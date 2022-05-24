@@ -14,10 +14,15 @@ public class PlayerController : MonoBehaviour
     private int facingRight = 1;
     private bool walk = true;
 
+    private float boundX;
+    private float boundY;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
+
+        boundX = Camera.main.ScreenToWorldPoint(pos).x;
+        boundY = Camera.main.ScreenToWorldPoint(pos).y;
     }
 
     private void getHp()
@@ -28,8 +33,30 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
+        if ((transform.position.x >= -boundX && transform.position.x <= boundX) && (transform.position.y >= -boundY && transform.position.y <= boundY))
+        {
+            transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
             UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (speed / 80) * Time.deltaTime;
+        }
+
+        if (transform.position.x <= -boundX)
+        {
+            transform.position = new Vector3(-boundX, transform.position.y, transform.position.z);
+        }
+        if (transform.position.x >= boundX)
+        {
+            transform.position = new Vector3(boundX, transform.position.y, transform.position.z);
+        }
+        if (transform.position.y <= -boundY)
+        {
+            transform.position = new Vector3(transform.position.x, -boundY, transform.position.z);
+        }
+        if (transform.position.y >= boundY)
+        {
+            transform.position = new Vector3(transform.position.x, boundY, transform.position.z);
+        }
+
+
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
             flip();
@@ -72,11 +99,11 @@ public class PlayerController : MonoBehaviour
     private void flip()
     {
         facingRight = 1 - facingRight;
-        Vector3 newScale = gameObject.transform.localScale;
+        Vector3 newScale = body.transform.localScale;
         newScale.x *= -1;
-        Vector3 newScale2 = level.gameObject.transform.localScale;
-        newScale2.x *= -1;
-        level.gameObject.transform.localScale = newScale2;
-        gameObject.transform.localScale = newScale;
+        //Vector3 newScale2 = level.gameObject.transform.localScale;
+        //newScale2.x *= -1;
+        //level.gameObject.transform.localScale = newScale2;
+        body.transform.localScale = newScale;
     }
 }

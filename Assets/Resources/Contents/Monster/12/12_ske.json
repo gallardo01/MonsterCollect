@@ -1,0 +1,827 @@
+{
+  "frameRate": 24,
+  "name": "12",
+  "version": "5.5",
+  "compatibleVersion": "5.5",
+  "armature": [
+    {
+      "type": "Armature",
+      "frameRate": 24,
+      "name": "No.12",
+      "aabb": {
+        "x": -94.5,
+        "y": -103,
+        "width": 195,
+        "height": 218.66
+      },
+      "bone": [
+        { "name": "root" },
+        {
+          "length": 75,
+          "name": "Layer_0",
+          "parent": "root",
+          "transform": {
+            "x": 18.85,
+            "y": 10.75,
+            "skX": -117.547,
+            "skY": -117.547
+          }
+        },
+        {
+          "name": "bone_ikTarget1",
+          "parent": "root",
+          "transform": {
+            "x": -86.348,
+            "y": 59.9195
+          }
+        },
+        {
+          "name": "bone_ikTarget",
+          "parent": "root",
+          "transform": {
+            "x": -16.2636,
+            "y": 88.8741
+          }
+        },
+        {
+          "length": 40,
+          "name": "Layer_3",
+          "parent": "Layer_0",
+          "transform": {
+            "x": 79.4243,
+            "y": 35.9583,
+            "skX": 151.7109,
+            "skY": 151.7109
+          }
+        },
+        {
+          "length": 38,
+          "name": "Layer_1",
+          "parent": "Layer_0",
+          "transform": {
+            "x": -6.9728,
+            "y": -34.2022,
+            "skX": -84.821,
+            "skY": -84.821
+          }
+        },
+        {
+          "length": 37,
+          "name": "Layer_1_copy",
+          "parent": "Layer_0",
+          "transform": {
+            "x": -16.8009,
+            "y": -0.9812,
+            "skX": -136.0199,
+            "skY": -136.0199
+          }
+        },
+        {
+          "length": 26,
+          "name": "Layer_3_copy",
+          "parent": "Layer_0",
+          "transform": {
+            "x": 80.8485,
+            "y": -22.3425,
+            "skX": 149.2842,
+            "skY": 149.2842
+          }
+        },
+        {
+          "length": 42,
+          "name": "Layer_5",
+          "parent": "Layer_0",
+          "transform": {
+            "x": -44.0737,
+            "y": -8.1579,
+            "skX": 136.8718,
+            "skY": 136.8718
+          }
+        },
+        {
+          "length": 30,
+          "name": "Layer_2",
+          "parent": "Layer_0",
+          "transform": {
+            "x": 78.6889,
+            "y": -12.4722,
+            "skX": -30.9925,
+            "skY": -30.9925
+          }
+        },
+        {
+          "length": 64,
+          "name": "Layer_4_copy",
+          "parent": "Layer_3_copy",
+          "transform": {
+            "x": 26.7686,
+            "y": 1.551,
+            "skX": 104.4498,
+            "skY": 104.4498
+          }
+        },
+        {
+          "length": 70,
+          "name": "Layer_4",
+          "parent": "Layer_3",
+          "transform": {
+            "x": 56.9506,
+            "y": -5.6576,
+            "skX": 104.7039,
+            "skY": 104.7039
+          }
+        }
+      ],
+      "slot": [
+        {
+          "name": "Layer_3_copy",
+          "parent": "Layer_3_copy"
+        },
+        {
+          "name": "Layer_4_copy",
+          "parent": "Layer_4_copy"
+        },
+        {
+          "name": "Layer_5",
+          "parent": "Layer_5"
+        },
+        {
+          "name": "Layer_0",
+          "parent": "Layer_0"
+        },
+        {
+          "name": "Layer_3",
+          "parent": "Layer_3"
+        },
+        {
+          "name": "Layer_2",
+          "parent": "Layer_2"
+        },
+        {
+          "name": "Layer_1",
+          "parent": "Layer_1"
+        },
+        {
+          "name": "Layer_1_copy",
+          "parent": "Layer_1_copy"
+        },
+        {
+          "name": "Layer_4",
+          "parent": "Layer_4"
+        }
+      ],
+      "ik": [
+        {
+          "name": "bone_ik1",
+          "bone": "Layer_1",
+          "target": "bone_ikTarget1"
+        },
+        {
+          "name": "bone_ik",
+          "bone": "Layer_1_copy",
+          "target": "bone_ikTarget"
+        }
+      ],
+      "skin": [
+        {
+          "slot": [
+            {
+              "name": "Layer_0",
+              "display": [
+                {
+                  "name": "12/Layer_0",
+                  "transform": {
+                    "x": 27.5,
+                    "y": 22.41,
+                    "skX": 117.55,
+                    "skY": 117.55
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_5",
+              "display": [
+                {
+                  "name": "12/Layer_5",
+                  "transform": {
+                    "x": 26.88,
+                    "y": -18.54,
+                    "skX": -19.32,
+                    "skY": -19.32
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_3_copy",
+              "display": [
+                {
+                  "name": "12/Layer_3_copy",
+                  "transform": {
+                    "x": 22.31,
+                    "y": 6.89,
+                    "skX": -31.74,
+                    "skY": -31.74
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_4_copy",
+              "display": [
+                {
+                  "name": "12/Layer_4_copy",
+                  "transform": {
+                    "x": 53.99,
+                    "y": -15.69,
+                    "skX": -136.19,
+                    "skY": -136.19
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_1_copy",
+              "display": [
+                {
+                  "name": "12/Layer_1_copy",
+                  "transform": {
+                    "x": 38.73,
+                    "y": -13.25,
+                    "skX": -106.43,
+                    "skY": -106.43
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_1",
+              "display": [
+                {
+                  "name": "12/Layer_1",
+                  "transform": {
+                    "x": 36.22,
+                    "y": -15.1,
+                    "skX": -157.63,
+                    "skY": -157.63
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_2",
+              "display": [
+                {
+                  "name": "12/Layer_2",
+                  "transform": {
+                    "x": 16.33,
+                    "y": -0.9,
+                    "skX": 148.54,
+                    "skY": 148.54
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_3",
+              "display": [
+                {
+                  "name": "12/Layer_3",
+                  "transform": {
+                    "x": 29.84,
+                    "y": -0.55,
+                    "skX": -34.16,
+                    "skY": -34.16
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Layer_4",
+              "display": [
+                {
+                  "name": "12/Layer_4",
+                  "transform": {
+                    "x": 46.73,
+                    "y": -14.29,
+                    "skX": -138.87,
+                    "skY": -138.87
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "animation": [
+        {
+          "duration": 24,
+          "playTimes": 0,
+          "name": "idle",
+          "bone": [
+            {
+              "name": "Layer_0",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "y": 9.43
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_3",
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": -8.44
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_1_copy",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": 3.82,
+                  "y": 2.88
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_1",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": 3.1,
+                  "y": 3.73
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_5",
+              "translateFrame": [
+                {
+                  "duration": 24,
+                  "tweenEasing": 0,
+                  "x": 12.86,
+                  "y": 6.37
+                },
+                {
+                  "duration": 0,
+                  "x": 13.86,
+                  "y": 6.89
+                }
+              ]
+            },
+            {
+              "name": "Layer_2",
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": -5.69
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_4_copy",
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 4,
+                  "tweenEasing": 0,
+                  "rotate": -1.5
+                },
+                { "duration": 8 }
+              ]
+            }
+          ]
+        },
+        {
+          "duration": 24,
+          "playTimes": 0,
+          "name": "move",
+          "bone": [
+            {
+              "name": "Layer_0",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": -0.34,
+                  "y": 2.07
+                },
+                { "duration": 0 }
+              ],
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": 1.33
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "bone_ikTarget1",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": 53.46,
+                  "y": 13.8
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "bone_ikTarget",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": -35.52,
+                  "y": -30.35
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_1",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": -1.94,
+                  "y": 7.7
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": 14.8,
+                  "y": 15.44
+                },
+                {
+                  "duration": 0,
+                  "x": -1.94,
+                  "y": 7.7
+                }
+              ],
+              "rotateFrame": [
+                {
+                  "duration": 24,
+                  "rotate": 3.19
+                }
+              ]
+            },
+            {
+              "name": "Layer_1_copy",
+              "rotateFrame": [
+                {
+                  "duration": 24,
+                  "rotate": 17.36
+                }
+              ]
+            },
+            {
+              "name": "Layer_5",
+              "translateFrame": [
+                {
+                  "duration": 24,
+                  "x": 8.43,
+                  "y": 1.19
+                }
+              ],
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": -17.71
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_2",
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": 6.25
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_4_copy",
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": 3.32
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": -8.81
+                },
+                {
+                  "duration": 0,
+                  "rotate": 3.32
+                }
+              ]
+            },
+            {
+              "name": "Layer_4",
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": 7.09
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": -3.12
+                },
+                {
+                  "duration": 0,
+                  "rotate": 7.09
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "duration": 16,
+          "playTimes": 0,
+          "name": "attack",
+          "bone": [
+            {
+              "name": "Layer_0",
+              "rotateFrame": [
+                {
+                  "duration": 4,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": -13.19
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_3",
+              "rotateFrame": [
+                {
+                  "duration": 4,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": 121.4
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_1",
+              "rotateFrame": [
+                {
+                  "duration": 16,
+                  "rotate": 3.19
+                }
+              ]
+            },
+            {
+              "name": "Layer_1_copy",
+              "rotateFrame": [
+                {
+                  "duration": 16,
+                  "rotate": 17.36
+                }
+              ]
+            },
+            {
+              "name": "Layer_5",
+              "translateFrame": [
+                {
+                  "duration": 4,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "x": 13.17,
+                  "y": 0.95
+                },
+                { "duration": 0 }
+              ],
+              "rotateFrame": [
+                {
+                  "duration": 4,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "tweenEasing": 0,
+                  "rotate": -16.67
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_4_copy",
+              "rotateFrame": [
+                {
+                  "duration": 4,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 6,
+                  "tweenEasing": 0,
+                  "rotate": 122.84
+                },
+                {
+                  "duration": 6,
+                  "tweenEasing": 0,
+                  "rotate": 23.02
+                },
+                { "duration": 0 }
+              ]
+            },
+            {
+              "name": "Layer_4",
+              "rotateFrame": [
+                {
+                  "duration": 10,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 6,
+                  "tweenEasing": 0,
+                  "rotate": -29.08
+                },
+                { "duration": 0 }
+              ]
+            }
+          ]
+        },
+        {
+          "duration": 17,
+          "playTimes": 0,
+          "name": "die",
+          "bone": [
+            {
+              "name": "Layer_0",
+              "translateFrame": [
+                {
+                  "duration": 17,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "x": 3.01,
+                  "y": 56.88
+                }
+              ]
+            },
+            {
+              "name": "bone_ikTarget",
+              "translateFrame": [
+                {
+                  "duration": 17,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "x": -11.87,
+                  "y": -28.57
+                }
+              ]
+            },
+            {
+              "name": "Layer_1",
+              "rotateFrame": [
+                {
+                  "duration": 17,
+                  "rotate": 3.19
+                }
+              ]
+            },
+            {
+              "name": "Layer_1_copy",
+              "rotateFrame": [
+                {
+                  "duration": 17,
+                  "rotate": 17.36
+                }
+              ]
+            },
+            {
+              "name": "Layer_5",
+              "translateFrame": [
+                {
+                  "duration": 17,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "x": 10.69,
+                  "y": 5.57
+                }
+              ]
+            },
+            {
+              "name": "Layer_4_copy",
+              "rotateFrame": [
+                {
+                  "duration": 10,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 7,
+                  "rotate": -47.32
+                }
+              ]
+            },
+            {
+              "name": "Layer_4",
+              "rotateFrame": [
+                {
+                  "duration": 10,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 7,
+                  "rotate": -40.74
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "defaultActions": [ { "gotoAndPlay": "idle" } ]
+    }
+  ]
+}

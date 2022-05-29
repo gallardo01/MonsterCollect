@@ -6,16 +6,20 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] GameObject body;
-    [SerializeField] TextMeshPro level;
+    [SerializeField] TextMeshPro levelText;
     [SerializeField] GameObject bar;
+    [SerializeField] int id;
 
     private int hp;
     private float speed = 100;
     private int facingRight = 1;
     private bool walk = true;
-
+    private int level = 1;
     private float boundX;
     private float boundY;
+    private bool canMove = true;
+    private bool isAtk = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,15 +29,21 @@ public class PlayerController : MonoBehaviour
         boundY = Camera.main.ScreenToWorldPoint(pos).y;
     }
 
-    private void getHp()
+    public void setLevel(int val)
     {
+        level = val;   
+    }
 
+    public int getLevel()
+    {
+        return level;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ((transform.position.x >= -boundX && transform.position.x <= boundX) && (transform.position.y >= -boundY && transform.position.y <= boundY))
+        if (canMove && (transform.position.x >= -boundX && transform.position.x <= boundX) 
+            && (transform.position.y >= -boundY && transform.position.y <= boundY))
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
             UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (speed / 80) * Time.deltaTime;
@@ -80,19 +90,37 @@ public class PlayerController : MonoBehaviour
                 runAnimation(1);
             }
         }
-
     }
     private void runAnimation(int pos)
     {
+        Debug.Log("Run Animation: " + pos);
         //idle
-        if (pos == 1)
+        if (pos == 1 && isAtk == false)
         {
             GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
         }
         //move
-        else if (pos == 2)
+        else if (pos == 2 && isAtk == false)
         {
             GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
+        } else if (pos == 3)
+        {
+            isAtk = true;
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("Attack", 0.5f, 1);
+            StartCoroutine(replayAnimation());
+        }
+    }
+
+    IEnumerator replayAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isAtk = false;
+        if (walk)
+        {
+            runAnimation(1);
+        } else
+        {
+            runAnimation(2);
         }
     }
 
@@ -105,5 +133,14 @@ public class PlayerController : MonoBehaviour
         //newScale2.x *= -1;
         //level.gameObject.transform.localScale = newScale2;
         body.transform.localScale = newScale;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Enemy")
+        {
+            runAnimation(3);
+            Debug.Log("AAA");
+        }
     }
 }

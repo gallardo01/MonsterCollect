@@ -123,12 +123,49 @@ public class MonsterController : MonoBehaviour
         //idle
         if(pos == 1)
         {
-            GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+            if(id == 48)
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("IDLE");
+            } else
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+            }
         }
         //move
         else if(pos == 2)
         {
-            GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
+            if (id == 33 || id == 47 || id == 63)
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("Move");
+            }
+            else
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
+            }
+        }
+        //attack
+        else if(pos == 3)
+        {
+            if (id == 18 || id == 63)
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("attacl");
+            }
+            else
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("attack");
+            }
+        }
+        // die
+        else if(pos == 4)
+        {
+            if (id == 29 || id == 63 || id == 63)
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("newAnimation");
+            }
+            else
+            {
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("die");
+            }
         }
     }
 
@@ -148,5 +185,12 @@ public class MonsterController : MonoBehaviour
         gameObject.transform.localScale = newScale;
     }
 
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            runAnimation(3);
+            Debug.Log("AAA");
+        }
+    }
 }

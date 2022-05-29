@@ -42,29 +42,16 @@ public class UserDatabase : Singleton<UserDatabase>
     {
         UserData newItem = new UserData();
         newItem.Name = userData["Name"].ToString();
-        newItem.Level = (int)userData["Level"];
-        newItem.Exp = (int)userData["Exp"];
-        newItem.Cup = (int)userData["Cup"];
-        newItem.Rank = (int)userData["Rank"];
         newItem.Gold = (int)userData["Gold"];
         newItem.Diamond = (int)userData["Diamond"];
-        newItem.Shard = (int)userData["Shard"];
-        newItem.Vip = (int)userData["Vip"];
-        newItem.DiamondPurchased = (int)userData["DiamondPurchased"];
-        newItem.BattlePass = (int)userData["BattlePass"];
-        newItem.AttackBonus = (int)userData["AttackBonus"];
-        newItem.SpecialAtkBonus = (int)userData["SpecialAtkBonus"];
-        newItem.DefenseBonus = (int)userData["DefenseBonus"];
-        newItem.SpecialDefBonus = (int)userData["SpecialDefBonus"];
-        newItem.HpBonus = (int)userData["HpBonus"];
-        newItem.SpeedBonus = (int)userData["SpeedBonus"];
-        newItem.SuperEffectBonus = (int)userData["SuperEffectBonus"];
+        newItem.Level = (int)userData["Level"];
 
         database = newItem;
     }
     private void LoadResourceTextfileCurrentData()
     {
         string tempPath = Application.persistentDataPath + "/c/b/c" + "/UserData.txt";
+        Debug.Log(tempPath);
         //Load saved Json
         if (!File.Exists(tempPath))
         {
@@ -127,70 +114,36 @@ public class UserDatabase : Singleton<UserDatabase>
     {
         return database;
     }
-    public void gainVipPoint(int point)
-    {
-        database.DiamondPurchased += point;
-        Save();
-    }
-    public void setupVipValue(int val)
-    {
-        database.Vip = val;
-        Save();
-    }
-    public void gainMoney(int gold, int diamond, int shard)
+
+    public void gainMoney(int gold, int diamond)
     {
         database.Gold += gold;
         database.Diamond += diamond;
-        database.Shard += shard;
         Save();
     }
-    public bool reduceMoney(int gold, int diamond, int shard)
+    public bool reduceMoney(int gold, int diamond)
     {
-        if (database.Gold < gold || database.Diamond < diamond || database.Shard < shard)
+        if (database.Gold < gold || database.Diamond < diamond)
         {
             return false;
         }
         database.Gold -= gold;
         database.Diamond -= diamond;
-        database.Shard -= shard;
         Save();
         return true;
     }
-    public void setBonusDataInfo(int atk, int sAtk, int def, int sDef, int hp, int speed, int superEff, int notEff)
-    {
-        database.AttackBonus = atk;
-        database.SpecialAtkBonus = sAtk;
-        database.DefenseBonus = def;
-        database.SpecialDefBonus = sDef;
-        database.HpBonus = hp;
-        database.SpecialDefBonus = speed;
-        database.SuperEffectBonus = superEff;
-        database.NotEffectBonus = notEff;
-        Save();
-    }
-
 }
 public class UserData
 {
     public string Name { get; set; }
-    public int Level { get; set; }
-    public int Exp { get; set; }
-    public int Cup { get; set; }
-    public int Rank { get; set; }
     public int Gold { get; set; }
     public int Diamond { get; set; }
-    public int Shard { get; set; }
-    public int Vip { get; set; }
-    public int DiamondPurchased { get; set; }
-    public int BattlePass { get; set; }
-    public int AttackBonus { get; set; }
-    public int SpecialAtkBonus { get; set; }
-    public int DefenseBonus { get; set; }
-    public int SpecialDefBonus { get; set; }
-    public int HpBonus { get; set; }
-    public int SpeedBonus { get; set; }
-    public int SuperEffectBonus { get; set; }
-    public int NotEffectBonus { get; set; }
+    public int Level { get; set; }
 
+    public int atk { get; set; }
+    public int hp { get; set; }
+    public int armour { get; set; }
+    public int speed { get; set; }
+    public int bonus { get; set; }
 
 }

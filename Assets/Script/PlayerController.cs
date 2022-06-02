@@ -10,11 +10,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject bar;
     [SerializeField] int id;
 
-    private int hp;
+    private int hp = 1000;
     private float speed = 100;
     private int facingRight = 1;
     private bool walk = true;
-    private int level = 1;
+    private int level = 25;
     private float boundX;
     private float boundY;
     private bool canMove = true;
@@ -29,9 +29,11 @@ public class PlayerController : MonoBehaviour
         boundY = Camera.main.ScreenToWorldPoint(pos).y;
     }
 
-    public void setLevel(int val)
+    public void init(int val)
     {
-        level = val;   
+        level = val;
+        levelText.text = val.ToString();
+        
     }
 
     public int getLevel()
@@ -103,7 +105,7 @@ public class PlayerController : MonoBehaviour
         else if (pos == 2 && isAtk == false)
         {
             GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
-        } else if (pos == 3)
+        } else if (pos == 3) // atk
         {
             isAtk = true;
             GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("Attack", 0.5f, 1);
@@ -139,8 +141,16 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.gameObject.tag == "Enemy")
         {
-            runAnimation(3);
-            Debug.Log("AAA");
+            int enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
+            if (level >= enemyLv) // kill
+            {
+                runAnimation(3);
+                collision.gameObject.GetComponent<MonsterController>().setAction(2);
+            } else
+            {
+                collision.gameObject.GetComponent<MonsterController>().setAction(1);
+            }
+
         }
     }
 }

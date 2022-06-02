@@ -13,7 +13,7 @@ public class MonsterController : MonoBehaviour
     private int waypointIndex = 0;
     private bool isMove = true;
     private int facingRight = 1;
-
+    
     void Start()
     {
         setText(id);
@@ -22,6 +22,33 @@ public class MonsterController : MonoBehaviour
     void Update()
     {
         Move();
+    }
+
+    public int getLevel()
+    {
+        return id;
+    }
+
+    public void setAction(int action)
+    {
+        // attack back
+        if(action == 1)
+        {
+            runAnimation(3);
+            isMove = false;
+            StartCoroutine(setMove());
+        }
+        else if(action == 2) // dead
+        {
+            runAnimation(4);
+            isMove = false;
+        }
+    }
+
+    IEnumerator setMove()
+    {
+        yield return new WaitForSeconds(1f);
+        isMove = true;
     }
 
     private void Move()
@@ -83,7 +110,7 @@ public class MonsterController : MonoBehaviour
     private void setText(int lv)
     {
         level.text = "Lv." + lv.ToString();
-        if(lv%10 < 3)
+        if(lv%10 < 3 && lv != 0)
         {
             level.color = Color.white;  
         } else if(lv % 10 < 5)
@@ -148,25 +175,47 @@ public class MonsterController : MonoBehaviour
         {
             if (id == 18 || id == 63)
             {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("attacl");
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attacl", 0.5f, 1);
             }
             else
             {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("attack");
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attack", 0.5f, 1);
             }
+            StartCoroutine(replayAnimation());
         }
         // die
         else if(pos == 4)
         {
             if (id == 29 || id == 63 || id == 63)
             {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("newAnimation");
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("newAnimation", 0.5f, 1);
             }
             else
             {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("die");
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 0.5f, 1);
             }
+            StartCoroutine(disableObject());
         }
+    }
+
+    IEnumerator replayAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (isMove)
+        {
+            runAnimation(1);
+        }
+        else
+        {
+            runAnimation(2);
+        }
+    }
+
+
+    IEnumerator disableObject()
+    {
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(false);
     }
 
     private int CompareObNames(GameObject x, GameObject y)
@@ -187,10 +236,6 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            runAnimation(3);
-            Debug.Log("AAA");
-        }
+
     }
 }

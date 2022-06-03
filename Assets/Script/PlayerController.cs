@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private float boundY;
     private bool canMove = true;
     private bool isAtk = false;
+    private bool canHurt = true;
 
     // Start is called before the first frame update
     void Start()
@@ -145,12 +146,22 @@ public class PlayerController : MonoBehaviour
             if (level >= enemyLv) // kill
             {
                 runAnimation(3);
+                GameController.Instance.addParticle(collision.gameObject, 1);
                 collision.gameObject.GetComponent<MonsterController>().setAction(2);
-            } else
+            } else if(canHurt)
             {
+                canHurt = false;
+                StartCoroutine(setHurt());
+                GameController.Instance.addParticle(gameObject, 2);
                 collision.gameObject.GetComponent<MonsterController>().setAction(1);
             }
 
         }
+    }
+
+    IEnumerator setHurt()
+    {
+        yield return new WaitForSeconds(1f);
+        canHurt = true;
     }
 }

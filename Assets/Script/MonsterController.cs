@@ -16,6 +16,7 @@ public class MonsterController : MonoBehaviour
     
     void Start()
     {
+        gameObject.GetComponent<Collider2D>().enabled = true;
         setText(id);
     }
 
@@ -192,7 +193,7 @@ public class MonsterController : MonoBehaviour
             }
             else
             {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 0.5f, 1);
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 1f, 1);
             }
             StartCoroutine(disableObject());
         }
@@ -214,7 +215,8 @@ public class MonsterController : MonoBehaviour
 
     IEnumerator disableObject()
     {
-        yield return new WaitForSeconds(0.5f);
+        gameObject.GetComponent<Collider2D>().enabled = false;
+        yield return new WaitForSeconds(1f);
         gameObject.SetActive(false);
     }
 

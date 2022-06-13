@@ -1,15 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MarchingBytes;
 
 public class GameController : Singleton<GameController>
 {
+    public Button btnQuit;
+
+    public Canvas result;
+    public GameObject canvas;
+    public GameObject player;
+    public GameObject controller;
 
     // Start is called before the first frame update
     void Start()
     {
         addEnemy();
+        btnQuit.onClick.AddListener(quitGame);
     }
 
     public void addEnemy()
@@ -40,5 +48,14 @@ public class GameController : Singleton<GameController>
         yield return new WaitForSeconds(0.5f);
         //obj.SetActive(false);
         EasyObjectPool.instance.ReturnObjectToPool(obj);
+    }
+
+    void quitGame()
+    {
+        controller.SetActive(false);
+        canvas.SetActive(false);
+        player.SetActive(false);
+
+        result.gameObject.SetActive(true);
     }
 }

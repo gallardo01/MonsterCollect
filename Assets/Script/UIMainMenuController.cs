@@ -11,11 +11,13 @@ public class UIMainMenuController : MonoBehaviour
     public RectTransform Maps;
     public TextMeshProUGUI mapName;
     public TextMeshProUGUI mapDescription;
+    public GameObject locker;
 
     public Button leftBtn;
     public Button rightBtn;
 
     private int currentMap = 1;
+    private int currentStage = 3;
 
     private bool isClick = true;
 
@@ -63,13 +65,25 @@ public class UIMainMenuController : MonoBehaviour
 
     private void selectMap(int index)
     {
-        Maps.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Maps/map_"+ index);
+        Maps.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Maps/map_" + index);
+        locker.SetActive(false);
+        Maps.GetComponent<Image>().color = Color.white;
+
+
+        if (index > currentStage)
+        {
+            Maps.GetComponent<Image>().color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
+            locker.SetActive(true);
+        }
+
+
         mapName.text = StaticInfo.mapName[index];
         //mapDescription.text = "/10";
 
 
         StartCoroutine(animationMap());
         StartCoroutine(animationText());
+
 
     }
 
@@ -89,7 +103,7 @@ public class UIMainMenuController : MonoBehaviour
         mapDescription.GetComponent<RectTransform>().DOScale(new Vector3(1f, 1f, 1f), 0.1f);
 
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         isClick = true;
 
     }

@@ -24,7 +24,7 @@ public class UIController : Singleton<UIController>
 	void Start()
 	{
 		mainMenuButton();
-		bar.sizeDelta = new Vector2(0, Screen.width / 4);
+		bar.sizeDelta = new Vector2(0, 300);
 		shopBtn.onClick.AddListener(() => shopButton());
 		heroesBtn.onClick.AddListener(() => heoresButton());
 		mainMenuBtn.onClick.AddListener(() => mainMenuButton());

@@ -28,7 +28,7 @@ public class SwipeDetector : MonoBehaviour
                 if (!detectSwipeOnlyAfterRelease)
                 {
                     fingerDown = touch.position;
-                    checkSwipe();
+                    //checkSwipe();
                 }
             }
 
@@ -101,12 +101,12 @@ public class SwipeDetector : MonoBehaviour
 
     void OnSwipeLeft()
     {
-        UIController.Instance.detectSwipe(1);
+        UIController.Instance.detectSwipe(2);
     }
 
     void OnSwipeRight()
     {
-        UIController.Instance.detectSwipe(2);
+        UIController.Instance.detectSwipe(1);
     }
 }
 

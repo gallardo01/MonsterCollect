@@ -28,7 +28,6 @@ public class SwipeDetector : MonoBehaviour
                 if (!detectSwipeOnlyAfterRelease)
                 {
                     fingerDown = touch.position;
-                    checkSwipe();
                 }
             }
 
@@ -43,23 +42,8 @@ public class SwipeDetector : MonoBehaviour
 
     void checkSwipe()
     {
-        //Check if Vertical swipe
-        if (verticalMove() > SWIPE_THRESHOLD && verticalMove() > horizontalValMove())
-        {
-            //Debug.Log("Vertical");
-            if (fingerDown.y - fingerUp.y > 0)//up swipe
-            {
-                OnSwipeUp();
-            }
-            else if (fingerDown.y - fingerUp.y < 0)//Down swipe
-            {
-                OnSwipeDown();
-            }
-            fingerUp = fingerDown;
-        }
-
         //Check if Horizontal swipe
-        else if (horizontalValMove() > SWIPE_THRESHOLD && horizontalValMove() > verticalMove())
+        if (horizontalValMove() > SWIPE_THRESHOLD && horizontalValMove() > verticalMove())
         {
             //Debug.Log("Horizontal");
             if (fingerDown.x - fingerUp.x > 0)//Right swipe
@@ -72,12 +56,6 @@ public class SwipeDetector : MonoBehaviour
             }
             fingerUp = fingerDown;
         }
-
-        //No Movement at-all
-        else
-        {
-            //Debug.Log("No Swipe!");
-        }
     }
 
     float verticalMove()
@@ -88,15 +66,6 @@ public class SwipeDetector : MonoBehaviour
     float horizontalValMove()
     {
         return Mathf.Abs(fingerDown.x - fingerUp.x);
-    }
-
-    //////////////////////////////////CALLBACK FUNCTIONS/////////////////////////////
-    void OnSwipeUp()
-    {
-    }
-
-    void OnSwipeDown()
-    {
     }
 
     void OnSwipeLeft()

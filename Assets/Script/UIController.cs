@@ -18,6 +18,9 @@ public class UIController : Singleton<UIController>
 	public Button mainMenuBtn;
 	public Button upgradeBtn;
 
+	public Button addGoldBtn;
+	public Button addDiamondBtn;
+
 	public GameObject[] hightlight;
 	private int currentSite = 3;
 
@@ -29,6 +32,9 @@ public class UIController : Singleton<UIController>
 		heroesBtn.onClick.AddListener(() => heoresButton());
 		mainMenuBtn.onClick.AddListener(() => mainMenuButton());
 		upgradeBtn.onClick.AddListener(() => upgradeButton());
+
+		addGoldBtn.onClick.AddListener(() => shopButton());
+		addDiamondBtn.onClick.AddListener(() => shopButton());
 	}
 
 	private void shopButton()

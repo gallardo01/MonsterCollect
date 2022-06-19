@@ -8,18 +8,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject body;
     [SerializeField] TextMeshPro levelText;
     [SerializeField] GameObject bar;
-    [SerializeField] int id;
-
+    
+    private int id;
     private int hp = 1000;
     private float speed = 100;
     private int facingRight = 1;
     private bool walk = true;
-    private int level = 25;
+    private int playerLevel = 20;
     private float boundX;
     private float boundY;
     private bool canMove = true;
     private bool isAtk = false;
     private bool canHurt = true;
+    private int exp = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -28,18 +29,29 @@ public class PlayerController : MonoBehaviour
 
         boundX = Camera.main.ScreenToWorldPoint(pos).x;
         boundY = Camera.main.ScreenToWorldPoint(pos).y;
+        initStart();
     }
 
-    public void init(int val)
+    public void initStart()
     {
-        level = val;
-        levelText.text = val.ToString();
+        levelText.text = playerLevel.ToString();
         
+    }
+
+    private void initEatMonster(int lv)
+    {
+
+
+    }
+
+    private void initHurt(int lv)
+    {
+
     }
 
     public int getLevel()
     {
-        return level;
+        return playerLevel;
     }
 
     // Update is called once per frame
@@ -143,7 +155,7 @@ public class PlayerController : MonoBehaviour
         if(collision.gameObject.tag == "Enemy")
         {
             int enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
-            if (level >= enemyLv) // kill
+            if (playerLevel >= enemyLv) // kill
             {
                 runAnimation(3);
                 GameController.Instance.addParticle(collision.gameObject, 1);

@@ -17,7 +17,7 @@ public class GameController : Singleton<GameController>
     void Start()
     {
         addEnemy();
-        btnQuit.onClick.AddListener(quitGame);
+        //btnQuit.onClick.AddListener(quitGame);
     }
 
     public void addEnemy()

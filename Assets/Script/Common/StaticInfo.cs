@@ -19,5 +19,4 @@ public class StaticInfo : MonoBehaviour
         "10.Map Kien 10",
     };
 
-
 }

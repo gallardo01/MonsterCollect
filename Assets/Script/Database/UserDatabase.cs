@@ -138,6 +138,35 @@ public class UserDatabase : Singleton<UserDatabase>
         Save();
         return true;
     }
+    public int getTotalLevel()
+    {
+        return (database.Atk + database.Hp + database.Armour + database.Speed + database.BonusExp + database.BonusGold - 5);
+    }
+    public void gainLevel(int type)
+    {
+        switch(type)
+        {
+            case 1:
+                database.Atk++;
+                break;
+            case 2:
+                database.Hp++;
+                break;
+            case 3:
+                database.Armour++;
+                break;
+            case 4:
+                database.Speed++;
+                break;
+            case 5:
+                database.BonusExp++;
+                break;
+            case 6:
+                database.BonusGold++;
+                break;
+        }
+        Save();
+    }
 }
 public class UserData
 {

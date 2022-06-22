@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class UIController : Singleton<UIController>
 {
@@ -21,11 +22,15 @@ public class UIController : Singleton<UIController>
 	public Button addGoldBtn;
 	public Button addDiamondBtn;
 
+	public TextMeshProUGUI txtGold;
+	public TextMeshProUGUI txtDiamond;
+
 	public GameObject[] hightlight;
 	private int currentSite = 3;
 
 	void Start()
 	{
+		InitUI();
 		mainMenuButton();
 		bar.sizeDelta = new Vector2(0, 300);
 		shopBtn.onClick.AddListener(() => shopButton());
@@ -36,8 +41,13 @@ public class UIController : Singleton<UIController>
 		addGoldBtn.onClick.AddListener(() => shopButton());
 		addDiamondBtn.onClick.AddListener(() => shopButton());
 	}
-
-	private void shopButton()
+    public void InitUI()
+    {
+		UserData database = UserDatabase.Instance.getUserData();
+		txtGold.text = database.Gold.ToString();
+		txtDiamond.text = database.Diamond.ToString();
+	}
+    private void shopButton()
     {
 		currentSite = 1;
 		shop.DOAnchorPos(new Vector2(0, 0), 0.25f);

@@ -11,6 +11,10 @@ public class UserDatabase : Singleton<UserDatabase>
 {
     private UserData database = new UserData();
     private JsonData userData;
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()

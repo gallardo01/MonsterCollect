@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIMainMenuController : MonoBehaviour
 {
@@ -15,9 +16,10 @@ public class UIMainMenuController : MonoBehaviour
 
     public Button leftBtn;
     public Button rightBtn;
+    public Button playGame;
 
     private int currentMap = 1;
-    private int currentStage = 3;
+    private int currentStage = 1;
 
     private bool isClick = true;
 
@@ -29,7 +31,15 @@ public class UIMainMenuController : MonoBehaviour
 
         leftBtn.onClick.AddListener(() => leftButton());
         rightBtn.onClick.AddListener(() => rightButton());
+        playGame.onClick.AddListener(() => playGameAction());
+        currentStage = UserDatabase.Instance.getUserData().Level / 10 + 1;
+        currentMap = currentStage;
+    }
 
+    private void playGameAction()
+    {
+        PlayerPrefs.SetInt("Map", currentStage);
+        SceneManager.LoadScene(1);
     }
 
     private void leftButton()
@@ -74,8 +84,10 @@ public class UIMainMenuController : MonoBehaviour
         {
             Maps.GetComponent<Image>().color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
             locker.SetActive(true);
+        } else
+        {
+            currentStage = index;
         }
-
 
         mapName.text = StaticInfo.mapName[index];
         //mapDescription.text = "/10";
@@ -107,6 +119,4 @@ public class UIMainMenuController : MonoBehaviour
         isClick = true;
 
     }
-
-    
 }

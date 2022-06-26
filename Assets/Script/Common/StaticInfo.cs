@@ -5,7 +5,7 @@ using UnityEngine;
 public class StaticInfo : MonoBehaviour
 {
     public static string[] mapName =
-{
+    {
         "",
         "1.Map Kien 1",
         "2.Map Kien 2",

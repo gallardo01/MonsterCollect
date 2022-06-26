@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] GameObject body;
     [SerializeField] TextMeshPro levelText;
@@ -12,9 +12,14 @@ public class PlayerController : MonoBehaviour
     private int id;
     private int hp = 1000;
     private float speed = 100;
+    private int armour = 5;
+    private int atk = 10;
+    private int bonusExp = 5;
+    private int bonusGold = 10;
+
     private int facingRight = 1;
     private bool walk = true;
-    private int playerLevel = 20;
+    private int playerLevel = 1;
     private float boundX;
     private float boundY;
     private bool canMove = true;
@@ -26,7 +31,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
-
+        playerLevel = PlayerPrefs.GetInt("Map") * 10 + 1;
         boundX = Camera.main.ScreenToWorldPoint(pos).x;
         boundY = Camera.main.ScreenToWorldPoint(pos).y;
         initStart();
@@ -35,13 +40,20 @@ public class PlayerController : MonoBehaviour
     public void initStart()
     {
         levelText.text = playerLevel.ToString();
-        
+        int heroesId = 11;
+        HeroesData data = HeroesDatabase.Instance.fetchHeroesData(heroesId);
+        hp = data.Hp;
+        speed = data.Speed;
+        armour = data.Armour;
+        atk = data.Atk;
+        bonusExp = data.XpGain;
+        bonusGold = data.GoldGain;
     }
 
     private void initEatMonster(int lv)
     {
-
-
+        // 10 12 14 16 18 20 22 24 25
+        exp += (lv % 10 * 1000) / (8 + lv*2); 
     }
 
     private void initHurt(int lv)
@@ -108,7 +120,6 @@ public class PlayerController : MonoBehaviour
     }
     private void runAnimation(int pos)
     {
-        Debug.Log("Run Animation: " + pos);
         //idle
         if (pos == 1 && isAtk == false)
         {
@@ -158,6 +169,7 @@ public class PlayerController : MonoBehaviour
             if (playerLevel >= enemyLv) // kill
             {
                 runAnimation(3);
+                initEatMonster(collision.gameObject.GetComponent<MonsterController>().getLevel());
                 GameController.Instance.addParticle(collision.gameObject, 1);
                 collision.gameObject.GetComponent<MonsterController>().setAction(2);
             } else if(canHurt)
@@ -170,7 +182,6 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-
     IEnumerator setHurt()
     {
         yield return new WaitForSeconds(1f);

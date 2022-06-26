@@ -7,10 +7,15 @@ using System.Text;
 using System.IO;
 using System;
 
-public class HeroesDatabase : Singleton<UserDatabase>
+public class HeroesDatabase : Singleton<HeroesDatabase>
 {
-    private HeroesData database = new HeroesData();
+    private List<HeroesData> database = new List<HeroesData>();
     private JsonData userData;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +28,7 @@ public class HeroesDatabase : Singleton<UserDatabase>
     {
 
         string tempPath = Application.persistentDataPath + "/c/b/c/";
-        string filePath = tempPath + "HeroesData.txt";
+        string filePath = tempPath + "Heroes.txt";
         if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
@@ -31,7 +36,7 @@ public class HeroesDatabase : Singleton<UserDatabase>
         if (!File.Exists(filePath))
         {
             File.Create(filePath).Close();
-            string fileName = "HeroesData.txt";
+            string fileName = "Heroes.txt";
             LoadResourceTextfileItemData(fileName);
             ConstructItemDatabase();
             Save();
@@ -40,21 +45,36 @@ public class HeroesDatabase : Singleton<UserDatabase>
     }
     private void ConstructItemDatabase()
     {
-        HeroesData newItem = new HeroesData();
-        newItem.Name = userData["Name"].ToString();
-        newItem.Unlock = (int)userData["Level"];
-        newItem.HeroesPick = (int)userData["HeroesPick"];
-        newItem.Atk = (int)userData["Atk"];
-        newItem.Hp = (int)userData["Hp"];
-        newItem.Armour = (int)userData["Armour"];
-        newItem.Speed = (int)userData["Speed"];
-        newItem.BonusExp = (int)userData["BonusExp"];
-        newItem.BonusGold = (int)userData["BonusGold"];
-        database = newItem;
+        for (int i = 0; i < userData.Count; i++)
+        {
+            HeroesData newItem = new HeroesData();
+            newItem.Name = userData[i]["Name"].ToString();
+            newItem.Id = (int)userData[i]["Id"];
+            newItem.Unlock = (int)userData[i]["Unlock"];
+            newItem.Atk = (int)userData[i]["Atk"];
+            newItem.Hp = (int)userData[i]["Hp"];
+            newItem.Armour = (int)userData[i]["Armour"];
+            newItem.Speed = (int)userData[i]["Speed"];
+            newItem.XpGain = (int)userData[i]["XpGain"];
+            newItem.GoldGain = (int)userData[i]["GoldGain"];
+            database.Add(newItem);
+        }
     }
+    public HeroesData fetchHeroesData(int id)
+    {
+        for(int i = 0; i < database.Count; i++)
+        {
+            if(database[i].Id == id)
+            {
+                return database[i];
+            }
+        }
+        return null;
+    }
+
     private void LoadResourceTextfileCurrentData()
     {
-        string tempPath = Application.persistentDataPath + "/c/b/c" + "/HeroesData.txt";
+        string tempPath = Application.persistentDataPath + "/c/b/c" + "/Heroes.txt";
         Debug.Log(tempPath);
         //Load saved Json
         if (!File.Exists(tempPath))
@@ -87,7 +107,7 @@ public class HeroesDatabase : Singleton<UserDatabase>
         string jsonData = JsonConvert.SerializeObject(database, Formatting.Indented);
 
         string tempPath = Application.persistentDataPath + "/c/b/c/";
-        string filePath = tempPath + "UserData.txt";
+        string filePath = tempPath + "Heroes.txt";
 
         //Convert To Json then to bytes
 
@@ -114,22 +134,17 @@ public class HeroesDatabase : Singleton<UserDatabase>
             Debug.LogWarning("Error: " + e.Message);
         }
     }
-    public HeroesData getUserData()
-    {
-        return database;
-    }
 }
 public class HeroesData
 {
     public string Name { get; set; }
     public int Id { get; set; }
     public int Unlock { get; set; }
-    public int HeroesPick { get; set; }
     public int Atk { get; set; }
     public int Hp { get; set; }
     public int Armour { get; set; }
     public int Speed { get; set; }
-    public int BonusExp { get; set; }
-    public int BonusGold { get; set; }
+    public int XpGain { get; set; }
+    public int GoldGain { get; set; }
 
 }

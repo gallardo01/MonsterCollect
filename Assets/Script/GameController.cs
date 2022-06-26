@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MarchingBytes;
+using TMPro;
 
 public class GameController : Singleton<GameController>
 {
@@ -13,6 +14,9 @@ public class GameController : Singleton<GameController>
     public GameObject player;
     public GameObject controller;
 
+    public GameObject expBar;
+    public TextMeshProUGUI expText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,16 +24,33 @@ public class GameController : Singleton<GameController>
         //btnQuit.onClick.AddListener(quitGame);
     }
 
+    public void gainExp()
+    {
+
+    }
+
     public void addEnemy()
     {
-        int playerLv = 1;
-        for (int i = 21; i <= 30; i++)
+        int playerLv = PlayerPrefs.GetInt("Map")*10;
+        for (int i = 0; i < 7; i++)
         {
-            int enemyId = 1;
-            string enemyType = "Enemy" + i;
+            int enemyId = playerLv + 1;
+            string enemyType = "Enemy" + enemyId;
             GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
-            enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1, 17), i);
+            enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1, 17), enemyId);
         }
+        for (int i = 2; i < 5; i++)
+        {
+            int enemyId = playerLv + i;
+            string enemyType = "Enemy" + enemyId;
+            GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
+            enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1, 17), enemyId);
+        }
+    }
+
+    public void respawnEnemy()
+    {
+
     }
 
     public void addParticle(GameObject obj, int index)

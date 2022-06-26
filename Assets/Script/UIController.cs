@@ -21,7 +21,7 @@ public class UIController : Singleton<UIController>
 
 	public Button addGoldBtn;
 	public Button addDiamondBtn;
-
+	
 	public TextMeshProUGUI txtGold;
 	public TextMeshProUGUI txtDiamond;
 
@@ -41,6 +41,7 @@ public class UIController : Singleton<UIController>
 		addGoldBtn.onClick.AddListener(() => shopButton());
 		addDiamondBtn.onClick.AddListener(() => shopButton());
 	}
+
     public void InitUI()
     {
 		UserData database = UserDatabase.Instance.getUserData();

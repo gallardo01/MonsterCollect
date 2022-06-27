@@ -72,6 +72,19 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         return null;
     }
 
+    public HeroesData getCurrentHero(int id)
+    {
+        for (int i = 0; i < database.Count; i++)
+        {
+            if (database[i].Id/10 == id && database[i].Unlock == 1)
+            {
+                return database[i];
+                
+            }
+        }
+        return fetchHeroesData(id*10);
+    }
+
     private void LoadResourceTextfileCurrentData()
     {
         string tempPath = Application.persistentDataPath + "/c/b/c" + "/Heroes.txt";

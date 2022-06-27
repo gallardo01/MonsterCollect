@@ -20,8 +20,8 @@ public class UIHero : MonoBehaviour
     void Start()
     {
         curHero = 1;
-        imgAvatar.sprite = listHero[curHero-1].image.sprite;
-        txtHeroName.text = "pokemon so " + (curHero);
+        //imgAvatar.sprite = listHero[curHero-1].image.sprite;
+        //txtHeroName.text = "pokemon so " + (curHero);
 
         for (int i = 0; i < 12; i++)
         {

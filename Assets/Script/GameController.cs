@@ -48,10 +48,10 @@ public class GameController : Singleton<GameController>
         }
     }
 
-    public void respawnEnemy()
-    {
+    //public IEnumerator respawnEnemy()
+    //{
 
-    }
+    //}
 
     public void addParticle(GameObject obj, int index)
     {

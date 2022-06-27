@@ -1585,13 +1585,17 @@ PrefabInstance:
       propertyPath: anchor
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11471210, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
+      propertyPath: joystickTouchSize
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 22406518, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1.4799805
+      value: 75.47998
       objectReference: {fileID: 0}
     - target: {fileID: 22406518, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.4799805
+      value: 75.47998
       objectReference: {fileID: 0}
     - target: {fileID: 22406518, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1647,19 +1651,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22468432, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -149.47998
+      value: -223.47998
       objectReference: {fileID: 0}
     - target: {fileID: 22468432, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 185
+      value: 111
       objectReference: {fileID: 0}
     - target: {fileID: 22468432, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 298.96
+      value: 446.96
       objectReference: {fileID: 0}
     - target: {fileID: 22468432, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 298.96
+      value: 446.96
       objectReference: {fileID: 0}
     - target: {fileID: 22468432, guid: 7ffda55ee71685646aacbb22ab8fec4d, type: 3}
       propertyPath: m_AnchorMin.x
@@ -3301,6 +3305,8 @@ MonoBehaviour:
   canvas: {fileID: 0}
   player: {fileID: 0}
   controller: {fileID: 0}
+  expBar: {fileID: 0}
+  expText: {fileID: 0}
 --- !u!4 &760135086
 Transform:
   m_ObjectHideFlags: 0

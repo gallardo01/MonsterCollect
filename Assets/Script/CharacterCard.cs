@@ -10,6 +10,8 @@ public class CharacterCard : MonoBehaviour
     public Image[] stars;
     public TextMeshProUGUI heroName;
     public Button button;
+    public GameObject locker;
+
 
     private HeroesData heroesData;
 
@@ -20,7 +22,7 @@ public class CharacterCard : MonoBehaviour
     }
     private void onClickElemonData()
     {
-        //InformationController.Instance.initData(elemonData);
+        UIHero.Instance.onClickCard(heroesData);
     }
 
     public void initData(HeroesData data)
@@ -28,9 +30,20 @@ public class CharacterCard : MonoBehaviour
         heroesData = data;
 
         string name = data.Name;
-
         heroName.text = name;
         imgHero.sprite = Resources.Load<Sprite>("UI/Icons/Monster/" + data.Id.ToString());
+        if (data.Unlock == 0)
+        {
+            locker.SetActive(true);
+            imgHero.color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
+        }
+        else
+        {
+            locker.SetActive(false);
+            imgHero.color = Color.white;
+
+        }
+
 
 
     }

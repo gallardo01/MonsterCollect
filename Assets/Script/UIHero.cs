@@ -9,19 +9,20 @@ public class UIHero : Singleton<UIHero>
 {
     public GameObject[] listHero;
     public Button btnSelect;
-    public Image imgAvatar;
+    public Button btnBuy;
+    public GameObject imgAvatar;
 
     public TextMeshProUGUI txtHeroName;
 
-
-    int curHero;
+    public int curHeroID = 10;
 
     // Start is called before the first frame update
     void Start()
     {
         initUIHero();
-
+        onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));    
     }
+
 
     private void initUIHero()
     {
@@ -29,8 +30,35 @@ public class UIHero : Singleton<UIHero>
         {
             listHero[i].GetComponent<CharacterCard>().initData(HeroesDatabase.Instance.getCurrentHero(i));
         }
+
+
     }
 
+    public void onClickCard(HeroesData data)
+    {
+        txtHeroName.text = data.Name;
+        if (data.Unlock == 1)
+        {
+            btnBuy.gameObject.SetActive(false);
+            btnSelect.gameObject.SetActive(true);
+        }
+        else
+        {
+            btnBuy.gameObject.SetActive(true);
+            btnSelect.gameObject.SetActive(false);
+        }
 
+        foreach (Transform child in imgAvatar.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + data.Id.ToString()) as GameObject);
+        monster.transform.parent = imgAvatar.transform;
+        monster.transform.localPosition = new Vector3(0, 0, 0);
+        monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+    }
 
 }
+
+

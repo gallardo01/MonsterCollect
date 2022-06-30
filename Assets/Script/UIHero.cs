@@ -11,6 +11,8 @@ public class UIHero : Singleton<UIHero>
     public Button btnSelect;
     public Button btnBuy;
     public GameObject imgAvatar;
+    public GameObject bar;
+    public GameObject tabInventory;
 
     public TextMeshProUGUI txtHeroName;
 
@@ -20,7 +22,8 @@ public class UIHero : Singleton<UIHero>
     void Start()
     {
         initUIHero();
-        onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));    
+        onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
+        btnSelect.onClick.AddListener(() => selectHero());
     }
 
 
@@ -30,9 +33,9 @@ public class UIHero : Singleton<UIHero>
         {
             listHero[i].GetComponent<CharacterCard>().initData(HeroesDatabase.Instance.getCurrentHero(i));
         }
-
-
     }
+
+
 
     public void onClickCard(HeroesData data)
     {
@@ -53,10 +56,24 @@ public class UIHero : Singleton<UIHero>
             GameObject.Destroy(child.gameObject);
         }
 
-        GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + data.Id.ToString()) as GameObject);
-        monster.transform.parent = imgAvatar.transform;
+        GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + data.Id.ToString()) as GameObject, imgAvatar.transform);
+        //monster.transform.parent = imgAvatar.transform;
+        //monster.transform.parent = monster.transform;
         monster.transform.localPosition = new Vector3(0, 0, 0);
+        monster.transform.localScale = new Vector3(300, 300, 300);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+    }
+
+    void selectHero()
+    {
+        backToInventory();
+    }
+
+    void backToInventory()
+    {
+        tabInventory.SetActive(true);
+        gameObject.SetActive(false);
+        bar.SetActive(true);
     }
 
 }

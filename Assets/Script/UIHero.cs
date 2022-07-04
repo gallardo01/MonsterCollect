@@ -11,12 +11,21 @@ public class UIHero : Singleton<UIHero>
     public Button btnSelect;
     public Button btnBuy;
     public GameObject imgAvatar;
+
     public GameObject bar;
     public GameObject tabInventory;
 
     public TextMeshProUGUI txtHeroName;
 
+    public TextMeshProUGUI txtAlibity_1;
+    public TextMeshProUGUI txtAlibity_2;
+    public TextMeshProUGUI txtAlibity_3;
+    public TextMeshProUGUI txtAlibity_4;
+    public TextMeshProUGUI txtAlibity_5;
+    public TextMeshProUGUI txtAlibity_6;
+
     public int curHeroID = 10;
+
 
     // Start is called before the first frame update
     void Start()
@@ -40,16 +49,18 @@ public class UIHero : Singleton<UIHero>
     public void onClickCard(HeroesData data)
     {
         txtHeroName.text = data.Name;
-        if (data.Unlock == 1)
-        {
-            btnBuy.gameObject.SetActive(false);
-            btnSelect.gameObject.SetActive(true);
-        }
-        else
-        {
-            btnBuy.gameObject.SetActive(true);
-            btnSelect.gameObject.SetActive(false);
-        }
+
+        txtAlibity_1.text = "Atk: " + data.Atk.ToString();
+        txtAlibity_2.text = "HP: " + data.Hp.ToString();
+        txtAlibity_3.text = "Arm: " + data.Armour.ToString();
+        txtAlibity_4.text = "Spd: " + data.Speed.ToString();
+        txtAlibity_5.text = "Exp: " + data.XpGain.ToString();
+        txtAlibity_6.text = "Gold: " + data.GoldGain.ToString();
+
+        curHeroID = data.Id;
+        btnBuy.onClick.AddListener(() => buyHero(data));
+
+        handleButton(data);
 
         foreach (Transform child in imgAvatar.transform)
         {
@@ -69,11 +80,33 @@ public class UIHero : Singleton<UIHero>
         backToInventory();
     }
 
+
     void backToInventory()
     {
         tabInventory.SetActive(true);
         gameObject.SetActive(false);
         bar.SetActive(true);
+    }
+
+    void handleButton(HeroesData data)
+    {
+        if (data.Unlock == 1)
+        {
+            btnBuy.gameObject.SetActive(false);
+            btnSelect.gameObject.SetActive(true);
+        }
+        else
+        {
+            btnBuy.gameObject.SetActive(true);
+            btnSelect.gameObject.SetActive(false);
+        }
+    }
+
+    void buyHero(HeroesData data)
+    {
+        data.Unlock = 1;
+        initUIHero();
+        handleButton(data);
     }
 
 }

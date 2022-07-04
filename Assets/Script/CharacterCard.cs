@@ -18,9 +18,9 @@ public class CharacterCard : MonoBehaviour
 
     void Start()
     {
-        button.onClick.AddListener(() => onClickElemonData());
+        button.onClick.AddListener(() => onClickHeroData());
     }
-    private void onClickElemonData()
+    private void onClickHeroData()
     {
         UIHero.Instance.onClickCard(heroesData);
     }

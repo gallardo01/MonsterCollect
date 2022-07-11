@@ -24,7 +24,7 @@ public class UIHero : Singleton<UIHero>
     public TextMeshProUGUI txtAlibity_5;
     public TextMeshProUGUI txtAlibity_6;
 
-    public int curHeroID;
+    private int curHeroID;
     public int cacheId;
 
     // Start is called before the first frame update
@@ -32,7 +32,7 @@ public class UIHero : Singleton<UIHero>
     {
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
-            PlayerPrefs.SetInt("HeoresPick", 10);
+            PlayerPrefs.SetInt("HeroesPick", 10);
         }
         else
         {
@@ -71,7 +71,6 @@ public class UIHero : Singleton<UIHero>
         curHeroID = data.Id;
         cacheId = data.Id;
         handleButton(data);
-        PlayerPrefs.SetInt("HeoresPick", curHeroID);
 
         foreach (Transform child in imgAvatar.transform)
         {
@@ -88,6 +87,7 @@ public class UIHero : Singleton<UIHero>
 
     void selectHero()
     {
+        PlayerPrefs.SetInt("HeroesPick", cacheId);
         backToInventory();
     }
 

@@ -12,19 +12,20 @@ public class UIInventory : Singleton<UIInventory>
     public GameObject tabInventory;
     public GameObject imgAvatar;
 
-    private int curHeroId = 20;
+    private int curHeroId;
 
 
     void Start()
     {
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
-            PlayerPrefs.SetInt("HeoresPick", 10);
+            PlayerPrefs.SetInt("HeroesPick", 10);
         }
         else
         {
             curHeroId = PlayerPrefs.GetInt("HeroesPick");
         }
+        Debug.Log(curHeroId);
         initData(curHeroId);
         btnChange.onClick.AddListener(() => swapToHero());
     }
@@ -37,7 +38,6 @@ public class UIInventory : Singleton<UIInventory>
         {
             GameObject.Destroy(child.gameObject);
         }
-        Debug.Log(data.Id);
         GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + data.Id.ToString()) as GameObject, imgAvatar.transform);
         monster.transform.localPosition = new Vector3(0, 0, 0);
         monster.transform.localScale = new Vector3(100, 100, 1);

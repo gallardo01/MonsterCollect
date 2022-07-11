@@ -21,4 +21,8 @@ public class StaticInfo : MonoBehaviour
 
     public static int[] costHeroes = { 0, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000 };
 
+    public static int[] statsItem1 = { 2, 3, 5, 6 };
+    public static int[] statsItem2 = { 1, 3, 5, 6 };
+    public static int[] statsItem3 = { 1, 2, 5, 6 };
+    public static int[] statsItem4 = { 3, 4, 5, 6 };
 }

@@ -10,6 +10,11 @@ using Random = UnityEngine.Random;
 
 public class ItemDatabase : Singleton<ItemDatabase>
 {
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
+
     private List<ItemData> database = new List<ItemData>();
     private List<ItemInventory> inventoryData = new List<ItemInventory>();
     private JsonData itemData;
@@ -24,17 +29,12 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileItemData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
 
-        //addNewItem(30, 100, Random.Range(1, 6));
-        //Save();
-        ////for (int i = 101; i < 131; i++)
-        ////{
-        ////    addNewItem(i, 1, Random.Range(1, 6));
-        ////}
-        //for (int i = 1; i <= 65; i++)
-        //{
-        //    addNewItem(i, 1, Random.Range(1, 6));
-        //}
-        //Save();
+
+        for (int i = 1; i <= 24; i++)
+        {
+            addNewItem(i, 1);
+        }
+        Save();
 
     }
     private void LoadResourceTextfileItemData(string path)
@@ -74,14 +74,13 @@ public class ItemDatabase : Singleton<ItemDatabase>
             newItem.Id = (int)myCurrentJsonData[i]["Id"];
             newItem.Name = myCurrentJsonData[i]["Name"].ToString();
             newItem.Contents = myCurrentJsonData[i]["Contents"].ToString();
-            newItem.Ability = (int)myCurrentJsonData[i]["Ability"];
             newItem.Rarity = (int)myCurrentJsonData[i]["Rarity"];
             newItem.Type = (int)myCurrentJsonData[i]["Type"];
 
             newItem.Slot = (int)myCurrentJsonData[i]["Slot"];
             newItem.ShopId = (int)myCurrentJsonData[i]["ShopId"];
-            newItem.PositionHuman = (int)myCurrentJsonData[i]["PositionHuman"];
             newItem.IsUse = (int)myCurrentJsonData[i]["IsUse"];
+            newItem.Level = (int)myCurrentJsonData[i]["Level"];
 
             newItem.Stats_1 = (int)myCurrentJsonData[i]["Stats_1"];
             newItem.Stats_2 = (int)myCurrentJsonData[i]["Stats_2"];
@@ -98,7 +97,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             newItem.Id = (int)itemData[i]["Id"];
             newItem.Name = itemData[i]["Name"].ToString();
             newItem.Contents = itemData[i]["Contents"].ToString();
-            newItem.Ability = (int)itemData[i]["Ability"];
             newItem.Rarity = (int)itemData[i]["Rarity"];
             newItem.Type = (int)itemData[i]["Type"];
 
@@ -199,26 +197,104 @@ public class ItemDatabase : Singleton<ItemDatabase>
         return inventoryData;
     }
     // common = 1 , uncommon = 2, rare = 3, mythical = 4, arcana = 5
-    public ItemInventory addNewItem(int id, int slot, int rare)
+    public void addNewItem(int id, int slot)
     {
         ItemData rawItem = fetchItemById(id);
-        int index = fetchInventoryByIndex(id);
-        //if (rawItem.Consume == 1 && index >= 0)
-        //{
-        //    inventoryData[index].Slot += slot;
-        //    Save();
-        //    return inventoryData[index];
-        //}
+        // Add consume item
+        if (rawItem.Type == 0)
+        {
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rawItem.Rarity;
+            item.Type = rawItem.Type;
+            item.ShopId = 0;
+            item.IsUse = 0;
+            item.Level = 0;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            int index = fetchInventoryByIndex(id);
+            if (index == -1)
+            {
+                item.Slot = slot;
+                inventoryData.Add(item);
+            }
+            else
+            {
+                inventoryData[index].Slot += slot;
+            }
+            Save();
+        }   
+        else
+        {
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rawItem.Rarity;
+            item.Type = rawItem.Type;
 
-        ItemInventory item = new ItemInventory();
-        item.Id = rawItem.Id;
-        item.Name = rawItem.Name;
-        item.Contents = rawItem.Contents;
-        item.Ability = rawItem.Ability;
-        item.Rarity = rawItem.Rarity;
-        item.Type = rawItem.Type;
+            item.Slot = 1;
+            item.ShopId = Random.Range(0, 999999);
+            item.IsUse = 0;
+            item.Level = 1;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            if (item.Rarity == 1)
+            {
+                int randomValue = getStatsItem(item.Type);
+                int randomStat = Random.Range(1, 3);
+                item.Stats_1 = randomValue * 100 + randomStat;
+            } else if(item.Rarity == 2)
+            {
+                int randomValue = getStatsItem(item.Type);
+                int randomStat = Random.Range(1, 4);
+                item.Stats_1 = randomValue * 100 + randomStat;
+            }
+            else if(item.Rarity == 3)
+            {
+                int randomValue = getStatsItem(item.Type);
+                int randomStat = Random.Range(1, 4);
+                item.Stats_1 = randomValue * 100 + randomStat;
 
-        return item;
+                int randomValue1 = getStatsItem(item.Type);
+                int randomStat1 = Random.Range(1, 4);
+                item.Stats_2 = randomValue1 * 100 + randomStat1;
+            }
+            else
+            {
+                int randomValue = getStatsItem(item.Type);
+                int randomStat = Random.Range(1, 4);
+                item.Stats_1 = randomValue * 100 + randomStat;
+
+                int randomValue1 = getStatsItem(item.Type);
+                int randomStat1 = Random.Range(1, 4);
+                item.Stats_2 = randomValue1 * 100 + randomStat1;
+
+                int randomValue2 = getStatsItem(item.Type);
+                int randomStat2 = Random.Range(1, 4);
+                item.Stats_3 = randomValue2 * 100 + randomStat2;
+            }
+            inventoryData.Add(item);
+        }
+    }
+
+    private int getStatsItem(int type)
+    {
+        if(type == 1)
+        {
+            return StaticInfo.statsItem1[Random.Range(0, 4)];
+        } else if(type == 2)
+        {
+            return StaticInfo.statsItem2[Random.Range(0, 4)];
+        } else if(type == 3)
+        {
+            return StaticInfo.statsItem3[Random.Range(0, 4)];
+        }
+        return StaticInfo.statsItem4[Random.Range(0, 4)];
     }
     public void reduceItemSlot(int shopId, int slot)
     {
@@ -247,58 +323,45 @@ public class ItemDatabase : Singleton<ItemDatabase>
     {
         return inventoryData;
     }
-    public List<ItemInventory> filterAll()
-    {
-        List<ItemInventory> itemList = new List<ItemInventory>();
-        for (int i = 0; i < inventoryData.Count; i++)
-        {
-            if (inventoryData[i].Ability >= 0 && inventoryData[i].Type >= 0)
-            {
-                itemList.Add(inventoryData[i]);
-            }
-        }
-        return itemList;
-    }
 
-    public void equipItemPosition(ItemInventory item)
-    {
-        for (int i = 0; i < inventoryData.Count; i++)
-        {
-            if (inventoryData[i].Ability == -(item.Type))
-            {
-                inventoryData[i].Ability = 0;
-                break;
-            }
-        }
-        int index = fetchInventoryByShopIdIndex(item.ShopId);
-        inventoryData[index].Ability = -item.Type;
-    }
-    public void unequipItem(int shopId)
-    {
-        int index = fetchInventoryByShopIdIndex(shopId);
-        if (index >= 0)
-        {
-            inventoryData[index].Ability = 0;
-        }
-    }
+    //public void equipItemPosition(ItemInventory item)
+    //{
+    //    for (int i = 0; i < inventoryData.Count; i++)
+    //    {
+    //        if (inventoryData[i].Ability == -(item.Type))
+    //        {
+    //            inventoryData[i].Ability = 0;
+    //            break;
+    //        }
+    //    }
+    //    int index = fetchInventoryByShopIdIndex(item.ShopId);
+    //    inventoryData[index].Ability = -item.Type;
+    //}
+    //public void unequipItem(int shopId)
+    //{
+    //    int index = fetchInventoryByShopIdIndex(shopId);
+    //    if (index >= 0)
+    //    {
+    //        inventoryData[index].Ability = 0;
+    //    }
+    //}
 }
 
 public class ItemInventory : ItemData
 {
     public int Slot { get; set; }
     public int ShopId { get; set; }
-    public int PositionHuman { get; set; }
     public int IsUse { get; set; }
     public int Stats_1 { get; set; }
     public int Stats_2 { get; set; }
     public int Stats_3 { get; set; }
+    public int Level { get; set; }
 }
 public class ItemData
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Contents { get; set; }
-    public int Ability { get; set; }
     public int Rarity { get; set; }
     public int Type { get; set; }
 }

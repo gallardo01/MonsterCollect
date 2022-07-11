@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UIInventory : MonoBehaviour
+public class UIInventory : Singleton<UIInventory>
 {
     public Button btnChange;
     public GameObject tabHero;
@@ -12,28 +12,38 @@ public class UIInventory : MonoBehaviour
     public GameObject tabInventory;
     public GameObject imgAvatar;
 
-    public int curHeroId = 1;
+    private int curHeroId = 20;
 
 
     void Start()
     {
+        if (!PlayerPrefs.HasKey("HeroesPick"))
+        {
+            PlayerPrefs.SetInt("HeoresPick", 10);
+        }
+        else
+        {
+            curHeroId = PlayerPrefs.GetInt("HeroesPick");
+        }
         initData(curHeroId);
         btnChange.onClick.AddListener(() => swapToHero());
     }
 
-    void initData(int curHeroId)
+    public void initData(int curHeroId)
     {
-        HeroesData data = HeroesDatabase.Instance.getCurrentHero(curHeroId);
+        HeroesData data = HeroesDatabase.Instance.fetchHeroesData(curHeroId);
 
         foreach (Transform child in imgAvatar.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
+        Debug.Log(data.Id);
         GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + data.Id.ToString()) as GameObject, imgAvatar.transform);
         monster.transform.localPosition = new Vector3(0, 0, 0);
-        monster.transform.localScale = new Vector3(100, 100, 100);
-        monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+        monster.transform.localScale = new Vector3(100, 100, 1);
 
+        //monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+        monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
 
     void swapToHero()

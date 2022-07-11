@@ -43,9 +43,6 @@ public class CharacterCard : MonoBehaviour
             imgHero.color = Color.white;
 
         }
-
-
-
     }
 
 }

@@ -21,6 +21,7 @@ public class UserDatabase : Singleton<UserDatabase>
     {
         firstTimeSetUp();
         LoadResourceTextfileCurrentData();
+        gainMoney(0, 10000);
     }
 
     private void firstTimeSetUp()
@@ -139,6 +140,7 @@ public class UserDatabase : Singleton<UserDatabase>
         }
         database.Gold -= gold;
         database.Diamond -= diamond;
+        UIController.Instance.InitUI();
         Save();
         return true;
     }

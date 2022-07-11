@@ -24,17 +24,30 @@ public class UIHero : Singleton<UIHero>
     public TextMeshProUGUI txtAlibity_5;
     public TextMeshProUGUI txtAlibity_6;
 
-    public int curHeroID = 10;
-
+    public int curHeroID;
+    public int cacheId;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (!PlayerPrefs.HasKey("HeroesPick"))
+        {
+            PlayerPrefs.SetInt("HeoresPick", 10);
+        }
+        else
+        {
+            curHeroID = PlayerPrefs.GetInt("HeroesPick");
+        }
         initUIHero();
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
         btnSelect.onClick.AddListener(() => selectHero());
+        btnBuy.onClick.AddListener(() => buyHero());
     }
 
+    public void updateCacheSelection(int id)
+    {
+        cacheId = id;
+    }
 
     private void initUIHero()
     {
@@ -43,8 +56,6 @@ public class UIHero : Singleton<UIHero>
             listHero[i].GetComponent<CharacterCard>().initData(HeroesDatabase.Instance.getCurrentHero(i));
         }
     }
-
-
 
     public void onClickCard(HeroesData data)
     {
@@ -58,9 +69,9 @@ public class UIHero : Singleton<UIHero>
         txtAlibity_6.text = "Gold: " + data.GoldGain.ToString();
 
         curHeroID = data.Id;
-        btnBuy.onClick.AddListener(() => buyHero(data));
-
+        cacheId = data.Id;
         handleButton(data);
+        PlayerPrefs.SetInt("HeoresPick", curHeroID);
 
         foreach (Transform child in imgAvatar.transform)
         {
@@ -84,8 +95,9 @@ public class UIHero : Singleton<UIHero>
     void backToInventory()
     {
         tabInventory.SetActive(true);
-        gameObject.SetActive(false);
         bar.SetActive(true);
+        UIInventory.Instance.initData(curHeroID);
+        gameObject.SetActive(false);
     }
 
     void handleButton(HeroesData data)
@@ -102,11 +114,17 @@ public class UIHero : Singleton<UIHero>
         }
     }
 
-    void buyHero(HeroesData data)
+    void buyHero()
     {
-        data.Unlock = 1;
-        initUIHero();
-        handleButton(data);
+        if (HeroesDatabase.Instance.buyHeroes(cacheId))
+        {
+            HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
+            initUIHero();
+            handleButton(data);
+        } else
+        {
+            // khong du tien
+        }
     }
 
 }

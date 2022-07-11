@@ -72,6 +72,35 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         return null;
     }
 
+    public int fetchHeroesIndex(int id)
+    {
+        for (int i = 0; i < database.Count; i++)
+        {
+            if (database[i].Id == id)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public bool buyHeroes(int id)
+    {
+        int cost = StaticInfo.costHeroes[id / 10];
+        if(UserDatabase.Instance.reduceMoney(0, cost) == true)
+        {
+            unlockHero(id);
+            Save();
+            return true;
+        }
+        return false;
+    }
+
+    private void unlockHero(int id)
+    {
+        database[fetchHeroesIndex(id)].Unlock = 1;
+    }
+
     public HeroesData getCurrentHero(int id)
     {
         for (int i = 0; i < database.Count; i++)
@@ -79,7 +108,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             if (database[i].Id/10 == id && database[i].Unlock == 1)
             {
                 return database[i];
-                
             }
         }
         return fetchHeroesData(id*10);

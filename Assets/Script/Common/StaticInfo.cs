@@ -19,4 +19,6 @@ public class StaticInfo : MonoBehaviour
         "10.Map Kien 10",
     };
 
+    public static int[] costHeroes = { 0, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000 };
+
 }

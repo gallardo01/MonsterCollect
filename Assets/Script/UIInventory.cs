@@ -12,7 +12,7 @@ public class UIInventory : Singleton<UIInventory>
     public GameObject tabInventory;
     public GameObject imgAvatar;
 
-    private int curHeroId;
+    private int curHeroId = 10;
 
 
     void Start()

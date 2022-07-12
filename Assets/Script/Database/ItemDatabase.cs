@@ -30,11 +30,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileCurrentData(myFileName);
 
 
-        for (int i = 1; i <= 24; i++)
-        {
-            addNewItem(i, 1);
-        }
-        Save();
+        //for (int i = 1; i <= 24; i++)
+        //{
+        //    addNewItem(i, 1);
+        //}
+        //Save();
 
     }
     private void LoadResourceTextfileItemData(string path)
@@ -280,6 +280,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
             inventoryData.Add(item);
         }
+        Save();
     }
 
     private int getStatsItem(int type)
@@ -359,7 +360,7 @@ public class ItemInventory : ItemData
 }
 public class ItemData
 {
-    public int Id { get; set; }
+    public int Id { get; set; } 
     public string Name { get; set; }
     public string Contents { get; set; }
     public int Rarity { get; set; }

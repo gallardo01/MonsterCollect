@@ -10,7 +10,10 @@ public class UIHero : Singleton<UIHero>
     public GameObject[] listHero;
     public Button btnSelect;
     public Button btnBuy;
+    public Button btnEvolve;
     public GameObject imgAvatar;
+
+    public RectTransform pnEvolve;
 
     public GameObject bar;
     public GameObject tabInventory;
@@ -42,6 +45,7 @@ public class UIHero : Singleton<UIHero>
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
         btnSelect.onClick.AddListener(() => selectHero());
         btnBuy.onClick.AddListener(() => buyHero());
+        btnEvolve.onClick.AddListener(() => openEvolvePanel());
     }
 
     public void updateCacheSelection(int id)
@@ -127,6 +131,11 @@ public class UIHero : Singleton<UIHero>
         }
     }
 
+    void openEvolvePanel()
+    {
+        imgAvatar.SetActive(false);
+        pnEvolve.DOAnchorPos(new Vector2(0, -100), 0.25f);
+    }
 }
 
 

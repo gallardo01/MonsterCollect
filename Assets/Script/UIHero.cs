@@ -30,6 +30,12 @@ public class UIHero : Singleton<UIHero>
     private int curHeroID;
     public int cacheId;
 
+    public Button panelBtnClose;
+    public List<GameObject> listHeroEvolve;
+    public List<GameObject> listHeroAvatar;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +52,7 @@ public class UIHero : Singleton<UIHero>
         btnSelect.onClick.AddListener(() => selectHero());
         btnBuy.onClick.AddListener(() => buyHero());
         btnEvolve.onClick.AddListener(() => openEvolvePanel());
+        panelBtnClose.onClick.AddListener(() => closeEvolvePanel());
     }
 
     public void updateCacheSelection(int id)
@@ -125,7 +132,8 @@ public class UIHero : Singleton<UIHero>
             HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
             initUIHero();
             handleButton(data);
-        } else
+        }
+        else
         {
             // khong du tien
         }
@@ -134,8 +142,41 @@ public class UIHero : Singleton<UIHero>
     void openEvolvePanel()
     {
         imgAvatar.SetActive(false);
-        pnEvolve.DOAnchorPos(new Vector2(0, -100), 0.25f);
+        pnEvolve.DOAnchorPos(new Vector2(0, 0), 0.25f);
+
+        initDataEvolve();
+    }
+
+    void initDataEvolve()
+    {
+         List<HeroesData> listhero =  HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
+
+        for (int i = 0; i < 5; i++)
+        {
+            listHeroEvolve[i].SetActive(false);
+        }
+        for (int i = 0; i < listhero.Count; i++)
+        {
+            listHeroEvolve[i].SetActive(true);
+            foreach (Transform child in listHeroAvatar[i].transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+
+            GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + listhero[i].Id.ToString()) as GameObject, listHeroAvatar[i].transform);
+            monster.transform.localPosition = new Vector3(0, 0, 0);
+            monster.transform.localScale = new Vector3(300, 300, 300);
+            monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+
+        }
+
+    }
+    void closeEvolvePanel()
+    {
+        imgAvatar.SetActive(true);
+        pnEvolve.DOAnchorPos(new Vector2(0, 3000), 0.25f);
     }
 }
+
 
 

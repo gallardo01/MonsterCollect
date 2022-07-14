@@ -84,6 +84,19 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         return 0;
     }
 
+    public List<HeroesData> fetchAllEvolveHero(int data)
+    {
+        List<HeroesData> listHero = new List<HeroesData> ();
+        for (int i = 0; i < database.Count; i++)
+        {
+            if (database[i].Id / 10 == data /10)
+            {
+                listHero.Add(database[i]);
+            }
+        }
+        return listHero;
+    }
+
     public bool buyHeroes(int id)
     {
         int cost = StaticInfo.costHeroes[id / 10];

@@ -92,7 +92,7 @@ public class UIHero : Singleton<UIHero>
         //monster.transform.parent = imgAvatar.transform;
         //monster.transform.parent = monster.transform;
         monster.transform.localPosition = new Vector3(0, 0, 0);
-        monster.transform.localScale = new Vector3(300, 300, 300);
+        monster.transform.localScale = new Vector3(monster.transform.localScale.x * 300, monster.transform.localScale.y * 300, monster.transform.localScale.z * 300);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
 
@@ -105,6 +105,7 @@ public class UIHero : Singleton<UIHero>
 
     void backToInventory()
     {
+        UIController.Instance.enableSwipe = true;
         tabInventory.SetActive(true);
         bar.SetActive(true);
         UIInventory.Instance.initData(curHeroID);
@@ -165,7 +166,7 @@ public class UIHero : Singleton<UIHero>
 
             GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + listhero[i].Id.ToString()) as GameObject, listHeroAvatar[i].transform);
             monster.transform.localPosition = new Vector3(0, 0, 0);
-            monster.transform.localScale = new Vector3(300, 300, 300);
+            monster.transform.localScale = new Vector3(monster.transform.localScale.x *300, monster.transform.localScale.y * 300, monster.transform.localScale.z *300);
             monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
 
         }

@@ -48,6 +48,7 @@ public class UIInventory : Singleton<UIInventory>
 
     void swapToHero()
     {
+        UIController.Instance.enableSwipe = false;
         tabHero.SetActive(true);
         tabInventory.SetActive(false);
         bar.SetActive(false);

@@ -17,6 +17,7 @@ public class GameController : Singleton<GameController>
     public GameObject expBar;
     public TextMeshProUGUI expText;
 
+
     // Start is called before the first frame update
     void Start()
     {

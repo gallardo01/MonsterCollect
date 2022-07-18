@@ -28,8 +28,12 @@ public class UIController : Singleton<UIController>
 	public GameObject[] hightlight;
 	private int currentSite = 3;
 
+	public bool enableSwipe;
+
+
 	void Start()
 	{
+		enableSwipe = true;
 		InitUI();
 		mainMenuButton();
 		bar.sizeDelta = new Vector2(0, 300);
@@ -99,32 +103,40 @@ public class UIController : Singleton<UIController>
 
 	public void detectSwipe(int direction)
     {
-		// 1 = left, 2 = right
-		if(direction == 1)
+		if(enableSwipe)
         {
-			if(currentSite > 1)
-            {
-				currentSite--;
-            }
-        } else
-        {
-			if(currentSite < 4)
-            {
-				currentSite++;
-            }
-        }
-		if(currentSite == 1)
-        {
-			shopButton();
-		} else if(currentSite == 2)
-        {
-			heoresButton();
-		} else if(currentSite == 3)
-        {
-			mainMenuButton();
-		} else
-        {
-			upgradeButton();
+			// 1 = left, 2 = right
+			if (direction == 1)
+			{
+				if (currentSite > 1)
+				{
+					currentSite--;
+				}
+			}
+			else
+			{
+				if (currentSite < 4)
+				{
+					currentSite++;
+				}
+			}
+			if (currentSite == 1)
+			{
+				shopButton();
+			}
+			else if (currentSite == 2)
+			{
+				heoresButton();
+			}
+			else if (currentSite == 3)
+			{
+				mainMenuButton();
+			}
+			else
+			{
+				upgradeButton();
+			}
 		}
+		
     }
 }

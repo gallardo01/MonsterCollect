@@ -174,8 +174,18 @@ public class UIHero : Singleton<UIHero>
     }
     void closeEvolvePanel()
     {
-        imgAvatar.SetActive(true);
         pnEvolve.DOAnchorPos(new Vector2(0, 3000), 0.25f);
+        StartCoroutine(waitToActiveAvatar());
+
+    }
+
+    IEnumerator waitToActiveAvatar()
+    {
+
+        yield return new WaitForSeconds(0.15f);
+        imgAvatar.SetActive(true);
+
+
     }
 }
 

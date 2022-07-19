@@ -16,49 +16,94 @@ public class GameController : Singleton<GameController>
 
     public GameObject expBar;
     public TextMeshProUGUI expText;
+    public TextMeshProUGUI levelText;
+
+    private int exp = 0;
+    private int playerLevel = 1;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        addEnemy();
+        playerLevel = PlayerController.Instance.getLevel();
+        for (int i = 0; i < 13; i++)
+        {
+            addEnemy();
+        }
         //btnQuit.onClick.AddListener(quitGame);
-    }
-
-    public void gainExp()
-    {
-
     }
 
     public void addEnemy()
     {
-        int playerLv = PlayerPrefs.GetInt("Map")*10;
-        for (int i = 0; i < 7; i++)
+        int playerLv = PlayerController.Instance.getLevel();
+        int chance = Random.Range(1, 14);
+        int enemyId = 0;
+        if (chance < 11)
         {
-            int enemyId = playerLv + 1;
-            string enemyType = "Enemy" + enemyId;
-            GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
-            enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1, 17), enemyId);
+            enemyId = playerLv;
         }
-        for (int i = 2; i < 5; i++)
+        else
         {
-            int enemyId = playerLv + i;
-            string enemyType = "Enemy" + enemyId;
-            GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
-            enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1, 17), enemyId);
+            enemyId = playerLv + chance % 10;
+            if(enemyId >= (playerLv + 10))
+            {
+                enemyId = playerLv + 9;
+            }
+        }
+        string enemyType = "Enemy" + enemyId;
+        GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
+        enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1, 17), enemyId);
+    }
+
+    public IEnumerator respawnEnemy()
+    {
+        yield return new WaitForSeconds(2f);
+        int chance = Random.Range(1, 4);
+        if(chance == 1)
+        {
+            addEnemy();
+        } else if(chance == 2)
+        {
+            addEnemy();
+            yield return new WaitForSeconds(1f);
+            addEnemy();
         }
     }
 
-    //public IEnumerator respawnEnemy()
-    //{
+    public void initEatMonster(int lv)
+    {
+        // 10 12 14 16 18 20 22 24 25
+        exp += (lv % 10 * 1000) / (8 + lv * 3 / 2);
+        if (exp >= playerLevel % 10 * 1000)
+        {
+            playerLevel++;
+            exp = 0;
+            updateProgressBar(true);
+        }
+        else
+        {
+            updateProgressBar(false);
+        }
+        StartCoroutine(respawnEnemy());
+    }
 
-    //}
+    private void updateProgressBar(bool levelUp)
+    {
+        float progres = (float) exp / (float) (playerLevel % 10 * 1000);
+        Debug.Log(exp);
+        expBar.GetComponent<Slider>().value = progres;
+        expText.text = exp + "/" + (playerLevel % 10 * 1000);
+        if (levelUp)
+        {
+            PlayerController.Instance.gainLv(playerLevel);
+        }
+    }
 
     public void addParticle(GameObject obj, int index)
     {
         string par = "Particle" + index;
         GameObject particle = EasyObjectPool.instance.GetObjectFromPool(par, obj.transform.position, obj.transform.rotation);
-        if(index == 2)
+        if (index == 2)
         {
             particle.transform.SetParent(obj.transform);
         }

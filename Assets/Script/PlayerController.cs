@@ -35,6 +35,7 @@ public class PlayerController : Singleton<PlayerController>
         boundX = Camera.main.ScreenToWorldPoint(pos).x;
         boundY = Camera.main.ScreenToWorldPoint(pos).y;
         initStart();
+        levelText.text = playerLevel.ToString();
     }
 
     public void initStart()
@@ -50,15 +51,10 @@ public class PlayerController : Singleton<PlayerController>
         bonusGold = data.GoldGain;
     }
 
-    private void initEatMonster(int lv)
+    public void gainLv(int lv)
     {
-        // 10 12 14 16 18 20 22 24 25
-        exp += (lv % 10 * 1000) / (8 + lv*2); 
-    }
-
-    private void initHurt(int lv)
-    {
-
+        playerLevel = lv;
+        levelText.text = playerLevel.ToString();
     }
 
     public int getLevel()
@@ -169,7 +165,7 @@ public class PlayerController : Singleton<PlayerController>
             if (playerLevel >= enemyLv) // kill
             {
                 runAnimation(3);
-                initEatMonster(collision.gameObject.GetComponent<MonsterController>().getLevel());
+                GameController.Instance.initEatMonster(collision.gameObject.GetComponent<MonsterController>().getLevel());
                 GameController.Instance.addParticle(collision.gameObject, 1);
                 collision.gameObject.GetComponent<MonsterController>().setAction(2);
             } else if(canHurt)

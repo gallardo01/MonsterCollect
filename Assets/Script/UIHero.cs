@@ -96,14 +96,14 @@ public class UIHero : Singleton<UIHero>
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
 
-    void selectHero()
+    public void selectHero()
     {
         PlayerPrefs.SetInt("HeroesPick", cacheId);
         backToInventory();
     }
 
 
-    void backToInventory()
+    public void backToInventory()
     {
         UIController.Instance.enableSwipe = true;
         tabInventory.SetActive(true);
@@ -150,7 +150,7 @@ public class UIHero : Singleton<UIHero>
 
     void initDataEvolve()
     {
-         List<HeroesData> listhero =  HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
+        List<HeroesData> listhero =  HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
 
         for (int i = 0; i < 5; i++)
         {
@@ -172,7 +172,7 @@ public class UIHero : Singleton<UIHero>
         }
 
     }
-    void closeEvolvePanel()
+    public void closeEvolvePanel()
     {
         pnEvolve.DOAnchorPos(new Vector2(0, 3000), 0.25f);
         StartCoroutine(waitToActiveAvatar());

@@ -25,4 +25,8 @@ public class StaticInfo : MonoBehaviour
     public static int[] statsItem2 = { 1, 3, 5, 6 };
     public static int[] statsItem3 = { 1, 2, 5, 6 };
     public static int[] statsItem4 = { 3, 4, 5, 6 };
+
+    public static int[,] evolveLevel = {{ 5, 5, 0, 1000 }, { 5, 5, 2, 3000 }, { 10, 5, 3, 5000 }, { 10, 10, 10, 10000 } };
+
+
 }

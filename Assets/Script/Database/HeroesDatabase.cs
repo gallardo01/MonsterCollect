@@ -45,6 +45,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     }
     private void ConstructItemDatabase()
     {
+        Debug.Log(userData.Count);
         for (int i = 0; i < userData.Count; i++)
         {
             HeroesData newItem = new HeroesData();
@@ -96,6 +97,16 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         return listHero;
     }
+
+    public void evolveHero(int id )
+    {
+        if (fetchHeroesData(id+1) != null)
+        {
+            unlockHero(id + 1);
+            Save();
+        }
+    }
+
 
     public bool buyHeroes(int id)
     {

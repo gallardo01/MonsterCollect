@@ -30,9 +30,9 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileCurrentData(myFileName);
 
 
-        //for (int i = 1; i <= 24; i++)
+        //for (int i = 1; i <= 8; i++)
         //{
-        //    addNewItem(i, 1);
+        //    addNewItem(i, 10);
         //}
         //Save();
 
@@ -50,6 +50,12 @@ public class ItemDatabase : Singleton<ItemDatabase>
         //Load saved Json
         if (!File.Exists(tempPath))
         {
+            for (int i = 1; i < 9; i++)
+            {
+                addNewItem(i, 0);
+
+            }
+            Save();
             return;
         }
         byte[] jsonByte = null;
@@ -313,13 +319,23 @@ public class ItemDatabase : Singleton<ItemDatabase>
         if (index >= 0)
         {
             inventoryData[index].Slot -= slot;
-            if (inventoryData[index].Slot <= 0)
-            {
-                inventoryData.RemoveAt(index);
-            }
+            //if (inventoryData[index].Slot <= 0)
+            //{
+            //    inventoryData.RemoveAt(index);
+            //}
             Save();
         }
     }
+
+    public bool canReduceItemSlotEvol(int id, int slot)
+    {
+        if (fetchInventoryById(id).Slot >= slot)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public List<ItemInventory> getAllData()
     {
         return inventoryData;

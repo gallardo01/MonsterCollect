@@ -31,8 +31,13 @@ public class UIHero : Singleton<UIHero>
     public int cacheId;
 
     public Button panelBtnClose;
+    public Button panelBtnEvolve;
     public List<GameObject> listHeroEvolve;
     public List<GameObject> listHeroAvatar;
+    public List<GameObject> listHeroBackGlow;
+    public List<TextMeshProUGUI> textEvolRequire;
+    int currentEvol = 0;
+
 
 
 
@@ -53,6 +58,7 @@ public class UIHero : Singleton<UIHero>
         btnBuy.onClick.AddListener(() => buyHero());
         btnEvolve.onClick.AddListener(() => openEvolvePanel());
         panelBtnClose.onClick.AddListener(() => closeEvolvePanel());
+        panelBtnEvolve.onClick.AddListener(() => evolutionHero());
     }
 
     public void updateCacheSelection(int id)
@@ -155,10 +161,13 @@ public class UIHero : Singleton<UIHero>
         for (int i = 0; i < 5; i++)
         {
             listHeroEvolve[i].SetActive(false);
+
         }
         for (int i = 0; i < listhero.Count; i++)
         {
             listHeroEvolve[i].SetActive(true);
+            listHeroBackGlow[i].SetActive(false);
+
             foreach (Transform child in listHeroAvatar[i].transform)
             {
                 GameObject.Destroy(child.gameObject);
@@ -170,8 +179,62 @@ public class UIHero : Singleton<UIHero>
             monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
 
         }
+        for (int i = listhero.Count-1; i >=0 ; i--)
+        {
+            if (listhero[i].Unlock == 1)
+            {
+                listHeroBackGlow[i].SetActive(true);
+                currentEvol = i;
+                break;
+            }
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
+        }
+        textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol,3].ToString());
+
 
     }
+
+    void evolutionHero()
+    {
+        if (canEvolve())
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                ItemDatabase.Instance.reduceItemSlotById(i + 5, StaticInfo.evolveLevel[currentEvol, i]);
+            }
+            UserDatabase.Instance.reduceMoney(StaticInfo.evolveLevel[currentEvol, 3], 0);
+
+            HeroesDatabase.Instance.evolveHero(curHeroID);
+        }
+        else
+        {
+            Debug.Log("khong co du do");
+
+        }
+    }
+
+    bool canEvolve()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            //if(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
+            if(!ItemDatabase.Instance.canReduceItemSlotEvol(i+5, StaticInfo.evolveLevel[currentEvol, i]))
+            {
+                return false;
+            }
+        }
+        UserData database = UserDatabase.Instance.getUserData();
+        if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void closeEvolvePanel()
     {
         pnEvolve.DOAnchorPos(new Vector2(0, 3000), 0.25f);

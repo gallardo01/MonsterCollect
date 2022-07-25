@@ -21,7 +21,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     void Start()
     {
         firstTimeSetUp();
-        LoadResourceTextfileCurrentData();
     }
 
     private void firstTimeSetUp()
@@ -40,12 +39,13 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             LoadResourceTextfileItemData(fileName);
             ConstructItemDatabase();
             Save();
+        } else
+        {
+            LoadResourceTextfileCurrentData();
         }
-
     }
     private void ConstructItemDatabase()
     {
-        Debug.Log(userData.Count);
         for (int i = 0; i < userData.Count; i++)
         {
             HeroesData newItem = new HeroesData();
@@ -87,14 +87,16 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
     public List<HeroesData> fetchAllEvolveHero(int data)
     {
-        List<HeroesData> listHero = new List<HeroesData> ();
+        List<HeroesData> listHero = new List<HeroesData>();
+        Debug.Log(database.Count);
         for (int i = 0; i < database.Count; i++)
         {
-            if (database[i].Id / 10 == data /10)
+            if (database[i].Id /10 == data/10)
             {
                 listHero.Add(database[i]);
             }
         }
+        Debug.Log("List :" + listHero.Count);
         return listHero;
     }
 

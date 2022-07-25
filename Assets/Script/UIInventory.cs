@@ -25,7 +25,6 @@ public class UIInventory : Singleton<UIInventory>
         {
             curHeroId = PlayerPrefs.GetInt("HeroesPick");
         }
-        Debug.Log(curHeroId);
         initData(curHeroId);
         btnChange.onClick.AddListener(() => swapToHero());
     }

@@ -28,5 +28,6 @@ public class StaticInfo : MonoBehaviour
 
     public static int[,] evolveLevel = {{ 5, 5, 0, 1000 }, { 5, 5, 2, 3000 }, { 10, 5, 3, 5000 }, { 10, 10, 10, 10000 } };
 
+    public static int[] evolLocation = {-600, -1200, -2000,-2800,-3600 };
 
 }

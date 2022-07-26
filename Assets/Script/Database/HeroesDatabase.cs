@@ -96,7 +96,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
                 listHero.Add(database[i]);
             }
         }
-        Debug.Log("List :" + listHero.Count);
+        //Debug.Log("List :" + listHero.Count);
         return listHero;
     }
 

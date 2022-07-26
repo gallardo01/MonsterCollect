@@ -32,9 +32,11 @@ public class UIHero : Singleton<UIHero>
 
     public Button panelBtnClose;
     public Button panelBtnEvolve;
+    public GameObject scrollview_evol;
     public List<GameObject> listHeroEvolve;
     public List<GameObject> listHeroAvatar;
     public List<GameObject> listHeroBackGlow;
+    public GameObject EvolRequire;
     public List<TextMeshProUGUI> textEvolRequire;
     int currentEvol = 0;
 
@@ -158,6 +160,15 @@ public class UIHero : Singleton<UIHero>
     {
         List<HeroesData> listhero =  HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
 
+        //if (currentEvol >= listhero.Count - 1)
+        //{
+        //    EvolRequire.SetActive(false);
+        //}
+        //else
+        //{
+        //    EvolRequire.SetActive(true);
+        //}
+
         for (int i = 0; i < 5; i++)
         {
             listHeroEvolve[i].SetActive(false);
@@ -189,6 +200,9 @@ public class UIHero : Singleton<UIHero>
             }
         }
 
+        Debug.Log("cur evol "+ currentEvol);
+        scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol], 749, 0);
+
         for (int i = 0; i < 3; i++)
         {
             textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
@@ -209,6 +223,11 @@ public class UIHero : Singleton<UIHero>
             UserDatabase.Instance.reduceMoney(StaticInfo.evolveLevel[currentEvol, 3], 0);
 
             HeroesDatabase.Instance.evolveHero(curHeroID);
+            Debug.Log("cur Hero ID " + curHeroID);
+
+            curHeroID++;
+            PlayerPrefs.SetInt("HeroesPick", curHeroID);
+            initDataEvolve();
         }
         else
         {
@@ -219,6 +238,11 @@ public class UIHero : Singleton<UIHero>
 
     bool canEvolve()
     {
+        List<HeroesData> listhero = HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
+        if (currentEvol >= listhero.Count-1)
+        {
+            return false;
+        }
         for (int i = 0; i < 3; i++)
         {
             //if(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
@@ -247,7 +271,7 @@ public class UIHero : Singleton<UIHero>
 
         yield return new WaitForSeconds(0.15f);
         imgAvatar.SetActive(true);
-
+        onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
 
     }
 }

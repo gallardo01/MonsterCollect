@@ -32,7 +32,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
         //for (int i = 1; i <= 8; i++)
         //{
-        //    addNewItem(i, 10);
+        //    addNewItem(i, 900);
         //}
         //Save();
 

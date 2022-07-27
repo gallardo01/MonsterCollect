@@ -36,7 +36,7 @@ public class GameController : Singleton<GameController>
     public void addEnemy()
     {
         int playerLv = PlayerController.Instance.getLevel();
-        int chance = Random.Range(1, 14);
+        int chance = Random.Range(2, 14);
         int enemyId = 0;
         if (chance < 11)
         {
@@ -45,9 +45,9 @@ public class GameController : Singleton<GameController>
         else
         {
             enemyId = playerLv + chance % 10;
-            if(enemyId >= (playerLv + 10))
+            if(enemyId > ((playerLv - 1)/10 + 9))
             {
-                enemyId = playerLv + 9;
+                enemyId = ((playerLv - 1) / 10) + 9;
             }
         }
         string enemyType = "Enemy" + enemyId;
@@ -73,7 +73,7 @@ public class GameController : Singleton<GameController>
     public void initEatMonster(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        exp += (lv % 10 * 1000) / (8 + lv * 3 / 2);
+        exp += ((lv % 10) + 2)* 50;
         if (exp >= playerLevel % 10 * 1000)
         {
             playerLevel++;
@@ -87,16 +87,31 @@ public class GameController : Singleton<GameController>
         StartCoroutine(respawnEnemy());
     }
 
+    private void updateColorText()
+    {
+        GameObject[] gos;
+        gos = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject go in gos)
+        {
+            go.GetComponent<MonsterController>().setColor();
+        }
+    }
+
     private void updateProgressBar(bool levelUp)
     {
         float progres = (float) exp / (float) (playerLevel % 10 * 1000);
-        Debug.Log(exp);
         expBar.GetComponent<Slider>().value = progres;
         expText.text = exp + "/" + (playerLevel % 10 * 1000);
         if (levelUp)
         {
             PlayerController.Instance.gainLv(playerLevel);
+            updateColorText();
         }
+    }
+
+    public int getLevel()
+    {
+        return playerLevel;
     }
 
     public void addParticle(GameObject obj, int index)

@@ -13,6 +13,7 @@ public class MonsterController : MonoBehaviour
     private int waypointIndex = 0;
     private bool isMove = true;
     private int facingRight = 1;
+    private int monsterLv = 1;
     
     void Start()
     {
@@ -68,7 +69,6 @@ public class MonsterController : MonoBehaviour
         }
 
     }
-
     IEnumerator idleBehavior()
     {
         yield return new WaitForSeconds(2f);
@@ -110,23 +110,25 @@ public class MonsterController : MonoBehaviour
 
     private void setText(int lv)
     {
+        monsterLv = lv;
         level.text = "Lv." + lv.ToString();
-        if(lv%10 < 3 && lv != 0)
+        setColor();
+    }
+
+    public void setColor()
+    {
+        int playerLv = PlayerController.Instance.getLevel();
+        if (monsterLv <= playerLv)
         {
-            level.color = Color.white;  
-        } else if(lv % 10 < 5)
-        {
-            level.color = Color.cyan;
+            level.color = Color.white;
         }
-        else if(lv % 10 < 7)
+        else if(monsterLv <= playerLv+1)
         {
             level.color = Color.green;
-        }
-        else if(lv % 10 <= 9)
+        } else if(monsterLv <= playerLv+2)
         {
             level.color = Color.yellow;
-        }
-        else
+        } else
         {
             level.color = Color.red;
         }

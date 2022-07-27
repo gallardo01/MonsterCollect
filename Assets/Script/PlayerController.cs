@@ -31,7 +31,7 @@ public class PlayerController : Singleton<PlayerController>
     void Start()
     {
         Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
-        playerLevel = PlayerPrefs.GetInt("Map") * 10 + 1;
+        playerLevel = (PlayerPrefs.GetInt("Map") - 1)* 10 + 1;
         boundX = Camera.main.ScreenToWorldPoint(pos).x;
         boundY = Camera.main.ScreenToWorldPoint(pos).y;
         initStart();

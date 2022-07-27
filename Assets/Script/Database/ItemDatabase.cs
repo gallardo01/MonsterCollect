@@ -30,9 +30,10 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileCurrentData(myFileName);
 
 
-        //for (int i = 1; i <= 8; i++)
+
+        //for (int i = 9; i <= 24; i++)
         //{
-        //    addNewItem(i, 900);
+        //    addNewItem(12, 1);
         //}
         //Save();
 
@@ -334,6 +335,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
             return true;
         }
         return false;
+    }
+    public void upgradeItem(int shopId)
+    {
+        var item = fetchInventoryByShopIdIndex(shopId);
+        if (inventoryData[item].Level<10)
+        {
+            inventoryData[item].Level++;
+        }
+        Save();
     }
 
     public List<ItemInventory> getAllData()

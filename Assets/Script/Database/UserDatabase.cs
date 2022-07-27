@@ -21,7 +21,7 @@ public class UserDatabase : Singleton<UserDatabase>
     {
         firstTimeSetUp();
         LoadResourceTextfileCurrentData();
-        gainMoney(0, 10000);
+        gainMoney(50000, 10000);
     }
 
     private void firstTimeSetUp()

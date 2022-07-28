@@ -8,7 +8,8 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] GameObject body;
     [SerializeField] TextMeshPro levelText;
     [SerializeField] GameObject bar;
-    
+    [SerializeField] GameObject particle;
+
     private int id;
     private int hp = 1000;
     private float speed = 100;
@@ -27,6 +28,7 @@ public class PlayerController : Singleton<PlayerController>
     private bool canHurt = true;
     private int exp = 0;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +38,11 @@ public class PlayerController : Singleton<PlayerController>
         boundY = Camera.main.ScreenToWorldPoint(pos).y;
         initStart();
         levelText.text = playerLevel.ToString();
+    }
+
+    public Transform getPosition()
+    {
+        return gameObject.transform;
     }
 
     public void initStart()
@@ -55,8 +62,15 @@ public class PlayerController : Singleton<PlayerController>
     {
         playerLevel = lv;
         levelText.text = playerLevel.ToString();
+        StartCoroutine(runVFX());
     }
 
+    IEnumerator runVFX()
+    {
+        particle.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        particle.SetActive(false);
+    }
     public int getLevel()
     {
         return playerLevel;
@@ -172,7 +186,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 canHurt = false;
                 StartCoroutine(setHurt());
-                GameController.Instance.addParticle(gameObject, 2);
+                //GameController.Instance.addParticle(gameObject, 2);
                 collision.gameObject.GetComponent<MonsterController>().setAction(1);
             }
 
@@ -180,6 +194,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     IEnumerator setHurt()
     {
+        body.GetComponent<Animator>().SetTrigger("hurt");
         yield return new WaitForSeconds(1f);
         canHurt = true;
     }

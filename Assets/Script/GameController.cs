@@ -17,6 +17,7 @@ public class GameController : Singleton<GameController>
     public GameObject expBar;
     public TextMeshProUGUI expText;
     public TextMeshProUGUI levelText;
+    public GameObject bossController;
 
     private int exp = 0;
     private int playerLevel = 1;
@@ -30,7 +31,17 @@ public class GameController : Singleton<GameController>
         {
             addEnemy();
         }
+        addBoss();
+        levelText.text = playerLevel.ToString();
         //btnQuit.onClick.AddListener(quitGame);
+    }
+
+    private void addBoss()
+    {
+        string enemyType = "No." + (playerLevel/10 + 10);
+        GameObject boss = Instantiate(Resources.Load("Prefabs/Pokemon/" + enemyType) as GameObject, bossController.transform);
+        boss.transform.localPosition = new Vector3(0, 0, 0);
+        boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
 
     public void addEnemy()
@@ -104,6 +115,7 @@ public class GameController : Singleton<GameController>
         expText.text = exp + "/" + (playerLevel % 10 * 1000);
         if (levelUp)
         {
+            levelText.text = playerLevel.ToString();
             PlayerController.Instance.gainLv(playerLevel);
             updateColorText();
         }

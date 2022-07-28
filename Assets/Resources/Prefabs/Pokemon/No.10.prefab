@@ -691,12 +691,12 @@ GameObject:
   - component: {fileID: 6524686488300311580}
   - component: {fileID: 2455025890026491223}
   - component: {fileID: 1288238088554370339}
-  - component: {fileID: 7224078045323996511}
   - component: {fileID: -5311074203067911817}
   - component: {fileID: 450017111380081176}
+  - component: {fileID: 2471931367934901004}
   m_Layer: 0
   m_Name: No.10
-  m_TagString: Enemy
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -710,7 +710,7 @@ Transform:
   m_GameObject: {fileID: 5362573311696489332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.627, y: -0.034, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children:
   - {fileID: 9075298838937299970}
   - {fileID: 8612014127491218481}
@@ -771,21 +771,6 @@ MonoBehaviour:
   - Layer_2
   - Layer_1
   dirty: 0
---- !u!114 &7224078045323996511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5362573311696489332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa363a857d450304ead3f0fe6b4d7f24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 10
-  level: {fileID: 1456656242844560921}
-  speed: 150
 --- !u!50 &-5311074203067911817
 Rigidbody2D:
   serializedVersion: 4
@@ -833,6 +818,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.452569}
   m_EdgeRadius: 0
+--- !u!114 &2471931367934901004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5362573311696489332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11206a91933582344ad0bca7b74e6f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5426766855227030697
 GameObject:
   m_ObjectHideFlags: 0

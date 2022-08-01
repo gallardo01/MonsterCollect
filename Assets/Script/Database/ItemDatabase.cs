@@ -31,9 +31,9 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
 
 
-        //for (int i = 9; i <= 24; i++)
+        //for (int i = 9; i <= 36; i++)
         //{
-        //    addNewItem(12, 1);
+        //    addNewItem(i, 1);
         //}
         //Save();
 
@@ -314,6 +314,18 @@ public class ItemDatabase : Singleton<ItemDatabase>
         }
         Save();
     }
+    public void addItemSlotbyShopId(int shopId, int slot)
+    {
+        int index = fetchInventoryByShopIdIndex(shopId);
+        inventoryData[index].Slot += slot;
+        Save();
+    }
+    public void addItemSlotById(int id, int slot)
+    {
+        int index = fetchInventoryByIndex(id);
+        inventoryData[index].Slot += slot;
+        Save();
+    }
     public void reduceItemSlotById(int id, int slot)
     {
         int index = fetchInventoryByIndex(id);
@@ -336,6 +348,20 @@ public class ItemDatabase : Singleton<ItemDatabase>
         }
         return false;
     }
+    public void fuseItemByShopId(int shopId)
+    {
+        if (fetchInventoryById(8).Slot <= 0)
+        {           
+            addNewItem(8, fetchInventoryByShopId(shopId).Rarity + 1);
+        }
+        else
+        {   
+            addItemSlotById(8, fetchInventoryByShopId(shopId).Rarity + 1);
+        }
+        int index = fetchInventoryByShopIdIndex(shopId);
+        inventoryData.RemoveAt(index);
+        Save();
+    }
     public void upgradeItem(int shopId)
     {
         var item = fetchInventoryByShopIdIndex(shopId);
@@ -351,27 +377,31 @@ public class ItemDatabase : Singleton<ItemDatabase>
         return inventoryData;
     }
 
-    //public void equipItemPosition(ItemInventory item)
-    //{
-    //    for (int i = 0; i < inventoryData.Count; i++)
-    //    {
-    //        if (inventoryData[i].Ability == -(item.Type))
-    //        {
-    //            inventoryData[i].Ability = 0;
-    //            break;
-    //        }
-    //    }
-    //    int index = fetchInventoryByShopIdIndex(item.ShopId);
-    //    inventoryData[index].Ability = -item.Type;
-    //}
-    //public void unequipItem(int shopId)
-    //{
-    //    int index = fetchInventoryByShopIdIndex(shopId);
-    //    if (index >= 0)
-    //    {
-    //        inventoryData[index].Ability = 0;
-    //    }
-    //}
+    public void equipItemPosition(ItemInventory item)
+    {
+        for (int i = 0; i < inventoryData.Count; i++)
+        {
+            // gỡ đồ đang mặc (nếu có)
+            if (inventoryData[i].IsUse == -(item.Type))
+            {
+                inventoryData[i].IsUse = 0;
+                break;
+            }
+        }
+        // Mặc đồ 
+        int index = fetchInventoryByShopIdIndex(item.ShopId);
+        inventoryData[index].IsUse = -item.Type;
+        Save();
+    }
+    public void unequipItem(int shopId)
+    {
+        int index = fetchInventoryByShopIdIndex(shopId);
+        if (index >= 0)
+        {
+            inventoryData[index].IsUse = 0;
+        }
+        Save();
+    }
 }
 
 public class ItemInventory : ItemData

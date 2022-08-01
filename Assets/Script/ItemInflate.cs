@@ -43,11 +43,16 @@ public class ItemInflate : MonoBehaviour
         if (itemData != null)
         {
             InventoryController.Instance.onClickItem(itemData);
+            InventoryController.Instance.selectingItem = this;
             setFocus(true);
         }
     }
     public void setFocus(bool enable)
     {
         focus.SetActive(enable);
+    }
+    public bool isFocus()
+    {
+        return focus.active;
     }
 }

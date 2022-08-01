@@ -13,11 +13,14 @@ public class InventoryController : Singleton<InventoryController>
     public GameObject SlotItem;
     public GameObject InfoPanel;
     public GameObject[] Equipment;
-
-
+    public GameObject PopupPrefab;
+    public GameObject ParentPanel;
+    private GameObject PopupPanel;
+    public ItemInflate selectingItem;
     private List<GameObject> listItem = new List<GameObject>();
     string[] rarity = new string[4] { "Common", "Rare", "Mythical", "Epic" };
     string[] Albility = new string[6] { "Attack", "HP", "Armor", "Speed", "Exp Bonus", "Gold Bonus" };
+    int[] fuseReturnByRarity = new int[4] { 2, 3, 4, 5 };
     int[] iconSort = new int[6] { 4, 3, 0, 1, 2, 5 };
     Color[] rarityColor = new Color[4] { Color.white, Color.green, Color.blue, Color.magenta };
     int upgradeItemID = -1;
@@ -28,6 +31,9 @@ public class InventoryController : Singleton<InventoryController>
     }
     void Init()
     {
+        InfoPanel.SetActive(false);
+        PopupPanel = Instantiate(PopupPrefab, ParentPanel.transform);
+        PopupPanel.SetActive(false);
         List<ItemInventory> itemArr = ItemDatabase.Instance.getAllData();
         foreach (Transform child in ItemPanel.transform)
         {
@@ -41,11 +47,16 @@ public class InventoryController : Singleton<InventoryController>
                 GameObject _slotitem = Instantiate(SlotItem, ItemPanel.transform);
                 _slotitem.transform.localPosition = new Vector3(0, 0, 0);
                 _slotitem.GetComponent<ItemInflate>().InitData(item);
-                
+
                 listItem.Add(_slotitem);
                 if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
+                if (item.IsUse < 0)
+                {
+                    Debug.Log(item.IsUse);
+                    InitEquipment(item, (-item.IsUse)-1);
+                }
             }
-
+            
         }
     }
     public void onClickItem(ItemInventory data)
@@ -95,7 +106,8 @@ public class InventoryController : Singleton<InventoryController>
         main.Find("Panel/Bottom/Upgrade/Stats/Content2").GetComponent<TextMeshProUGUI>().text = data.Stats_2 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_2 / 100) - 1)] + "></size>" + Albility[(data.Stats_2 / 100) - 1] + " + " + data.Stats_2 % 100;
         main.Find("Panel/Bottom/Upgrade/Stats/Content3").GetComponent<TextMeshProUGUI>().text = data.Stats_3 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_3 / 100) - 1)] + "></size>" + Albility[(data.Stats_3 / 100) - 1] + " + " + data.Stats_3 % 100;
 
-        main.Find("Panel/Bottom/Button/ButtonFuse").GetComponent<Button>().onClick.AddListener(() => fuseItem(data.Id));
+        main.Find("Panel/Bottom/Button/ButtonFuse").GetComponent<Button>().onClick.AddListener(() =>
+        { InfoPanel.SetActive(false); fuseItem(data); });
         if (data.Level >= 10)
         {
             main.Find("Panel/Bottom/Upgrade/Material/Content").GetComponent<TextMeshProUGUI>().text = "Level Max";
@@ -106,14 +118,51 @@ public class InventoryController : Singleton<InventoryController>
             main.Find("Panel/Bottom/Upgrade/Material/Content").GetComponent<TextMeshProUGUI>().text = "X" + upgrade_item.Slot + "/" + data.Level;
             main.Find("Panel/Bottom/Button/ButtonUpgrade").GetComponent<Button>().onClick.AddListener(() => UpgradeItem(data.ShopId, data.Level, data.Level * 1000));
         }
-        main.Find("Panel/Bottom/Button/ButtonEquip").GetComponent<Button>().onClick.AddListener(() => { if (data.IsUse == 1) return; InitEquipment(data, data.Type - 1); InfoPanel.SetActive(false); });
+        main.Find("Panel/Bottom/Button/ButtonEquip").GetComponent<Button>().onClick.AddListener(() => { if (data.IsUse > 0) return;
+            ItemDatabase.Instance.equipItemPosition(data);
+            InitEquipment(data, data.Type - 1); 
+            InfoPanel.SetActive(false); });
 
         InfoPanel.SetActive(true);
 
     }
-    void fuseItem(int itemID)
+    void fuseItem(ItemInventory item)
     {
+        Debug.Log(item.IsUse);
+        if (item.IsUse < 0)
+        {
+            PopupPanel.gameObject.transform.Find("ButtonTransform/OK").gameObject.SetActive(false);
+            PopupPanel.gameObject.transform.Find("Message/Text (TMP)").GetComponent<TextMeshProUGUI>().text = "Your Item is using. Can not fuse!";
+        }
+        else
+        {
+            PopupPanel.gameObject.transform.Find("ButtonTransform/OK").gameObject.SetActive(true);
+            PopupPanel.gameObject.transform.Find("Message/Text (TMP)").GetComponent<TextMeshProUGUI>().text = "Your Item will be delete. Are you sure?";
+        }
+        
+        PopupPanel.gameObject.transform.Find("ButtonTransform/Cancel").GetComponent<Button>().onClick.AddListener(() => { PopupPanel.gameObject.SetActive(false); InfoPanel.SetActive(true); });
 
+        PopupPanel.gameObject.transform.Find("ButtonTransform/OK").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                try
+                {
+                    ItemDatabase.Instance.fuseItemByShopId(item.ShopId);
+                    ItemInventory upgradeItem = ItemDatabase.Instance.fetchInventoryById(8);
+                    if (upgradeItem.Slot > 0)
+                        listItem[upgradeItemID].transform.Find("Slot/Count").GetComponent<TextMeshProUGUI>().text = upgradeItem.Slot.ToString();
+                    else
+                        listItem[upgradeItemID].transform.Find("Slot/Count").gameObject.SetActive(false);
+                    selectingItem.gameObject.SetActive(false);
+                }
+                catch { }
+                finally
+                {
+                    InfoPanel.SetActive(false);
+                    PopupPanel.SetActive(false);
+                }
+            }
+        );
+        PopupPanel.gameObject.SetActive(true);
     }
     void UpgradeItem(int itemShopID, int stoneRequired, int coinRequired)
     {

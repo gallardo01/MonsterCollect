@@ -9,21 +9,27 @@ using Random = UnityEngine.Random;
 
 public class InventoryController : Singleton<InventoryController>
 {
+    public GameObject Hero;
     public GameObject ItemPanel;
     public GameObject SlotItem;
     public GameObject InfoPanel;
     public GameObject[] Equipment;
     public GameObject PopupPrefab;
     public GameObject ParentPanel;
+    public GameObject[] albilitiesText;
     private GameObject PopupPanel;
     public ItemInflate selectingItem;
     private List<GameObject> listItem = new List<GameObject>();
+
     string[] rarity = new string[4] { "Common", "Rare", "Mythical", "Epic" };
     string[] Albility = new string[6] { "Attack", "HP", "Armor", "Speed", "Exp Bonus", "Gold Bonus" };
-    int[] fuseReturnByRarity = new int[4] { 2, 3, 4, 5 };
+    //int[] fuseReturnByRarity = new int[4] { 2, 3, 4, 5 };
     int[] iconSort = new int[6] { 4, 3, 0, 1, 2, 5 };
     Color[] rarityColor = new Color[4] { Color.white, Color.green, Color.blue, Color.magenta };
     int upgradeItemID = -1;
+
+    public int[] baseAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
+    public int[] bonusAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
     // Start is called before the first frame update
     void Start()
     {
@@ -52,12 +58,12 @@ public class InventoryController : Singleton<InventoryController>
                 if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
                 if (item.IsUse < 0)
                 {
-                    Debug.Log(item.IsUse);
-                    InitEquipment(item, (-item.IsUse)-1);
+                    InitEquipment(item, (-item.IsUse) - 1);
                 }
             }
-            
         }
+        //fix inventory to center
+        ItemPanel.GetComponent<GridLayoutGroup>().cellSize =new Vector2 ((ItemPanel.GetComponent<RectTransform>().rect.size.x-100-90)/4, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4);
     }
     public void onClickItem(ItemInventory data)
     {
@@ -102,12 +108,15 @@ public class InventoryController : Singleton<InventoryController>
         }
         ItemInventory upgrade_item = ItemDatabase.Instance.fetchInventoryById(8);
 
-        main.Find("Panel/Bottom/Upgrade/Stats/Content1").GetComponent<TextMeshProUGUI>().text = data.Stats_1 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_1 / 100) - 1)] + "></size>" + Albility[(data.Stats_1 / 100) - 1] + " + " + data.Stats_1 % 100;
-        main.Find("Panel/Bottom/Upgrade/Stats/Content2").GetComponent<TextMeshProUGUI>().text = data.Stats_2 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_2 / 100) - 1)] + "></size>" + Albility[(data.Stats_2 / 100) - 1] + " + " + data.Stats_2 % 100;
-        main.Find("Panel/Bottom/Upgrade/Stats/Content3").GetComponent<TextMeshProUGUI>().text = data.Stats_3 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_3 / 100) - 1)] + "></size>" + Albility[(data.Stats_3 / 100) - 1] + " + " + data.Stats_3 % 100;
+        main.Find("Panel/Bottom/Upgrade/Stats/Content1").GetComponent<TextMeshProUGUI>().text = data.Stats_1 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_1 / 100) - 1)] + "></size>" + Albility[(data.Stats_1 / 100) - 1] + " + " + data.Stats_1 % 100 + (data.Level == 1 ? "" : "<color=#00ff00>(+" + (data.Level - 1) + ")</color>");
+        main.Find("Panel/Bottom/Upgrade/Stats/Content2").GetComponent<TextMeshProUGUI>().text = data.Stats_2 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_2 / 100) - 1)] + "></size>" + Albility[(data.Stats_2 / 100) - 1] + " + " + data.Stats_2 % 100 + (data.Level == 1 ? "" : "<color=#00ff00>(+" + (data.Level - 1) + ")</color>");
+        main.Find("Panel/Bottom/Upgrade/Stats/Content3").GetComponent<TextMeshProUGUI>().text = data.Stats_3 <= 0 ? "" : "<size=120%><sprite=" + iconSort[((data.Stats_3 / 100) - 1)] + "></size>" + Albility[(data.Stats_3 / 100) - 1] + " + " + data.Stats_3 % 100 + (data.Level == 1 ? "" : "<color=#00ff00>(+" + (data.Level - 1) + ")</color>");
 
         main.Find("Panel/Bottom/Button/ButtonFuse").GetComponent<Button>().onClick.AddListener(() =>
-        { InfoPanel.SetActive(false); fuseItem(data); });
+        {
+            InfoPanel.SetActive(false);
+            fuseItem(data);
+        });
         if (data.Level >= 10)
         {
             main.Find("Panel/Bottom/Upgrade/Material/Content").GetComponent<TextMeshProUGUI>().text = "Level Max";
@@ -115,20 +124,32 @@ public class InventoryController : Singleton<InventoryController>
         }
         else
         {
-            main.Find("Panel/Bottom/Upgrade/Material/Content").GetComponent<TextMeshProUGUI>().text = "X" + upgrade_item.Slot + "/" + data.Level;
+            if (upgrade_item.Slot < data.Level)
+            {
+                main.Find("Panel/Bottom/Upgrade/Material/Content").GetComponent<TextMeshProUGUI>().text = "<color=#ff0000>X" + upgrade_item.Slot + "/" + data.Level;
+            }
+            else
+            {
+                main.Find("Panel/Bottom/Upgrade/Material/Content").GetComponent<TextMeshProUGUI>().text = "<color=#00ff00>X" + upgrade_item.Slot + "/" + data.Level;
+            }
             main.Find("Panel/Bottom/Button/ButtonUpgrade").GetComponent<Button>().onClick.AddListener(() => UpgradeItem(data.ShopId, data.Level, data.Level * 1000));
         }
-        main.Find("Panel/Bottom/Button/ButtonEquip").GetComponent<Button>().onClick.AddListener(() => { if (data.IsUse > 0) return;
+        main.Find("Panel/Bottom/Button/ButtonEquip").GetComponent<Button>().onClick.AddListener(() =>
+        {
+            if (data.IsUse > 0) return;
             ItemDatabase.Instance.equipItemPosition(data);
-            InitEquipment(data, data.Type - 1); 
-            InfoPanel.SetActive(false); });
+            InitEquipment(data, data.Type - 1);
+            InfoPanel.SetActive(false);
+            Hero.gameObject.SetActive(true);
+        }
+        );
 
+        Hero.gameObject.SetActive(false);
         InfoPanel.SetActive(true);
 
     }
     void fuseItem(ItemInventory item)
     {
-        Debug.Log(item.IsUse);
         if (item.IsUse < 0)
         {
             PopupPanel.gameObject.transform.Find("ButtonTransform/OK").gameObject.SetActive(false);
@@ -139,7 +160,7 @@ public class InventoryController : Singleton<InventoryController>
             PopupPanel.gameObject.transform.Find("ButtonTransform/OK").gameObject.SetActive(true);
             PopupPanel.gameObject.transform.Find("Message/Text (TMP)").GetComponent<TextMeshProUGUI>().text = "Your Item will be delete. Are you sure?";
         }
-        
+
         PopupPanel.gameObject.transform.Find("ButtonTransform/Cancel").GetComponent<Button>().onClick.AddListener(() => { PopupPanel.gameObject.SetActive(false); InfoPanel.SetActive(true); });
 
         PopupPanel.gameObject.transform.Find("ButtonTransform/OK").GetComponent<Button>().onClick.AddListener(() =>
@@ -159,6 +180,7 @@ public class InventoryController : Singleton<InventoryController>
                 {
                     InfoPanel.SetActive(false);
                     PopupPanel.SetActive(false);
+                    Hero.gameObject.SetActive(true);
                 }
             }
         );
@@ -179,12 +201,31 @@ public class InventoryController : Singleton<InventoryController>
             listItem[upgradeItemID].transform.Find("Slot/Count").gameObject.SetActive(false);
         ItemInventory data = ItemDatabase.Instance.fetchInventoryByShopId(itemShopID);
         SetInfoPanelData(data);
+        InitAlbilities();
     }
     void InitEquipment(ItemInventory item, int itemSlot)
     {
         Equipment[itemSlot].transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
         Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + item.Rarity.ToString());
         Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
+        InitAlbilities();
 
+    }
+    void InitAlbilities()
+    {
+       
+        foreach (var item in ItemDatabase.Instance.getAllData())
+        {
+            if (item.IsUse < 0)
+            {
+                if (item.Stats_1 > 0) { baseAlbility[((item.Stats_1 / 100) - 1)] += item.Stats_1 % 100; bonusAlbility[(item.Stats_1 / 100) - 1] += item.Level - 1; }
+                if (item.Stats_2 > 0) { baseAlbility[((item.Stats_2 / 100) - 1)] += item.Stats_2 % 100; bonusAlbility[(item.Stats_2 / 100) - 1] += item.Level - 1; }
+                if (item.Stats_3 > 0) { baseAlbility[((item.Stats_3 / 100) - 1)] += item.Stats_2 % 100; bonusAlbility[(item.Stats_3 / 100) - 1] += item.Level - 1; }
+            }
+        }
+        for (int i = 0; i < 6; ++i)
+        {
+            albilitiesText[i].GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=" + iconSort[i] + " ></size>" + baseAlbility[i] + "<color=#00ff00>(+" + bonusAlbility[i] + ")";
+        }
     }
 }

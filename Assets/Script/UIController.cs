@@ -56,9 +56,9 @@ public class UIController : Singleton<UIController>
     {
 		// active bar & swipe
 		enableSwipe = true;
-		bar.gameObject.SetActive(true);
-		UIHero.Instance.closeEvolvePanel();
-		UIHero.Instance.backToInventory();
+		//bar.gameObject.SetActive(true);
+		//UIHero.Instance.closeEvolvePanel();
+		//UIHero.Instance.backToInventory();
 
 		currentSite = 1;
 		shop.DOAnchorPos(new Vector2(0, 0), 0.25f);

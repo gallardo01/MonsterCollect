@@ -213,7 +213,9 @@ public class InventoryController : Singleton<InventoryController>
     }
     void InitAlbilities()
     {
-       
+
+        baseAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
+        bonusAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
         foreach (var item in ItemDatabase.Instance.getAllData())
         {
             if (item.IsUse < 0)

@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FGP_Distort_MPF_BG_Shimmer
+  m_Shader: {fileID: 4800000, guid: 2c277c3394ccb7b45a2bc303db447e91, type: 3}
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA HORIZBIAS_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DisTex:
+        m_Texture: {fileID: 2800000, guid: 81483017a05c5ad43965264ba7f8e624, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 10e8783c5e8bf204896a1c3d37638fb3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 2800000, guid: 10e8783c5e8bf204896a1c3d37638fb3, type: 3}
+        m_Scale: {x: 5, y: 5}
+        m_Offset: {x: 0, y: 0}
+    - _Tex1:
+        m_Texture: {fileID: 2800000, guid: 10e8783c5e8bf204896a1c3d37638fb3, type: 3}
+        m_Scale: {x: 3, y: 3}
+        m_Offset: {x: 0, y: 0}
+    - _Tex1b:
+        m_Texture: {fileID: 2800000, guid: 1258734af505a0d40a381fcd1b15b283, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - HorizBias: 1
+    - MaskDistort: 0
+    - UVSet2: 0
+    - _Alpha: 3
+    - _Brightness: 1.33
+    - _DisBias: 1
+    - _DisBiasY: 1
+    - _Rot1: 0
+    - _Rot1Pan: 0
+    - _Rot2: 0
+    - _Rot2Pan: 0
+    - _RotMask: 0
+    - _RotMaskPan: 0
+    - _Tex1Bright: 0
+    - _Tex1bAmount: 1
+    - _Tex1bBright: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DisPan: {r: -3, g: 3, b: 0, a: 0}
+    - _MaskPan: {r: 0, g: 0, b: 0, a: 0}
+    - _Pan1: {r: 1.5, g: -2, b: 0, a: 0}
+    - _Pan1b: {r: -1, g: -3, b: 0, a: 0}

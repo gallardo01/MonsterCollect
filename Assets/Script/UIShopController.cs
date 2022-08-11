@@ -25,16 +25,23 @@ public class UIShopController : MonoBehaviour
     }
     void InitTargetedOffer()
     {
+
         //init data
         TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "4x Value";
-        TargetedOfferPanel.transform.Find("Panel/Description").GetComponent<TextMeshProUGUI>().text = "Powerful Item";
-        TargetedOfferPanel.transform.Find("Panel/BaseValue").GetComponent<TextMeshProUGUI>().text = "6.99$";
-        TargetedOfferPanel.transform.Find("Panel/Value").GetComponent<TextMeshProUGUI>().text = "3.99$";
+        GameObject TO = new GameObject();
+        //Get Target offer
+        if(true)
+        {
+            TO = Instantiate(Resources.Load("Prefabs/UI/TargetOffer/TO_1") as GameObject, TargetedOfferPanel.transform.Find("Content").transform);
+            TO.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Powerful Item";
+            TO.transform.Find("BaseValue").GetComponent<TextMeshProUGUI>().text = "6.99$";
+            TO.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = "3.99$";
 
-        var item1_image = TargetedOfferPanel.transform.Find("Panel/Content/Item1/Image").GetComponent<Image>().sprite;
-        var item2_image = TargetedOfferPanel.transform.Find("Panel/Content/Item1 (1)/Image").GetComponent<Image>().sprite;
-        var item3_image = TargetedOfferPanel.transform.Find("Panel/Content/Item1 (2)/Image").GetComponent<Image>().sprite;
-        var item4_image = TargetedOfferPanel.transform.Find("Panel/Content/Item1 (3)/Image").GetComponent<Image>().sprite;
+            var item1_image = TO.transform.Find("Content/Item1/Image").GetComponent<Image>().sprite;
+            var item2_image = TO.transform.Find("Content/Item1 (1)/Image").GetComponent<Image>().sprite;
+            var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
+            var item4_image = TO.transform.Find("Content/Item1 (3)/Image").GetComponent<Image>().sprite;
+        }
 
         //setup data
         TargetedOfferPanel.transform.Find("ButtonOverlay").GetComponent<Button>().onClick.AddListener(()=> { CelebrationPanel = Instantiate(CelebrationDialog, ParentTransform.transform); CelebrationPanel.transform.Find("Content/ButtonTransform/Button").GetComponent<Button>().onClick.AddListener(() => { Destroy(CelebrationPanel); }); });

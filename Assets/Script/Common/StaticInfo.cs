@@ -30,4 +30,20 @@ public class StaticInfo : MonoBehaviour
 
     public static int[] evolLocation = {-600, -1200, -2000,-2800,-3600 };
 
+    public static double TO1BaseValue = 6.99;
+    public static double TO1Value = 3.99;
+    public static string TO1Description = "Evolve monster pack";
+
+    public static double TO2BaseValue = 9.99;
+    public static double TO2Value = 4.99;
+    public static string TO2Description = "Pack of gem - Discount 50%";
+
+    public static double TO3BaseValue = 9.99;
+    public static double TO3Value = 4.99;
+    public static string TO3Description = "Pack of gold - Mastery";
+
+    public static double TO4BaseValue = 9.99;
+    public static double TO4Value = 4.99;
+    public static string TO4Description = "Powerful Item";
+
 }

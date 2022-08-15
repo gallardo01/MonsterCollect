@@ -189,7 +189,17 @@ public class PlayerController : Singleton<PlayerController>
                 //GameController.Instance.addParticle(gameObject, 2);
                 collision.gameObject.GetComponent<MonsterController>().setAction(1);
             }
+        }
 
+        if (collision.gameObject.tag == "Boss")
+        {
+            if (canHurt)
+            {
+                canHurt = false;
+                StartCoroutine(setHurt());
+                //GameController.Instance.addParticle(gameObject, 2);
+                collision.gameObject.GetComponent<BossController>().setAction(1);
+            }
         }
     }
     IEnumerator setHurt()

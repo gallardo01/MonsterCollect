@@ -39,10 +39,9 @@ public class UIInventory : Singleton<UIInventory>
         }
         GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + data.Id.ToString()) as GameObject, imgAvatar.transform);
         monster.transform.localPosition = new Vector3(0, 0, 0);
-        monster.transform.localScale = new Vector3(100, 100, 1);
-
-        //monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+        monster.transform.localScale = new Vector3(monster.transform.localScale.x * 100, monster.transform.localScale.y * 100, monster.transform.localScale.z * 100);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+
     }
 
     void swapToHero()

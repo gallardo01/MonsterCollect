@@ -88,7 +88,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     public List<HeroesData> fetchAllEvolveHero(int data)
     {
         List<HeroesData> listHero = new List<HeroesData>();
-        Debug.Log(database.Count);
+        //Debug.Log(database.Count);
         for (int i = 0; i < database.Count; i++)
         {
             if (database[i].Id /10 == data/10)
@@ -129,7 +129,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
     public HeroesData getCurrentHero(int id)
     {
-        for (int i = 0; i < database.Count; i++)
+        for (int i = database.Count - 1; i >=0 ; i--)
         {
             if (database[i].Id/10 == id && database[i].Unlock == 1)
             {

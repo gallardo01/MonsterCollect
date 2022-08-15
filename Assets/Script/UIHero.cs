@@ -11,6 +11,7 @@ public class UIHero : Singleton<UIHero>
     public Button btnSelect;
     public Button btnBuy;
     public Button btnEvolve;
+    public Button btnBack;
     public GameObject imgAvatar;
 
     public RectTransform pnEvolve;
@@ -49,6 +50,8 @@ public class UIHero : Singleton<UIHero>
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
             PlayerPrefs.SetInt("HeroesPick", 10);
+            curHeroID = PlayerPrefs.GetInt("HeroesPick");
+
         }
         else
         {
@@ -56,8 +59,11 @@ public class UIHero : Singleton<UIHero>
         }
         initUIHero();
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
+
+
         btnSelect.onClick.AddListener(() => selectHero());
         btnBuy.onClick.AddListener(() => buyHero());
+        btnBack.onClick.AddListener(() => backToInventory());
         btnEvolve.onClick.AddListener(() => openEvolvePanel());
         panelBtnClose.onClick.AddListener(() => closeEvolvePanel());
         panelBtnEvolve.onClick.AddListener(() => evolutionHero());
@@ -107,7 +113,7 @@ public class UIHero : Singleton<UIHero>
     public void selectHero()
     {
         PlayerPrefs.SetInt("HeroesPick", cacheId);
-        backToInventory();
+        //backToInventory();
     }
 
 
@@ -228,6 +234,7 @@ public class UIHero : Singleton<UIHero>
             curHeroID++;
             PlayerPrefs.SetInt("HeroesPick", curHeroID);
             initDataEvolve();
+            initUIHero();
         }
         else
         {
@@ -238,11 +245,16 @@ public class UIHero : Singleton<UIHero>
 
     bool canEvolve()
     {
+        if (HeroesDatabase.Instance.fetchHeroesData(curHeroID).Unlock == 0)
+        {
+            return false;
+        }
         List<HeroesData> listhero = HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
         if (currentEvol >= listhero.Count-1)
         {
             return false;
         }
+
         for (int i = 0; i < 3; i++)
         {
             //if(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])

@@ -34,6 +34,11 @@ public class BossController : MonoBehaviour
         StartCoroutine(idleBehavior());
     }
 
+    public int getLevel()
+    {
+        return id;
+    }
+
     private void initInfo()
     {
         level.text = "Lv." + id.ToString();

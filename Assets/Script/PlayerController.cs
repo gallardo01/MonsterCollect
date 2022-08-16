@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using MarchingBytes;
 
 public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] GameObject body;
     [SerializeField] TextMeshPro levelText;
-    [SerializeField] GameObject bar;
     [SerializeField] GameObject particle;
 
+    [SerializeField] TextMeshPro hpText;
+    [SerializeField] GameObject hpBar;
+
     private int id;
-    private int hp = 1000;
-    private float speed = 100;
-    private int armour = 5;
-    private int atk = 10;
-    private int bonusExp = 5;
-    private int bonusGold = 10;
+    private int currentHp;
+    private float currentSpeed;
+    private int currentArmour;
+    private int currentAtk;
+    private int bonusExp;
+    private int bonusGold;
 
     private int facingRight = 1;
     private bool walk = true;
@@ -27,7 +30,7 @@ public class PlayerController : Singleton<PlayerController>
     private bool isAtk = false;
     private bool canHurt = true;
     private int exp = 0;
-
+    private HeroesData data;
 
     // Start is called before the first frame update
     void Start()
@@ -49,13 +52,16 @@ public class PlayerController : Singleton<PlayerController>
     {
         levelText.text = playerLevel.ToString();
         int heroesId = 11;
-        HeroesData data = HeroesDatabase.Instance.fetchHeroesData(heroesId);
-        hp = data.Hp;
-        speed = data.Speed;
-        armour = data.Armour;
-        atk = data.Atk;
+        data = HeroesDatabase.Instance.fetchHeroesData(heroesId);
+        currentHp = data.Hp;
+        currentSpeed = data.Speed;
+        currentArmour = data.Armour;
+        currentAtk = data.Atk;
         bonusExp = data.XpGain;
         bonusGold = data.GoldGain;
+
+        hpText.text = currentHp.ToString();
+        hpBar.transform.localScale = new Vector3(1f, 1f, 1f);
     }
 
     public void gainLv(int lv)
@@ -83,7 +89,7 @@ public class PlayerController : Singleton<PlayerController>
             && (transform.position.y >= -boundY && transform.position.y <= boundY))
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
-            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (speed / 80) * Time.deltaTime;
+            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (currentSpeed / 80) * Time.deltaTime;
         }
 
         if (transform.position.x <= -boundX)
@@ -185,7 +191,7 @@ public class PlayerController : Singleton<PlayerController>
             } else if(canHurt)
             {
                 canHurt = false;
-                StartCoroutine(setHurt());
+                StartCoroutine(setHurt(enemyLv));
                 //GameController.Instance.addParticle(gameObject, 2);
                 collision.gameObject.GetComponent<MonsterController>().setAction(1);
             }
@@ -195,17 +201,61 @@ public class PlayerController : Singleton<PlayerController>
         {
             if (canHurt)
             {
+                int enemyLv = collision.gameObject.GetComponent<BossController>().getLevel();
                 canHurt = false;
-                StartCoroutine(setHurt());
+                StartCoroutine(setHurt(enemyLv));
                 //GameController.Instance.addParticle(gameObject, 2);
                 collision.gameObject.GetComponent<BossController>().setAction(1);
             }
         }
     }
-    IEnumerator setHurt()
+    IEnumerator setHurt(int level)
     {
+        int dame = 50 + (level % 10) * 40 + (level / 10) * 100;
+        int percent = calculateArmourReduce(currentArmour);
+        dame = dame * (100 - percent) / 100;
+        reduceHealth(dame);
         body.GetComponent<Animator>().SetTrigger("hurt");
         yield return new WaitForSeconds(1f);
         canHurt = true;
+    }
+
+    private void reduceHealth(int amount)
+    {
+        string floatingText = "FloatingText";
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
+        particle.GetComponent<FloatingText>().disableObject(amount);
+        
+        currentHp -= amount;
+        hpText.text = currentHp.ToString();
+        float per = currentHp / data.Hp;
+        hpBar.transform.localScale = new Vector3(per, 1f, 1f);
+        if (currentHp <= 0)
+        {
+            // dead
+
+        }
+    }
+
+    private int calculateArmourReduce(int armour)
+    {
+        int percent = 0;
+        if(armour <= 15)
+        {
+            percent += armour;
+        } 
+        if(armour <= 30)
+        {
+            percent += (int)((armour - 15) * 0.7);
+        }
+        if (armour <= 50)
+        {
+            percent += (int)((armour - 15) * 0.5);
+        }
+        if(armour > 50)
+        {
+            percent += (int)((armour - 15) * 0.3);
+        }
+        return percent;
     }
 }

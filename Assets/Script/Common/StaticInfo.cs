@@ -62,4 +62,19 @@ public class StaticInfo : MonoBehaviour
     public static int ChestBasePrice = 2000;
     public static int Chest3Price = 1800;
     public static string Chest3PriceType = "gem";
+
+    public static string[] skillDetail = {
+        "ban chuong gi do 01",
+        "ban chuong gi do 02",
+        "ban chuong gi do 03",
+        "ban chuong gi do 04",
+        "ban chuong gi do 05",
+        "ban chuong gi do 06",
+        "ban chuong gi do 07",
+        "ban chuong gi do 08",
+        "ban chuong gi do 09",
+        "ban chuong gi do 10",
+        "ban chuong gi do 11",
+        "ban chuong gi do 12"
+    };
 }

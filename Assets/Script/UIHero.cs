@@ -20,6 +20,7 @@ public class UIHero : Singleton<UIHero>
     public GameObject tabInventory;
 
     public TextMeshProUGUI txtHeroName;
+    public TextMeshProUGUI txtHeroSkillDetail;
 
     public TextMeshProUGUI txtAlibity_1;
     public TextMeshProUGUI txtAlibity_2;
@@ -84,7 +85,11 @@ public class UIHero : Singleton<UIHero>
 
     public void onClickCard(HeroesData data)
     {
+        curHeroID = data.Id;
+        cacheId = data.Id;
+
         txtHeroName.text = data.Name;
+        txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
 
         txtAlibity_1.text = "Atk: " + data.Atk.ToString();
         txtAlibity_2.text = "HP: " + data.Hp.ToString();
@@ -93,8 +98,7 @@ public class UIHero : Singleton<UIHero>
         txtAlibity_5.text = "Exp: " + data.XpGain.ToString();
         txtAlibity_6.text = "Gold: " + data.GoldGain.ToString();
 
-        curHeroID = data.Id;
-        cacheId = data.Id;
+        
         handleButton(data);
 
         foreach (Transform child in imgAvatar.transform)

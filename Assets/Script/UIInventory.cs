@@ -12,6 +12,13 @@ public class UIInventory : Singleton<UIInventory>
     public GameObject tabInventory;
     public GameObject imgAvatar;
 
+    public TextMeshProUGUI txtAlibity_1;
+    public TextMeshProUGUI txtAlibity_2;
+    public TextMeshProUGUI txtAlibity_3;
+    public TextMeshProUGUI txtAlibity_4;
+    public TextMeshProUGUI txtAlibity_5;
+    public TextMeshProUGUI txtAlibity_6;
+
     private int curHeroId = 10;
 
 
@@ -20,6 +27,7 @@ public class UIInventory : Singleton<UIInventory>
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
             PlayerPrefs.SetInt("HeroesPick", 10);
+            curHeroId = PlayerPrefs.GetInt("HeroesPick");
         }
         else
         {
@@ -42,6 +50,14 @@ public class UIInventory : Singleton<UIInventory>
         monster.transform.localScale = new Vector3(monster.transform.localScale.x * 100, monster.transform.localScale.y * 100, monster.transform.localScale.z * 100);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
 
+        HeroesData dataHero = HeroesDatabase.Instance.fetchHeroesData(curHeroId);
+
+        txtAlibity_1.text = "Atk: " + dataHero.Atk.ToString();
+        txtAlibity_2.text = "HP: " + dataHero.Hp.ToString();
+        txtAlibity_3.text = "Arm: " + dataHero.Armour.ToString();
+        txtAlibity_4.text = "Spd: " + dataHero.Speed.ToString();
+        txtAlibity_5.text = "Exp: " + dataHero.XpGain.ToString();
+        txtAlibity_6.text = "Gold: " + dataHero.GoldGain.ToString();
     }
 
     void swapToHero()

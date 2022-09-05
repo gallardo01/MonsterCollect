@@ -85,7 +85,7 @@ public class UIHero : Singleton<UIHero>
 
     public void onClickCard(HeroesData data)
     {
-        curHeroID = data.Id;
+        //curHeroID = data.Id;
         cacheId = data.Id;
 
         txtHeroName.text = data.Name;
@@ -117,12 +117,15 @@ public class UIHero : Singleton<UIHero>
     public void selectHero()
     {
         PlayerPrefs.SetInt("HeroesPick", cacheId);
+        curHeroID = cacheId;    
         //backToInventory();
     }
 
 
     public void backToInventory()
     {
+        PlayerPrefs.SetInt("HeroesPick", curHeroID);
+
         UIController.Instance.enableSwipe = true;
         tabInventory.SetActive(true);
         bar.SetActive(true);
@@ -136,11 +139,14 @@ public class UIHero : Singleton<UIHero>
         {
             btnBuy.gameObject.SetActive(false);
             btnSelect.gameObject.SetActive(true);
+            btnEvolve.gameObject.SetActive(true);
         }
         else
         {
             btnBuy.gameObject.SetActive(true);
             btnSelect.gameObject.SetActive(false);
+            btnEvolve.gameObject.SetActive(false);
+
         }
     }
 
@@ -160,6 +166,15 @@ public class UIHero : Singleton<UIHero>
 
     void openEvolvePanel()
     {
+        // check unlocked
+        HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
+
+        if (data.Unlock == 0)
+        {
+            return;
+        }
+
+        curHeroID = cacheId;
         imgAvatar.SetActive(false);
         pnEvolve.DOAnchorPos(new Vector2(0, 0), 0.25f);
 

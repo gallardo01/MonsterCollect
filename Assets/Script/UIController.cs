@@ -26,6 +26,9 @@ public class UIController : Singleton<UIController>
 	public TextMeshProUGUI txtDiamond;
 
 	public GameObject[] hightlight;
+	public GameObject[] menuSprite;
+	public GameObject[] menuText;
+
 	private int currentSite = 3;
 
 	public bool enableSwipe;
@@ -100,12 +103,25 @@ public class UIController : Singleton<UIController>
 
 	private void setupHightLight()
     {
-		for(int i = 1; i <= 4; i++)
+		var expandSize = 80;
+		var deactivesize = (bar.rect.width - expandSize) / 4;
+		var activesize = deactivesize + expandSize;
+		for (int i = 1; i <= 4; i++)
         {
 			hightlight[i].SetActive(false);
-        }
+			menuText[i].SetActive(false);
+			((RectTransform)bar.GetChild(i - 1).transform).sizeDelta = new Vector2(deactivesize,300);
+			var trans = (RectTransform)menuSprite[i].gameObject.transform;
+			var minsize = trans.rect.width > trans.rect.height ? trans.rect.height : trans.rect.width;
+			trans.sizeDelta = new Vector2(minsize+20,minsize);
+			
+			menuSprite[i].gameObject.transform.localPosition = new Vector3(0, 0, 0);
+		}
+		((RectTransform)bar.GetChild(currentSite - 1).transform).sizeDelta = new Vector2(activesize, 310);
+		menuSprite[currentSite].gameObject.transform.localPosition = new Vector3(0, 40, 0);
 		hightlight[currentSite].SetActive(true);
-    }
+		menuText[currentSite].SetActive(true);
+	}
 
 	public void detectSwipe(int direction)
     {

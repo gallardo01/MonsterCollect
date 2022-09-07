@@ -125,6 +125,7 @@ public class UIHero : Singleton<UIHero>
     public void backToInventory()
     {
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
+        onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
 
         UIController.Instance.enableSwipe = true;
         tabInventory.SetActive(true);

@@ -13,9 +13,9 @@ public class UIShopController : MonoBehaviour
     public GameObject HeroesPanel;
     public GameObject GemsPanel;
     public GameObject CoinsPanel;
-    GameObject CelebrationPanel;
-    public GameObject CelebrationDialog;
-    
+
+    public GameObject _go_claim_popup;
+
     void Start()
     {
         InitTargetedOffer();
@@ -52,8 +52,19 @@ public class UIShopController : MonoBehaviour
         }
 
         //setup data
-        TargetedOfferPanel.transform.Find("Content").GetComponent<Button>().onClick.AddListener(() => { CelebrationPanel = Instantiate(CelebrationDialog, ParentTransform.transform); CelebrationPanel.transform.Find("Content/ButtonTransform/Button").GetComponent<Button>().onClick.AddListener(() => { Destroy(CelebrationPanel); }); });
+        TargetedOfferPanel.transform.Find("Content").GetComponent<Button>().onClick.AddListener(() => { SetupCelebration(); });
     }
+    void SetupCelebration()
+    {
+        var _claim_popup = Instantiate(_go_claim_popup, ParentTransform.transform);
+        StartCoroutine(FadeCelebration(_claim_popup));
+    }
+    IEnumerator FadeCelebration(GameObject _claim_popup)
+    {
+        yield return new WaitForSeconds(0.5f);
+        _claim_popup.GetComponent<Animator>().SetTrigger("Fade");
+    }
+
     void SetUpTO1(GameObject TO)
     {
         TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)(10 * (StaticInfo.TO1Value / StaticInfo.TO1BaseValue))) * 10)) + "%";

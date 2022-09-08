@@ -36,6 +36,11 @@ public class GameController : Singleton<GameController>
         //btnQuit.onClick.AddListener(quitGame);
     }
 
+    private void initInfo()
+    {
+        expBar.GetComponent<Slider>().value = 0;
+    }
+
     private void addBoss()
     {
         string enemyType = "No." + (playerLevel/10 + 10);

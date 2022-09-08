@@ -31,11 +31,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
 
 
-        //for (int i = 9; i <= 36; i++)
-        //{
-        //    addNewItem(i, 1);
-        //}
-        //Save();
+        for (int i = 9; i <= 20; i++)
+        {
+            addNewItem(i, 1);
+        }
+        Save();
 
     }
     private void LoadResourceTextfileItemData(string path)

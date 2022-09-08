@@ -26,6 +26,7 @@ public class GameController : Singleton<GameController>
     // Start is called before the first frame update
     void Start()
     {
+        initInfo();
         playerLevel = PlayerController.Instance.getLevel();
         for (int i = 0; i < 13; i++)
         {
@@ -116,13 +117,43 @@ public class GameController : Singleton<GameController>
     private void updateProgressBar(bool levelUp)
     {
         float progres = (float) exp / (float) (playerLevel % 10 * 1000);
-        expBar.GetComponent<Slider>().value = progres;
+        //expBar.GetComponent<Slider>().value = progres;
+        StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
         expText.text = exp + "/" + (playerLevel % 10 * 1000);
         if (levelUp)
         {
             levelText.text = playerLevel.ToString();
             PlayerController.Instance.gainLv(playerLevel);
             updateColorText();
+        }
+    }
+
+    private IEnumerator animationprogressBar(float current, float last, bool lvUp)
+    {
+        if (lvUp)
+        {
+            while (current < 1)
+            {
+                current += 0.05f;
+                if (current >= 1)
+                {
+                    current = 1;
+                }
+                expBar.GetComponent<Slider>().value = current;
+                yield return new WaitForSeconds(0.03f);
+            }
+            current = 0f;
+            expBar.GetComponent<Slider>().value = current;
+        }
+        while (current < last)
+        {
+            current += 0.05f;
+            if(current >= last)
+            {
+                current = last;
+            }
+            expBar.GetComponent<Slider>().value = current;
+            yield return new WaitForSeconds(0.03f);
         }
     }
 

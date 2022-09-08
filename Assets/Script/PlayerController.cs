@@ -227,13 +227,18 @@ public class PlayerController : Singleton<PlayerController>
         particle.GetComponent<FloatingText>().disableObject(amount);
         
         currentHp -= amount;
-        hpText.text = currentHp.ToString();
-        float per = currentHp / data.Hp;
-        hpBar.transform.localScale = new Vector3(per, 1f, 1f);
+
         if (currentHp <= 0)
         {
+            currentHp = 0;
             // dead
 
+        }
+        else
+        {
+            hpText.text = currentHp.ToString();
+            float per = currentHp / data.Hp;
+            hpBar.transform.localScale = new Vector3(per, 1f, 1f);
         }
     }
 

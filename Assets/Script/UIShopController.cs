@@ -278,6 +278,7 @@ public class UIShopController : MonoBehaviour
         var userdb = UserDatabase.Instance;
 
         userdb.gainMoney(0, value);
+     
     }
     void OnCoinPurchased(int value, int price)
     {

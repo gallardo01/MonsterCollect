@@ -91,12 +91,12 @@ public class UIHero : Singleton<UIHero>
         txtHeroName.text = data.Name;
         txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
 
-        txtAlibity_1.text = "Atk: " + data.Atk.ToString();
-        txtAlibity_2.text = "HP: " + data.Hp.ToString();
-        txtAlibity_3.text = "Arm: " + data.Armour.ToString();
-        txtAlibity_4.text = "Spd: " + data.Speed.ToString();
-        txtAlibity_5.text = "Exp: " + data.XpGain.ToString();
-        txtAlibity_6.text = "Gold: " + data.GoldGain.ToString();
+        txtAlibity_1.text = data.Atk.ToString();
+        txtAlibity_2.text = data.Hp.ToString();
+        txtAlibity_3.text = data.Armour.ToString();
+        txtAlibity_4.text = data.Speed.ToString();
+        txtAlibity_5.text = data.XpGain.ToString();
+        txtAlibity_6.text = data.GoldGain.ToString();
 
         
         handleButton(data);

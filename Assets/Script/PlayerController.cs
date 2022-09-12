@@ -13,6 +13,9 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] TextMeshPro hpText;
     [SerializeField] GameObject hpBar;
 
+    public GameObject runSmoke;
+    public GameObject SmokePos;
+
     private int id;
     private int currentHp;
     private float currentSpeed;
@@ -29,12 +32,16 @@ public class PlayerController : Singleton<PlayerController>
     private bool canHurt = true;
     private int exp = 0;
     private HeroesData data;
+    float timeSmoke = 0;
+    public float timeSmokeWait = 1f;
+    
+
 
     // Start is called before the first frame update
     void Start()
     {
         Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
-        playerLevel = (PlayerPrefs.GetInt("Map") - 1)* 10 + 1;
+        playerLevel = (PlayerPrefs.GetInt("Map") - 1) * 10 + 1;
         initStart();
         levelText.text = playerLevel.ToString();
     }
@@ -85,32 +92,60 @@ public class PlayerController : Singleton<PlayerController>
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
             UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (currentSpeed / 80) * Time.deltaTime;
+
         }
 
 
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
             flip();
-        } else if (UltimateJoystick.GetHorizontalAxis("Movement") < 0 && facingRight == 1)
+        }
+        else if (UltimateJoystick.GetHorizontalAxis("Movement") < 0 && facingRight == 1)
         {
             flip();
         }
 
         if (UltimateJoystick.GetHorizontalAxis("Movement") != 0 || UltimateJoystick.GetVerticalAxis("Movement") != 0)
         {
+
             if (walk)
             {
                 walk = false;
                 runAnimation(2);
             }
-        } else
+        }
+        else
         {
             if (!walk)
             {
                 walk = true;
+
                 runAnimation(1);
             }
         }
+    }
+    private void FixedUpdate()
+    {
+        if (UltimateJoystick.GetHorizontalAxis("Movement") != 0 || UltimateJoystick.GetVerticalAxis("Movement") != 0)
+        {
+            if (timeSmoke > timeSmokeWait) // only check for space bar if we last fired longer than the cooldown time
+            {
+
+                var smoke = Instantiate(runSmoke,new Vector3(SmokePos.transform.position.x, SmokePos.transform.position.y, SmokePos.transform.position.z), SmokePos.transform.rotation);
+                StartCoroutine(DestroySmoke(smoke));
+                timeSmoke = 0;
+
+            }
+            else
+            {
+                timeSmoke += Time.deltaTime;
+            }
+        }
+    }
+    private IEnumerator DestroySmoke(GameObject o)
+    {
+        yield return new WaitForSeconds(1);
+        o.SetActive(false);
     }
     private void runAnimation(int pos)
     {
@@ -123,7 +158,8 @@ public class PlayerController : Singleton<PlayerController>
         else if (pos == 2 && isAtk == false)
         {
             GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
-        } else if (pos == 3) // atk
+        }
+        else if (pos == 3) // atk
         {
             isAtk = true;
             GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("Attack", 0.5f, 1);
@@ -138,7 +174,8 @@ public class PlayerController : Singleton<PlayerController>
         if (walk)
         {
             runAnimation(1);
-        } else
+        }
+        else
         {
             runAnimation(2);
         }
@@ -157,7 +194,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy")
         {
             int enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
             if (playerLevel >= enemyLv) // kill
@@ -166,7 +203,8 @@ public class PlayerController : Singleton<PlayerController>
                 GameController.Instance.initEatMonster(collision.gameObject.GetComponent<MonsterController>().getLevel());
                 GameController.Instance.addParticle(collision.gameObject, 1);
                 collision.gameObject.GetComponent<MonsterController>().setAction(2);
-            } else if(canHurt)
+            }
+            else if (canHurt)
             {
                 canHurt = false;
                 StartCoroutine(setHurt(enemyLv));
@@ -203,7 +241,7 @@ public class PlayerController : Singleton<PlayerController>
         string floatingText = "FloatingText";
         GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
         particle.GetComponent<FloatingText>().disableObject(amount);
-        
+
         currentHp -= amount;
 
         if (currentHp <= 0)
@@ -223,11 +261,11 @@ public class PlayerController : Singleton<PlayerController>
     private int calculateArmourReduce(int armour)
     {
         int percent = 0;
-        if(armour <= 15)
+        if (armour <= 15)
         {
             percent += armour;
-        } 
-        if(armour <= 30)
+        }
+        if (armour <= 30)
         {
             percent += (int)((armour - 15) * 0.7);
         }
@@ -235,7 +273,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             percent += (int)((armour - 15) * 0.5);
         }
-        if(armour > 50)
+        if (armour > 50)
         {
             percent += (int)((armour - 15) * 0.3);
         }

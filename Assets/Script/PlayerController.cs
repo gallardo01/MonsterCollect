@@ -24,8 +24,6 @@ public class PlayerController : Singleton<PlayerController>
     private int facingRight = 1;
     private bool walk = true;
     private int playerLevel = 1;
-    private float boundX;
-    private float boundY;
     private bool canMove = true;
     private bool isAtk = false;
     private bool canHurt = true;
@@ -37,8 +35,6 @@ public class PlayerController : Singleton<PlayerController>
     {
         Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
         playerLevel = (PlayerPrefs.GetInt("Map") - 1)* 10 + 1;
-        boundX = Camera.main.ScreenToWorldPoint(pos).x;
-        boundY = Camera.main.ScreenToWorldPoint(pos).y;
         initStart();
         levelText.text = playerLevel.ToString();
     }
@@ -54,7 +50,7 @@ public class PlayerController : Singleton<PlayerController>
         int heroesId = 11;
         data = HeroesDatabase.Instance.fetchHeroesData(heroesId);
         currentHp = data.Hp;
-        currentSpeed = data.Speed;
+        currentSpeed = data.Speed * 2;
         currentArmour = data.Armour;
         currentAtk = data.Atk;
         bonusExp = data.XpGain;
@@ -85,28 +81,10 @@ public class PlayerController : Singleton<PlayerController>
     // Update is called once per frame
     void Update()
     {
-        if (canMove && (transform.position.x >= -boundX && transform.position.x <= boundX) 
-            && (transform.position.y >= -boundY && transform.position.y <= boundY))
+        if (canMove)
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
             UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (currentSpeed / 80) * Time.deltaTime;
-        }
-
-        if (transform.position.x <= -boundX)
-        {
-            transform.position = new Vector3(-boundX, transform.position.y, transform.position.z);
-        }
-        if (transform.position.x >= boundX)
-        {
-            transform.position = new Vector3(boundX, transform.position.y, transform.position.z);
-        }
-        if (transform.position.y <= -boundY)
-        {
-            transform.position = new Vector3(transform.position.x, -boundY, transform.position.z);
-        }
-        if (transform.position.y >= boundY)
-        {
-            transform.position = new Vector3(transform.position.x, boundY, transform.position.z);
         }
 
 

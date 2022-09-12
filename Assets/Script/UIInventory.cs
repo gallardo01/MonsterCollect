@@ -12,12 +12,12 @@ public class UIInventory : Singleton<UIInventory>
     public GameObject tabInventory;
     public GameObject imgAvatar;
 
-    public TextMeshProUGUI txtAlibity_1;
-    public TextMeshProUGUI txtAlibity_2;
-    public TextMeshProUGUI txtAlibity_3;
-    public TextMeshProUGUI txtAlibity_4;
-    public TextMeshProUGUI txtAlibity_5;
-    public TextMeshProUGUI txtAlibity_6;
+    //public TextMeshProUGUI txtAlibity_1;
+    //public TextMeshProUGUI txtAlibity_2;
+    //public TextMeshProUGUI txtAlibity_3;
+    //public TextMeshProUGUI txtAlibity_4;
+    //public TextMeshProUGUI txtAlibity_5;
+    //public TextMeshProUGUI txtAlibity_6;
 
     private int curHeroId = 10;
 

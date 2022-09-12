@@ -42,6 +42,7 @@ public class UIHero : Singleton<UIHero>
     public List<TextMeshProUGUI> textEvolRequire;
     int currentEvol = 0;
 
+    Animator evolAnimator;
 
 
 
@@ -68,6 +69,8 @@ public class UIHero : Singleton<UIHero>
         btnEvolve.onClick.AddListener(() => openEvolvePanel());
         panelBtnClose.onClick.AddListener(() => closeEvolvePanel());
         panelBtnEvolve.onClick.AddListener(() => evolutionHero());
+
+        evolAnimator = pnEvolve.GetComponent<Animator>();
     }
 
     public void updateCacheSelection(int id)
@@ -254,19 +257,10 @@ public class UIHero : Singleton<UIHero>
     {
         if (canEvolve())
         {
-            for (int i = 0; i < 3; i++)
-            {
-                ItemDatabase.Instance.reduceItemSlotById(i + 5, StaticInfo.evolveLevel[currentEvol, i]);
-            }
-            UserDatabase.Instance.reduceMoney(StaticInfo.evolveLevel[currentEvol, 3], 0);
+            //run anim
+            StartCoroutine(runAnimEvolve());
 
-            HeroesDatabase.Instance.evolveHero(curHeroID);
-            Debug.Log("cur Hero ID " + curHeroID);
-
-            curHeroID++;
-            PlayerPrefs.SetInt("HeroesPick", curHeroID);
-            initDataEvolve();
-            initUIHero();
+            
         }
         else
         {
@@ -317,6 +311,26 @@ public class UIHero : Singleton<UIHero>
         imgAvatar.SetActive(true);
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
 
+    }
+
+    IEnumerator runAnimEvolve()
+    {
+        evolAnimator.SetTrigger("Evolve");
+        yield return new WaitForSeconds(2f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            ItemDatabase.Instance.reduceItemSlotById(i + 5, StaticInfo.evolveLevel[currentEvol, i]);
+        }
+        UserDatabase.Instance.reduceMoney(StaticInfo.evolveLevel[currentEvol, 3], 0);
+
+        HeroesDatabase.Instance.evolveHero(curHeroID);
+        Debug.Log("cur Hero ID " + curHeroID);
+
+        curHeroID++;
+        PlayerPrefs.SetInt("HeroesPick", curHeroID);
+        initDataEvolve();
+        initUIHero();
     }
 }
 

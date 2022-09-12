@@ -195,6 +195,8 @@ public class UIHero : Singleton<UIHero>
         //    EvolRequire.SetActive(true);
         //}
 
+
+
         for (int i = 0; i < 5; i++)
         {
             listHeroEvolve[i].SetActive(false);
@@ -234,6 +236,16 @@ public class UIHero : Singleton<UIHero>
             textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
         }
         textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol,3].ToString());
+
+        if (canEvolve())
+        {
+            panelBtnEvolve.gameObject.SetActive(true);
+        }
+        else
+        {
+            panelBtnEvolve.gameObject.SetActive(false);
+
+        }
 
 
     }

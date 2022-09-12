@@ -1231,7 +1231,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.335, y: 0.22200002}
   m_AnchorMax: {x: 0.96928084, y: 0.65000004}
-  m_AnchoredPosition: {x: 0.19995117, y: -2.000061}
+  m_AnchoredPosition: {x: 0.19995117, y: -2}
   m_SizeDelta: {x: -6.395752, y: -3.1010742}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &268933058364741742
@@ -19119,7 +19119,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c4bd7a50fb345494db1d588153060136, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 81420c864c338de44890fe8567df177c, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -28689,7 +28689,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 206.66667, y: -100}
+  m_AnchoredPosition: {x: 206.66663, y: -100}
   m_SizeDelta: {x: 300, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3601474597783234580
@@ -33514,7 +33514,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.569}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 38.200073}
+  m_AnchoredPosition: {x: 0, y: 38.200195}
   m_SizeDelta: {x: 0, y: -76.4021}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8381885759186345703
@@ -40286,6 +40286,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -21.400002
       objectReference: {fileID: 0}
+    - target: {fileID: 2393972118180214262, guid: 6e035751738c98c459256e17c14de03c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -40.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2393972118180214262, guid: 6e035751738c98c459256e17c14de03c,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 81.79991
+      objectReference: {fileID: 0}
     - target: {fileID: 4395480385792860747, guid: 6e035751738c98c459256e17c14de03c,
         type: 3}
       propertyPath: m_Name
@@ -40395,6 +40405,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758726421159816913, guid: 6e035751738c98c459256e17c14de03c,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 59.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758726421159816913, guid: 6e035751738c98c459256e17c14de03c,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758726421159816913, guid: 6e035751738c98c459256e17c14de03c,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e035751738c98c459256e17c14de03c, type: 3}

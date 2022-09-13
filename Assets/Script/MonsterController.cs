@@ -12,9 +12,11 @@ public class MonsterController : MonoBehaviour
     private GameObject[] waypoints;
     private int waypointIndex = 0;
     private bool isMove = true;
+    private int wayMove = 1;
     private int facingRight = 1;
     private int monsterLv = 1;
-    
+    private Transform playerPos;
+
     void Start()
     {
         gameObject.GetComponent<Collider2D>().enabled = true;
@@ -34,13 +36,13 @@ public class MonsterController : MonoBehaviour
     public void setAction(int action)
     {
         // attack back
-        if(action == 1)
+        if (action == 1)
         {
             runAnimation(3);
             isMove = false;
             StartCoroutine(setMove());
         }
-        else if(action == 2) // dead
+        else if (action == 2) // dead
         {
             runAnimation(4);
             isMove = false;
@@ -57,18 +59,30 @@ public class MonsterController : MonoBehaviour
     {
         if (isMove)
         {
-            transform.position = Vector2.MoveTowards(transform.position,
-                waypoints[waypointIndex].transform.position,
-                (speed / 80) * Time.deltaTime);
-            if (transform.position.x == waypoints[waypointIndex].transform.position.x && transform.position.y == waypoints[waypointIndex].transform.position.y)
+            // move theo waypoints
+            if (wayMove == 1)
             {
-                isMove = false;
-                runAnimation(1);
-                StartCoroutine(idleBehavior());
+                transform.position = Vector2.MoveTowards(transform.position,
+                    waypoints[waypointIndex].transform.position,
+                    (speed / 80) * Time.deltaTime);
+                if (transform.position.x == waypoints[waypointIndex].transform.position.x && transform.position.y == waypoints[waypointIndex].transform.position.y)
+                {
+                    isMove = false;
+                    runAnimation(1);
+                    StartCoroutine(idleBehavior());
+                }
+            }
+            // move theo position
+            else if (wayMove == 2)
+            {
+                transform.position = Vector2.MoveTowards(transform.position,
+                    playerPos.position,
+                    (speed / 80) * Time.deltaTime);
+                checkFlipPlayer();
             }
         }
-
     }
+
     IEnumerator idleBehavior()
     {
         yield return new WaitForSeconds(2f);
@@ -77,12 +91,7 @@ public class MonsterController : MonoBehaviour
         {
             isMove = true;
             runAnimation(2);
-            //waypointIndex = Random.Range(0, waypoints.Length);
-            waypointIndex++;
-            if(waypointIndex == waypoints.Length)
-            {
-                waypointIndex = 0;
-            }
+            waypointIndex = Random.Range(0, 25);
             checkFlip();
         }
         else
@@ -101,8 +110,20 @@ public class MonsterController : MonoBehaviour
         {
             flip();
         }
-
     }
+
+    private void checkFlipPlayer()
+    {
+        if (transform.position.x < playerPos.transform.position.x && facingRight == 0)
+        {
+            flip();
+        }
+        else if (transform.position.x > playerPos.transform.position.x && facingRight == 1)
+        {
+            flip();
+        }
+    }
+
     private int getId()
     {
         return id;
@@ -122,13 +143,15 @@ public class MonsterController : MonoBehaviour
         {
             level.color = Color.white;
         }
-        else if(monsterLv <= playerLv+1)
+        else if (monsterLv <= playerLv + 1)
         {
             level.color = Color.green;
-        } else if(monsterLv <= playerLv+2)
+        }
+        else if (monsterLv <= playerLv + 2)
         {
             level.color = Color.yellow;
-        } else
+        }
+        else
         {
             level.color = Color.red;
         }
@@ -137,13 +160,16 @@ public class MonsterController : MonoBehaviour
     public void setupWaypoints(int num, int enemyId)
     {
         id = enemyId;
-        string route = "Route" + num.ToString();
+        wayMove = num;
+        string route = "Route1";
         GameObject[] waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
         waypoints = waypoints1;
         int pos = Random.Range(0, waypoints.Length);
         gameObject.SetActive(true);
         transform.position = waypoints[pos].transform.position;
+        waypointIndex = Random.Range(0, 25);
+        playerPos = GameObject.FindGameObjectsWithTag("Player")[0].transform;
         checkFlip();
         runAnimation(2);
     }
@@ -151,18 +177,19 @@ public class MonsterController : MonoBehaviour
     private void runAnimation(int pos)
     {
         //idle
-        if(pos == 1)
+        if (pos == 1)
         {
-            if(id == 48)
+            if (id == 48)
             {
                 GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("IDLE");
-            } else
+            }
+            else
             {
                 GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
             }
         }
         //move
-        else if(pos == 2)
+        else if (pos == 2)
         {
             if (id == 33 || id == 47 || id == 63)
             {
@@ -174,7 +201,7 @@ public class MonsterController : MonoBehaviour
             }
         }
         //attack
-        else if(pos == 3)
+        else if (pos == 3)
         {
             if (id == 18 || id == 63)
             {
@@ -187,7 +214,7 @@ public class MonsterController : MonoBehaviour
             StartCoroutine(replayAnimation());
         }
         // die
-        else if(pos == 4)
+        else if (pos == 4)
         {
             if (id == 29 || id == 63 || id == 63)
             {

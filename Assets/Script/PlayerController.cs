@@ -130,9 +130,9 @@ public class PlayerController : Singleton<PlayerController>
         {
             if (timeSmoke > timeSmokeWait) // only check for space bar if we last fired longer than the cooldown time
             {
-
-                var smoke = Instantiate(runSmoke,new Vector3(SmokePos.transform.position.x, SmokePos.transform.position.y, SmokePos.transform.position.z), SmokePos.transform.rotation);
-                StartCoroutine(DestroySmoke(smoke));
+                GameObject smoke = EasyObjectPool.instance.GetObjectFromPool("Smoke", new Vector3(SmokePos.transform.position.x, SmokePos.transform.position.y, SmokePos.transform.position.z), SmokePos.transform.rotation);
+                smoke.GetComponent<SmokeDisable>().disableSelf();
+                //var smoke = Instantiate(runSmoke,new Vector3(SmokePos.transform.position.x, SmokePos.transform.position.y, SmokePos.transform.position.z), SmokePos.transform.rotation);
                 timeSmoke = 0;
 
             }
@@ -142,11 +142,7 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
     }
-    private IEnumerator DestroySmoke(GameObject o)
-    {
-        yield return new WaitForSeconds(1);
-        o.SetActive(false);
-    }
+  
     private void runAnimation(int pos)
     {
         //idle

@@ -176,7 +176,7 @@ public class GameController : Singleton<GameController>
     IEnumerator disableParticle(GameObject obj)
     {
         yield return new WaitForSeconds(0.5f);
-        //obj.SetActive(false);
+        obj.SetActive(false);
         EasyObjectPool.instance.ReturnObjectToPool(obj);
     }
 

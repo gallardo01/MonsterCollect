@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using MarchingBytes;
 public class MonsterController : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -16,10 +16,12 @@ public class MonsterController : MonoBehaviour
     private int facingRight = 1;
     private int monsterLv = 1;
     private Transform playerPos;
+    private BoxCollider2D collider;
 
     void Start()
     {
-        gameObject.GetComponent<Collider2D>().enabled = true;
+        collider = GetComponent<BoxCollider2D>();
+        //gameObject.GetComponent<Collider2D>().enabled = true;
         setText(id);
     }
 
@@ -159,6 +161,7 @@ public class MonsterController : MonoBehaviour
 
     public void setupWaypoints(int num, int enemyId)
     {
+        isMove = true;
         id = enemyId;
         wayMove = num;
         string route = "Route1";
@@ -246,6 +249,8 @@ public class MonsterController : MonoBehaviour
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(1f);
+        gameObject.GetComponent<Collider2D>().enabled = true;
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
         gameObject.SetActive(false);
     }
 

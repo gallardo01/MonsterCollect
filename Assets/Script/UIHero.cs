@@ -43,7 +43,7 @@ public class UIHero : Singleton<UIHero>
     int currentEvol = 0;
 
     Animator evolAnimator;
-
+    bool can_evolve;
 
 
     // Start is called before the first frame update
@@ -170,6 +170,8 @@ public class UIHero : Singleton<UIHero>
 
     void openEvolvePanel()
     {
+        can_evolve = true;
+
         // check unlocked
         HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
 
@@ -255,12 +257,14 @@ public class UIHero : Singleton<UIHero>
 
     void evolutionHero()
     {
-        if (canEvolve())
+        if (canEvolve() && can_evolve)
         {
             //run anim
+            can_evolve = false;
             StartCoroutine(runAnimEvolve());
-
             
+
+
         }
         else
         {
@@ -316,7 +320,7 @@ public class UIHero : Singleton<UIHero>
     IEnumerator runAnimEvolve()
     {
         evolAnimator.SetTrigger("Evolve");
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         for (int i = 0; i < 3; i++)
         {
@@ -331,6 +335,8 @@ public class UIHero : Singleton<UIHero>
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
         initDataEvolve();
         initUIHero();
+
+        can_evolve = true;
     }
 }
 

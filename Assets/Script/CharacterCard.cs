@@ -11,6 +11,7 @@ public class CharacterCard : MonoBehaviour
     public TextMeshProUGUI heroName;
     public Button button;
     public GameObject locker;
+    public GameObject selected;
 
 
     private HeroesData heroesData;
@@ -23,10 +24,12 @@ public class CharacterCard : MonoBehaviour
     private void onClickHeroData()
     {
         UIHero.Instance.onClickCard(heroesData);
+        //selected.SetActive(true);
     }
 
     public void initData(HeroesData data)
     {
+
         heroesData = data;
 
         string name = data.Name;

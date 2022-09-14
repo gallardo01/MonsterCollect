@@ -32,6 +32,8 @@ public class UIHero : Singleton<UIHero>
     private int curHeroID;
     public int cacheId;
 
+    public List<GameObject> selected;
+
     public Button panelBtnClose;
     public Button panelBtnEvolve;
     public GameObject scrollview_evol;
@@ -90,6 +92,13 @@ public class UIHero : Singleton<UIHero>
     {
         //curHeroID = data.Id;
         cacheId = data.Id;
+
+        for (int i = 1; i <= 12; i++)
+        {
+            selected[i].SetActive(false);
+        }
+        selected[cacheId/10].SetActive(true);
+
 
         txtHeroName.text = data.Name;
         txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
@@ -202,6 +211,7 @@ public class UIHero : Singleton<UIHero>
 
 
 
+
         for (int i = 0; i < 5; i++)
         {
             listHeroEvolve[i].SetActive(false);
@@ -236,21 +246,26 @@ public class UIHero : Singleton<UIHero>
         Debug.Log("cur evol "+ currentEvol);
         scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol], 749, 0);
 
-        for (int i = 0; i < 3; i++)
-        {
-            textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
-        }
-        textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol,3].ToString());
-
         if (canEvolve())
         {
             panelBtnEvolve.gameObject.SetActive(true);
+            EvolRequire.SetActive(true);
+
+            for (int i = 0; i < 3; i++)
+            {
+                textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
+            }
+            textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol, 3].ToString());
         }
         else
         {
             panelBtnEvolve.gameObject.SetActive(false);
+            EvolRequire.SetActive(false);
 
         }
+
+
+
 
 
     }

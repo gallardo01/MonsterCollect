@@ -13,7 +13,6 @@ public class UIHero : Singleton<UIHero>
     public Button btnEvolve;
     public Button btnBack;
     public GameObject imgAvatar;
-    public GameObject lockAvatar;
 
     public RectTransform pnEvolve;
 
@@ -154,14 +153,12 @@ public class UIHero : Singleton<UIHero>
             btnBuy.gameObject.SetActive(false);
             btnSelect.gameObject.SetActive(true);
             btnEvolve.gameObject.SetActive(true);
-            lockAvatar.SetActive(false);
         }
         else
         {
             btnBuy.gameObject.SetActive(true);
             btnSelect.gameObject.SetActive(false);
             btnEvolve.gameObject.SetActive(false);
-            lockAvatar.SetActive(true);
 
 
         }

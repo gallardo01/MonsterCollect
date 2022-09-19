@@ -42,11 +42,20 @@ public class UIHero : Singleton<UIHero>
     public List<GameObject> listHeroBackGlow;
     public GameObject EvolRequire;
     public List<TextMeshProUGUI> textEvolRequire;
+
+    public List<TextMeshProUGUI> txtAlibityBefore;
+    public List<TextMeshProUGUI> txtAlibityAfter;
+
     int currentEvol = 0;
+
+
 
     Animator evolAnimator;
     bool can_evolve;
 
+
+    public GameObject maskBtnBuyGold;
+    public GameObject maskBtnBuyDiamond;
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +82,9 @@ public class UIHero : Singleton<UIHero>
         panelBtnEvolve.onClick.AddListener(() => evolutionHero());
 
         evolAnimator = pnEvolve.GetComponent<Animator>();
+
+        maskBtnBuyGold.SetActive(true);
+        maskBtnBuyDiamond.SetActive(true);
     }
 
     public void updateCacheSelection(int id)
@@ -136,6 +148,9 @@ public class UIHero : Singleton<UIHero>
 
     public void backToInventory()
     {
+        maskBtnBuyGold.SetActive(false);
+        maskBtnBuyDiamond.SetActive(false);
+
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
 
@@ -201,17 +216,6 @@ public class UIHero : Singleton<UIHero>
     {
         List<HeroesData> listhero =  HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
 
-        //if (currentEvol >= listhero.Count - 1)
-        //{
-        //    EvolRequire.SetActive(false);
-        //}
-        //else
-        //{
-        //    EvolRequire.SetActive(true);
-        //}
-
-
-
 
         for (int i = 0; i < 5; i++)
         {
@@ -245,13 +249,43 @@ public class UIHero : Singleton<UIHero>
         }
 
         Debug.Log("cur evol "+ currentEvol);
+        Debug.Log("total  " + listhero.Count);
+
         scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol], 749, 0);
 
-        if (canEvolve())
+       
+
+        if (currentEvol < listhero.Count - 1)
         {
             panelBtnEvolve.gameObject.SetActive(true);
             EvolRequire.SetActive(true);
 
+            //panel thong tin
+            HeroesData data_before = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
+            txtAlibityBefore[0].text = data_before.Atk.ToString();
+            txtAlibityBefore[1].text = data_before.Hp.ToString();
+            txtAlibityBefore[2].text = data_before.Armour.ToString();
+            txtAlibityBefore[3].text = data_before.Speed.ToString();
+            txtAlibityBefore[4].text = data_before.XpGain.ToString();
+            txtAlibityBefore[5].text = data_before.GoldGain.ToString();
+
+            HeroesData data_after = HeroesDatabase.Instance.fetchHeroesData(curHeroID + 1);
+            txtAlibityAfter[0].text = data_after.Atk.ToString();
+            txtAlibityAfter[1].text = data_after.Hp.ToString();
+            txtAlibityAfter[2].text = data_after.Armour.ToString();
+            txtAlibityAfter[3].text = data_after.Speed.ToString();
+            txtAlibityAfter[4].text = data_after.XpGain.ToString();
+            txtAlibityAfter[5].text = data_after.GoldGain.ToString();
+
+        }
+        else
+        {
+            panelBtnEvolve.gameObject.SetActive(false);
+            EvolRequire.SetActive(false);
+        }
+
+        if (canEvolve())
+        {
             for (int i = 0; i < 3; i++)
             {
                 textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
@@ -260,14 +294,9 @@ public class UIHero : Singleton<UIHero>
         }
         else
         {
-            panelBtnEvolve.gameObject.SetActive(false);
-            EvolRequire.SetActive(false);
+
 
         }
-
-
-
-
 
     }
 
@@ -278,14 +307,10 @@ public class UIHero : Singleton<UIHero>
             //run anim
             can_evolve = false;
             StartCoroutine(runAnimEvolve());
-            
-
-
         }
         else
         {
             Debug.Log("khong co du do");
-
         }
     }
 

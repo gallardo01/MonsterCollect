@@ -23,6 +23,7 @@ public class UserDatabase : Singleton<UserDatabase>
         LoadResourceTextfileCurrentData();
 
         //gainMoney(10000000, 9999999);
+        //reduceMoney(6172000, 1000);
     }
 
     private void firstTimeSetUp()

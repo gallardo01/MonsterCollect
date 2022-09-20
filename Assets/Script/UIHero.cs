@@ -45,6 +45,8 @@ public class UIHero : Singleton<UIHero>
 
     public List<TextMeshProUGUI> txtAlibityBefore;
     public List<TextMeshProUGUI> txtAlibityAfter;
+    public GameObject groupPanelAlibityAfter;
+
 
     int currentEvol = 0;
 
@@ -56,6 +58,8 @@ public class UIHero : Singleton<UIHero>
 
     public GameObject maskBtnBuyGold;
     public GameObject maskBtnBuyDiamond;
+
+    private UserData database = new UserData();
 
     // Start is called before the first frame update
     void Start()
@@ -253,23 +257,44 @@ public class UIHero : Singleton<UIHero>
 
         scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol], 749, 0);
 
-       
+
+        for (int i = 0; i < 3; i++)
+        {
+            textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
+        }
+        textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol, 3].ToString());
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
+            {
+                textEvolRequire[i].color = Color.red;
+            }
+        }
+        if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
+        {
+            textEvolRequire[3].color = Color.red;
+        }
+
+        HeroesData data_before = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
+        txtAlibityBefore[0].text = data_before.Atk.ToString();
+        txtAlibityBefore[1].text = data_before.Hp.ToString();
+        txtAlibityBefore[2].text = data_before.Armour.ToString();
+        txtAlibityBefore[3].text = data_before.Speed.ToString();
+        txtAlibityBefore[4].text = data_before.XpGain.ToString();
+        txtAlibityBefore[5].text = data_before.GoldGain.ToString();
 
         if (currentEvol < listhero.Count - 1)
         {
+            groupPanelAlibityAfter.SetActive(true);
             panelBtnEvolve.gameObject.SetActive(true);
             EvolRequire.SetActive(true);
 
             //panel thong tin
-            HeroesData data_before = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
-            txtAlibityBefore[0].text = data_before.Atk.ToString();
-            txtAlibityBefore[1].text = data_before.Hp.ToString();
-            txtAlibityBefore[2].text = data_before.Armour.ToString();
-            txtAlibityBefore[3].text = data_before.Speed.ToString();
-            txtAlibityBefore[4].text = data_before.XpGain.ToString();
-            txtAlibityBefore[5].text = data_before.GoldGain.ToString();
+           
 
             HeroesData data_after = HeroesDatabase.Instance.fetchHeroesData(curHeroID + 1);
+
             txtAlibityAfter[0].text = data_after.Atk.ToString();
             txtAlibityAfter[1].text = data_after.Hp.ToString();
             txtAlibityAfter[2].text = data_after.Armour.ToString();
@@ -277,25 +302,36 @@ public class UIHero : Singleton<UIHero>
             txtAlibityAfter[4].text = data_after.XpGain.ToString();
             txtAlibityAfter[5].text = data_after.GoldGain.ToString();
 
+            if (data_after.Atk > data_before.Atk)
+            {
+                txtAlibityAfter[0].color = Color.green;
+            }
+            if (data_after.Hp > data_before.Hp)
+            {
+                txtAlibityAfter[1].color = Color.green;
+            }
+            if (data_after.Armour > data_before.Armour)
+            {
+                txtAlibityAfter[2].color = Color.green;
+            }
+            if (data_after.Speed > data_before.Speed)
+            {
+                txtAlibityAfter[3].color = Color.green;
+            }
+            if (data_after.XpGain > data_before.XpGain)
+            {
+                txtAlibityAfter[4].color = Color.green;
+            }
+            if (data_after.GoldGain > data_before.GoldGain)
+            {
+                txtAlibityAfter[5].color = Color.green;
+            }
         }
         else
         {
+            groupPanelAlibityAfter.SetActive(false);
             panelBtnEvolve.gameObject.SetActive(false);
             EvolRequire.SetActive(false);
-        }
-
-        if (canEvolve())
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
-            }
-            textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol, 3].ToString());
-        }
-        else
-        {
-
-
         }
 
     }

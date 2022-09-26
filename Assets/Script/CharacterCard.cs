@@ -12,6 +12,7 @@ public class CharacterCard : MonoBehaviour
     public Button button;
     public GameObject locker;
     public GameObject selected;
+    public Image typeHero;
 
 
     private HeroesData heroesData;
@@ -35,6 +36,7 @@ public class CharacterCard : MonoBehaviour
         string name = data.Name;
         heroName.text = name;
         imgHero.sprite = Resources.Load<Sprite>("UI/Icons/Monster/" + data.Id.ToString());
+        typeHero.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type.ToString());
         if (data.Unlock == 0)
         {
             locker.SetActive(true);

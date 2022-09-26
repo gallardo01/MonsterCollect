@@ -60,8 +60,8 @@ public class PlayerController : Singleton<PlayerController>
         currentSpeed = data.Speed * 2;
         currentArmour = data.Armour;
         currentAtk = data.Atk;
-        bonusExp = data.XpGain;
-        bonusGold = data.GoldGain;
+        bonusExp = data.Crit;
+        bonusGold = data.Spell;
 
         hpText.text = currentHp.ToString();
         hpBar.transform.localScale = new Vector3(1f, 1f, 1f);

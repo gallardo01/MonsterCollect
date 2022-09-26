@@ -56,8 +56,13 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             newItem.Hp = (int)userData[i]["Hp"];
             newItem.Armour = (int)userData[i]["Armour"];
             newItem.Speed = (int)userData[i]["Speed"];
-            newItem.XpGain = (int)userData[i]["XpGain"];
-            newItem.GoldGain = (int)userData[i]["GoldGain"];
+            newItem.Crit = (int)userData[i]["Crit"];
+            newItem.Spell = (int)userData[i]["Spell"];
+            newItem.Type = (int)userData[i]["Type"];
+            newItem.Skill = userData[i]["Skill"].ToString();
+
+
+
             database.Add(newItem);
         }
     }
@@ -207,11 +212,13 @@ public class HeroesData
     public string Name { get; set; }
     public int Id { get; set; }
     public int Unlock { get; set; }
+    public int Type { get; set; }
     public int Atk { get; set; }
     public int Hp { get; set; }
     public int Armour { get; set; }
     public int Speed { get; set; }
-    public int XpGain { get; set; }
-    public int GoldGain { get; set; }
+    public int Crit { get; set; }
+    public int Spell { get; set; }
+    public string Skill { get; set; }
 
 }

@@ -55,12 +55,6 @@ public class UIInventory : Singleton<UIInventory>
 
         HeroesData dataHero = HeroesDatabase.Instance.fetchHeroesData(curHeroId);
 
-        //txtAlibity_1.text = "Atk: " + dataHero.Atk.ToString();
-        //txtAlibity_2.text = "HP: " + dataHero.Hp.ToString();
-        //txtAlibity_3.text = "Arm: " + dataHero.Armour.ToString();
-        //txtAlibity_4.text = "Spd: " + dataHero.Speed.ToString();
-        //txtAlibity_5.text = "Exp: " + dataHero.XpGain.ToString();
-        //txtAlibity_6.text = "Gold: " + dataHero.GoldGain.ToString();
     }
 
     void swapToHero()

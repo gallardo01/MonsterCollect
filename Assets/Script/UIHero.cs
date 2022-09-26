@@ -123,8 +123,8 @@ public class UIHero : Singleton<UIHero>
         txtAlibity_2.text = data.Hp.ToString();
         txtAlibity_3.text = data.Armour.ToString();
         txtAlibity_4.text = data.Speed.ToString();
-        txtAlibity_5.text = data.XpGain.ToString();
-        txtAlibity_6.text = data.GoldGain.ToString();
+        txtAlibity_5.text = data.Crit.ToString();
+        txtAlibity_6.text = data.Spell.ToString();
 
         
         handleButton(data);
@@ -281,8 +281,8 @@ public class UIHero : Singleton<UIHero>
         txtAlibityBefore[1].text = data_before.Hp.ToString();
         txtAlibityBefore[2].text = data_before.Armour.ToString();
         txtAlibityBefore[3].text = data_before.Speed.ToString();
-        txtAlibityBefore[4].text = data_before.XpGain.ToString();
-        txtAlibityBefore[5].text = data_before.GoldGain.ToString();
+        txtAlibityBefore[4].text = data_before.Crit.ToString();
+        txtAlibityBefore[5].text = data_before.Spell.ToString();
 
         if (currentEvol < listhero.Count - 1)
         {
@@ -299,8 +299,8 @@ public class UIHero : Singleton<UIHero>
             txtAlibityAfter[1].text = data_after.Hp.ToString();
             txtAlibityAfter[2].text = data_after.Armour.ToString();
             txtAlibityAfter[3].text = data_after.Speed.ToString();
-            txtAlibityAfter[4].text = data_after.XpGain.ToString();
-            txtAlibityAfter[5].text = data_after.GoldGain.ToString();
+            txtAlibityAfter[4].text = data_after.Crit.ToString();
+            txtAlibityAfter[5].text = data_after.Spell.ToString();
 
             if (data_after.Atk > data_before.Atk)
             {
@@ -318,11 +318,11 @@ public class UIHero : Singleton<UIHero>
             {
                 txtAlibityAfter[3].color = Color.green;
             }
-            if (data_after.XpGain > data_before.XpGain)
+            if (data_after.Crit > data_before.Crit)
             {
                 txtAlibityAfter[4].color = Color.green;
             }
-            if (data_after.GoldGain > data_before.GoldGain)
+            if (data_after.Spell > data_before.Spell)
             {
                 txtAlibityAfter[5].color = Color.green;
             }

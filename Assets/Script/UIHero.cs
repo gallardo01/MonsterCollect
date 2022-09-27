@@ -59,7 +59,6 @@ public class UIHero : Singleton<UIHero>
     public GameObject maskBtnBuyGold;
     public GameObject maskBtnBuyDiamond;
 
-    private UserData database = new UserData();
 
     // Start is called before the first frame update
     void Start()
@@ -117,7 +116,8 @@ public class UIHero : Singleton<UIHero>
 
 
         txtHeroName.text = data.Name;
-        txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
+        //txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
+        txtHeroSkillDetail.text = data.Skill.ToString();
 
         txtAlibity_1.text = data.Atk.ToString();
         txtAlibity_2.text = data.Hp.ToString();
@@ -271,10 +271,14 @@ public class UIHero : Singleton<UIHero>
                 textEvolRequire[i].color = Color.red;
             }
         }
+        UserData database = UserDatabase.Instance.getUserData();
+
         if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
         {
             textEvolRequire[3].color = Color.red;
         }
+
+
 
         HeroesData data_before = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
         txtAlibityBefore[0].text = data_before.Atk.ToString();

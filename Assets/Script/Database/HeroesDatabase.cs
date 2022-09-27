@@ -52,6 +52,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             newItem.Name = userData[i]["Name"].ToString();
             newItem.Id = (int)userData[i]["Id"];
             newItem.Unlock = (int)userData[i]["Unlock"];
+            newItem.Level = (int)userData[i]["Level"];
             newItem.Atk = (int)userData[i]["Atk"];
             newItem.Hp = (int)userData[i]["Hp"];
             newItem.Armour = (int)userData[i]["Armour"];
@@ -212,6 +213,7 @@ public class HeroesData
     public string Name { get; set; }
     public int Id { get; set; }
     public int Unlock { get; set; }
+    public int Level { get; set; }
     public int Type { get; set; }
     public int Atk { get; set; }
     public int Hp { get; set; }

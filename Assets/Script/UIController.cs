@@ -41,7 +41,6 @@ public class UIController : Singleton<UIController>
 
         InitUI();
         mainMenuButton();
-        bar.sizeDelta = new Vector2(0, 200);
         shopBtn.onClick.AddListener(() => shopButton());
         heroesBtn.onClick.AddListener(() => heoresButton());
         mainMenuBtn.onClick.AddListener(() => mainMenuButton());
@@ -161,24 +160,31 @@ public class UIController : Singleton<UIController>
 
     private void setupHightLight()
     {
+        // bar.sizeDelta = new Vector2(0, 200);
+
         var expandSize = 80;
         var deactivesize = (bar.rect.width - expandSize) / 4;
         var activesize = deactivesize + expandSize;
         for (int i = 1; i <= 4; i++)
         {
-            hightlight[i].SetActive(false);
+            hightlight[i].gameObject.GetComponent<Image>().color = Color.white;
+            hightlight[i].gameObject.transform.localScale = new Vector3(1,1,1);
             menuText[i].SetActive(false);
-            ((RectTransform)bar.GetChild(i - 1).transform).sizeDelta = new Vector2(deactivesize, 200);
+            ((RectTransform)bar.GetChild(i - 1).transform).sizeDelta = new Vector2(deactivesize, 300);
             var trans = (RectTransform)menuSprite[i].gameObject.transform;
             var minsize = trans.rect.width > trans.rect.height ? trans.rect.height : trans.rect.width;
-            trans.sizeDelta = new Vector2(minsize + 20, minsize);
-
+            trans.sizeDelta = new Vector2(minsize , minsize);
+            hightlight[i].gameObject.transform.localPosition = new Vector3(0, 0, 0);
             menuSprite[i].gameObject.transform.localPosition = new Vector3(0, 0, 0);
         }
-        ((RectTransform)bar.GetChild(currentSite - 1).transform).sizeDelta = new Vector2(activesize, 230);
-        menuSprite[currentSite].gameObject.transform.localPosition = new Vector3(0, 40, 0);
-        hightlight[currentSite].SetActive(true);
         menuText[currentSite].SetActive(true);
+        ((RectTransform)bar.GetChild(currentSite - 1).transform).sizeDelta = new Vector2(activesize, 330);
+      
+        hightlight[currentSite].gameObject.transform.localPosition = new Vector3(0, 55, 0);
+        menuSprite[currentSite].gameObject.transform.localPosition = new Vector3(0, 55, 0);
+        hightlight[currentSite].gameObject.GetComponent<Image>().color = Color.black;
+     
+        
     }
 
     public void detectSwipe(int direction)

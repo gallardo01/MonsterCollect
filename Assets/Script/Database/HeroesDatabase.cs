@@ -51,8 +51,8 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             HeroesData newItem = new HeroesData();
             newItem.Name = userData[i]["Name"].ToString();
             newItem.Id = (int)userData[i]["Id"];
-            newItem.Unlock = (int)userData[i]["Unlock"];
-            newItem.Level = (int)userData[i]["Level"];
+            //newItem.Unlock = (int)userData[i]["Unlock"];
+            //newItem.Level = (int)userData[i]["Level"];
             newItem.Atk = (int)userData[i]["Atk"];
             newItem.Hp = (int)userData[i]["Hp"];
             newItem.Armour = (int)userData[i]["Armour"];
@@ -130,12 +130,12 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
     private void unlockHero(int id)
     {
-        database[fetchHeroesIndex(id)].Unlock = 1;
+        //database[fetchHeroesIndex(id)].Unlock = 1;
     }
 
     public void levelUpHero(int id)
     {
-        database[fetchHeroesIndex(id)].Level += 1;
+        //database[fetchHeroesIndex(id)].Level += 1;
         Save();
 
     }
@@ -144,10 +144,10 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     {
         for (int i = database.Count - 1; i >=0 ; i--)
         {
-            if (database[i].Id/10 == id && database[i].Unlock == 1)
-            {
-                return database[i];
-            }
+            //if (database[i].Id/10 == id && database[i].Unlock == 1)
+            //{
+            //    return database[i];
+            //}
         }
         return fetchHeroesData(id*10);
     }

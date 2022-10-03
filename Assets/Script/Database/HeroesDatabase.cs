@@ -133,6 +133,13 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         database[fetchHeroesIndex(id)].Unlock = 1;
     }
 
+    public void levelUpHero(int id)
+    {
+        database[fetchHeroesIndex(id)].Level += 1;
+        Save();
+
+    }
+
     public HeroesData getCurrentHero(int id)
     {
         for (int i = database.Count - 1; i >=0 ; i--)
@@ -208,12 +215,18 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
     }
 }
+
+
+public class MyHeroes : HeroesData
+{
+    public int Unlock { get; set; }
+    public int Level { get; set; }
+}
+
 public class HeroesData
 {
     public string Name { get; set; }
     public int Id { get; set; }
-    public int Unlock { get; set; }
-    public int Level { get; set; }
     public int Type { get; set; }
     public int Atk { get; set; }
     public int Hp { get; set; }

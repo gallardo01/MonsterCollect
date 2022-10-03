@@ -342,16 +342,19 @@ public class UIHero : Singleton<UIHero>
 
     void evolutionHero()
     {
-        if (canEvolve() && can_evolve)
-        {
-            //run anim
-            can_evolve = false;
-            StartCoroutine(runAnimEvolve());
-        }
-        else
-        {
-            Debug.Log("khong co du do");
-        }
+        //if (canEvolve() && can_evolve)
+        //{
+        //    //run anim
+        //    can_evolve = false;
+        //    StartCoroutine(runAnimEvolve());
+        //}
+        //else
+        //{
+        //    Debug.Log("khong co du do");
+        //}
+
+        HeroesDatabase.Instance.levelUpHero(curHeroID);
+
     }
 
     bool canEvolve()

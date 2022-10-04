@@ -43,6 +43,8 @@ public class UIHero : Singleton<UIHero>
     public GameObject EvolRequire;
     public List<TextMeshProUGUI> textEvolRequire;
 
+    public TextMeshProUGUI txtCurrentLevel;
+    public TextMeshProUGUI txtNextLevel;
     public List<TextMeshProUGUI> txtAlibityBefore;
     public List<TextMeshProUGUI> txtAlibityAfter;
     public GameObject groupPanelAlibityAfter;
@@ -167,20 +169,20 @@ public class UIHero : Singleton<UIHero>
 
     void handleButton(HeroesData data)
     {
-        //if (data.Unlock == 1)
-        //{
-        //    btnBuy.gameObject.SetActive(false);
-        //    btnSelect.gameObject.SetActive(true);
-        //    btnEvolve.gameObject.SetActive(true);
-        //}
-        //else
-        //{
-        //    btnBuy.gameObject.SetActive(true);
-        //    btnSelect.gameObject.SetActive(false);
-        //    btnEvolve.gameObject.SetActive(false);
+        if (HeroesDatabase.Instance.isUnlock(data.Id))
+        {
+            btnBuy.gameObject.SetActive(false);
+            btnSelect.gameObject.SetActive(true);
+            btnEvolve.gameObject.SetActive(true);
+        }
+        else
+        {
+            btnBuy.gameObject.SetActive(true);
+            btnSelect.gameObject.SetActive(false);
+            btnEvolve.gameObject.SetActive(false);
 
 
-        //}
+        }
     }
 
     void buyHero()
@@ -219,6 +221,7 @@ public class UIHero : Singleton<UIHero>
     void initDataEvolve()
     {
         List<HeroesData> listhero =  HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
+        currentEvol = curHeroID % 10 + 1;
 
 
         for (int i = 0; i < 5; i++)
@@ -242,45 +245,40 @@ public class UIHero : Singleton<UIHero>
             monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
 
         }
-        for (int i = listhero.Count-1; i >=0 ; i--)
-        {
-            //if (listhero[i].Unlock == 1)
-            //{
-            //    listHeroBackGlow[i].SetActive(true);
-            //    currentEvol = i;
-            //    break;
-            //}
-        }
 
-        Debug.Log("cur evol "+ currentEvol);
-        Debug.Log("total  " + listhero.Count);
+        listHeroBackGlow[currentEvol-1].SetActive(true);
 
-        scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol], 749, 0);
+        //Debug.Log("cur evol "+ currentEvol);
 
 
-        for (int i = 0; i < 3; i++)
-        {
-            textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
-        }
-        textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol, 3].ToString());
+        scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol-1], 749, 0);
 
-        for (int i = 0; i < 3; i++)
-        {
-            if (ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
-            {
-                textEvolRequire[i].color = Color.red;
-            }
-        }
-        UserData database = UserDatabase.Instance.getUserData();
 
-        if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
-        {
-            textEvolRequire[3].color = Color.red;
-        }
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
+        //}
+        //textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol, 3].ToString());
+
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    if (ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
+        //    {
+        //        textEvolRequire[i].color = Color.red;
+        //    }
+        //}
+        //UserData database = UserDatabase.Instance.getUserData();
+
+        //if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
+        //{
+        //    textEvolRequire[3].color = Color.red;
+        //}
 
 
 
-        HeroesData data_before = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
+        MyHeroes data_before = HeroesDatabase.Instance.fetchMyData(curHeroID);
+
+        txtCurrentLevel.text = "Level "+ data_before.Level.ToString();
         txtAlibityBefore[0].text = data_before.Atk.ToString();
         txtAlibityBefore[1].text = data_before.Hp.ToString();
         txtAlibityBefore[2].text = data_before.Armour.ToString();
@@ -288,48 +286,53 @@ public class UIHero : Singleton<UIHero>
         txtAlibityBefore[4].text = data_before.Crit.ToString();
         txtAlibityBefore[5].text = data_before.Spell.ToString();
 
-        if (currentEvol < listhero.Count - 1)
+        if (data_before.Level < 25)
         {
             groupPanelAlibityAfter.SetActive(true);
             panelBtnEvolve.gameObject.SetActive(true);
             EvolRequire.SetActive(true);
 
             //panel thong tin
-           
+            txtNextLevel.text = "Level " + (data_before.Level+1).ToString();
 
-            HeroesData data_after = HeroesDatabase.Instance.fetchHeroesData(curHeroID + 1);
 
-            txtAlibityAfter[0].text = data_after.Atk.ToString();
-            txtAlibityAfter[1].text = data_after.Hp.ToString();
-            txtAlibityAfter[2].text = data_after.Armour.ToString();
-            txtAlibityAfter[3].text = data_after.Speed.ToString();
-            txtAlibityAfter[4].text = data_after.Crit.ToString();
-            txtAlibityAfter[5].text = data_after.Spell.ToString();
+            //if ((data_before.Atk * (data_before.Level * 5 + 100) / 100) > data_before.Atk)
+            //{
+            //    txtAlibityAfter[0].color = Color.green;
+            //}
+            //if ((data_before.Hp * (data_before.Level * 5 + 100) / 100) > data_before.Hp)
+            //{
+            //    txtAlibityAfter[1].color = Color.green;
+            //}
+            //if ((data_before.Armour * (data_before.Level * 5 + 100) / 100) > data_before.Armour)
+            //{
+            //    txtAlibityAfter[2].color = Color.green;
+            //}
+            //if ((data_before.Speed * (data_before.Level * 5 + 100) / 100) > data_before.Speed)
+            //{
+            //    txtAlibityAfter[3].color = Color.green;
+            //}
+            //if ((data_before.Crit * (data_before.Level * 5 + 100) / 100) > data_before.Crit)
+            //{
+            //    txtAlibityAfter[4].color = Color.green;
+            //}
+            //if ((data_before.Spell * (data_before.Level * 5 + 100) / 100) > data_before.Spell)
+            //{
+            //    txtAlibityAfter[5].color = Color.green;
+            //}
+            for (int i = 0; i < 6; i++)
+            {
+                txtAlibityAfter[i].color = Color.green;
+            }
 
-            if (data_after.Atk > data_before.Atk)
-            {
-                txtAlibityAfter[0].color = Color.green;
-            }
-            if (data_after.Hp > data_before.Hp)
-            {
-                txtAlibityAfter[1].color = Color.green;
-            }
-            if (data_after.Armour > data_before.Armour)
-            {
-                txtAlibityAfter[2].color = Color.green;
-            }
-            if (data_after.Speed > data_before.Speed)
-            {
-                txtAlibityAfter[3].color = Color.green;
-            }
-            if (data_after.Crit > data_before.Crit)
-            {
-                txtAlibityAfter[4].color = Color.green;
-            }
-            if (data_after.Spell > data_before.Spell)
-            {
-                txtAlibityAfter[5].color = Color.green;
-            }
+            
+            txtAlibityAfter[0].text = (data_before.Atk * (data_before.Level * 5 + 100) / 100).ToString();
+            txtAlibityAfter[1].text = (data_before.Hp * (data_before.Level * 5 + 100) / 100).ToString();
+            txtAlibityAfter[2].text = (data_before.Armour * (data_before.Level * 5 + 100) / 100).ToString();
+            txtAlibityAfter[3].text = (data_before.Speed * (data_before.Level * 5 + 100) / 100).ToString();
+            txtAlibityAfter[4].text = (data_before.Crit * (data_before.Level * 5 + 100) / 100).ToString();
+            txtAlibityAfter[5].text = (data_before.Spell * (data_before.Level * 5 + 100) / 100).ToString();
+
         }
         else
         {
@@ -353,7 +356,11 @@ public class UIHero : Singleton<UIHero>
         //    Debug.Log("khong co du do");
         //}
 
+
+
         HeroesDatabase.Instance.levelUpHero(curHeroID);
+
+        initDataEvolve();
 
     }
 

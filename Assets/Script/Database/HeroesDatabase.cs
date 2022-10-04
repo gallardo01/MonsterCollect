@@ -29,11 +29,11 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
         LoadResourceTextfileHeroesData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
-        //if (!PlayerPrefs.HasKey("HeroesPick"))
-        //{
-        //    unlockHero(10);
-        //    PlayerPrefs.SetInt("HeroesPick", 10);
-        //}
+        if (!PlayerPrefs.HasKey("HeroesPick"))
+        {
+            unlockHero(10);
+            PlayerPrefs.SetInt("HeroesPick", 10);
+        }
 
         unlockHero(10);
         PlayerPrefs.SetInt("HeroesPick", 10);
@@ -151,7 +151,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         return 0;
     }
     // Fetch trong DB so huu
-    public HeroesData fetchMyData(int id)
+    public MyHeroes fetchMyData(int id)
     {
         for (int i = 0; i < myHeroes.Count; i++)
         {
@@ -211,8 +211,13 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             int pos = fetchMyIndex(id);
             myHeroes[pos].Id += 1;
             // update chi so
-            myHeroes[pos].Atk = raw.Atk * (myHeroes[pos].Level*5 + 100) / 100; // bonus
-            //
+            myHeroes[pos].Atk = raw.Atk * (myHeroes[pos].Level*5 + 100) / 100;
+            myHeroes[pos].Hp = raw.Hp * (myHeroes[pos].Level*5 + 100) / 100;
+            myHeroes[pos].Armour = raw.Armour * (myHeroes[pos].Level * 5 + 100) / 100;
+            myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
+            myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
+            myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
+
             Save();
         }
     }
@@ -221,6 +226,17 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     {
         int pos = fetchMyIndex(id);
         myHeroes[pos].Level += 1;
+
+        HeroesData raw = fetchHeroesData(id);
+        // update chi so
+        myHeroes[pos].Atk = raw.Atk * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Hp = raw.Hp * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Armour = raw.Armour * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
+        Debug.Log(myHeroes[pos].Atk);
+        Save();
     }
 
     private bool canEvolve(int id)
@@ -229,6 +245,19 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         {
             return true;
         }
+        return false;
+    }
+
+    public bool isUnlock(int id)
+    {
+        for (int i = 0; i < myHeroes.Count ; i++)
+        {
+            if (id/10 == myHeroes[i].Id/10)
+            {
+                return true;
+            }
+        }
+       
         return false;
     }
 

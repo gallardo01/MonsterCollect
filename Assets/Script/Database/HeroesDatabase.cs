@@ -275,7 +275,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
     public void Save()
     {
-        string jsonData = JsonConvert.SerializeObject(myHeroesJson, Formatting.Indented);
+        string jsonData = JsonConvert.SerializeObject(myHeroes, Formatting.Indented);
 
         string tempPath = Application.persistentDataPath + "/c/b/c/";
         string filePath = tempPath + "MyHeroes.txt";

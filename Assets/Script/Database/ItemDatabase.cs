@@ -29,14 +29,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileItemData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
 
-
-
         //for (int i = 1; i <= 20; i++)
         //{
         //    addNewItem(i, 30);
         //}
         //Save();
-
     }
     private void LoadResourceTextfileItemData(string path)
     {
@@ -51,12 +48,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
         //Load saved Json
         if (!File.Exists(tempPath))
         {
-            for (int i = 1; i < 9; i++)
-            {
-                addNewItem(i, 0);
-
-            }
-            Save();
             return;
         }
         byte[] jsonByte = null;

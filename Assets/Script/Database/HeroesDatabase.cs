@@ -25,15 +25,19 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     {
         string fileName = "Heroes.txt";
         string myFileName = "MyHeroes.txt";
-        firstTimeSetUp();
+        //firstTimeSetUp();
 
         LoadResourceTextfileHeroesData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
-        if (!PlayerPrefs.HasKey("HeroesPick"))
-        {
-            unlockHero(10);
-            PlayerPrefs.SetInt("HeroesPick", 10);
-        }
+        //if (!PlayerPrefs.HasKey("HeroesPick"))
+        //{
+        //    unlockHero(10);
+        //    PlayerPrefs.SetInt("HeroesPick", 10);
+        //}
+
+        unlockHero(10);
+        PlayerPrefs.SetInt("HeroesPick", 10);
+
     }
 
     private void firstTimeSetUp()
@@ -88,8 +92,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             HeroesData newItem = new HeroesData();
             newItem.Name = heroesDataJson[i]["Name"].ToString();
             newItem.Id = (int)heroesDataJson[i]["Id"];
-            //newItem.Unlock = (int)userData[i]["Unlock"];
-            //newItem.Level = (int)userData[i]["Level"];
             newItem.Atk = (int)heroesDataJson[i]["Atk"];
             newItem.Hp = (int)heroesDataJson[i]["Hp"];
             newItem.Armour = (int)heroesDataJson[i]["Armour"];
@@ -181,6 +183,8 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         {
             HeroesData raw = fetchHeroesData(id);
             MyHeroes addNew = new MyHeroes();
+
+
             addNew.Name = raw.Name;
             addNew.Id = raw.Id;
             addNew.Hp = raw.Hp;
@@ -191,8 +195,8 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             addNew.Skill = raw.Skill;
             addNew.Crit = raw.Crit;
             addNew.Atk = raw.Atk;
-            //
             addNew.Level = 1;
+
             myHeroes.Add(addNew);
             Save();
         }

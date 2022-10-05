@@ -167,20 +167,20 @@ public class UIHero : Singleton<UIHero>
 
     void handleButton(HeroesData data)
     {
-        if (data.Unlock == 1)
-        {
-            btnBuy.gameObject.SetActive(false);
-            btnSelect.gameObject.SetActive(true);
-            btnEvolve.gameObject.SetActive(true);
-        }
-        else
-        {
-            btnBuy.gameObject.SetActive(true);
-            btnSelect.gameObject.SetActive(false);
-            btnEvolve.gameObject.SetActive(false);
+        //if (data.Unlock == 1)
+        //{
+        //    btnBuy.gameObject.SetActive(false);
+        //    btnSelect.gameObject.SetActive(true);
+        //    btnEvolve.gameObject.SetActive(true);
+        //}
+        //else
+        //{
+        //    btnBuy.gameObject.SetActive(true);
+        //    btnSelect.gameObject.SetActive(false);
+        //    btnEvolve.gameObject.SetActive(false);
 
 
-        }
+        //}
     }
 
     void buyHero()
@@ -204,10 +204,10 @@ public class UIHero : Singleton<UIHero>
         // check unlocked
         HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
 
-        if (data.Unlock == 0)
-        {
-            return;
-        }
+        //if (data.Unlock == 0)
+        //{
+        //    return;
+        //}
 
         curHeroID = cacheId;
         imgAvatar.SetActive(false);
@@ -244,12 +244,12 @@ public class UIHero : Singleton<UIHero>
         }
         for (int i = listhero.Count-1; i >=0 ; i--)
         {
-            if (listhero[i].Unlock == 1)
-            {
-                listHeroBackGlow[i].SetActive(true);
-                currentEvol = i;
-                break;
-            }
+            //if (listhero[i].Unlock == 1)
+            //{
+            //    listHeroBackGlow[i].SetActive(true);
+            //    currentEvol = i;
+            //    break;
+            //}
         }
 
         Debug.Log("cur evol "+ currentEvol);
@@ -342,24 +342,27 @@ public class UIHero : Singleton<UIHero>
 
     void evolutionHero()
     {
-        if (canEvolve() && can_evolve)
-        {
-            //run anim
-            can_evolve = false;
-            StartCoroutine(runAnimEvolve());
-        }
-        else
-        {
-            Debug.Log("khong co du do");
-        }
+        //if (canEvolve() && can_evolve)
+        //{
+        //    //run anim
+        //    can_evolve = false;
+        //    StartCoroutine(runAnimEvolve());
+        //}
+        //else
+        //{
+        //    Debug.Log("khong co du do");
+        //}
+
+        HeroesDatabase.Instance.levelUpHero(curHeroID);
+
     }
 
     bool canEvolve()
     {
-        if (HeroesDatabase.Instance.fetchHeroesData(curHeroID).Unlock == 0)
-        {
-            return false;
-        }
+        //if (HeroesDatabase.Instance.fetchHeroesData(curHeroID).Unlock == 0)
+        //{
+        //    return false;
+        //}
         List<HeroesData> listhero = HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
         if (currentEvol >= listhero.Count-1)
         {

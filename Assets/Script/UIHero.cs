@@ -345,20 +345,27 @@ public class UIHero : Singleton<UIHero>
 
     void evolutionHero()
     {
-        //if (canEvolve() && can_evolve)
-        //{
-        //    //run anim
-        //    can_evolve = false;
-        //    StartCoroutine(runAnimEvolve());
-        //}
-        //else
-        //{
-        //    Debug.Log("khong co du do");
-        //}
+     
 
-
-
+        int currentLevel = HeroesDatabase.Instance.fetchMyData(curHeroID).Level;
         HeroesDatabase.Instance.levelUpHero(curHeroID);
+
+        if (currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24)
+        {
+            // tien hoa hinh dang moi
+
+            if (canEvolve() && can_evolve)
+            {
+                //run anim
+                can_evolve = false;
+                //HeroesDatabase.Instance.evolveHero(curHeroID);
+                StartCoroutine(runAnimEvolve());
+            }
+            else
+            {
+                Debug.Log("khong co du do");
+            }
+        }
 
         initDataEvolve();
 
@@ -376,19 +383,19 @@ public class UIHero : Singleton<UIHero>
             return false;
         }
 
-        for (int i = 0; i < 3; i++)
-        {
-            //if(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
-            if(!ItemDatabase.Instance.canReduceItemSlotEvol(i+5, StaticInfo.evolveLevel[currentEvol, i]))
-            {
-                return false;
-            }
-        }
-        UserData database = UserDatabase.Instance.getUserData();
-        if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
-        {
-            return false;
-        }
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    //if(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
+        //    if(!ItemDatabase.Instance.canReduceItemSlotEvol(i+5, StaticInfo.evolveLevel[currentEvol, i]))
+        //    {
+        //        return false;
+        //    }
+        //}
+        //UserData database = UserDatabase.Instance.getUserData();
+        //if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
+        //{
+        //    return false;
+        //}
         return true;
     }
 

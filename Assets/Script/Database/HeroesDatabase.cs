@@ -217,6 +217,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
             myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
             myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
+            myHeroes[pos].Name = raw.Name;
 
             Save();
         }

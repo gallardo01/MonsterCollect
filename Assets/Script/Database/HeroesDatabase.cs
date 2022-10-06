@@ -236,7 +236,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
-        Debug.Log(myHeroes[pos].Atk);
         Save();
     }
 
@@ -293,14 +292,13 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     
     public HeroesData getCurrentHero(int id)
     {
-        for (int i = heroesData.Count - 1; i >=0 ; i--)
+        if (myHeroes.Count >= id)
         {
-            //if (database[i].Id/10 == id && database[i].Unlock == 1)
-            //{
-            //    return database[i];
-            //}
+            return fetchMyData(myHeroes[id - 1].Id);
+
         }
-        return fetchHeroesData(id*10);
+        return fetchHeroesData(id * 10);
+
     }
 
     public void Save()

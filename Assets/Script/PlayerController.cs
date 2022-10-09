@@ -41,6 +41,10 @@ public class PlayerController : Singleton<PlayerController>
     void Start()
     {
         Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
+        if (!PlayerPrefs.HasKey("Map"))
+        {
+            PlayerPrefs.SetInt("Map", 1);
+        }
         playerLevel = (PlayerPrefs.GetInt("Map") - 1) * 10 + 1;
         initStart();
         levelText.text = playerLevel.ToString();
@@ -57,7 +61,7 @@ public class PlayerController : Singleton<PlayerController>
         int heroesId = 11;
         data = HeroesDatabase.Instance.fetchHeroesData(heroesId);
         currentHp = data.Hp;
-        currentSpeed = data.Speed * 2;
+        currentSpeed = data.Speed / 10;
         currentArmour = data.Armour;
         currentAtk = data.Atk;
         bonusExp = data.Crit;

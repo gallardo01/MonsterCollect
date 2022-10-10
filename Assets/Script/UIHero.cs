@@ -369,7 +369,7 @@ public class UIHero : Singleton<UIHero>
                 txtAlibityAfter[i].color = Color.green;
             }
 
-            if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
+            if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && currentEvol < listhero.Count)
             {
                 HeroesData data_before_evole = HeroesDatabase.Instance.fetchHeroesData(curHeroID+1);
 
@@ -426,6 +426,8 @@ public class UIHero : Singleton<UIHero>
                 Debug.Log("khong co du do");
             }
         }
+
+
 
     }
 

@@ -250,10 +250,9 @@ public class UIHero : Singleton<UIHero>
 
         //Debug.Log("cur evol "+ currentEvol);
 
+        scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol - 1], 749, 0);
 
-        scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol-1], 749, 0);
-
-
+        
         //for (int i = 0; i < 3; i++)
         //{
         //    textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
@@ -316,6 +315,11 @@ public class UIHero : Singleton<UIHero>
             txtLevelOnScrollVew[4].text = "Level 20";
         }
 
+        if (true)
+        {
+            txtLevelOnScrollVew[listhero.Count - 1].text = "Level " + currentLevel;
+        }
+
         MyHeroes data_before = HeroesDatabase.Instance.fetchMyData(curHeroID);
 
         txtCurrentLevel.text = "Level "+ data_before.Level.ToString();
@@ -365,7 +369,7 @@ public class UIHero : Singleton<UIHero>
                 txtAlibityAfter[i].color = Color.green;
             }
 
-            if (currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24)
+            if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
             {
                 HeroesData data_before_evole = HeroesDatabase.Instance.fetchHeroesData(curHeroID+1);
 

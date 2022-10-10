@@ -42,6 +42,7 @@ public class UIHero : Singleton<UIHero>
     public List<GameObject> listHeroBackGlow;
     public GameObject EvolRequire;
     public List<TextMeshProUGUI> textEvolRequire;
+    public Image heroShard;
 
     public TextMeshProUGUI txtCurrentLevel;
     public TextMeshProUGUI txtNextLevel;
@@ -252,12 +253,19 @@ public class UIHero : Singleton<UIHero>
 
         scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol - 1], 749, 0);
 
-        
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    textEvolRequire[i].SetText(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot.ToString() + "/" + StaticInfo.evolveLevel[currentEvol, i].ToString());
-        //}
-        //textEvolRequire[3].SetText(StaticInfo.evolveLevel[currentEvol, 3].ToString());
+        ////////
+        ///
+
+
+        int index_shard = HeroesDatabase.Instance.fetchMyData(curHeroID).Id / 10 + 100;
+
+        heroShard.sprite = Resources.Load<Sprite>("Contents/Item/" + index_shard.ToString());
+
+        textEvolRequire[0].SetText(ItemDatabase.Instance.fetchInventoryById(index_shard).Slot.ToString() + "/" + (currentLevel + 1).ToString());
+        textEvolRequire[1].SetText(ItemDatabase.Instance.fetchInventoryById(1).Slot.ToString() + "/" + (currentLevel/3 + 3).ToString());
+        textEvolRequire[2].SetText(ItemDatabase.Instance.fetchInventoryById(2).Slot.ToString() + "/" + (currentLevel/5 + 2).ToString());
+        textEvolRequire[3].SetText(ItemDatabase.Instance.fetchInventoryById(3).Slot.ToString() + "/" + (currentLevel / 10 + 1).ToString());
+        textEvolRequire[4].SetText((currentLevel * 200).ToString());
 
         //for (int i = 0; i < 3; i++)
         //{
@@ -266,14 +274,32 @@ public class UIHero : Singleton<UIHero>
         //        textEvolRequire[i].color = Color.red;
         //    }
         //}
-        //UserData database = UserDatabase.Instance.getUserData();
 
-        //if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
-        //{
-        //    textEvolRequire[3].color = Color.red;
-        //}
+        if (ItemDatabase.Instance.fetchInventoryById(index_shard).Slot < (currentLevel + 1))
+        {
+            textEvolRequire[0].color = Color.red;
+        }
+        if (ItemDatabase.Instance.fetchInventoryById(1).Slot < (currentLevel / 3 + 3))
+        {
+            textEvolRequire[1].color = Color.red;
+        }
+        if (ItemDatabase.Instance.fetchInventoryById(2).Slot < (currentLevel / 5 + 2))
+        {
+            textEvolRequire[2].color = Color.red;
+        }
+        if (ItemDatabase.Instance.fetchInventoryById(3).Slot < (currentLevel / 10 + 1))
+        {
+            textEvolRequire[3].color = Color.red;
+        }
 
-        if(currentLevel < 5)
+        UserData database = UserDatabase.Instance.getUserData();
+        if (database.Gold < currentLevel * 200)
+        {
+            textEvolRequire[4].color = Color.red;
+        }
+
+        //set text level
+        if (currentLevel < 5)
         {
             txtLevelOnScrollVew[0].text = "Level " + currentLevel;
         }
@@ -369,7 +395,7 @@ public class UIHero : Singleton<UIHero>
                 txtAlibityAfter[i].color = Color.green;
             }
 
-            if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && currentEvol < listhero.Count)
+            if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
             {
                 HeroesData data_before_evole = HeroesDatabase.Instance.fetchHeroesData(curHeroID+1);
 
@@ -403,32 +429,32 @@ public class UIHero : Singleton<UIHero>
 
     void evolutionAndLevelUpHero()
     {
-     
+        //check requiement
         int currentLevel = HeroesDatabase.Instance.fetchMyData(curHeroID).Level;
-        HeroesDatabase.Instance.levelUpHero(curHeroID);
-        StartCoroutine(runAnimEvolveAndLevelUp());
-
-
-        if (currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24)
+        if (checkRequired(currentLevel))
         {
-            // tien hoa hinh dang moi
+            HeroesDatabase.Instance.levelUpHero(curHeroID);
+            StartCoroutine(runAnimEvolveAndLevelUp());
 
-            if (canEvolve())
+
+            if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
             {
+                // tien hoa hinh dang moi
+
                 //run anim
                 //HeroesDatabase.Instance.evolveHero(curHeroID);
                 HeroesDatabase.Instance.evolveHero(curHeroID);
                 curHeroID++;
                 PlayerPrefs.SetInt("HeroesPick", curHeroID);
-            }
-            else
-            {
-                Debug.Log("khong co du do");
+
             }
         }
+        else
+        {
+            Debug.Log("khong du do");
+        }
 
-
-
+        
     }
 
     bool canEvolve()
@@ -444,19 +470,37 @@ public class UIHero : Singleton<UIHero>
             return false;
         }
 
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    //if(ItemDatabase.Instance.fetchInventoryById(i + 5).Slot < StaticInfo.evolveLevel[currentEvol, i])
-        //    if(!ItemDatabase.Instance.canReduceItemSlotEvol(i+5, StaticInfo.evolveLevel[currentEvol, i]))
-        //    {
-        //        return false;
-        //    }
-        //}
-        //UserData database = UserDatabase.Instance.getUserData();
-        //if (database.Gold < StaticInfo.evolveLevel[currentEvol, 3])
-        //{
-        //    return false;
-        //}
+        return true;
+    }
+    
+    bool checkRequired(int level)
+    {
+        int index_shard = HeroesDatabase.Instance.fetchMyData(curHeroID).Id / 10 + 100;
+        //Heros shard
+        if (!ItemDatabase.Instance.canReduceItemSlotEvol(index_shard, level + 1))
+        {
+            return false;
+        }
+        // moon stone
+        if (!ItemDatabase.Instance.canReduceItemSlotEvol(1, level/3 + 3))
+        {
+            return false;
+        }
+        // sun stone
+        if (!ItemDatabase.Instance.canReduceItemSlotEvol(2, level/5 + 2))
+        {
+            return false;
+        }
+        // element stone
+        if (!ItemDatabase.Instance.canReduceItemSlotEvol(3, level/10 + 1))
+        {
+            return false;
+        }
+        UserData database = UserDatabase.Instance.getUserData();
+        if (database.Gold < level *200)
+        {
+            return false;
+        }
         return true;
     }
 

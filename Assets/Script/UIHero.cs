@@ -49,6 +49,7 @@ public class UIHero : Singleton<UIHero>
     public List<TextMeshProUGUI> txtAlibityAfter;
     public GameObject groupPanelAlibityAfter;
 
+    public List<TextMeshProUGUI> txtLevelOnScrollVew;
 
     int currentEvol = 0;
 
@@ -273,7 +274,47 @@ public class UIHero : Singleton<UIHero>
         //    textEvolRequire[3].color = Color.red;
         //}
 
+        if(currentLevel < 5)
+        {
+            txtLevelOnScrollVew[0].text = "Level " + currentLevel;
+        }
+        else
+        {
+            txtLevelOnScrollVew[0].text = "Level 1"; 
+        }
 
+        if (currentLevel >= 5 && currentLevel <10)
+        {
+            txtLevelOnScrollVew[1].text = "Level " + currentLevel;
+        }
+        else
+        {
+            txtLevelOnScrollVew[1].text = "Level 5";
+        }
+        if (currentLevel >= 10 && currentLevel < 15)
+        {
+            txtLevelOnScrollVew[2].text = "Level " + currentLevel;
+        }
+        else
+        {
+            txtLevelOnScrollVew[2].text = "Level 10";
+        }
+        if (currentLevel >= 15 && currentLevel < 20)
+        {
+            txtLevelOnScrollVew[3].text = "Level " + currentLevel;
+        }
+        else
+        {
+            txtLevelOnScrollVew[3].text = "Level 15";
+        }
+        if (currentLevel >= 20 && currentLevel < 25)
+        {
+            txtLevelOnScrollVew[4].text = "Level " + currentLevel;
+        }
+        else
+        {
+            txtLevelOnScrollVew[4].text = "Level 20";
+        }
 
         MyHeroes data_before = HeroesDatabase.Instance.fetchMyData(curHeroID);
 
@@ -337,12 +378,14 @@ public class UIHero : Singleton<UIHero>
             }
             else
             {
-                txtAlibityAfter[0].text = (data_before.Atk * ((data_before.Level) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[1].text = (data_before.Hp * ((data_before.Level) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[2].text = (data_before.Armour * ((data_before.Level) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[3].text = (data_before.Speed * ((data_before.Level) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[4].text = (data_before.Crit * ((data_before.Level) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[5].text = (data_before.Spell * ((data_before.Level) * 5 + 100) / 100).ToString();
+                HeroesData data_before_evole_1 = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
+
+                txtAlibityAfter[0].text = (data_before_evole_1.Atk * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[1].text = (data_before_evole_1.Hp * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[2].text = (data_before_evole_1.Armour * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[3].text = (data_before_evole_1.Speed * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[4].text = (data_before_evole_1.Crit * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[5].text = (data_before_evole_1.Spell * ((data_before.Level) * 5 + 100) / 100).ToString();
             }
         }
         else

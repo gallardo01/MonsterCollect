@@ -226,7 +226,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     public void levelUpHero(int id)
     {
         int pos = fetchMyIndex(id);
-        myHeroes[pos].Level += 1;
 
         HeroesData raw = fetchHeroesData(id);
         // update chi so
@@ -236,6 +235,8 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Level += 1;
+
         Save();
     }
 
@@ -292,10 +293,17 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     
     public HeroesData getCurrentHero(int id)
     {
-        if (myHeroes.Count >= id)
-        {
-            return fetchMyData(myHeroes[id - 1].Id);
+        //if (myHeroes.Count >= id)
+        //{
+        //    return fetchMyData(myHeroes[id - 1].Id);
 
+        //}
+        for (int i = 0; i < myHeroes.Count; i++)
+        {
+            if (myHeroes[i].Id/10 == id)
+            {
+                return fetchMyData(myHeroes[i].Id);
+            }
         }
         return fetchHeroesData(id * 10);
 

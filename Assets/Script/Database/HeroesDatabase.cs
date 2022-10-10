@@ -238,6 +238,19 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         myHeroes[pos].Level += 1;
 
         Save();
+
+        //tru tien
+        reduceItemForLevelUpAndEvolve(myHeroes[pos]);
+    }
+
+    private void reduceItemForLevelUpAndEvolve(MyHeroes raw)
+    {
+        ItemDatabase.Instance.reduceItemSlotById(1, raw.Level / 3 +3);
+        ItemDatabase.Instance.reduceItemSlotById(2, raw.Level / 5 + 2);
+        ItemDatabase.Instance.reduceItemSlotById(3, raw.Level / 10 + 1);
+        ItemDatabase.Instance.reduceItemSlotById(raw.Id/10+100, raw.Level +1);
+
+        UserDatabase.Instance.reduceMoney(raw.Level *200, 0);
     }
 
     private bool canEvolve(int id)

@@ -29,11 +29,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileItemData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
 
-        //for (int i = 1; i <= 20; i++)
+        //for (int i = 1; i <= 37; i++)
         //{
-        //    addNewItem(i, 30);
+        //    addNewItem(i, 1000);
         //}
-        //Save();
+        //for(int i = 101; i <= 112; i++)
+        //{
+        //    addNewItem(i, 1000);
+        //}
+        Save();
     }
     private void LoadResourceTextfileItemData(string path)
     {

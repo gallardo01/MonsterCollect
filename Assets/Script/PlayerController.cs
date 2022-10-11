@@ -161,6 +161,7 @@ public class PlayerController : Singleton<PlayerController>
         }
         else if (pos == 3) // atk
         {
+            Transform e = EasyObjectPool.instance.returnNearestHitPosition(gameObject);
             isAtk = true;
             GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("Attack", 0.5f, 1);
             StartCoroutine(replayAnimation());

@@ -148,7 +148,6 @@ public class UIHero : Singleton<UIHero>
     public void selectHero()
     {
         PlayerPrefs.SetInt("HeroesPick", cacheId);
-        Debug.Log(cacheId);
         curHeroID = cacheId;    
         //backToInventory();
     }
@@ -159,7 +158,6 @@ public class UIHero : Singleton<UIHero>
         maskBtnBuyGold.SetActive(false);
         maskBtnBuyDiamond.SetActive(false);
 
-        Debug.Log(curHeroID);
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
 
@@ -401,15 +399,15 @@ public class UIHero : Singleton<UIHero>
             {
                 HeroesData data_before_evole = HeroesDatabase.Instance.fetchHeroesData(curHeroID+1);
 
-                txtAlibityAfter[0].text = (data_before_evole.Atk * ((data_before.Level+1) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[1].text = (data_before_evole.Hp * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[2].text = (data_before_evole.Armour * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[3].text = (data_before_evole.Speed * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[4].text = (data_before_evole.Crit * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
-                txtAlibityAfter[5].text = (data_before_evole.Spell * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[0].text = (data_before_evole.Atk * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[1].text = (data_before_evole.Hp * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[2].text = (data_before_evole.Armour * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[3].text = (data_before_evole.Speed * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[4].text = (data_before_evole.Crit * ((data_before.Level) * 5 + 100) / 100).ToString();
+                txtAlibityAfter[5].text = (data_before_evole.Spell * ((data_before.Level) * 5 + 100) / 100).ToString();
 
-                Debug.Log(data_before.Level);
-                Debug.Log(curHeroID);
+                Debug.Log("elvo: "+data_before.Level);
+                Debug.Log("elvo: " + curHeroID);
             }
             else
             {
@@ -422,8 +420,8 @@ public class UIHero : Singleton<UIHero>
                 txtAlibityAfter[4].text = (data_before_evole_1.Crit * ((data_before.Level) * 5 + 100) / 100).ToString();
                 txtAlibityAfter[5].text = (data_before_evole_1.Spell * ((data_before.Level) * 5 + 100) / 100).ToString();
 
-                Debug.Log(data_before.Level);
-                Debug.Log(curHeroID); 
+                Debug.Log("nor: " + data_before.Level);
+                Debug.Log("nor: " + curHeroID); 
             }
         }
         else

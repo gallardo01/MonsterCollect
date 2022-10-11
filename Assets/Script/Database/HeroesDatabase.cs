@@ -34,10 +34,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             unlockHero(10);
             PlayerPrefs.SetInt("HeroesPick", 10);
         }
-
-        unlockHero(10);
-        PlayerPrefs.SetInt("HeroesPick", 10);
-
     }
 
     private void firstTimeSetUp()
@@ -211,12 +207,12 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             int pos = fetchMyIndex(id);
             myHeroes[pos].Id += 1;
             // update chi so
-            myHeroes[pos].Atk = raw.Atk * (myHeroes[pos].Level*5 + 100) / 100;
-            myHeroes[pos].Hp = raw.Hp * (myHeroes[pos].Level*5 + 100) / 100;
-            myHeroes[pos].Armour = raw.Armour * (myHeroes[pos].Level * 5 + 100) / 100;
-            myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
-            myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
-            myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
+            myHeroes[pos].Atk = raw.Atk * ((myHeroes[pos].Level-1)*5 + 100) / 100;
+            myHeroes[pos].Hp = raw.Hp * ((myHeroes[pos].Level-1) *5 + 100) / 100;
+            myHeroes[pos].Armour = raw.Armour * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Speed = raw.Speed * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Crit = raw.Crit * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Spell = raw.Spell * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
             myHeroes[pos].Name = raw.Name;
 
             Save();

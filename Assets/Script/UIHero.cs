@@ -148,6 +148,7 @@ public class UIHero : Singleton<UIHero>
     public void selectHero()
     {
         PlayerPrefs.SetInt("HeroesPick", cacheId);
+        Debug.Log(cacheId);
         curHeroID = cacheId;    
         //backToInventory();
     }
@@ -158,6 +159,7 @@ public class UIHero : Singleton<UIHero>
         maskBtnBuyGold.SetActive(false);
         maskBtnBuyDiamond.SetActive(false);
 
+        Debug.Log(curHeroID);
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
 
@@ -405,6 +407,9 @@ public class UIHero : Singleton<UIHero>
                 txtAlibityAfter[3].text = (data_before_evole.Speed * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
                 txtAlibityAfter[4].text = (data_before_evole.Crit * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
                 txtAlibityAfter[5].text = (data_before_evole.Spell * ((data_before.Level + 1) * 5 + 100) / 100).ToString();
+
+                Debug.Log(data_before.Level);
+                Debug.Log(curHeroID);
             }
             else
             {
@@ -416,6 +421,9 @@ public class UIHero : Singleton<UIHero>
                 txtAlibityAfter[3].text = (data_before_evole_1.Speed * ((data_before.Level) * 5 + 100) / 100).ToString();
                 txtAlibityAfter[4].text = (data_before_evole_1.Crit * ((data_before.Level) * 5 + 100) / 100).ToString();
                 txtAlibityAfter[5].text = (data_before_evole_1.Spell * ((data_before.Level) * 5 + 100) / 100).ToString();
+
+                Debug.Log(data_before.Level);
+                Debug.Log(curHeroID); 
             }
         }
         else
@@ -434,8 +442,6 @@ public class UIHero : Singleton<UIHero>
         if (checkRequired(currentLevel))
         {
             HeroesDatabase.Instance.levelUpHero(curHeroID);
-            StartCoroutine(runAnimEvolveAndLevelUp());
-
 
             if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
             {
@@ -448,6 +454,7 @@ public class UIHero : Singleton<UIHero>
                 PlayerPrefs.SetInt("HeroesPick", curHeroID);
 
             }
+            StartCoroutine(runAnimEvolveAndLevelUp());
         }
         else
         {

@@ -24,7 +24,7 @@ namespace MarchingBytes {
 		private GameObject poolObjectPrefab;
 		private int poolSize;
 		private string poolName;
-
+		
 		public Pool(string poolName, GameObject poolObjectPrefab, int initialCount, bool fixedSize) {
 			this.poolName = poolName;
 			this.poolObjectPrefab = poolObjectPrefab;
@@ -82,7 +82,16 @@ namespace MarchingBytes {
 			
 			return result;
 		} 
-		
+
+		public bool isNewCreateObject()
+        {
+			if (availableObjStack.Count > 0)
+			{
+				return false;
+			}
+			return true;
+		}
+
 		//o(1)
 		public void ReturnObjectToPool(PoolObject po) {
 			
@@ -114,7 +123,8 @@ namespace MarchingBytes {
 
 		//mapping of pool name vs list
 		private Dictionary<string, Pool> poolDictionary  = new Dictionary<string, Pool>();
-		
+		private List<Transform> listObj = new List<Transform>();
+
 		// Use this for initialization
 		void Start () {
 			//set instance
@@ -162,9 +172,20 @@ namespace MarchingBytes {
 			
 			if(poolDictionary.ContainsKey(poolName)) {
 				Pool pool = poolDictionary[poolName];
-				result = pool.NextAvailableObject(position,rotation);
-				//scenario when no available object is found in pool
-				if(result == null) {
+                bool isCreateNew = false;
+                if (pool.isNewCreateObject() == true)
+                {
+                    isCreateNew = true;
+                }
+                result = pool.NextAvailableObject(position,rotation);
+                if (isCreateNew && result.tag == "Enemy" && result != null)
+                {
+                    Transform vector2;
+                    vector2 = result.transform;
+                    listObj.Add(vector2);
+                }
+                //scenario when no available object is found in pool
+                if (result == null) {
 					Debug.LogWarning("No object available in pool. Consider setting fixedSize to false.: " + poolName);
 				}
 				
@@ -188,5 +209,21 @@ namespace MarchingBytes {
 				}
 			}
 		}
+
+		public Transform returnNearestHitPosition(GameObject player)
+        {
+			float distance = float.MaxValue;
+			int obj = 0;
+			for(int i = 0; i < listObj.Count; i++)
+            {
+				Vector3 delta = player.transform.position - listObj[i].transform.position;
+				if(distance < delta.magnitude)
+                {
+					distance = delta.magnitude;
+					obj = i;
+				}
+			}
+			return listObj[obj].transform;
+        }
 	}
 }

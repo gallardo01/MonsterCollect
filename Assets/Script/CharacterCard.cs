@@ -37,17 +37,19 @@ public class CharacterCard : MonoBehaviour
         heroName.text = name;
         imgHero.sprite = Resources.Load<Sprite>("UI/Icons/Monster/" + data.Id.ToString());
         typeHero.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type.ToString());
-        //if (data.Unlock == 0)
-        //{
-        //    locker.SetActive(true);
-        //    imgHero.color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
-        //}
-        //else
-        //{
-        //    locker.SetActive(false);
-        //    imgHero.color = Color.white;
+        if (HeroesDatabase.Instance.isUnlock(data.Id) == false)
+        {
+            //lock
+            locker.SetActive(true);
+            imgHero.color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
+        }
+        else
+        {
+            //da mua
+            locker.SetActive(false);
+            imgHero.color = Color.white;
 
-        //}
+        }
     }
 
 }

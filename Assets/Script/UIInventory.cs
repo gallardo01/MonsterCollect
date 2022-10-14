@@ -19,7 +19,7 @@ public class UIInventory : Singleton<UIInventory>
     //public TextMeshProUGUI txtAlibity_5;
     //public TextMeshProUGUI txtAlibity_6;
 
-    private int curHeroId = 10;
+    private int curHeroId = 0;
 
 
     void Start()
@@ -33,7 +33,6 @@ public class UIInventory : Singleton<UIInventory>
         {
             curHeroId = PlayerPrefs.GetInt("HeroesPick");
         }
-
         initData(curHeroId);
         btnChange.onClick.AddListener(() => swapToHero());
     }

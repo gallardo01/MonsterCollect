@@ -140,8 +140,10 @@ public class UserDatabase : Singleton<UserDatabase>
         {
             return false;
         }
+        //tru trong db
         database.Gold -= gold;
         database.Diamond -= diamond;
+        //tru tren UI
         UIController.Instance.InitUI();
         Save();
         return true;

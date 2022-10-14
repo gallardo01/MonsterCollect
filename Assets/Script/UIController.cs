@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
-
 public class UIController : Singleton<UIController>
 {
     public RectTransform shop;
@@ -71,47 +70,29 @@ public class UIController : Singleton<UIController>
     }
     IEnumerator DiamonChange(int diamon)
     {
-        int valPerFrame = (diamon - int.Parse(txtDiamond.text)) > 0 ? (diamon - int.Parse(txtDiamond.text)) : (int.Parse(txtDiamond.text) - diamon);
-        while (int.Parse(txtDiamond.text) != diamon)
-        {
+        int firstValue = int.Parse(txtDiamond.text);
+        int valChange = Mathf.Abs(firstValue - diamon);
 
-            float waitTime = 0.05f;
-            float maxWaitTime = 1f;
-            var percent = waitTime / maxWaitTime;
-            if (int.Parse(txtDiamond.text) < diamon)
-            {
-                txtDiamond.text = (int.Parse(txtDiamond.text) + valPerFrame * percent).ToString();
-                if (int.Parse(txtDiamond.text) > diamon) txtDiamond.text = diamon.ToString();
-            };
-            if (int.Parse(txtDiamond.text) > diamon)
-            {
-                txtDiamond.text = (int.Parse(txtDiamond.text) - valPerFrame * percent).ToString();
-                if (int.Parse(txtDiamond.text) < diamon) txtDiamond.text = diamon.ToString();
-            }
-            yield return new WaitForSeconds(waitTime);
+        for (int i = 0; i < 10; i++)
+        {
+            firstValue -= (int)(valChange * 0.05f);
+            txtDiamond.text = firstValue.ToString();
+            yield return new WaitForSeconds(0.05f);
         }
+        txtDiamond.text = diamon.ToString();
     }
     IEnumerator MoneyChange(int gold)
     {
-        int valPerFrame = (gold - int.Parse(txtGold.text)) > 0 ? (gold - int.Parse(txtGold.text)) : (int.Parse(txtGold.text) - gold);
-        while (int.Parse(txtGold.text) != gold)
+        int firstValue = int.Parse(txtGold.text);
+        int valChange = Mathf.Abs(firstValue - gold);
+
+        for (int i = 0; i < 10; i++)
         {
-            
-            float waitTime = 0.05f;
-            float maxWaitTime = 1f;
-            var percent = waitTime/ maxWaitTime;
-            if (int.Parse(txtGold.text) < gold)
-            {
-                txtGold.text = (int.Parse(txtGold.text) + valPerFrame * percent).ToString();
-                if(int.Parse(txtGold.text) > gold) txtGold.text = gold.ToString();
-            };
-            if (int.Parse(txtGold.text) > gold)
-            {
-                txtGold.text = (int.Parse(txtGold.text) - valPerFrame * percent).ToString();
-                if (int.Parse(txtGold.text) < gold) txtGold.text = gold.ToString();
-            }
-            yield return new WaitForSeconds(waitTime);
+            firstValue -= (int)(valChange * 0.05f);
+            txtGold.text = firstValue.ToString();
+            yield return new WaitForSeconds(0.05f);
         }
+        txtGold.text = gold.ToString();
     }
     private void shopButton()
     {

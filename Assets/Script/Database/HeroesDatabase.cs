@@ -29,15 +29,11 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
         LoadResourceTextfileHeroesData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
-        //if (!PlayerPrefs.HasKey("HeroesPick"))
-        //{
-        //    unlockHero(10);
-        //    PlayerPrefs.SetInt("HeroesPick", 10);
-        //}
-
-        unlockHero(10);
-        PlayerPrefs.SetInt("HeroesPick", 10);
-
+        if (!PlayerPrefs.HasKey("HeroesPick"))
+        {
+            unlockHero(10);
+            PlayerPrefs.SetInt("HeroesPick", 10);
+        }
     }
 
     private void firstTimeSetUp()
@@ -151,7 +147,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         return 0;
     }
     // Fetch trong DB so huu
-    public HeroesData fetchMyData(int id)
+    public MyHeroes fetchMyData(int id)
     {
         for (int i = 0; i < myHeroes.Count; i++)
         {
@@ -211,8 +207,14 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             int pos = fetchMyIndex(id);
             myHeroes[pos].Id += 1;
             // update chi so
-            myHeroes[pos].Atk = raw.Atk * (myHeroes[pos].Level*5 + 100) / 100; // bonus
-            //
+            myHeroes[pos].Atk = raw.Atk * ((myHeroes[pos].Level-1)*5 + 100) / 100;
+            myHeroes[pos].Hp = raw.Hp * ((myHeroes[pos].Level-1) *5 + 100) / 100;
+            myHeroes[pos].Armour = raw.Armour * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Speed = raw.Speed * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Crit = raw.Crit * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Spell = raw.Spell * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Name = raw.Name;
+
             Save();
         }
     }
@@ -220,7 +222,31 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     public void levelUpHero(int id)
     {
         int pos = fetchMyIndex(id);
+
+        HeroesData raw = fetchHeroesData(id);
+        // update chi so
+        myHeroes[pos].Atk = raw.Atk * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Hp = raw.Hp * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Armour = raw.Armour * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Level += 1;
+
+        Save();
+
+        //tru tien
+        reduceItemForLevelUpAndEvolve(myHeroes[pos]);
+    }
+
+    private void reduceItemForLevelUpAndEvolve(MyHeroes raw)
+    {
+        ItemDatabase.Instance.reduceItemSlotById(1, raw.Level / 3 +3);
+        ItemDatabase.Instance.reduceItemSlotById(2, raw.Level / 5 + 2);
+        ItemDatabase.Instance.reduceItemSlotById(3, raw.Level / 10 + 1);
+        ItemDatabase.Instance.reduceItemSlotById(raw.Id/10+100, raw.Level +1);
+
+        UserDatabase.Instance.reduceMoney(raw.Level *200, 0);
     }
 
     private bool canEvolve(int id)
@@ -229,6 +255,19 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         {
             return true;
         }
+        return false;
+    }
+
+    public bool isUnlock(int id)
+    {
+        for (int i = 0; i < myHeroes.Count ; i++)
+        {
+            if (id/10 == myHeroes[i].Id/10)
+            {
+                return true;
+            }
+        }
+       
         return false;
     }
 
@@ -263,14 +302,20 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     
     public HeroesData getCurrentHero(int id)
     {
-        for (int i = heroesData.Count - 1; i >=0 ; i--)
+        //if (myHeroes.Count >= id)
+        //{
+        //    return fetchMyData(myHeroes[id - 1].Id);
+
+        //}
+        for (int i = 0; i < myHeroes.Count; i++)
         {
-            //if (database[i].Id/10 == id && database[i].Unlock == 1)
-            //{
-            //    return database[i];
-            //}
+            if (myHeroes[i].Id/10 == id)
+            {
+                return fetchMyData(myHeroes[i].Id);
+            }
         }
-        return fetchHeroesData(id*10);
+        return fetchHeroesData(id * 10);
+
     }
 
     public void Save()

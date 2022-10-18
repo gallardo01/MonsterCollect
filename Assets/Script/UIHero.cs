@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using System;
 
 public class UIHero : Singleton<UIHero>
 {
@@ -59,6 +60,12 @@ public class UIHero : Singleton<UIHero>
     public GameObject maskBtnBuyGold;
     public GameObject maskBtnBuyDiamond;
 
+    string addAtk;
+    string addHp;
+    string addArmor ;
+    string addSpeed ;
+    string addCrit ;
+    string addSpell;
 
     // Start is called before the first frame update
     void Start()
@@ -364,12 +371,12 @@ public class UIHero : Singleton<UIHero>
             {
                 HeroesData data_before_evole = HeroesDatabase.Instance.fetchHeroesData(curHeroID + 1);
 
-                string addAtk = (data_before_evole.Atk * ((data_before.Level) * 5 + 100) / 100 - data_before.Atk).ToString();
-                string addHp = (data_before_evole.Hp * ((data_before.Level) * 5 + 100) / 100 - data_before.Hp).ToString();
-                string addArmor = (data_before_evole.Armour * ((data_before.Level) * 5 + 100) / 100 - data_before.Armour).ToString();
-                string addSpeed = (data_before_evole.Speed * ((data_before.Level) * 5 + 100) / 100 - data_before.Speed).ToString();
-                string addCrit = (data_before_evole.Crit * ((data_before.Level) * 5 + 100) / 100 - data_before.Crit).ToString();
-                string addSpell = (data_before_evole.Spell * ((data_before.Level) * 5 + 100) / 100 - data_before.Spell).ToString();
+                addAtk = (data_before_evole.Atk * ((data_before.Level) * 5 + 100) / 100 - data_before.Atk).ToString();
+                addHp = (data_before_evole.Hp * ((data_before.Level) * 5 + 100) / 100 - data_before.Hp).ToString();
+                addArmor = (data_before_evole.Armour * ((data_before.Level) * 5 + 100) / 100 - data_before.Armour).ToString();
+                addSpeed = (data_before_evole.Speed * ((data_before.Level) * 5 + 100) / 100 - data_before.Speed).ToString();
+                addCrit = (data_before_evole.Crit * ((data_before.Level) * 5 + 100) / 100 - data_before.Crit).ToString();
+                addSpell = (data_before_evole.Spell * ((data_before.Level) * 5 + 100) / 100 - data_before.Spell).ToString();
 
                 txtAlibityBefore[0].text = data_before.Atk.ToString() + "+(" + "<color=green>" + addAtk + "</color=green>" + ")";
                 txtAlibityBefore[1].text = data_before.Hp.ToString() + "+(" + "<color=green>" + addHp + "</color=green>" + ")";
@@ -382,12 +389,12 @@ public class UIHero : Singleton<UIHero>
             {
                 HeroesData data_before_evole_1 = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
 
-                string addAtk = (data_before_evole_1.Atk * ((data_before.Level) * 5 + 100) / 100 - data_before.Atk).ToString();
-                string addHp = (data_before_evole_1.Hp * ((data_before.Level) * 5 + 100) / 100 - data_before.Hp).ToString();
-                string addArmor = (data_before_evole_1.Armour * ((data_before.Level) * 5 + 100) / 100 - data_before.Armour).ToString();
-                string addSpeed = (data_before_evole_1.Speed * ((data_before.Level) * 5 + 100) / 100 - data_before.Speed).ToString();
-                string addCrit = (data_before_evole_1.Crit * ((data_before.Level) * 5 + 100) / 100 - data_before.Crit).ToString();
-                string addSpell = (data_before_evole_1.Spell * ((data_before.Level) * 5 + 100) / 100 - data_before.Spell).ToString();
+                addAtk = (data_before_evole_1.Atk * ((data_before.Level) * 5 + 100) / 100 - data_before.Atk).ToString();
+                addHp = (data_before_evole_1.Hp * ((data_before.Level) * 5 + 100) / 100 - data_before.Hp).ToString();
+                addArmor = (data_before_evole_1.Armour * ((data_before.Level) * 5 + 100) / 100 - data_before.Armour).ToString();
+                addSpeed = (data_before_evole_1.Speed * ((data_before.Level) * 5 + 100) / 100 - data_before.Speed).ToString();
+                addCrit = (data_before_evole_1.Crit * ((data_before.Level) * 5 + 100) / 100 - data_before.Crit).ToString();
+                addSpell = (data_before_evole_1.Spell * ((data_before.Level) * 5 + 100) / 100 - data_before.Spell).ToString();
 
 
                 txtAlibityBefore[0].text = data_before.Atk.ToString() + "+(" + "<color=green>" + addAtk + "</color=green>" + ")";
@@ -542,12 +549,12 @@ public class UIHero : Singleton<UIHero>
 
         for (int i = 0; i < 19; i++)
         {
-            txtAlibityBefore[0].text = (data_before_evole_1.Atk + i).ToString();
-            txtAlibityBefore[1].text = (data_before_evole_1.Hp + i).ToString();
-            txtAlibityBefore[2].text = (data_before_evole_1.Armour + i).ToString();
-            txtAlibityBefore[3].text = (data_before_evole_1.Speed + i).ToString();
-            txtAlibityBefore[4].text = (data_before_evole_1.Crit + i).ToString();
-            txtAlibityBefore[5].text = (data_before_evole_1.Spell + i).ToString();
+            txtAlibityBefore[0].text = (data_before_evole_1.Atk + i* Int32.Parse(addAtk)/19).ToString() + "<color=green>" + " +"+ addAtk + "</color=green>";
+            txtAlibityBefore[1].text = (data_before_evole_1.Hp + i * Int32.Parse(addHp) / 19).ToString() + "<color=green>" + " +" + addHp + "</color=green>";
+            txtAlibityBefore[2].text = (data_before_evole_1.Armour + i * Int32.Parse(addArmor) / 19).ToString() + "<color=green>" + " +" + addArmor + "</color=green>";
+            txtAlibityBefore[3].text = (data_before_evole_1.Speed + i * Int32.Parse(addSpeed) / 19).ToString() + "<color=green>" + " +" + addSpeed + "</color=green>";
+            txtAlibityBefore[4].text = (data_before_evole_1.Crit + i * Int32.Parse(addCrit) / 19).ToString() + "<color=green>" + " +" + addCrit + "</color=green>";
+            txtAlibityBefore[5].text = (data_before_evole_1.Spell + i * Int32.Parse(addSpell) / 19).ToString() + "<color=green>" + " +" + addSpell + "</color=green>";
             yield return new WaitForSeconds(0.05f);
         }
 

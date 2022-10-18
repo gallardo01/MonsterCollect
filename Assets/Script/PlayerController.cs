@@ -13,6 +13,8 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] TextMeshPro hpText;
     [SerializeField] GameObject hpBar;
 
+    [SerializeField] GameObject locate;
+
     public GameObject runSmoke;
     public GameObject SmokePos;
 
@@ -34,7 +36,7 @@ public class PlayerController : Singleton<PlayerController>
     private HeroesData data;
     float timeSmoke = 0;
     public float timeSmokeWait = 1f;
-    
+    private bool isPause = false;
 
 
     // Start is called before the first frame update
@@ -48,6 +50,8 @@ public class PlayerController : Singleton<PlayerController>
         playerLevel = (PlayerPrefs.GetInt("Map") - 1) * 10 + 1;
         initStart();
         levelText.text = playerLevel.ToString();
+
+        attackMonster();
     }
 
     public Transform getPosition()
@@ -96,10 +100,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
             UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (currentSpeed / 80) * Time.deltaTime;
-
         }
-
-
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
             flip();
@@ -108,10 +109,8 @@ public class PlayerController : Singleton<PlayerController>
         {
             flip();
         }
-
         if (UltimateJoystick.GetHorizontalAxis("Movement") != 0 || UltimateJoystick.GetVerticalAxis("Movement") != 0)
         {
-
             if (walk)
             {
                 walk = false;
@@ -147,6 +146,32 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
   
+    private void attackMonster()
+    {
+        StartCoroutine(normalAttack());
+    }
+
+    private IEnumerator normalAttack()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (isPause == false)
+        {
+            string bulletText = "Electric_1";
+            Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
+            if (shootTarget != null)
+            {
+                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+    shootTarget.rotation);
+                Vector2 vector = shootFollower(shootTarget);
+                float angle = calAngle(shootTarget, vector);
+                projectileNormal.transform.Rotate(0, 0, angle + 90);
+
+                projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
+            }
+        }
+        StartCoroutine(normalAttack());
+    }
+
     private void runAnimation(int pos)
     {
         //idle
@@ -161,7 +186,6 @@ public class PlayerController : Singleton<PlayerController>
         }
         else if (pos == 3) // atk
         {
-            Transform e = EasyObjectPool.instance.returnNearestHitPosition(gameObject);
             isAtk = true;
             GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("Attack", 0.5f, 1);
             StartCoroutine(replayAnimation());
@@ -187,9 +211,6 @@ public class PlayerController : Singleton<PlayerController>
         facingRight = 1 - facingRight;
         Vector3 newScale = body.transform.localScale;
         newScale.x *= -1;
-        //Vector3 newScale2 = level.gameObject.transform.localScale;
-        //newScale2.x *= -1;
-        //level.gameObject.transform.localScale = newScale2;
         body.transform.localScale = newScale;
     }
 
@@ -197,23 +218,15 @@ public class PlayerController : Singleton<PlayerController>
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            int enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
-            if (playerLevel >= enemyLv) // kill
+            if (canHurt)
             {
-                runAnimation(3);
-                GameController.Instance.initEatMonster(collision.gameObject.GetComponent<MonsterController>().getLevel());
-                GameController.Instance.addParticle(collision.gameObject, 1);
-                collision.gameObject.GetComponent<MonsterController>().setAction(2);
-            }
-            else if (canHurt)
-            {
+                int enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
                 canHurt = false;
                 StartCoroutine(setHurt(enemyLv));
-                //GameController.Instance.addParticle(gameObject, 2);
                 collision.gameObject.GetComponent<MonsterController>().setAction(1);
             }
-        }
 
+        }
         if (collision.gameObject.tag == "Boss")
         {
             if (canHurt)
@@ -221,7 +234,6 @@ public class PlayerController : Singleton<PlayerController>
                 int enemyLv = collision.gameObject.GetComponent<BossController>().getLevel();
                 canHurt = false;
                 StartCoroutine(setHurt(enemyLv));
-                //GameController.Instance.addParticle(gameObject, 2);
                 collision.gameObject.GetComponent<BossController>().setAction(1);
             }
         }
@@ -236,7 +248,6 @@ public class PlayerController : Singleton<PlayerController>
         yield return new WaitForSeconds(1f);
         canHurt = true;
     }
-
     private void reduceHealth(int amount)
     {
         string floatingText = "FloatingText";
@@ -258,7 +269,6 @@ public class PlayerController : Singleton<PlayerController>
             hpBar.transform.localScale = new Vector3(per, 1f, 1f);
         }
     }
-
     private int calculateArmourReduce(int armour)
     {
         int percent = 0;
@@ -279,5 +289,37 @@ public class PlayerController : Singleton<PlayerController>
             percent += (int)((armour - 15) * 0.3);
         }
         return percent;
+    }
+    private Vector2 shootFollower(Transform en)
+    {
+        Vector2 vector = new Vector2(-gameObject.transform.position.x + en.transform.position.x, -gameObject.transform.position.y + en.transform.position.y);
+        vector = vector.normalized;
+        return vector;
+    }
+
+    private float calAngle(Transform en, Vector2 vector)
+    {
+        Vector2 cur = new Vector2(-1, 0);
+        float y = gameObject.transform.position.y;
+        float n = en.transform.position.y;
+        float angle = 0;
+
+        if (y <= n)
+            angle = 2 * AngleTo(cur, vector);
+        else
+            angle = -2 * AngleTo(cur, vector);
+
+        return angle;
+    }
+    private float AngleTo(Vector2 pos, Vector2 target)
+    {
+        Vector2 diference = Vector2.zero;
+
+        if (target.x > pos.x)
+            diference = target - pos;
+        else
+            diference = pos - target;
+
+        return Vector2.Angle(Vector2.right, diference);
     }
 }

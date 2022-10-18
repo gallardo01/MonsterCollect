@@ -123,7 +123,7 @@ namespace MarchingBytes {
 
 		//mapping of pool name vs list
 		private Dictionary<string, Pool> poolDictionary  = new Dictionary<string, Pool>();
-		private List<Transform> listObj = new List<Transform>();
+		private List<GameObject> listObj = new List<GameObject>();
 
 		// Use this for initialization
 		void Start () {
@@ -180,8 +180,8 @@ namespace MarchingBytes {
                 result = pool.NextAvailableObject(position,rotation);
                 if (isCreateNew && result.tag == "Enemy" && result != null)
                 {
-                    Transform vector2;
-                    vector2 = result.transform;
+                    GameObject vector2;
+                    vector2 = result;
                     listObj.Add(vector2);
                 }
                 //scenario when no available object is found in pool
@@ -210,19 +210,28 @@ namespace MarchingBytes {
 			}
 		}
 
-		public Transform returnNearestHitPosition(GameObject player)
+		public Transform getNearestHitPosition(GameObject player)
         {
 			float distance = float.MaxValue;
-			int obj = 0;
-			for(int i = 0; i < listObj.Count; i++)
+			int obj = -1;
+			Debug.Log(listObj.Count);
+
+			for (int i = 0; i < listObj.Count; i++)
             {
-				Vector3 delta = player.transform.position - listObj[i].transform.position;
-				if(distance < delta.magnitude)
-                {
-					distance = delta.magnitude;
-					obj = i;
+				if (listObj[i].activeInHierarchy == true)
+				{
+					Vector3 delta = player.transform.position - listObj[i].transform.position;
+					if (distance > delta.magnitude)
+					{
+						distance = delta.magnitude;
+						obj = i;
+					}
 				}
 			}
+			if(obj < 0)
+            {
+				return null;
+            }
 			return listObj[obj].transform;
         }
 	}

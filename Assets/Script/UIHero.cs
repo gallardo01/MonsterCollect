@@ -459,7 +459,7 @@ public class UIHero : Singleton<UIHero>
             }
             StartCoroutine(AlibityChange());
 
-            StartCoroutine(runAnimEvolveAndLevelUp());
+            StartCoroutine(runAnimEvolveAndLevelUp(currentLevel));
 
         }
         else
@@ -533,9 +533,17 @@ public class UIHero : Singleton<UIHero>
 
     }
 
-    IEnumerator runAnimEvolveAndLevelUp()
+    IEnumerator runAnimEvolveAndLevelUp(int currentLevel)
     {
-        evolAnimator.SetTrigger("Evolve");
+        if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
+        {
+            evolAnimator.SetTrigger("Evolve");
+        }
+        else
+        {
+            evolAnimator.SetTrigger("LevelUp");
+
+        }
         panelBtnEvolve.gameObject.SetActive(false);
         // anim tang chi so
         txtAlibityBefore[0].GetComponent<Animator>().SetTrigger("LevelUp");

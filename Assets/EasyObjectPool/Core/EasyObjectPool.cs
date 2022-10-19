@@ -214,7 +214,6 @@ namespace MarchingBytes {
         {
 			float distance = float.MaxValue;
 			int obj = -1;
-			Debug.Log(listObj.Count);
 
 			for (int i = 0; i < listObj.Count; i++)
             {

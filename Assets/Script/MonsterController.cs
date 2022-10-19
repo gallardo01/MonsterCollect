@@ -164,6 +164,9 @@ public class MonsterController : MonoBehaviour
         isMove = true;
         id = enemyId;
         wayMove = num;
+
+        wayMove = 1;
+
         string route = "Route1";
         GameObject[] waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
@@ -272,6 +275,10 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
+        //if (collision.gameObject.tag == "Bullet")
+        //{
+        //    Debug.Log("ABC");
+        //    StartCoroutine(disableObject());
+        //}
     }
 }

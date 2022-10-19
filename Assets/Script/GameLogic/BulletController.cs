@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MarchingBytes;
 
 public class BulletController : MonoBehaviour
 {
@@ -19,4 +20,26 @@ public class BulletController : MonoBehaviour
     {
 
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Enemy")
+        {
+            GameController.Instance.addParticle(collision.gameObject, 1);
+            StartCoroutine(disableObject());
+        }
+        //if (collision.gameObject.tag == "Enemy")
+        //{
+        //    //collision.gameObject.GetComponent<MonsterController>().
+        //    StartCoroutine(disableObject());
+        //}
+    }
+
+    IEnumerator disableObject()
+    {
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(1f);
+    }
+
 }

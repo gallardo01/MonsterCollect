@@ -315,7 +315,7 @@ public class UIHero : Singleton<UIHero>
         {
             txtLevelOnScrollVew[0].text = "Level 1";
         }
-
+        // level < 10
         if (currentLevel >= 5 && currentLevel < 10)
         {
             txtLevelOnScrollVew[1].text = "Level " + currentLevel;
@@ -324,6 +324,7 @@ public class UIHero : Singleton<UIHero>
         {
             txtLevelOnScrollVew[1].text = "Level 5";
         }
+        // level < 15
         if (currentLevel >= 10 && currentLevel < 15)
         {
             txtLevelOnScrollVew[2].text = "Level " + currentLevel;
@@ -332,6 +333,7 @@ public class UIHero : Singleton<UIHero>
         {
             txtLevelOnScrollVew[2].text = "Level 10";
         }
+        // level < 20
         if (currentLevel >= 15 && currentLevel < 20)
         {
             txtLevelOnScrollVew[3].text = "Level " + currentLevel;
@@ -340,6 +342,7 @@ public class UIHero : Singleton<UIHero>
         {
             txtLevelOnScrollVew[3].text = "Level 15";
         }
+        // level <25
         if (currentLevel >= 20 && currentLevel < 25)
         {
             txtLevelOnScrollVew[4].text = "Level " + currentLevel;
@@ -349,8 +352,10 @@ public class UIHero : Singleton<UIHero>
             txtLevelOnScrollVew[4].text = "Level 20";
         }
 
-
-        txtLevelOnScrollVew[listhero.Count - 1].text = "Level " + currentLevel;
+        if (currentEvol >= listhero.Count)
+        {
+            txtLevelOnScrollVew[currentEvol-1].text = "Level " + currentLevel;
+        }
 
 
         MyHeroes data_before = HeroesDatabase.Instance.fetchMyData(curHeroID);
@@ -396,11 +401,22 @@ public class UIHero : Singleton<UIHero>
                 addCrit = (data_before_evole_1.Crit * ((data_before.Level) * 5 + 100) / 100 - data_before.Crit).ToString();
                 addSpell = (data_before_evole_1.Spell * ((data_before.Level) * 5 + 100) / 100 - data_before.Spell).ToString();
 
-
-                txtAlibityBefore[0].text = data_before.Atk.ToString() + "+(" + "<color=green>" + addAtk + "</color=green>" + ")";
-                txtAlibityBefore[1].text = data_before.Hp.ToString() + "+(" + "<color=green>" + addHp + "</color=green>" + ")";
-                txtAlibityBefore[2].text = data_before.Armour.ToString() + "+(" + "<color=green>" + addArmor + "</color=green>" + ")";
-                txtAlibityBefore[3].text = data_before.Speed.ToString() + "+(" + "<color=green>" + addSpeed + "</color=green>" + ")";
+                if (addAtk != "0")
+                {
+                    txtAlibityBefore[0].text = data_before.Atk.ToString() + "+(" + "<color=green>" + addAtk + "</color=green>" + ")";
+                }
+                if (addHp != "0")
+                {
+                    txtAlibityBefore[1].text = data_before.Hp.ToString() + "+(" + "<color=green>" + addHp + "</color=green>" + ")";
+                }
+                if (addArmor != "0")
+                {
+                    txtAlibityBefore[2].text = data_before.Armour.ToString() + "+(" + "<color=green>" + addArmor + "</color=green>" + ")";
+                }
+                if (addSpeed != "0")
+                {
+                    txtAlibityBefore[3].text = data_before.Speed.ToString() + "+(" + "<color=green>" + addSpeed + "</color=green>" + ")";
+                }
                 if (addCrit != "0")
                 {
                     txtAlibityBefore[4].text = data_before.Crit.ToString() + "+(" + "<color=green>" + addCrit + "</color=green>" + ")";

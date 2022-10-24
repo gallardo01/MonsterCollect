@@ -16,30 +16,26 @@ public class BulletController : MonoBehaviour
         
     }
 
-    public void initBullet(int attack, int crit, int type)
+    public void initBullet(int a, int c, int t)
     {
-
+        attack = a;
+        attack = c;
+        type = t;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Wall")
         {
             GameController.Instance.addParticle(collision.gameObject, 1);
-            StartCoroutine(disableObject());
+            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+            gameObject.SetActive(false);
         }
-        //if (collision.gameObject.tag == "Enemy")
-        //{
-        //    //collision.gameObject.GetComponent<MonsterController>().
-        //    StartCoroutine(disableObject());
-        //}
+        if (collision.gameObject.tag == "Enemy")
+        {
+            GameController.Instance.addParticle(collision.gameObject, 1);
+            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+            gameObject.SetActive(false);
+        }
     }
-
-    IEnumerator disableObject()
-    {
-        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-        gameObject.SetActive(false);
-        yield return new WaitForSeconds(1f);
-    }
-
 }

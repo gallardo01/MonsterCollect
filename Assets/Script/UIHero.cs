@@ -147,6 +147,7 @@ public class UIHero : Singleton<UIHero>
         monster.transform.localPosition = new Vector3(0, 0, 0);
         monster.transform.localScale = new Vector3(monster.transform.localScale.x * 300, monster.transform.localScale.y * 300, monster.transform.localScale.z * 300);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+
     }
 
     public void selectHero()
@@ -257,13 +258,10 @@ public class UIHero : Singleton<UIHero>
 
         //Debug.Log("cur evol "+ currentEvol);
 
-
-        scrollview_evol.GetComponent<RectTransform>().localPosition = new Vector3(StaticInfo.evolLocation[currentEvol - 1], 749, 0);
-
+        scrollview_evol.GetComponent<RectTransform>().anchoredPosition = new Vector2(StaticInfo.evolLocation[currentEvol - 1], 0);
 
         ////////
         ///
-
 
         int index_shard = HeroesDatabase.Instance.fetchMyData(curHeroID).Id / 10 + 100;
 

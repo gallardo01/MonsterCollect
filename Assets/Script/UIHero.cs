@@ -44,10 +44,10 @@ public class UIHero : Singleton<UIHero>
     public GameObject EvolRequire;
     public List<TextMeshProUGUI> textEvolRequire;
     public Image heroShard;
+    public TextMeshProUGUI txtCurLevel;
+
 
     public List<TextMeshProUGUI> txtAlibityBefore;
-
-
     public List<TextMeshProUGUI> txtLevelOnScrollVew;
 
     int currentEvol = 0;
@@ -357,6 +357,8 @@ public class UIHero : Singleton<UIHero>
             txtLevelOnScrollVew[currentEvol-1].text = "Level " + currentLevel;
         }
 
+        txtCurLevel.text = "Level " + currentLevel;
+
 
         MyHeroes data_before = HeroesDatabase.Instance.fetchMyData(curHeroID);
 
@@ -444,6 +446,8 @@ public class UIHero : Singleton<UIHero>
         int currentLevel = HeroesDatabase.Instance.fetchMyData(curHeroID).Level;
         if (checkRequired(currentLevel))
         {
+            StartCoroutine(AlibityChange());
+
             HeroesDatabase.Instance.levelUpHero(curHeroID);
 
             if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
@@ -457,8 +461,6 @@ public class UIHero : Singleton<UIHero>
                 PlayerPrefs.SetInt("HeroesPick", curHeroID);
 
             }
-            StartCoroutine(AlibityChange());
-
             StartCoroutine(runAnimEvolveAndLevelUp(currentLevel));
 
         }
@@ -573,12 +575,12 @@ public class UIHero : Singleton<UIHero>
 
         for (int i = 0; i < 19; i++)
         {
-            txtAlibityBefore[0].text = (data_before_evole_1.Atk + i* Int32.Parse(addAtk)/19).ToString() + "<color=green>" + " +"+ addAtk + "</color=green>";
-            txtAlibityBefore[1].text = (data_before_evole_1.Hp + i * Int32.Parse(addHp) / 19).ToString() + "<color=green>" + " +" + addHp + "</color=green>";
-            txtAlibityBefore[2].text = (data_before_evole_1.Armour + i * Int32.Parse(addArmor) / 19).ToString() + "<color=green>" + " +" + addArmor + "</color=green>";
-            txtAlibityBefore[3].text = (data_before_evole_1.Speed + i * Int32.Parse(addSpeed) / 19).ToString() + "<color=green>" + " +" + addSpeed + "</color=green>";
-            txtAlibityBefore[4].text = (data_before_evole_1.Crit + i * Int32.Parse(addCrit) / 19).ToString() + "<color=green>" + " +" + addCrit + "</color=green>";
-            txtAlibityBefore[5].text = (data_before_evole_1.Spell + i * Int32.Parse(addSpell) / 19).ToString() + "<color=green>" + " +" + addSpell + "</color=green>";
+            txtAlibityBefore[0].text = (data_before_evole_1.Atk - Int32.Parse(addAtk) + i* Int32.Parse(addAtk)/19).ToString() + "<color=green>" + " +"+ addAtk + "</color=green>";
+            txtAlibityBefore[1].text = (data_before_evole_1.Hp - Int32.Parse(addHp) + i * Int32.Parse(addHp) / 19).ToString() + "<color=green>" + " +" + addHp + "</color=green>";
+            txtAlibityBefore[2].text = (data_before_evole_1.Armour - Int32.Parse(addArmor) + i * Int32.Parse(addArmor) / 19).ToString() + "<color=green>" + " +" + addArmor + "</color=green>";
+            txtAlibityBefore[3].text = (data_before_evole_1.Speed - Int32.Parse(addSpeed) + i * Int32.Parse(addSpeed) / 19).ToString() + "<color=green>" + " +" + addSpeed + "</color=green>";
+            txtAlibityBefore[4].text = (data_before_evole_1.Crit - Int32.Parse(addCrit) + i * Int32.Parse(addCrit) / 19).ToString() + "<color=green>" + " +" + addCrit + "</color=green>";
+            txtAlibityBefore[5].text = (data_before_evole_1.Spell - Int32.Parse(addSpell) + i * Int32.Parse(addSpell) / 19).ToString() + "<color=green>" + " +" + addSpell + "</color=green>";
             yield return new WaitForSeconds(0.05f);
         }
 

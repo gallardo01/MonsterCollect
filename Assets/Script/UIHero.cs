@@ -11,6 +11,8 @@ public class UIHero : Singleton<UIHero>
     public GameObject[] listHero;
     public Button btnSelect;
     public Button btnBuy;
+    public TextMeshProUGUI txtPrice;
+
     public Button btnEvolve;
     public Button btnBack;
     public GameObject imgAvatar;
@@ -122,7 +124,18 @@ public class UIHero : Singleton<UIHero>
         selected[cacheId / 10].SetActive(true);
 
 
-        txtHeroName.text = data.Name;
+
+        if (HeroesDatabase.Instance.isUnlock(data.Id))
+        {
+            txtHeroName.text = data.Name + "\nLevel " + HeroesDatabase.Instance.fetchMyData(cacheId).Level;
+
+        }
+        else
+        {
+            txtHeroName.text = data.Name;
+            txtPrice.text = "<sprite=5> " +  StaticInfo.costHeroes[cacheId / 10].ToString();
+        }
+
         //txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
         txtHeroSkillDetail.text = data.Skill.ToString();
 
@@ -177,8 +190,19 @@ public class UIHero : Singleton<UIHero>
     {
         if (HeroesDatabase.Instance.isUnlock(data.Id))
         {
+            if (PlayerPrefs.GetInt("HeroesPick") == cacheId)
+            {
+                btnSelect.gameObject.SetActive(false);
+
+            }
+            else
+            {
+                btnSelect.gameObject.SetActive(true);
+
+            }
+
             btnBuy.gameObject.SetActive(false);
-            btnSelect.gameObject.SetActive(true);
+            //btnSelect.gameObject.SetActive(true);
             btnEvolve.gameObject.SetActive(true);
         }
         else
@@ -186,8 +210,6 @@ public class UIHero : Singleton<UIHero>
             btnBuy.gameObject.SetActive(true);
             btnSelect.gameObject.SetActive(false);
             btnEvolve.gameObject.SetActive(false);
-
-
         }
     }
 

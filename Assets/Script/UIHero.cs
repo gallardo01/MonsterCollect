@@ -36,6 +36,7 @@ public class UIHero : Singleton<UIHero>
     public int cacheId;
 
     public List<GameObject> selected;
+    public List<GameObject> choosed;
 
     public Button panelBtnClose;
     public Button panelBtnEvolve;
@@ -82,6 +83,9 @@ public class UIHero : Singleton<UIHero>
         {
             curHeroID = PlayerPrefs.GetInt("HeroesPick");
         }
+
+        choosed[curHeroID / 10].SetActive(true);
+
         initUIHero();
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
 
@@ -122,7 +126,6 @@ public class UIHero : Singleton<UIHero>
             selected[i].SetActive(false);
         }
         selected[cacheId / 10].SetActive(true);
-
 
 
         if (HeroesDatabase.Instance.isUnlock(data.Id))
@@ -168,6 +171,14 @@ public class UIHero : Singleton<UIHero>
         PlayerPrefs.SetInt("HeroesPick", cacheId);
         curHeroID = cacheId;
         //backToInventory();
+        btnSelect.gameObject.SetActive(false);
+
+        for (int i = 1; i < 13; i++)
+        {
+            choosed[i].SetActive(false);
+        }
+        choosed[cacheId / 10].SetActive(true);
+
     }
 
 
@@ -220,6 +231,7 @@ public class UIHero : Singleton<UIHero>
             HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
             initUIHero();
             handleButton(data);
+
         }
         else
         {

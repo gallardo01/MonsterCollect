@@ -14,7 +14,6 @@ public class CharacterCard : MonoBehaviour
     public GameObject selected;
     public Image typeHero;
 
-
     private HeroesData heroesData;
 
 
@@ -37,6 +36,9 @@ public class CharacterCard : MonoBehaviour
         heroName.text = name;
         imgHero.sprite = Resources.Load<Sprite>("UI/Icons/Monster/" + data.Id.ToString());
         typeHero.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type.ToString());
+
+
+
         if (HeroesDatabase.Instance.isUnlock(data.Id) == false)
         {
             //lock

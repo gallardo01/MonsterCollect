@@ -70,6 +70,10 @@ public class UIHero : Singleton<UIHero>
     string addCrit ;
     string addSpell;
 
+    public List<TextMeshProUGUI> txtLevelCard;
+    public List<TextMeshProUGUI> txtLevelProgessCard;
+    public List<Slider> slLevelCard;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -110,9 +114,32 @@ public class UIHero : Singleton<UIHero>
 
     private void initUIHero()
     {
+
         for (int i = 1; i <= 12; i++)
         {
             listHero[i].GetComponent<CharacterCard>().initData(HeroesDatabase.Instance.getCurrentHero(i));
+
+            HeroesData data = HeroesDatabase.Instance.fetchHeroesData(i * 10);
+
+
+            if (HeroesDatabase.Instance.isUnlock(data.Id) == true)
+            {
+                int lvlCard = HeroesDatabase.Instance.fetchMyDataLastest(i * 10).Level;
+
+                txtLevelCard[i].text = lvlCard.ToString();
+                txtLevelProgessCard[i].text = lvlCard.ToString() + "/25";
+                slLevelCard[i].value = lvlCard;
+
+
+            }
+            else
+            {
+                txtLevelCard[i].text = "0";
+                txtLevelProgessCard[i].text = "0/25";
+                slLevelCard[i].value = 0;
+            }
+
+
         }
     }
 
@@ -130,7 +157,7 @@ public class UIHero : Singleton<UIHero>
 
         if (HeroesDatabase.Instance.isUnlock(data.Id))
         {
-            txtHeroName.text = data.Name + "\nLevel " + HeroesDatabase.Instance.fetchMyData(cacheId).Level;
+            txtHeroName.text = data.Name;
 
         }
         else

@@ -159,6 +159,18 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         return null;
     }
 
+    public MyHeroes fetchMyDataLastest(int id)
+    {
+        for (int i = 0; i < myHeroes.Count; i++)
+        {
+            if (myHeroes[i].Id/10 == id/10)
+            {
+                return myHeroes[i];
+            }
+        }
+        return null;
+    }
+
     // Fetch trong DB so huu
     public int fetchMyIndex(int id)
     {

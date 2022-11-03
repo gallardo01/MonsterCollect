@@ -69,9 +69,9 @@ public class GameController : Singleton<GameController>
         }
         string enemyType = "Enemy" + enemyId;
         GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
+        enemy.GetComponent<MonsterController>().initData(enemyId);
         enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1,3), enemyId);
     }
-
     public IEnumerator respawnEnemy()
     {
         yield return new WaitForSeconds(2f);
@@ -86,7 +86,6 @@ public class GameController : Singleton<GameController>
             addEnemy();
         }
     }
-
     public void initEatMonster(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
@@ -103,7 +102,6 @@ public class GameController : Singleton<GameController>
         }
         StartCoroutine(respawnEnemy());
     }
-
     private void updateColorText()
     {
         GameObject[] gos;

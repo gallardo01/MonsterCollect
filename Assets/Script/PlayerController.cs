@@ -53,12 +53,10 @@ public class PlayerController : Singleton<PlayerController>
 
         attackMonster();
     }
-
     public Transform getPosition()
     {
         return gameObject.transform;
     }
-
     public void initStart()
     {
         levelText.text = playerLevel.ToString();
@@ -74,7 +72,6 @@ public class PlayerController : Singleton<PlayerController>
         hpText.text = currentHp.ToString();
         hpBar.transform.localScale = new Vector3(1f, 1f, 1f);
     }
-
     public void gainLv(int lv)
     {
         playerLevel = lv;
@@ -152,6 +149,26 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     private IEnumerator normalAttack()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (isPause == false)
+        {
+            string bulletText = "Electric_1";
+            Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
+            if (shootTarget != null)
+            {
+                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+    shootTarget.rotation);
+                Vector2 vector = shootFollower(shootTarget);
+                float angle = calAngle(shootTarget, vector);
+                projectileNormal.transform.Rotate(0, 0, angle + 90);
+                projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
+            }
+        }
+        StartCoroutine(normalAttack());
+    }
+
+    private IEnumerator thunder_1()
     {
         yield return new WaitForSeconds(1.5f);
         if (isPause == false)

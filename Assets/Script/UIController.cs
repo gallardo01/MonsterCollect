@@ -142,33 +142,11 @@ public class UIController : Singleton<UIController>
 
     private void setupHightLight()
     {
-        // bar.sizeDelta = new Vector2(0, 200);
-
-        var expandSize = 80;
-        var deactivesize = (bar.rect.width - expandSize) / 4;
-        var activesize = deactivesize + expandSize;
         for (int i = 1; i <= 4; i++)
         {
-            hightlight[i].gameObject.GetComponent<Image>().color = Color.white;
-            hightlight[i].gameObject.transform.localScale = new Vector3(1,1,1);
-            
-            menuText[i].SetActive(false);
-            ((RectTransform)bar.GetChild(i - 1).transform).sizeDelta = new Vector2(deactivesize, 300);
-            var trans = (RectTransform)menuSprite[i].gameObject.transform;
-            var minsize = trans.rect.width > trans.rect.height ? trans.rect.height : trans.rect.width;
-            trans.sizeDelta = new Vector2(minsize , minsize);
-            hightlight[i].gameObject.transform.localPosition = new Vector3(0, 0, 0);
-            menuSprite[i].gameObject.transform.localPosition = new Vector3(0, 0, 0);
+            hightlight[i].SetActive(false);
         }
-        menuText[currentSite].SetActive(true);
-        menuText[currentSite].gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,100);
-        ((RectTransform)bar.GetChild(currentSite - 1).transform).sizeDelta = new Vector2(activesize, 330);
-      
-        hightlight[currentSite].gameObject.transform.localPosition = new Vector3(0, 55, 0);
-        menuSprite[currentSite].gameObject.transform.localPosition = new Vector3(0, 55, 0);
-        hightlight[currentSite].gameObject.GetComponent<Image>().color = new Color32(61,49,45,255);
-     
-        
+        hightlight[currentSite].SetActive(true);     
     }
 
     public void detectSwipe(int direction)

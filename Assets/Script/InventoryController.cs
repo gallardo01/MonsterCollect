@@ -84,7 +84,7 @@ public class InventoryController : Singleton<InventoryController>
         main.Find("Panel/Top/Info/Description/Level").GetComponent<TextMeshProUGUI>().text = "Level: " + data.Level + " / 50";
 
         main.Find("Panel/Top/Info/Description/Des").GetComponent<TextMeshProUGUI>().text = data.Contents;
-        main.Find("Panel/Top/Info/ItemSprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + data.Rarity.ToString());
+        //main.Find("Panel/Top/Info/ItemSprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + data.Rarity.ToString());
         main.Find("Panel/Top/Info/ItemSprite/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + data.Id.ToString());
         main.Find("Panel/Top/Info/ItemSprite/Type").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/DameType/" + data.Type.ToString());
         if (data.Type == 0)
@@ -206,7 +206,7 @@ public class InventoryController : Singleton<InventoryController>
     void InitEquipment(ItemInventory item, int itemSlot)
     {
         Equipment[itemSlot].transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
-        Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + item.Rarity.ToString());
+        //Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + item.Rarity.ToString());
         Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
         InitAlbilities();
 

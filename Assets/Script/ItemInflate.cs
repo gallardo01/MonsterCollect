@@ -20,7 +20,7 @@ public class ItemInflate : MonoBehaviour
     {
         itemData = iteminfo;
         item.sprite = Resources.Load<Sprite>("Contents/Item/" + iteminfo.Id.ToString());
-        rarity.sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + iteminfo.Rarity.ToString());
+        //rarity.sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + iteminfo.Rarity.ToString());
         type.sprite = Resources.Load<Sprite>("Contents/Icon/DameType/" + iteminfo.Type.ToString());
         if (iteminfo.Type == 0)
         {

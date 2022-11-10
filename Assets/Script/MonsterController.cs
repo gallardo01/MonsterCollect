@@ -8,7 +8,7 @@ public class MonsterController : MonoBehaviour
     // Start is called before the first frame update
     public int id;
     public TextMeshPro level;
-    private int speed;
+    private int speed = 100;
     private GameObject[] waypoints;
     private int waypointIndex = 0;
     private bool isMove = true;
@@ -24,7 +24,7 @@ public class MonsterController : MonoBehaviour
         //gameObject.GetComponent<Collider2D>().enabled = true;
         setText(id);
     }
-    void Update()
+    void FixedUpdate()
     {
         Move();
     }
@@ -167,7 +167,6 @@ public class MonsterController : MonoBehaviour
         isMove = true;
         id = enemyId;
         wayMove = num;
-        wayMove = 1;
         string route = "Route1";
         GameObject[] waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
@@ -175,7 +174,7 @@ public class MonsterController : MonoBehaviour
         int pos = Random.Range(0, waypoints.Length);
         gameObject.SetActive(true);
         transform.position = waypoints[pos].transform.position;
-        waypointIndex = Random.Range(0, 25);
+        waypointIndex = Random.Range(0, waypoints.Length);
         playerPos = GameObject.FindGameObjectsWithTag("Player")[0].transform;
         checkFlip();
         runAnimation(2);

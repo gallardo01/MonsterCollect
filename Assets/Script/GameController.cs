@@ -70,7 +70,7 @@ public class GameController : Singleton<GameController>
         string enemyType = "Enemy" + enemyId;
         GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
         enemy.GetComponent<MonsterController>().initData(enemyId);
-        enemy.GetComponent<MonsterController>().setupWaypoints(Random.Range(1,3), enemyId);
+        enemy.GetComponent<MonsterController>().setupWaypoints(1, enemyId);
     }
     public IEnumerator respawnEnemy()
     {

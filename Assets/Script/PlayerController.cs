@@ -235,7 +235,6 @@ public class PlayerController : Singleton<PlayerController>
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            Debug.Log("THANH DEP TRAI");
             if (canHurt)
             {
                 int enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();

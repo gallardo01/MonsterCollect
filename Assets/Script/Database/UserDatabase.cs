@@ -56,9 +56,9 @@ public class UserDatabase : Singleton<UserDatabase>
         newItem.Atk = (int)userData["Atk"];
         newItem.Hp = (int)userData["Hp"];
         newItem.Armour = (int)userData["Armour"];
+        newItem.Move = (int)userData["Move"];
+        newItem.Crit = (int)userData["Crit"];
         newItem.Speed = (int)userData["Speed"];
-        newItem.BonusExp = (int)userData["BonusExp"];
-        newItem.BonusGold = (int)userData["BonusGold"];
         database = newItem;
     }
     private void LoadResourceTextfileCurrentData()
@@ -150,7 +150,7 @@ public class UserDatabase : Singleton<UserDatabase>
     }
     public int getTotalLevel()
     {
-        return (database.Atk + database.Hp + database.Armour + database.Speed + database.BonusExp + database.BonusGold - 5);
+        return (database.Atk + database.Hp + database.Armour + database.Move + database.Crit + database.Speed - 5);
     }
     public void gainLevel(int type)
     {
@@ -166,13 +166,13 @@ public class UserDatabase : Singleton<UserDatabase>
                 database.Armour++;
                 break;
             case 4:
-                database.Speed++;
+                database.Move++;
                 break;
             case 5:
-                database.BonusExp++;
+                database.Crit++;
                 break;
             case 6:
-                database.BonusGold++;
+                database.Speed++;
                 break;
         }
         Save();
@@ -189,8 +189,8 @@ public class UserData
     public int Atk { get; set; }
     public int Hp { get; set; }
     public int Armour { get; set; }
+    public int Move { get; set; }
+    public int Crit { get; set; }
     public int Speed { get; set; }
-    public int BonusExp { get; set; }
-    public int BonusGold { get; set; }
 
 }

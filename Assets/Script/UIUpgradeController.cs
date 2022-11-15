@@ -22,11 +22,21 @@ public class UIUpgradeController : MonoBehaviour
         ActiveVFX(0);
         btnUpgrade.onClick.AddListener(() => ButtonUpgradeClicked());
 
+        btnToolTip[0].onClick.AddListener(() => openToolTip(0));
+        btnToolTip[1].onClick.AddListener(() => openToolTip(1));
+        btnToolTip[2].onClick.AddListener(() => openToolTip(2));
+        btnToolTip[3].onClick.AddListener(() => openToolTip(3));
+        btnToolTip[4].onClick.AddListener(() => openToolTip(4));
+        btnToolTip[5].onClick.AddListener(() => openToolTip(5));
+        btnToolTip[6].onClick.AddListener(() => openToolTip(6));
+        btnToolTip[7].onClick.AddListener(() => openToolTip(7));
+        btnToolTip[8].onClick.AddListener(() => openToolTip(8));
 
-        btnToolTip[0].onClick.AddListener(() => openToolTip_0());
-        btnToolTip[1].onClick.AddListener(() => openToolTip_1());
-        btnToolTip[2].onClick.AddListener(() => openToolTip_2());
+        //for (int i = 0; i < 9; i++)
+        //{
+        //    btnToolTip[i].onClick.AddListener(() => openToolTip(i));
 
+        //}
 
 
     }
@@ -39,16 +49,20 @@ public class UIUpgradeController : MonoBehaviour
         AbilitiesLevel[4].text = database.Move.ToString();
         AbilitiesLevel[5].text = database.Crit.ToString();
         AbilitiesLevel[6].text = database.Speed.ToString();
+        AbilitiesLevel[7].text = database.Equipment.ToString();
+        AbilitiesLevel[8].text = database.ExtraGold.ToString();
+        AbilitiesLevel[9].text = database.ExtraExp.ToString();
+
         upgradePrize.text = "x" + (UserDatabase.Instance.getTotalLevel() * 1000).ToString();
         UIController.Instance.InitUI();
     }
 
-    private void openToolTip_0()
+    private void openToolTip(int id)
     {
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 9; i++)
         {
-            if (i == 0)
+            if (i == id)
             {
                 toolTip[i].SetActive(true);
             }
@@ -57,52 +71,16 @@ public class UIUpgradeController : MonoBehaviour
                 toolTip[i].SetActive(false);
             }
         }
-    }
-    private void openToolTip_1()
-    {
-
-
-        for (int i = 0; i < 3; i++)
-        {
-            if (i == 1)
-            {
-                toolTip[i].SetActive(true);
-            }
-            else
-            {
-                toolTip[i].SetActive(false);
-            }
-        }
+        StartCoroutine(closeAllToolTip(id));  
     }
 
-    private void openToolTip_2()
+
+    IEnumerator closeAllToolTip(int id)
     {
+        yield return new WaitForSeconds(3f);
+ 
+            toolTip[id].SetActive(false);
 
-
-        for (int i = 0; i < 3; i++)
-        {
-            if (i == 2)
-            {
-
-                toolTip[i].SetActive(true);
-            }
-            else
-            {
-
-                toolTip[i].SetActive(false);
-            }
-        }
-    }
-
-    private void closeAllToolTip()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-
-
-            toolTip[i].SetActive(false);
-
-        }
     }
 
     private void ButtonUpgradeClicked()
@@ -110,11 +88,13 @@ public class UIUpgradeController : MonoBehaviour
         if (UserDatabase.Instance.reduceMoney(UserDatabase.Instance.getTotalLevel() * 1000, 0))
         {
 
-            int result = Random.Range(1, 7);
+            int result = Random.Range(1, 10);
             // Cộng ngầm 
             UserDatabase.Instance.gainLevel(result);
             //Play anim
             StartCoroutine(replayAnimation(result));
+            //StartCoroutine(replayAnimation2(result));
+
         }
         else
         {
@@ -123,18 +103,34 @@ public class UIUpgradeController : MonoBehaviour
     }
     IEnumerator replayAnimation(int result)
     {
-        for (int i = 1; i <= 20; i++)
+        for (int i = 1; i <= 10; i++)
         {
-            int rand = Random.Range(1, 7);
+            int rand = Random.Range(1, 10);
             ActiveVFX(rand);
             yield return new WaitForSeconds(0.1f);
         }
-        ActiveVFX(result);
+        for (int i = 1; i <= 10; i++)
+        {
+            int rand = Random.Range(1, 10);
+            ActiveVFX(rand);
+            yield return new WaitForSeconds(0.15f);
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            ActiveVFX(result);
+            yield return new WaitForSeconds(0.15f);
+            AbilitiesVFX[result].SetActive(false);
+            yield return new WaitForSeconds(0.15f);
+        }
         InitUI();
+
     }
+
+
     void ActiveVFX(int item)
     {
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; i <= 9; i++)
         {
             AbilitiesVFX[i].SetActive(false);
         }
@@ -143,4 +139,5 @@ public class UIUpgradeController : MonoBehaviour
             AbilitiesVFX[item].SetActive(true);
         }
     }
+
 }

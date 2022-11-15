@@ -59,6 +59,10 @@ public class UserDatabase : Singleton<UserDatabase>
         newItem.Move = (int)userData["Move"];
         newItem.Crit = (int)userData["Crit"];
         newItem.Speed = (int)userData["Speed"];
+        newItem.Equipment = (int)userData["Equipment"];
+        newItem.ExtraGold = (int)userData["ExtraGold"];
+        newItem.ExtraExp = (int)userData["ExtraExp"];
+
         database = newItem;
     }
     private void LoadResourceTextfileCurrentData()
@@ -174,6 +178,15 @@ public class UserDatabase : Singleton<UserDatabase>
             case 6:
                 database.Speed++;
                 break;
+            case 7:
+                database.Equipment++;
+                break;
+            case 8:
+                database.ExtraGold++;
+                break;
+            case 9:
+                database.ExtraExp++;
+                break;
         }
         Save();
     }
@@ -184,7 +197,6 @@ public class UserData
     public int Gold { get; set; }
     public int Diamond { get; set; }
     public int Level { get; set; }
-
     public int HeroesPick { get; set; }
     public int Atk { get; set; }
     public int Hp { get; set; }
@@ -192,5 +204,7 @@ public class UserData
     public int Move { get; set; }
     public int Crit { get; set; }
     public int Speed { get; set; }
-
+    public int Equipment { get; set; }
+    public int ExtraGold { get; set; }
+    public int ExtraExp { get; set; }
 }

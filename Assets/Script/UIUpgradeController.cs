@@ -15,6 +15,9 @@ public class UIUpgradeController : MonoBehaviour
     public Button[] btnToolTip;
     public GameObject[] toolTip;
 
+    private bool IsUpdated;
+    private int maxLevel = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +40,7 @@ public class UIUpgradeController : MonoBehaviour
         //    btnToolTip[i].onClick.AddListener(() => openToolTip(i));
 
         //}
-
+        IsUpdated = false;
 
     }
     private void InitUI()
@@ -53,7 +56,15 @@ public class UIUpgradeController : MonoBehaviour
         AbilitiesLevel[8].text = database.ExtraGold.ToString();
         AbilitiesLevel[9].text = database.ExtraExp.ToString();
 
-        upgradePrize.text = "x" + (UserDatabase.Instance.getTotalLevel() * 1000).ToString();
+        if (canUpgrade())
+        {
+            upgradePrize.text = "x" + (UserDatabase.Instance.getTotalLevel() * 1000).ToString();
+
+        }
+        else
+        {
+            btnUpgrade.gameObject.SetActive(false);
+        }
         UIController.Instance.InitUI();
     }
 
@@ -71,35 +82,77 @@ public class UIUpgradeController : MonoBehaviour
                 toolTip[i].SetActive(false);
             }
         }
-        StartCoroutine(closeAllToolTip(id));  
+        StartCoroutine(closeAllToolTip(3f));  
     }
 
 
-    IEnumerator closeAllToolTip(int id)
+    IEnumerator closeAllToolTip(float time)
     {
-        yield return new WaitForSeconds(3f);
- 
-            toolTip[id].SetActive(false);
+        yield return new WaitForSeconds(time);
+        for (int i = 0; i < 9; i++)
+        {
+            toolTip[i].SetActive(false);
+
+        }
 
     }
 
     private void ButtonUpgradeClicked()
     {
-        if (UserDatabase.Instance.reduceMoney(UserDatabase.Instance.getTotalLevel() * 1000, 0))
+        if (!IsUpdated && canUpgrade())
         {
+            if (UserDatabase.Instance.reduceMoney(UserDatabase.Instance.getTotalLevel() * 1000, 0))
+            {
+                UserData database = UserDatabase.Instance.getUserData();
 
-            int result = Random.Range(1, 10);
-            // Cộng ngầm 
-            UserDatabase.Instance.gainLevel(result);
-            //Play anim
-            StartCoroutine(replayAnimation(result));
-            //StartCoroutine(replayAnimation2(result));
+                int[] arr =
+                {
+                    0,
+                    database.Atk,
+                    database.Hp,
+                    database.Armour,
+                    database.Move,
+                    database.Crit,
+                    database.Speed,
+                    database.Equipment,
+                    database.ExtraGold,
+                    database.ExtraExp
+                };
+
+                int result;
+
+                do 
+                {
+                    result = Random.Range(1, 10);
+                } while (arr[result] >= maxLevel) ;
+
+                // Cộng ngầm 
+                UserDatabase.Instance.gainLevel(result);
+                //Play anim
+                StartCoroutine(replayAnimation(result));
+                //StartCoroutine(replayAnimation2(result));
+
+            }
+            else
+            {
+                Debug.Log("Out of money");
+            }
+
+            StartCoroutine(closeAllToolTip(0f));
+            IsUpdated = true;
 
         }
-        else
+    }
+
+
+    private bool canUpgrade()
+    {
+        UserData database = UserDatabase.Instance.getUserData();
+        if (database.Atk < maxLevel || database.Armour < maxLevel | database.Hp < maxLevel | database.Move < maxLevel | database.Speed < maxLevel || database.Crit < maxLevel || database.ExtraExp < maxLevel || database.ExtraGold < maxLevel || database.Equipment < maxLevel)
         {
-            Debug.Log("Out of money");
+            return true;
         }
+        return false;
     }
     IEnumerator replayAnimation(int result)
     {
@@ -124,6 +177,7 @@ public class UIUpgradeController : MonoBehaviour
             yield return new WaitForSeconds(0.15f);
         }
         InitUI();
+        IsUpdated = false;
 
     }
 

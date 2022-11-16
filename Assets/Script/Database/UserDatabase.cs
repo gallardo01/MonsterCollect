@@ -154,7 +154,7 @@ public class UserDatabase : Singleton<UserDatabase>
     }
     public int getTotalLevel()
     {
-        return (database.Atk + database.Hp + database.Armour + database.Move + database.Crit + database.Speed - 5);
+        return (database.Atk + database.Hp + database.Armour + database.Move + database.Crit + database.Speed + database.Equipment + database.ExtraGold + database.ExtraExp - 8);
     }
     public void gainLevel(int type)
     {

@@ -14,6 +14,8 @@ public class UIUpgradeController : MonoBehaviour
     public TextMeshProUGUI upgradePrize;
     public Button[] btnToolTip;
     public GameObject[] toolTip;
+    public Button btnBlank;
+    public TextMeshProUGUI[] txtAlibityDetail;
 
     private bool IsUpdated;
     private int maxLevel = 10;
@@ -35,11 +37,8 @@ public class UIUpgradeController : MonoBehaviour
         btnToolTip[7].onClick.AddListener(() => openToolTip(7));
         btnToolTip[8].onClick.AddListener(() => openToolTip(8));
 
-        //for (int i = 0; i < 9; i++)
-        //{
-        //    btnToolTip[i].onClick.AddListener(() => openToolTip(i));
-
-        //}
+        btnBlank.onClick.AddListener(() => closeAllToolTip());
+        setupTxtAlibityDetail();
         IsUpdated = false;
 
     }
@@ -70,7 +69,6 @@ public class UIUpgradeController : MonoBehaviour
 
     private void openToolTip(int id)
     {
-
         for (int i = 0; i < 9; i++)
         {
             if (i == id)
@@ -82,13 +80,25 @@ public class UIUpgradeController : MonoBehaviour
                 toolTip[i].SetActive(false);
             }
         }
-        StartCoroutine(closeAllToolTip(3f));  
+        //StartCoroutine(closeAllToolTip(3f));  
     }
 
 
-    IEnumerator closeAllToolTip(float time)
+    //IEnumerator closeAllToolTip(float time)
+    //{
+    //    Debug.Log("close");
+    //    yield return new WaitForSeconds(time);
+    //    for (int i = 0; i < 9; i++)
+    //    {
+    //        toolTip[i].SetActive(false);
+
+    //    }
+
+    //}
+
+    private void closeAllToolTip()
     {
-        yield return new WaitForSeconds(time);
+
         for (int i = 0; i < 9; i++)
         {
             toolTip[i].SetActive(false);
@@ -138,7 +148,8 @@ public class UIUpgradeController : MonoBehaviour
                 Debug.Log("Out of money");
             }
 
-            StartCoroutine(closeAllToolTip(0f));
+            closeAllToolTip();
+            setupTxtAlibityDetail();
             IsUpdated = true;
 
         }
@@ -192,6 +203,20 @@ public class UIUpgradeController : MonoBehaviour
         {
             AbilitiesVFX[item].SetActive(true);
         }
+    }
+
+    void setupTxtAlibityDetail()
+    {
+        UserData database = UserDatabase.Instance.getUserData();
+        txtAlibityDetail[0].text = "Power\nAtk + " + database.Atk * StaticInfo.userUpdateBase[0];
+        txtAlibityDetail[1].text = "Strength\nHp + " + database.Hp * StaticInfo.userUpdateBase[1];
+        txtAlibityDetail[2].text = "Block\nArmour + " + database.Armour * StaticInfo.userUpdateBase[2];
+        txtAlibityDetail[3].text = "Boost\nMovement + " + database.Move * StaticInfo.userUpdateBase[3];
+        txtAlibityDetail[4].text = "Dexterous\nCrit + " + database.Crit * StaticInfo.userUpdateBase[4];
+        txtAlibityDetail[5].text = "Agile\nSpeed + " + database.Speed * StaticInfo.userUpdateBase[5];
+        txtAlibityDetail[6].text = "Intelligence\nEquipment + " + database.Equipment * StaticInfo.userUpdateBase[6] +"%";
+        txtAlibityDetail[7].text = "Glory\nExtra Gold + " + database.ExtraGold * StaticInfo.userUpdateBase[7] + "%";
+        txtAlibityDetail[8].text = "Inspire\nExtra Exp + " + database.ExtraExp * StaticInfo.userUpdateBase[8] + "%";
     }
 
 }

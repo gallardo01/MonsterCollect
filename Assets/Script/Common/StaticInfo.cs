@@ -29,6 +29,8 @@ public class StaticInfo : MonoBehaviour
     //public static int[,] evolveLevel = {{ 5, 5, 0, 1000 }, { 5, 5, 2, 3000 }, { 10, 5, 3, 5000 }, { 10, 10, 10, 10000 } };
 
     public static int[] evolLocation = {0, -800, -1600,-2400,-3200 };
+    public static int[] userUpdateBase = { 10, 10, 2, 10, 5,5,1,1,1 };
+
 
     public static double TO1BaseValue = 6.99;
     public static double TO1Value = 3.99;

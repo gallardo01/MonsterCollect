@@ -45,15 +45,17 @@ public class UIUpgradeController : MonoBehaviour
     private void InitUI()
     {
         UserData database = UserDatabase.Instance.getUserData();
-        AbilitiesLevel[1].text = database.Atk.ToString();
-        AbilitiesLevel[2].text = database.Hp.ToString();
-        AbilitiesLevel[3].text = database.Armour.ToString();
-        AbilitiesLevel[4].text = database.Move.ToString();
-        AbilitiesLevel[5].text = database.Crit.ToString();
-        AbilitiesLevel[6].text = database.Speed.ToString();
-        AbilitiesLevel[7].text = database.Equipment.ToString();
-        AbilitiesLevel[8].text = database.ExtraGold.ToString();
-        AbilitiesLevel[9].text = database.ExtraExp.ToString();
+        AbilitiesLevel[1].text = database.Atk < 10 ? database.Atk.ToString() : "MAX";
+        AbilitiesLevel[2].text = database.Hp < 10 ? database.Hp.ToString() : "MAX";
+        AbilitiesLevel[3].text = database.Armour < 10 ? database.Armour.ToString() : "MAX";
+        AbilitiesLevel[4].text = database.Move < 10 ? database.Move.ToString() : "MAX";
+        AbilitiesLevel[5].text = database.Crit < 10 ? database.Crit.ToString() : "MAX";
+        AbilitiesLevel[6].text = database.Speed < 10 ? database.Speed.ToString() : "MAX";
+        AbilitiesLevel[7].text = database.Equipment < 10 ? database.Equipment.ToString() : "MAX";
+        AbilitiesLevel[8].text = database.ExtraGold < 10 ? database.ExtraGold.ToString() : "MAX";
+        AbilitiesLevel[9].text = database.ExtraExp < 10 ? database.ExtraExp.ToString(): "MAX";
+
+
 
         if (canUpgrade())
         {
@@ -213,7 +215,7 @@ public class UIUpgradeController : MonoBehaviour
         txtAlibityDetail[2].text = "Block\nArmour + " + database.Armour * StaticInfo.userUpdateBase[2];
         txtAlibityDetail[3].text = "Boost\nMovement + " + database.Move * StaticInfo.userUpdateBase[3];
         txtAlibityDetail[4].text = "Dexterous\nCrit + " + database.Crit * StaticInfo.userUpdateBase[4];
-        txtAlibityDetail[5].text = "Agile\nSpeed + " + database.Speed * StaticInfo.userUpdateBase[5];
+        txtAlibityDetail[5].text = "Agile\nAtk Speed + " + database.Speed * StaticInfo.userUpdateBase[5];
         txtAlibityDetail[6].text = "Intelligence\nEquipment + " + database.Equipment * StaticInfo.userUpdateBase[6] +"%";
         txtAlibityDetail[7].text = "Glory\nExtra Gold + " + database.ExtraGold * StaticInfo.userUpdateBase[7] + "%";
         txtAlibityDetail[8].text = "Inspire\nExtra Exp + " + database.ExtraExp * StaticInfo.userUpdateBase[8] + "%";

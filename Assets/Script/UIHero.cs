@@ -640,7 +640,7 @@ public class UIHero : Singleton<UIHero>
             txtAlibityBefore[3].text = (data_before_evole_1.Speed - Int32.Parse(addSpeed) + i * Int32.Parse(addSpeed) / 19).ToString() + "<color=green>" + " +" + addSpeed + "</color=green>";
             txtAlibityBefore[4].text = (data_before_evole_1.Crit - Int32.Parse(addCrit) + i * Int32.Parse(addCrit) / 19).ToString() + "<color=green>" + " +" + addCrit + "</color=green>";
             txtAlibityBefore[5].text = (data_before_evole_1.Spell - Int32.Parse(addSpell) + i * Int32.Parse(addSpell) / 19).ToString() + "<color=green>" + " +" + addSpell + "</color=green>";
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.04f);
         }
 
     }

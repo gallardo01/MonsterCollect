@@ -56,9 +56,13 @@ public class UserDatabase : Singleton<UserDatabase>
         newItem.Atk = (int)userData["Atk"];
         newItem.Hp = (int)userData["Hp"];
         newItem.Armour = (int)userData["Armour"];
+        newItem.Move = (int)userData["Move"];
+        newItem.Crit = (int)userData["Crit"];
         newItem.Speed = (int)userData["Speed"];
-        newItem.BonusExp = (int)userData["BonusExp"];
-        newItem.BonusGold = (int)userData["BonusGold"];
+        newItem.Equipment = (int)userData["Equipment"];
+        newItem.ExtraGold = (int)userData["ExtraGold"];
+        newItem.ExtraExp = (int)userData["ExtraExp"];
+
         database = newItem;
     }
     private void LoadResourceTextfileCurrentData()
@@ -150,7 +154,7 @@ public class UserDatabase : Singleton<UserDatabase>
     }
     public int getTotalLevel()
     {
-        return (database.Atk + database.Hp + database.Armour + database.Speed + database.BonusExp + database.BonusGold - 5);
+        return (database.Atk + database.Hp + database.Armour + database.Move + database.Crit + database.Speed + database.Equipment + database.ExtraGold + database.ExtraExp - 8);
     }
     public void gainLevel(int type)
     {
@@ -166,13 +170,22 @@ public class UserDatabase : Singleton<UserDatabase>
                 database.Armour++;
                 break;
             case 4:
-                database.Speed++;
+                database.Move++;
                 break;
             case 5:
-                database.BonusExp++;
+                database.Crit++;
                 break;
             case 6:
-                database.BonusGold++;
+                database.Speed++;
+                break;
+            case 7:
+                database.Equipment++;
+                break;
+            case 8:
+                database.ExtraGold++;
+                break;
+            case 9:
+                database.ExtraExp++;
                 break;
         }
         Save();
@@ -184,13 +197,14 @@ public class UserData
     public int Gold { get; set; }
     public int Diamond { get; set; }
     public int Level { get; set; }
-
     public int HeroesPick { get; set; }
     public int Atk { get; set; }
     public int Hp { get; set; }
     public int Armour { get; set; }
+    public int Move { get; set; }
+    public int Crit { get; set; }
     public int Speed { get; set; }
-    public int BonusExp { get; set; }
-    public int BonusGold { get; set; }
-
+    public int Equipment { get; set; }
+    public int ExtraGold { get; set; }
+    public int ExtraExp { get; set; }
 }

@@ -9,11 +9,22 @@ public class BulletController : MonoBehaviour
     private int attack;
     private int crit;
     private int type;
+    [SerializeField] int id;
 
     // Start is called before the first frame update
     void Start()
     {
         
+    }
+
+    private void FixedUpdate()
+    {
+        
+    }
+
+    private void thunder_1()
+    {
+
     }
 
     public void initBullet(int a, int c, int t)
@@ -37,5 +48,17 @@ public class BulletController : MonoBehaviour
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
+        // thunder_1
+        if (collision.gameObject.tag == "Enemy" && id == 11)
+        {
+            returnToPool(1f);
+        }
+    }
+    
+    IEnumerator returnToPool(float time)
+    {
+        yield return new WaitForSeconds(time);
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        gameObject.SetActive(false);
     }
 }

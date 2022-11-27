@@ -37,7 +37,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         //{
         //    addNewItem(i, 1000);
         //}
-        Save();
+        //Save();
     }
     private void LoadResourceTextfileItemData(string path)
     {

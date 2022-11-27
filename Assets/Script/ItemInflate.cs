@@ -16,11 +16,12 @@ public class ItemInflate : MonoBehaviour
     public GameObject focus;
 
     private ItemInventory itemData;
+    private string[] Rarity = { "Common", "Uncommon", "Rare", "Epic", "Mythic", "Legendary" };
     public void InitData(ItemInventory iteminfo)
     {
         itemData = iteminfo;
         item.sprite = Resources.Load<Sprite>("Contents/Item/" + iteminfo.Id.ToString());
-        //rarity.sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + iteminfo.Rarity.ToString());
+        rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + Rarity[iteminfo.Rarity]);
         type.sprite = Resources.Load<Sprite>("Contents/Icon/DameType/" + iteminfo.Type.ToString());
         if (iteminfo.Type == 0)
         {

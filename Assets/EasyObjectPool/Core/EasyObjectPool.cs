@@ -217,9 +217,10 @@ namespace MarchingBytes {
 
 			for (int i = 0; i < listObj.Count; i++)
             {
-				if (listObj[i].activeInHierarchy == true)
+				Vector3 delta = player.transform.position - listObj[i].transform.position;
+				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getCurrentHp() > 0
+					&& delta.magnitude < 7f)
 				{
-					Vector3 delta = player.transform.position - listObj[i].transform.position;
 					if (distance > delta.magnitude)
 					{
 						distance = delta.magnitude;

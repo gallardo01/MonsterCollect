@@ -9,29 +9,25 @@ public class BulletController : MonoBehaviour
     private int attack;
     private int crit;
     private int type;
+    private MyHeroes heroes;
     [SerializeField] int id;
+    private Transform target;
 
     // Start is called before the first frame update
-    void Start()
+
+
+    void Update()
     {
-        
+        if (target != null)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, .01f);
+        }
     }
 
-    private void FixedUpdate()
+    public void initBullet(MyHeroes myHeroes, int skill, Transform enemy)
     {
-        
-    }
-
-    private void thunder_1()
-    {
-
-    }
-
-    public void initBullet(int a, int c, int t)
-    {
-        attack = a;
-        crit = c;
-        type = t;
+        target = enemy;
+        heroes = myHeroes;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -44,6 +40,7 @@ public class BulletController : MonoBehaviour
         }
         if (collision.gameObject.tag == "Enemy")
         {
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
             GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);

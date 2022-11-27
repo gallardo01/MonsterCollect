@@ -15,8 +15,17 @@ public class FloatingText : MonoBehaviour
 
     public void disableObject(int dame)
     {
-       text.text = dame.ToString();
-       StartCoroutine(disableFloating());
+        int actualDame = Mathf.Abs(dame);
+        if (dame > 0)
+        {
+            text.color = Color.yellow;
+        }
+        else
+        {
+            text.color = Color.white;
+        }
+        text.text = actualDame.ToString();
+        StartCoroutine(disableFloating());
     }
 
     private IEnumerator disableFloating()

@@ -61,7 +61,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         levelText.text = playerLevel.ToString();
         // pick con nao?
-        int heroesId = 11;
+        int heroesId = 10;
 
         data = HeroesDatabase.Instance.fetchMyData(heroesId);
         currentHp = data.Hp;
@@ -161,6 +161,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.rotation);
+                projectileNormal.GetComponent<BulletController>().initBullet(data, 1, shootTarget);
                 Vector2 vector = shootFollower(shootTarget);
                 float angle = calAngle(shootTarget, vector);
                 projectileNormal.transform.Rotate(0, 0, angle + 90);
@@ -233,7 +234,7 @@ public class PlayerController : Singleton<PlayerController>
         body.transform.localScale = newScale;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
@@ -262,7 +263,7 @@ public class PlayerController : Singleton<PlayerController>
         int dame = MathController.Instance.enemyHitPlayer(data, monsterData);
         reduceHealth(dame);
         body.GetComponent<Animator>().SetTrigger("hurt");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         canHurt = true;
     }
     private void reduceHealth(int amount)
@@ -277,12 +278,12 @@ public class PlayerController : Singleton<PlayerController>
         {
             currentHp = 0;
             // dead
-
         }
         else
         {
             hpText.text = currentHp.ToString();
-            float per = currentHp / data.Hp;
+            float per = (float) currentHp / data.Hp;
+            hpText.text = currentHp.ToString();
             hpBar.transform.localScale = new Vector3(per, 1f, 1f);
         }
     }

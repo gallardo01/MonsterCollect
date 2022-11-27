@@ -15,6 +15,7 @@ public class MonsterController : MonoBehaviour
     private Transform playerPos;
     private BoxCollider2D collider;
     private MonsterData monsterData;
+    private int currentHp;
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class MonsterController : MonoBehaviour
     public void initData(int id)
     {
         monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
+        currentHp = monsterData.Hp;
         setText(id);
         setupWaypoints();
     }
@@ -40,6 +42,28 @@ public class MonsterController : MonoBehaviour
     public void triggerWaypoints()
     {
         wayMove = 2;
+    }
+
+    public void enemyHurt(MyHeroes heroes)
+    {
+        int dame = MathController.Instance.playerHitEnemy(heroes, monsterData);
+        int actualDame = Mathf.Abs(dame);
+        currentHp -= actualDame;
+        if(currentHp <= 0)
+        {
+            isMove = false;
+            setAction(2);
+        }
+        disableObject();
+        string floatingText = "FloatingText";
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
+        particle.GetComponent<FloatingText>().disableObject(dame);
+
+    }
+
+    public int getCurrentHp()
+    {
+        return currentHp;
     }
 
     public void setAction(int action)
@@ -73,7 +97,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     waypoints[waypointIndex].transform.position,
-                    (monsterData.Speed / 1000f) * Time.deltaTime);
+                    (monsterData.Speed / 1200f) * Time.deltaTime);
                 if (transform.position.x == waypoints[waypointIndex].transform.position.x && transform.position.y == waypoints[waypointIndex].transform.position.y)
                 {
                     isMove = false;
@@ -86,7 +110,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     playerPos.position,
-                    (monsterData.Speed / 1000f) * Time.deltaTime);
+                    (monsterData.Speed / 1200f) * Time.deltaTime);
                 checkFlipPlayer();
             }
         }

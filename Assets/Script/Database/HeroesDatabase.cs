@@ -25,10 +25,11 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     {
         string fileName = "Heroes.txt";
         string myFileName = "MyHeroes.txt";
-        firstTimeSetUp();
+        //firstTimeSetUp();
 
         LoadResourceTextfileHeroesData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
+        Save();
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
             unlockHero(10);

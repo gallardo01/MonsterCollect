@@ -6,23 +6,21 @@ using MarchingBytes;
 public class MonsterController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int id;
     public TextMeshPro level;
-    private int speed = 100;
     private GameObject[] waypoints;
     private int waypointIndex = 0;
     private bool isMove = true;
     private int wayMove = 1;
     private int facingRight = 1;
-    private int monsterLv = 1;
     private Transform playerPos;
     private BoxCollider2D collider;
+    private MonsterData monsterData;
+    private int currentHp;
 
     void Start()
     {
         collider = GetComponent<BoxCollider2D>();
         //gameObject.GetComponent<Collider2D>().enabled = true;
-        setText(id);
     }
     void FixedUpdate()
     {
@@ -31,11 +29,41 @@ public class MonsterController : MonoBehaviour
     
     public void initData(int id)
     {
+        monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
+        currentHp = monsterData.Hp;
+        setText(id);
+        setupWaypoints();
+    }
+    public MonsterData getLevel()
+    {
+        return monsterData;
+    }
+
+    public void triggerWaypoints()
+    {
+        wayMove = 2;
+    }
+
+    public void enemyHurt(MyHeroes heroes)
+    {
+        int dame = MathController.Instance.playerHitEnemy(heroes, monsterData);
+        int actualDame = Mathf.Abs(dame);
+        currentHp -= actualDame;
+        if(currentHp <= 0)
+        {
+            isMove = false;
+            setAction(2);
+        }
+        disableObject();
+        string floatingText = "FloatingText";
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
+        particle.GetComponent<FloatingText>().disableObject(dame);
 
     }
-    public int getLevel()
+
+    public int getCurrentHp()
     {
-        return id;
+        return currentHp;
     }
 
     public void setAction(int action)
@@ -69,7 +97,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     waypoints[waypointIndex].transform.position,
-                    (speed / 80) * Time.deltaTime);
+                    (monsterData.Speed / 1200f) * Time.deltaTime);
                 if (transform.position.x == waypoints[waypointIndex].transform.position.x && transform.position.y == waypoints[waypointIndex].transform.position.y)
                 {
                     isMove = false;
@@ -82,7 +110,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     playerPos.position,
-                    (speed / 80) * Time.deltaTime);
+                    (monsterData.Speed / 1200f) * Time.deltaTime);
                 checkFlipPlayer();
             }
         }
@@ -129,14 +157,8 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private int getId()
-    {
-        return id;
-    }
-
     private void setText(int lv)
     {
-        monsterLv = lv;
         level.text = "Lv." + lv.ToString();
         setColor();
     }
@@ -144,15 +166,15 @@ public class MonsterController : MonoBehaviour
     public void setColor()
     {
         int playerLv = PlayerController.Instance.getLevel();
-        if (monsterLv <= playerLv)
+        if (monsterData.Id <= playerLv)
         {
             level.color = Color.white;
         }
-        else if (monsterLv <= playerLv + 1)
+        else if (monsterData.Id <= playerLv + 1)
         {
             level.color = Color.green;
         }
-        else if (monsterLv <= playerLv + 2)
+        else if (monsterData.Id <= playerLv + 2)
         {
             level.color = Color.yellow;
         }
@@ -162,11 +184,10 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    public void setupWaypoints(int num, int enemyId)
+    public void setupWaypoints()
     {
         isMove = true;
-        id = enemyId;
-        wayMove = num;
+        wayMove = 1;
         string route = "Route1";
         GameObject[] waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
@@ -185,7 +206,7 @@ public class MonsterController : MonoBehaviour
         //idle
         if (pos == 1)
         {
-            if (id == 48)
+            if (monsterData.Id == 48)
             {
                 GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("IDLE");
             }
@@ -197,7 +218,7 @@ public class MonsterController : MonoBehaviour
         //move
         else if (pos == 2)
         {
-            if (id == 33 || id == 47 || id == 63)
+            if (monsterData.Id == 33 || monsterData.Id == 47 || monsterData.Id == 63)
             {
                 GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("Move");
             }
@@ -209,7 +230,7 @@ public class MonsterController : MonoBehaviour
         //attack
         else if (pos == 3)
         {
-            if (id == 18 || id == 63)
+            if (monsterData.Id == 18 || monsterData.Id == 63)
             {
                 GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attacl", 0.5f, 1);
             }
@@ -222,7 +243,7 @@ public class MonsterController : MonoBehaviour
         // die
         else if (pos == 4)
         {
-            if (id == 29 || id == 63 || id == 63)
+            if (monsterData.Id == 29 || monsterData.Id == 63 || monsterData.Id == 63)
             {
                 GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("newAnimation", 0.5f, 1);
             }

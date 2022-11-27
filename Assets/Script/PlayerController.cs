@@ -33,7 +33,7 @@ public class PlayerController : Singleton<PlayerController>
     private bool isAtk = false;
     private bool canHurt = true;
     private int exp = 0;
-    private HeroesData data;
+    private MyHeroes data;
     float timeSmoke = 0;
     public float timeSmokeWait = 1f;
     private bool isPause = false;
@@ -60,8 +60,10 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         levelText.text = playerLevel.ToString();
-        int heroesId = 11;
-        data = HeroesDatabase.Instance.fetchHeroesData(heroesId);
+        // pick con nao?
+        int heroesId = 10;
+
+        data = HeroesDatabase.Instance.fetchMyData(heroesId);
         currentHp = data.Hp;
         currentSpeed = data.Speed / 10;
         currentArmour = data.Armour;
@@ -159,6 +161,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.rotation);
+                projectileNormal.GetComponent<BulletController>().initBullet(data, 1, shootTarget);
                 Vector2 vector = shootFollower(shootTarget);
                 float angle = calAngle(shootTarget, vector);
                 projectileNormal.transform.Rotate(0, 0, angle + 90);
@@ -231,13 +234,13 @@ public class PlayerController : Singleton<PlayerController>
         body.transform.localScale = newScale;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
             if (canHurt)
             {
-                int enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
+                MonsterData enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
                 canHurt = false;
                 StartCoroutine(setHurt(enemyLv));
                 collision.gameObject.GetComponent<MonsterController>().setAction(1);
@@ -248,21 +251,19 @@ public class PlayerController : Singleton<PlayerController>
         {
             if (canHurt)
             {
-                int enemyLv = collision.gameObject.GetComponent<BossController>().getLevel();
+                //int enemyLv = collision.gameObject.GetComponent<BossController>().getLevel();
                 canHurt = false;
-                StartCoroutine(setHurt(enemyLv));
+                //StartCoroutine(setHurt(enemyLv));
                 collision.gameObject.GetComponent<BossController>().setAction(1);
             }
         }
     }
-    IEnumerator setHurt(int level)
+    IEnumerator setHurt(MonsterData monsterData)
     {
-        int dame = 50 + (level % 10) * 40 + (level / 10) * 100;
-        int percent = calculateArmourReduce(currentArmour);
-        dame = dame * (100 - percent) / 100;
+        int dame = MathController.Instance.enemyHitPlayer(data, monsterData);
         reduceHealth(dame);
         body.GetComponent<Animator>().SetTrigger("hurt");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         canHurt = true;
     }
     private void reduceHealth(int amount)
@@ -277,36 +278,16 @@ public class PlayerController : Singleton<PlayerController>
         {
             currentHp = 0;
             // dead
-
         }
         else
         {
             hpText.text = currentHp.ToString();
-            float per = currentHp / data.Hp;
+            float per = (float) currentHp / data.Hp;
+            hpText.text = currentHp.ToString();
             hpBar.transform.localScale = new Vector3(per, 1f, 1f);
         }
     }
-    private int calculateArmourReduce(int armour)
-    {
-        int percent = 0;
-        if (armour <= 15)
-        {
-            percent += armour;
-        }
-        if (armour <= 30)
-        {
-            percent += (int)((armour - 15) * 0.7);
-        }
-        if (armour <= 50)
-        {
-            percent += (int)((armour - 15) * 0.5);
-        }
-        if (armour > 50)
-        {
-            percent += (int)((armour - 15) * 0.3);
-        }
-        return percent;
-    }
+
     private Vector2 shootFollower(Transform en)
     {
         Vector2 vector = new Vector2(-gameObject.transform.position.x + en.transform.position.x, -gameObject.transform.position.y + en.transform.position.y);

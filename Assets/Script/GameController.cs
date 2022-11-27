@@ -28,11 +28,11 @@ public class GameController : Singleton<GameController>
     {
         initInfo();
         playerLevel = PlayerController.Instance.getLevel();
-        for (int i = 0; i < 13; i++)
+        for (int i = 0; i < 12; i++)
         {
             addEnemy();
         }
-        addBoss();
+        //addBoss();
         levelText.text = playerLevel.ToString();
         //btnQuit.onClick.AddListener(quitGame);
     }
@@ -70,7 +70,6 @@ public class GameController : Singleton<GameController>
         string enemyType = "Enemy" + enemyId;
         GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
         enemy.GetComponent<MonsterController>().initData(enemyId);
-        enemy.GetComponent<MonsterController>().setupWaypoints(1, enemyId);
     }
     public IEnumerator respawnEnemy()
     {

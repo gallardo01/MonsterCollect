@@ -225,6 +225,10 @@ namespace MarchingBytes {
 						distance = delta.magnitude;
 						obj = i;
 					}
+					if(delta.magnitude < 3f)
+                    {
+						listObj[i].GetComponent<MonsterController>().triggerWaypoints();
+                    }
 				}
 			}
 			if(obj < 0)

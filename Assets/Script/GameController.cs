@@ -163,18 +163,26 @@ public class GameController : Singleton<GameController>
     {
         string par = "Particle" + index;
         GameObject particle = EasyObjectPool.instance.GetObjectFromPool(par, obj.transform.position, obj.transform.rotation);
-        if (index == 2)
+        if (index == 2 || index == 4)
         {
             particle.transform.SetParent(obj.transform);
         }
         StartCoroutine(disableParticle(particle));
     }
 
+    public void addExplosion(MyHeroes heroes, GameObject obj, int index)
+    {
+        string par = "Particle" + index;
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(par, obj.transform.position, obj.transform.rotation);
+        particle.GetComponent<ExplosionController>().initData(heroes);
+        StartCoroutine(disableParticle(particle));
+    }
+
     IEnumerator disableParticle(GameObject obj)
     {
-        yield return new WaitForSeconds(0.5f);
-        obj.SetActive(false);
+        yield return new WaitForSeconds(1f);
         EasyObjectPool.instance.ReturnObjectToPool(obj);
+        obj.SetActive(false);
     }
 
     void quitGame()

@@ -147,7 +147,9 @@ public class PlayerController : Singleton<PlayerController>
   
     private void attackMonster()
     {
-        StartCoroutine(normalAttack());
+        //StartCoroutine(normalAttack());
+        StartCoroutine(thunder_1());
+
     }
 
     private IEnumerator normalAttack()
@@ -165,7 +167,7 @@ public class PlayerController : Singleton<PlayerController>
                 Vector2 vector = shootFollower(shootTarget);
                 float angle = calAngle(shootTarget, vector);
                 projectileNormal.transform.Rotate(0, 0, angle + 90);
-                projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
+                //projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
         }
         StartCoroutine(normalAttack());
@@ -176,20 +178,35 @@ public class PlayerController : Singleton<PlayerController>
         yield return new WaitForSeconds(1.5f);
         if (isPause == false)
         {
-            string bulletText = "Electric_1";
-            Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
+            string bulletText = "Electric_2";
+            // 3f and 5f
+            GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
+    locate.transform.rotation);
+            shootTarget.transform.position = gameObject.transform.position + new Vector3(giveRandomFloatNumber(1f, 3f), giveRandomFloatNumber(1f, 5f), 0);
+            //StartCoroutine(returnToPoolEmpty(shootTarget));
             if (shootTarget != null)
             {
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
-    shootTarget.rotation);
-                Vector2 vector = shootFollower(shootTarget);
-                float angle = calAngle(shootTarget, vector);
-                projectileNormal.transform.Rotate(0, 0, angle + 90);
-
-                projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
+    shootTarget.transform.rotation);
+                projectileNormal.GetComponent<BulletController>().initBullet(data, 11, shootTarget.transform);
             }
         }
-        StartCoroutine(normalAttack());
+        StartCoroutine(thunder_1());
+    }
+
+    IEnumerator returnToPoolEmpty(GameObject obj)
+    {
+        yield return new WaitForSeconds(5f);
+        EasyObjectPool.instance.ReturnObjectToPool(obj);
+        obj.SetActive(false);
+    }
+    private float giveRandomFloatNumber(float x, float y)
+    {
+        if(Random.Range(1,9) % 2 == 0)
+        {
+            return Random.Range(x, y);
+        }
+        return Random.Range(-y, -x);
     }
 
     private void runAnimation(int pos)

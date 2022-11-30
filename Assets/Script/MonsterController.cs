@@ -51,6 +51,7 @@ public class MonsterController : MonoBehaviour
         currentHp -= actualDame;
         if(currentHp <= 0)
         {
+            GameController.Instance.initEatMonster(heroes.Level);
             isMove = false;
             setAction(2);
         }

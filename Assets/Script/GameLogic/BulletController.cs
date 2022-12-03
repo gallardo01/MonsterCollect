@@ -5,18 +5,17 @@ using MarchingBytes;
 
 public class BulletController : MonoBehaviour
 {
-
-    private int attack;
-    private int crit;
-    private int type;
     private MyHeroes heroes;
     [SerializeField] int id;
     private Transform target;
-    private bool isMove = true;
     // Start is called before the first frame update
 
     private void Start()
     {
+        if (id == 12)
+        {
+
+        }
     }
 
     void Update()
@@ -57,12 +56,18 @@ public class BulletController : MonoBehaviour
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
-        if (collision.gameObject.tag == "Enemy" && id != 11)
+        if (collision.gameObject.tag == "Enemy" && id != 11 && id != 12)
         {
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
             GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
+        }
+        if (collision.gameObject.tag == "Enemy" && id == 12)
+        {
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+            GameController.Instance.addParticle(collision.gameObject, 1);
+            returnToPool(1f);
         }
     }
     

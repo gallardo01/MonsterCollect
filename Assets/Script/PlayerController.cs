@@ -144,12 +144,13 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
     }
-  
+
     private void attackMonster()
     {
         //StartCoroutine(normalAttack());
-        StartCoroutine(thunder_1());
-
+        //StartCoroutine(thunder_1());
+        //StartCoroutine(thunder_2());
+        StartCoroutine(thunder_3());
     }
 
     private IEnumerator normalAttack()
@@ -172,7 +173,6 @@ public class PlayerController : Singleton<PlayerController>
         }
         StartCoroutine(normalAttack());
     }
-
     private IEnumerator thunder_1()
     {
         yield return new WaitForSeconds(1.5f);
@@ -190,8 +190,54 @@ public class PlayerController : Singleton<PlayerController>
     shootTarget.transform.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(data, 11, shootTarget.transform);
             }
+            StartCoroutine(disableObject(5f, shootTarget));
         }
         StartCoroutine(thunder_1());
+    }
+    IEnumerator disableObject(float timer, GameObject obj)
+    {
+        yield return new WaitForSeconds(timer);
+        EasyObjectPool.instance.ReturnObjectToPool(obj);
+        obj.SetActive(false);
+    }
+    private IEnumerator thunder_2()
+    {
+        yield return new WaitForSeconds(2.5f);
+        if (isPause == false)
+        {
+            string bulletText = "Electric_3";
+
+            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+gameObject.transform.rotation);
+            projectileNormal.GetComponent<BulletFlyAround>().initBullet(data, 1, gameObject.transform);
+            yield return new WaitForSeconds(3.5f);
+            EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
+            projectileNormal.SetActive(false);
+        }
+        StartCoroutine(thunder_2());
+    }
+    private IEnumerator thunder_3()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (isPause == false)
+        {
+            string bulletText = "Electric_4";
+            // 3f and 5f
+            GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Target", locate.transform.position,
+    locate.transform.rotation);
+            shootTarget.transform.position = gameObject.transform.position + new Vector3(giveRandomFloatNumber(1f, 3f), giveRandomFloatNumber(1f, 5f), 0);
+            StartCoroutine(disableObject(1.1f, shootTarget));
+            yield return new WaitForSeconds(1f);
+
+            if (shootTarget != null)
+            {
+                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, shootTarget.transform.position,
+    shootTarget.transform.rotation);
+                projectileNormal.transform.position = shootTarget.transform.position;
+                projectileNormal.GetComponent<BulletController>().initBullet(data, 1, shootTarget.transform);
+            }
+        }
+        StartCoroutine(thunder_3());
     }
 
     IEnumerator returnToPoolEmpty(GameObject obj)
@@ -202,7 +248,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     private float giveRandomFloatNumber(float x, float y)
     {
-        if(Random.Range(1,9) % 2 == 0)
+        if (Random.Range(1, 9) % 2 == 0)
         {
             return Random.Range(x, y);
         }
@@ -299,7 +345,7 @@ public class PlayerController : Singleton<PlayerController>
         else
         {
             hpText.text = currentHp.ToString();
-            float per = (float) currentHp / data.Hp;
+            float per = (float)currentHp / data.Hp;
             hpText.text = currentHp.ToString();
             hpBar.transform.localScale = new Vector3(per, 1f, 1f);
         }

@@ -269,6 +269,14 @@ public class MonsterController : MonoBehaviour
         }
     }
 
+    IEnumerator returnObjectToPool(float timer, GameObject obj)
+    {
+        yield return new WaitForSeconds(timer);
+        EasyObjectPool.instance.ReturnObjectToPool(obj);
+        obj.SetActive(false);
+    }
+
+
     IEnumerator disableObject()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;

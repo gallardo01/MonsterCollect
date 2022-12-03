@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using MarchingBytes;
 
 public class FloatingText : MonoBehaviour
 {
@@ -30,8 +31,8 @@ public class FloatingText : MonoBehaviour
 
     private IEnumerator disableFloating()
     {
-        gameObject.SetActive(true);
         yield return new WaitForSeconds(1f);
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
         gameObject.SetActive(false);
     }
 }

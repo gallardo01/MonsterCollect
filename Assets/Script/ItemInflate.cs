@@ -14,14 +14,21 @@ public class ItemInflate : MonoBehaviour
     public Image type;
     public TextMeshProUGUI slot;
     public GameObject focus;
+    public GameObject[] itemVFX;
 
     private ItemInventory itemData;
-    private string[] Rarity = { "Common", "Uncommon", "Rare", "Epic", "Mythic", "Legendary" };
+    private string[] Rarity = { "", "Common", "Great", "Rare", "Epic", "Mythic", "Legendary" };
     public void InitData(ItemInventory iteminfo)
     {
         itemData = iteminfo;
         item.sprite = Resources.Load<Sprite>("Contents/Item/" + iteminfo.Id.ToString());
         rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + Rarity[iteminfo.Rarity]);
+        foreach (var item in itemVFX)
+        {
+            item.SetActive(false);
+        }
+        if (iteminfo.Rarity > 2)
+            itemVFX[iteminfo.Rarity - 2].SetActive(true);
         type.sprite = Resources.Load<Sprite>("Contents/Icon/DameType/" + iteminfo.Type.ToString());
         if (iteminfo.Type == 0)
         {
@@ -31,12 +38,13 @@ public class ItemInflate : MonoBehaviour
         {
             slot.text = "";
         }
-        
+
     }
 
     //// Start is called before the first frame update
     void Start()
     {
+
         button.onClick.AddListener(() => onClickItem());
     }
     private void onClickItem()

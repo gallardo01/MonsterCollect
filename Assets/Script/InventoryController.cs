@@ -21,7 +21,7 @@ public class InventoryController : Singleton<InventoryController>
     public ItemInflate selectingItem;
     private List<GameObject> listItem = new List<GameObject>();
 
-    string[] rarity = new string[4] { "Common", "Rare", "Mythical", "Epic" };
+    string[] rarity = new string[4] { "Common", "Great", "Rare", "Epic" };
     string[] Albility = new string[6] { "Attack", "HP", "Armor", "Speed", "Exp Bonus", "Gold Bonus" };
     //int[] fuseReturnByRarity = new int[4] { 2, 3, 4, 5 };
     int[] iconSort = new int[6] { 4, 3, 0, 1, 2, 5 };
@@ -205,9 +205,9 @@ public class InventoryController : Singleton<InventoryController>
     }
     void InitEquipment(ItemInventory item, int itemSlot)
     {
-        Equipment[itemSlot].transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
-        //Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + item.Rarity.ToString());
-        Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
+        // Equipment[itemSlot].transform.Find("Contain/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
+        // //Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + item.Rarity.ToString());
+        // Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
         InitAlbilities();
 
     }
@@ -227,7 +227,8 @@ public class InventoryController : Singleton<InventoryController>
         }
         for (int i = 0; i < 6; ++i)
         {
-            albilitiesText[i].GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=" + iconSort[i] + " ></size>" + baseAlbility[i] + "<color=#00ff00>(+" + bonusAlbility[i] + ")";
+            int num = baseAlbility[i] + bonusAlbility[i];
+            albilitiesText[i].GetComponent<TextMeshProUGUI>().text =  num.ToString();
         }
     }
 }

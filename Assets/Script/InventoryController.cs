@@ -63,7 +63,7 @@ public class InventoryController : Singleton<InventoryController>
             }
         }
         //fix inventory to center
-        ItemPanel.GetComponent<GridLayoutGroup>().cellSize =new Vector2 ((ItemPanel.GetComponent<RectTransform>().rect.size.x-100-90)/4, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4);
+        ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4);
     }
     public void onClickItem(ItemInventory data)
     {
@@ -137,6 +137,7 @@ public class InventoryController : Singleton<InventoryController>
         main.Find("Panel/Bottom/Button/ButtonEquip").GetComponent<Button>().onClick.AddListener(() =>
         {
             if (data.IsUse > 0) return;
+            if (data.Slot > 1) return;
             ItemDatabase.Instance.equipItemPosition(data);
             InitEquipment(data, data.Type - 1);
             InfoPanel.SetActive(false);
@@ -205,9 +206,10 @@ public class InventoryController : Singleton<InventoryController>
     }
     void InitEquipment(ItemInventory item, int itemSlot)
     {
-        // Equipment[itemSlot].transform.Find("Contain/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
-        // //Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + item.Rarity.ToString());
-        // Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
+        string[] Rarity = { "", "Common", "Great", "Rare", "Epic", "Mythic", "Legendary" };
+        Equipment[itemSlot].transform.Find("Contain/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
+        Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + Rarity[item.Rarity]);
+        Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
         InitAlbilities();
 
     }
@@ -228,7 +230,7 @@ public class InventoryController : Singleton<InventoryController>
         for (int i = 0; i < 6; ++i)
         {
             int num = baseAlbility[i] + bonusAlbility[i];
-            albilitiesText[i].GetComponent<TextMeshProUGUI>().text =  num.ToString();
+            albilitiesText[i].GetComponent<TextMeshProUGUI>().text = num.ToString();
         }
     }
 }

@@ -40,11 +40,13 @@ public class UIUpgradeController : MonoBehaviour
         btnBlank.onClick.AddListener(() => closeAllToolTip());
         setupTxtAlibityDetail();
         IsUpdated = false;
+        
 
     }
     private void InitUI()
     {
         UserData database = UserDatabase.Instance.getUserData();
+
         AbilitiesLevel[1].text = database.Atk < 10 ? database.Atk.ToString() : "MAX";
         AbilitiesLevel[2].text = database.Hp < 10 ? database.Hp.ToString() : "MAX";
         AbilitiesLevel[3].text = database.Armour < 10 ? database.Armour.ToString() : "MAX";
@@ -66,9 +68,23 @@ public class UIUpgradeController : MonoBehaviour
         {
             btnUpgrade.gameObject.SetActive(false);
         }
+       
         UIController.Instance.InitUI();
+        ItemStatus(database);
     }
 
+    private void ItemStatus(UserData database)
+    {
+        Abilities[1].GetComponent<Animator>().SetTrigger(database.Atk <= 1 ? "Lock" : "Unlock");
+        Abilities[2].GetComponent<Animator>().SetTrigger(database.Hp <= 1 ? "Lock" : "Unlock");
+        Abilities[3].GetComponent<Animator>().SetTrigger(database.Armour <= 1 ? "Lock" : "Unlock");
+        Abilities[4].GetComponent<Animator>().SetTrigger(database.Move <= 1 ? "Lock" : "Unlock");
+        Abilities[5].GetComponent<Animator>().SetTrigger(database.Crit <= 1 ? "Lock" : "Unlock");
+        Abilities[6].GetComponent<Animator>().SetTrigger(database.Speed <= 1 ? "Lock" : "Unlock");
+        Abilities[7].GetComponent<Animator>().SetTrigger(database.Equipment <= 1 ? "Lock" : "Unlock");
+        Abilities[8].GetComponent<Animator>().SetTrigger(database.ExtraGold <= 1 ? "Lock" : "Unlock");
+        Abilities[9].GetComponent<Animator>().SetTrigger(database.ExtraExp <= 1 ? "Lock" : "Unlock");
+    }
     private void openToolTip(int id)
     {
         for (int i = 0; i < 9; i++)

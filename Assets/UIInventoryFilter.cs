@@ -18,7 +18,7 @@ public class UIInventoryFilter : MonoBehaviour
     }
     public void FilterByItemClicked()
     {
-
+        
         if(filterStatus == 1)
         {
             filterStatus = 0;
@@ -33,6 +33,7 @@ public class UIInventoryFilter : MonoBehaviour
             filterByEquipment.GetComponent<Image>().color = Color.white;
 
         }
+        InventoryController.Instance.InitInventory(filterStatus);
     }
     public void FilterByEquipmentClicked()
     {
@@ -50,10 +51,6 @@ public class UIInventoryFilter : MonoBehaviour
             filterByItem.GetComponent<Image>().color = Color.white;
            
         }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
+        InventoryController.Instance.InitInventory(filterStatus);
     }
 }

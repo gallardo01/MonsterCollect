@@ -59,60 +59,41 @@ public class InventoryController : Singleton<InventoryController>
                 case 0:
                     if (item.Slot > 0)
                     {
-
-                        GameObject _slotitem = Instantiate(SlotItem, ItemPanel.transform);
-                        _slotitem.transform.localPosition = new Vector3(0, 0, 0);
-                        _slotitem.GetComponent<ItemInflate>().InitData(item);
-
-                        listItem.Add(_slotitem);
-                        if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
-                        if (item.IsUse < 0)
-                        {
-                            InitEquipment(item, (-item.IsUse) - 1);
-                        }
+                        ShowItem(item);
                     }
                     break;
                 case 1:
                     if (item.Type == 0)
                     {
-                        if (item.Slot > 0)
-                        {
-
-                            GameObject _slotitem = Instantiate(SlotItem, ItemPanel.transform);
-                            _slotitem.transform.localPosition = new Vector3(0, 0, 0);
-                            _slotitem.GetComponent<ItemInflate>().InitData(item);
-
-                            listItem.Add(_slotitem);
-                            if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
-                            if (item.IsUse < 0)
-                            {
-                                InitEquipment(item, (-item.IsUse) - 1);
-                            }
-                        }
+                        ShowItem(item);
                     }
                     break;
                 case 2:
                     if (item.Type != 0)
                     {
-                        if (item.Slot > 0)
-                        {
-
-                            GameObject _slotitem = Instantiate(SlotItem, ItemPanel.transform);
-                            _slotitem.transform.localPosition = new Vector3(0, 0, 0);
-                            _slotitem.GetComponent<ItemInflate>().InitData(item);
-
-                            listItem.Add(_slotitem);
-                            if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
-                            if (item.IsUse < 0)
-                            {
-                                InitEquipment(item, (-item.IsUse) - 1);
-                            }
-                        }
+                        ShowItem(item);
                     }
                     break;
             }
            
             
+        }
+    }
+    public void ShowItem(ItemInventory item)
+    {
+        if (item.Slot > 0)
+        {
+
+            GameObject _slotitem = Instantiate(SlotItem, ItemPanel.transform);
+            _slotitem.transform.localPosition = new Vector3(0, 0, 0);
+            _slotitem.GetComponent<ItemInflate>().InitData(item);
+
+            listItem.Add(_slotitem);
+            if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
+            if (item.IsUse < 0)
+            {
+                InitEquipment(item, (-item.IsUse) - 1);
+            }
         }
     }
     public void onClickItem(ItemInventory data)

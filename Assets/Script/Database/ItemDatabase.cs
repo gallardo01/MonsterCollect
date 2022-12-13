@@ -29,10 +29,10 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileItemData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
 
-        // for (int i = 1; i <= 37; i++)
-        // {
-        //    addNewItem(i, 1000);
-        // }
+        for (int i = 1; i <= 37; i++)
+        {
+            addNewItem(i, 1000);
+        }
         // for (int i = 101; i <= 112; i++)
         // {
         //    addNewItem(i, 1000);

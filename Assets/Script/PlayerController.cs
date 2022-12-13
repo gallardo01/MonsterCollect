@@ -147,10 +147,10 @@ public class PlayerController : Singleton<PlayerController>
 
     private void attackMonster()
     {
-        //StartCoroutine(normalAttack());
-        //StartCoroutine(thunder_1());
-        //StartCoroutine(thunder_2());
-        StartCoroutine(thunder_3());
+        StartCoroutine(normalAttack());
+        StartCoroutine(thunder_1());
+        StartCoroutine(thunder_2());
+        //StartCoroutine(thunder_3());
     }
 
     private IEnumerator normalAttack()

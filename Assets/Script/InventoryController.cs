@@ -40,6 +40,12 @@ public class InventoryController : Singleton<InventoryController>
         InfoPanel.SetActive(false);
         PopupPanel = Instantiate(PopupPrefab, ParentPanel.transform);
         PopupPanel.SetActive(false);
+        InitInventory(0);
+        //fix inventory to center
+        ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4);
+    }
+    public void InitInventory(int filterStatus)
+    {
         List<ItemInventory> itemArr = ItemDatabase.Instance.getAllData();
         foreach (Transform child in ItemPanel.transform)
         {
@@ -48,22 +54,47 @@ public class InventoryController : Singleton<InventoryController>
         for (int i = 0; i < itemArr.Count; i++)
         {
             ItemInventory item = itemArr[i];
-            if (item.Slot > 0)
+            switch (filterStatus)
             {
-                GameObject _slotitem = Instantiate(SlotItem, ItemPanel.transform);
-                _slotitem.transform.localPosition = new Vector3(0, 0, 0);
-                _slotitem.GetComponent<ItemInflate>().InitData(item);
+                case 0:
+                    if (item.Slot > 0)
+                    {
+                        ShowItem(item);
+                    }
+                    break;
+                case 1:
+                    if (item.Type == 0)
+                    {
+                        ShowItem(item);
+                    }
+                    break;
+                case 2:
+                    if (item.Type != 0)
+                    {
+                        ShowItem(item);
+                    }
+                    break;
+            }
+           
+            
+        }
+    }
+    public void ShowItem(ItemInventory item)
+    {
+        if (item.Slot > 0)
+        {
 
-                listItem.Add(_slotitem);
-                if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
-                if (item.IsUse < 0)
-                {
-                    InitEquipment(item, (-item.IsUse) - 1);
-                }
+            GameObject _slotitem = Instantiate(SlotItem, ItemPanel.transform);
+            _slotitem.transform.localPosition = new Vector3(0, 0, 0);
+            _slotitem.GetComponent<ItemInflate>().InitData(item);
+
+            listItem.Add(_slotitem);
+            if (item.Id == 8) upgradeItemID = listItem.IndexOf(_slotitem);
+            if (item.IsUse < 0)
+            {
+                InitEquipment(item, (-item.IsUse) - 1);
             }
         }
-        //fix inventory to center
-        ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 100 - 90) / 4);
     }
     public void onClickItem(ItemInventory data)
     {

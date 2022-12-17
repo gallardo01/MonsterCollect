@@ -310,4 +310,17 @@ public class MonsterController : MonoBehaviour
         //    StartCoroutine(disableObject());
         //}
     }
+
+    public void stopRunning()
+    {
+        StartCoroutine(stopRunningSecond(1f));
+    }
+
+    IEnumerator stopRunningSecond(float timer)
+    {
+        int s = monsterData.Speed;
+        monsterData.Speed = 0;
+        yield return new WaitForSeconds(timer);
+        monsterData.Speed = s;
+    }
 }

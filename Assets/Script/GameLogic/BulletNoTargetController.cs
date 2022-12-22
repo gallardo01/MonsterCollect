@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
 
-public class BulletController : MonoBehaviour
+public class BulletNoTargetController : MonoBehaviour
 {
     private MyHeroes heroes;
     [SerializeField] int id;
@@ -12,18 +12,7 @@ public class BulletController : MonoBehaviour
 
     private void Start()
     {
-       
-    }
 
-    void Update()
-    {
-        if (target != null)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, .035f);
-        } else
-        {
-            returnToPool(0f);
-        }
     }
 
     void OnDisable()
@@ -32,10 +21,7 @@ public class BulletController : MonoBehaviour
 
     void OnEnable()
     {
-        if (id == 1)
-        {
-            StartCoroutine(disableCollider());
-        }
+ 
     }
 
     IEnumerator disableCollider()
@@ -44,52 +30,33 @@ public class BulletController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         gameObject.GetComponent<Collider2D>().enabled = true;
     }
-    IEnumerator thunder_2()
-    {
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(explosion(heroes));
-        StartCoroutine(returnToPool(1.3f));
-    }
 
     public void initBullet(MyHeroes myHeroes, int skill, Transform enemy)
     {
         target = enemy;
         heroes = myHeroes;
 
-        if (skill == 1)
-        {
-            StartCoroutine(thunder_2());
-        }
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Wall" && id != 1)
+        if (collision.gameObject.tag == "Wall")
         {
             GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
-        if (collision.gameObject.tag == "Enemy" && id != 1 && id != 12)
+        if (collision.gameObject.tag == "Enemy" && id == 3)
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
-            GameController.Instance.addParticle(collision.gameObject, 1);
+            GameController.Instance.addExplosion(heroes, gameObject, 5);
+
+            //collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+            //GameController.Instance.addParticle(collision.gameObject, 5);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
-        }
-        if (collision.gameObject.tag == "Enemy" && id == 12)
-        {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
-            GameController.Instance.addParticle(collision.gameObject, 1);
-            returnToPool(1f);
-        }
-        if (collision.gameObject.tag == "Enemy" && id == 1)
-        {
-            //collision.gameObject.GetComponent<MonsterController>().stopRunning();
         }
     }
-    
+
     IEnumerator explosion(MyHeroes data)
     {
         yield return new WaitForSeconds(0);

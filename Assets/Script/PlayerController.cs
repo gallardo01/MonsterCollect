@@ -37,7 +37,10 @@ public class PlayerController : Singleton<PlayerController>
     float timeSmoke = 0;
     public float timeSmokeWait = 1f;
     private bool isPause = false;
-
+    private int[] thunderType = { 1, 0, 0, 0, 0, 0 };
+    private int[] grassType = { 1, 0, 0, 0, 0, 0 };
+    private int[] waterType = { 1, 0, 0, 0, 0, 0 };
+    private int[] fireType = { 1, 0, 0, 0, 0, 0 };
 
     // Start is called before the first frame update
     void Start()
@@ -147,10 +150,10 @@ public class PlayerController : Singleton<PlayerController>
 
     private void attackMonster()
     {
-        StartCoroutine(normalAttack());
-        StartCoroutine(thunder_1());
-        StartCoroutine(thunder_2());
-        //StartCoroutine(thunder_3());
+        //StartCoroutine(normalAttack());
+        //StartCoroutine(thunder_1());
+        //StartCoroutine(thunder_2());
+        StartCoroutine(thunder_3());
     }
 
     private IEnumerator normalAttack()
@@ -182,13 +185,13 @@ public class PlayerController : Singleton<PlayerController>
             // 3f and 5f
             GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
     locate.transform.rotation);
-            shootTarget.transform.position = gameObject.transform.position + new Vector3(giveRandomFloatNumber(1f, 3f), giveRandomFloatNumber(1f, 5f), 0);
+            shootTarget.transform.position = gameObject.transform.position + new Vector3(giveRandomFloatNumber(0.3f, 3f), giveRandomFloatNumber(1f, 5f), 0);
             //StartCoroutine(returnToPoolEmpty(shootTarget));
             if (shootTarget != null)
             {
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.transform.rotation);
-                projectileNormal.GetComponent<BulletController>().initBullet(data, 11, shootTarget.transform);
+                projectileNormal.GetComponent<BulletController>().initBullet(data, 1, shootTarget.transform);
             }
             StartCoroutine(disableObject(5f, shootTarget));
         }
@@ -222,20 +225,16 @@ gameObject.transform.rotation);
         if (isPause == false)
         {
             string bulletText = "Electric_4";
-            // 3f and 5f
-            GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Target", locate.transform.position,
-    locate.transform.rotation);
-            shootTarget.transform.position = gameObject.transform.position + new Vector3(giveRandomFloatNumber(1f, 3f), giveRandomFloatNumber(1f, 5f), 0);
-            StartCoroutine(disableObject(1.1f, shootTarget));
-            yield return new WaitForSeconds(1f);
 
-            if (shootTarget != null)
-            {
-                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, shootTarget.transform.position,
-    shootTarget.transform.rotation);
-                projectileNormal.transform.position = shootTarget.transform.position;
-                projectileNormal.GetComponent<BulletController>().initBullet(data, 1, shootTarget.transform);
-            }
+            Vector2 vector = new Vector2(-1f, 2f);
+            Vector2 vector2 = new Vector2(1f, -2f);
+            Vector2 vector3 = new Vector2(-1f, -2f);
+            Vector2 vector4 = new Vector2(1f, 2f);
+
+            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+locate.transform.rotation);
+            projectileNormal.GetComponent<BulletNoTargetController>().initBullet(data, 3, gameObject.transform);
+            projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 100);
         }
         StartCoroutine(thunder_3());
     }

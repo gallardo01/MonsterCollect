@@ -6,6 +6,7 @@ using MarchingBytes;
 public class ExplosionController : MonoBehaviour
 {
     private MyHeroes data;
+    public int id;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,15 +26,22 @@ public class ExplosionController : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(data);
-            GameController.Instance.addParticle(collision.gameObject, 4);
-            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-            gameObject.SetActive(false);
+            if (id != 3)
+            {
+                GameController.Instance.addParticle(collision.gameObject, 4);
+            }
         }
     }
+
+    void OnEnable()
+    {
+        //StartCoroutine(returnToPool(0.3f));
+    }
+
 
 }

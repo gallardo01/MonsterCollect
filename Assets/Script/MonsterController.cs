@@ -21,12 +21,23 @@ public class MonsterController : MonoBehaviour
     {
         collider = GetComponent<BoxCollider2D>();
         //gameObject.GetComponent<Collider2D>().enabled = true;
+        StartCoroutine(stopIdle());
     }
     void FixedUpdate()
     {
         Move();
     }
-    
+
+    void OnEnable()
+    {
+        StartCoroutine(stopIdle());
+    }
+
+    IEnumerator stopIdle()
+    {
+        yield return new WaitForSeconds(Random.Range(5f, 9f));
+        wayMove = 2;
+    }
     public void initData(int id)
     {
         monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
@@ -313,7 +324,7 @@ public class MonsterController : MonoBehaviour
 
     public void stopRunning()
     {
-        StartCoroutine(stopRunningSecond(1f));
+        StartCoroutine(stopRunningSecond(0.5f));
     }
 
     IEnumerator stopRunningSecond(float timer)

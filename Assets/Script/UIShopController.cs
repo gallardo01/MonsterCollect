@@ -257,7 +257,7 @@ public class UIShopController : MonoBehaviour
         {
             //Open golden chest
             userdb.reduceMoney(price, 0);
-            itemDb.addNewItem(Random.RandomRange(9, 36), 1);
+            itemDb.addNewItem(Random.Range(9, 36), 1);
         }
         else
         {
@@ -265,7 +265,7 @@ public class UIShopController : MonoBehaviour
             userdb.reduceMoney(0, price);
             for (int i = 0; i < quantity; ++i)
             {
-                itemDb.addNewItem(Random.RandomRange(9, 36), 1);
+                itemDb.addNewItem(Random.Range(9, 36), 1);
             }
         }
     }

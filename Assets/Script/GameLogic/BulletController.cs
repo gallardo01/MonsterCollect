@@ -9,6 +9,8 @@ public class BulletController : MonoBehaviour
     [SerializeField] int id;
     private Transform target;
     // Start is called before the first frame update
+    private int bounce = 4;
+    private float speed = 0.035f;
 
     private void Start()
     {
@@ -19,7 +21,7 @@ public class BulletController : MonoBehaviour
     {
         if (target != null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, .035f);
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
         } else
         {
             returnToPool(0f);
@@ -55,6 +57,11 @@ public class BulletController : MonoBehaviour
     {
         target = enemy;
         heroes = myHeroes;
+        if(id == 4)
+        {
+            bounce = 4;
+            speed = 0.05f;
+        }
 
         if (skill == 1)
         {
@@ -71,22 +78,41 @@ public class BulletController : MonoBehaviour
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
-        if (collision.gameObject.tag == "Enemy" && id != 1 && id != 12)
+
+        //if (collision.gameObject.tag == "Enemy" && id == 12)
+        //{
+        //    collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+        //    GameController.Instance.addParticle(collision.gameObject, 1);
+        //    returnToPool(1f);
+        //}
+        if (collision.gameObject.tag == "Enemy" && id == 1)
+        {
+            //collision.gameObject.GetComponent<MonsterController>().stopRunning();
+        }
+        else if (collision.gameObject.tag == "Enemy" && id == 4)
+        {
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+            GameController.Instance.addParticle(collision.gameObject, 1);
+            if (bounce > 0) {
+                target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                bounce--;
+                if(target == null)
+                {
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
+                }
+            } else
+            {
+                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                gameObject.SetActive(false);
+            }
+        }
+        else if (collision.gameObject.tag == "Enemy" && id != 1 && id != 12 && id != 4)
         {
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
             GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
-        }
-        if (collision.gameObject.tag == "Enemy" && id == 12)
-        {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
-            GameController.Instance.addParticle(collision.gameObject, 1);
-            returnToPool(1f);
-        }
-        if (collision.gameObject.tag == "Enemy" && id == 1)
-        {
-            //collision.gameObject.GetComponent<MonsterController>().stopRunning();
         }
     }
     

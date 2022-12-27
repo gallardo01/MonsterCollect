@@ -153,9 +153,15 @@ public class PlayerController : Singleton<PlayerController>
         //StartCoroutine(normalAttack());
         //StartCoroutine(thunder_1());
         //StartCoroutine(thunder_2());
-        StartCoroutine(thunder_3());
+        //StartCoroutine(thunder_3());
+        StartCoroutine(thunder_4());
     }
-
+    IEnumerator disableObject(float timer, GameObject obj)
+    {
+        yield return new WaitForSeconds(timer);
+        EasyObjectPool.instance.ReturnObjectToPool(obj);
+        obj.SetActive(false);
+    }
     private IEnumerator normalAttack()
     {
         yield return new WaitForSeconds(1.5f);
@@ -197,12 +203,6 @@ public class PlayerController : Singleton<PlayerController>
         }
         StartCoroutine(thunder_1());
     }
-    IEnumerator disableObject(float timer, GameObject obj)
-    {
-        yield return new WaitForSeconds(timer);
-        EasyObjectPool.instance.ReturnObjectToPool(obj);
-        obj.SetActive(false);
-    }
     private IEnumerator thunder_2()
     {
         yield return new WaitForSeconds(2.5f);
@@ -238,6 +238,26 @@ locate.transform.rotation);
         }
         StartCoroutine(thunder_3());
     }
+    private IEnumerator thunder_4()
+    {
+        yield return new WaitForSeconds(3f);
+        if (isPause == false)
+        {
+            string bulletText = "Electric_5";
+            Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
+            if (shootTarget != null)
+            {
+                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+    shootTarget.rotation);
+                projectileNormal.GetComponent<BulletController>().initBullet(data, 4, shootTarget);
+                //Vector2 vector = shootFollower(shootTarget);
+                //float angle = calAngle(shootTarget, vector);
+                //projectileNormal.transform.Rotate(0, 0, angle + 90);
+                //projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
+            }
+        }
+        StartCoroutine(thunder_4());
+    }
 
     IEnumerator returnToPoolEmpty(GameObject obj)
     {
@@ -253,7 +273,6 @@ locate.transform.rotation);
         }
         return Random.Range(-y, -x);
     }
-
     private void runAnimation(int pos)
     {
         //idle

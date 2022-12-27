@@ -210,15 +210,18 @@ namespace MarchingBytes {
 			}
 		}
 
+		private GameObject playerObj;
+
 		public Transform getNearestHitPosition(GameObject player)
         {
+			playerObj = player;
 			float distance = float.MaxValue;
 			int obj = -1;
 
 			for (int i = 0; i < listObj.Count; i++)
             {
 				Vector3 delta = player.transform.position - listObj[i].transform.position;
-				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getCurrentHp() > 0
+				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
 					&& delta.magnitude < 7f)
 				{
 					if (distance > delta.magnitude)
@@ -238,5 +241,34 @@ namespace MarchingBytes {
             }
 			return listObj[obj].transform;
         }
+
+		public Transform getNearestExcludeGameObjectPosition(GameObject en)
+		{
+			float distance = float.MaxValue;
+			int obj = -1;
+
+			for (int i = 0; i < listObj.Count; i++)
+			{
+				Vector3 delta = playerObj.transform.position - listObj[i].transform.position;
+				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
+					&& listObj[i] != en && delta.magnitude < 7f)
+				{
+					if (distance > delta.magnitude)
+					{
+						distance = delta.magnitude;
+						obj = i;
+					}
+					if (delta.magnitude < 3f)
+					{
+						listObj[i].GetComponent<MonsterController>().triggerWaypoints();
+					}
+				}
+			}
+			if (obj < 0)
+			{
+				return null;
+			}
+			return listObj[obj].transform;
+		}
 	}
 }

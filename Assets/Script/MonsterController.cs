@@ -16,6 +16,7 @@ public class MonsterController : MonoBehaviour
     private BoxCollider2D collider;
     private MonsterData monsterData;
     private int currentHp;
+    private bool isDead = false;
 
     void Start()
     {
@@ -40,10 +41,19 @@ public class MonsterController : MonoBehaviour
     }
     public void initData(int id)
     {
+        isDead = false;
         monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
         currentHp = monsterData.Hp;
         setText(id);
         setupWaypoints();
+    }
+    public bool isFullHp()
+    {
+        return currentHp == monsterData.Hp;
+    }
+    public bool getIsDead()
+    {
+        return isDead;
     }
     public MonsterData getLevel()
     {
@@ -57,20 +67,23 @@ public class MonsterController : MonoBehaviour
 
     public void enemyHurt(MyHeroes heroes)
     {
-        int dame = MathController.Instance.playerHitEnemy(heroes, monsterData);
-        int actualDame = Mathf.Abs(dame);
-        currentHp -= actualDame;
-        if(currentHp <= 0)
+        if (!isDead)
         {
-            GameController.Instance.initEatMonster(heroes.Level);
-            isMove = false;
-            setAction(2);
+            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData);
+            int actualDame = Mathf.Abs(dame);
+            currentHp -= actualDame;
+            if (currentHp <= 0)
+            {
+                GameController.Instance.initEatMonster(heroes.Level);
+                isMove = false;
+                setAction(2);
+                isDead = true;
+            }
+            disableObject();
+            string floatingText = "FloatingText";
+            GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
+            particle.GetComponent<FloatingText>().disableObject(dame);
         }
-        disableObject();
-        string floatingText = "FloatingText";
-        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
-        particle.GetComponent<FloatingText>().disableObject(dame);
-
     }
 
     public int getCurrentHp()

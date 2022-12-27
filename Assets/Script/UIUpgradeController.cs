@@ -91,28 +91,23 @@ public class UIUpgradeController : MonoBehaviour
         {
             if (i == id)
             {
-                toolTip[i].SetActive(true);
+                if(toolTip[i].activeSelf == true)
+                {
+                    toolTip[i].SetActive(false);
+
+                }
+                else
+                {
+                    toolTip[i].SetActive(true);
+
+                }
             }
             else
             {
                 toolTip[i].SetActive(false);
             }
         }
-        //StartCoroutine(closeAllToolTip(3f));  
     }
-
-
-    //IEnumerator closeAllToolTip(float time)
-    //{
-    //    Debug.Log("close");
-    //    yield return new WaitForSeconds(time);
-    //    for (int i = 0; i < 9; i++)
-    //    {
-    //        toolTip[i].SetActive(false);
-
-    //    }
-
-    //}
 
     private void closeAllToolTip()
     {
@@ -158,8 +153,6 @@ public class UIUpgradeController : MonoBehaviour
                 UserDatabase.Instance.gainLevel(result);
                 //Play anim
                 StartCoroutine(replayAnimation(result));
-                //StartCoroutine(replayAnimation2(result));
-
             }
             else
             {

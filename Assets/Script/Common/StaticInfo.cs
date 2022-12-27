@@ -32,25 +32,10 @@ public class StaticInfo : MonoBehaviour
     public static int[] userUpdateBase = { 10, 10, 2, 10, 5,5,1,1,1 };
 
 
-    public static double TO1BaseValue = 6.99;
-    public static double TO1Value = 3.99;
-    public static string TO1Description = "Evolve monster pack";
-    public static string TO1PriceType = "dollar";
-
-    public static double TO2BaseValue = 9.99;
-    public static double TO2Value = 4.99;
-    public static string TO2Description = "Pack of gem - Discount 50%";
-    public static string TO2PriceType = "dollar";
-
-    public static double TO3BaseValue = 9.99;
-    public static double TO3Value = 4.99;
-    public static string TO3Description = "Pack of gold - Mastery";
-    public static string TO3PriceType = "dollar";
-
-    public static double TO4BaseValue = 9.99;
-    public static double TO4Value = 4.99;
-    public static string TO4Description = "Powerful Item";
-    public static string TO4PriceType = "dollar";
+    public static double[] TOBaseValue = { 6.99, 9.99, 9.99, 9.99};
+    public static double[] TOValue = { 3.99, 4.99, 4.99, 4.99};
+    public static string[] TODescription = { "Evolve monster pack", "Pack of gem - Discount 50%", "Pack of gold - Mastery", "Powerful Item" };
+    public static string[] TOPriceType = { "dollar", "dollar", "dollar", "dollar" };
 
     public static string Chest1Name = "Golden Chest";
     public static int Chest1Price = 1000;

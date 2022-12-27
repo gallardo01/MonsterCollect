@@ -31,28 +31,11 @@ public class UIShopController : MonoBehaviour
 
         GameObject TO = new GameObject();
         int to = UnityEngine.Random.Range(1, 5);
-        //Get Target offer
-        switch (to)
-        {
-            case 1:
-                SetUpTO1(TO);
-                break;
-            case 2:
-                SetUpTO2(TO);
-                break;
-            case 3:
-                SetUpTO3(TO);
-                break;
-            case 4:
-                SetUpTO4(TO);
-                break;
-            default:
-                SetUpTO1(TO);
-                break;
-        }
+
+        SetUpTO(TO, to);
 
         //setup data
-        TargetedOfferPanel.transform.Find("Content").GetComponent<Button>().onClick.AddListener(() => { SetupCelebration(); });
+        TargetedOfferPanel.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() => { SetupCelebration(); });
     }
     void SetupCelebration()
     {
@@ -65,58 +48,21 @@ public class UIShopController : MonoBehaviour
         _claim_popup.GetComponent<Animator>().SetTrigger("Fade");
     }
 
-    void SetUpTO1(GameObject TO)
-    {
-        TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)(10 * (StaticInfo.TO1Value / StaticInfo.TO1BaseValue))) * 10)) + "%";
-        TO = Instantiate(Resources.Load("Prefabs/UI/TargetOffer/TO_1") as GameObject, TargetedOfferPanel.transform.Find("Content").transform);
-        TO.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO1Description;
-        TO.transform.Find("BaseValue").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO1BaseValue + "$";
-        TO.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO1Value + "$";
 
-        var item1_image = TO.transform.Find("Content/Item1/Image").GetComponent<Image>().sprite;
-        var item2_image = TO.transform.Find("Content/Item1 (1)/Image").GetComponent<Image>().sprite;
-        var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
-        var item4_image = TO.transform.Find("Content/Item1 (3)/Image").GetComponent<Image>().sprite;
-    }
-    void SetUpTO2(GameObject TO)
+    void SetUpTO(GameObject TO, int index)
     {
-        TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)(10 * (StaticInfo.TO2Value / StaticInfo.TO2BaseValue))) * 10)) + "%";
-        TO = Instantiate(Resources.Load("Prefabs/UI/TargetOffer/TO_2") as GameObject, TargetedOfferPanel.transform.Find("Content").transform);
-        TO.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO2Description;
-        TO.transform.Find("BaseValue").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO2BaseValue + "$";
-        TO.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO2Value + "$";
+        //TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)((StaticInfo.TOValue[index] / StaticInfo.TOBaseValue[index]))) * 100)) + "%";
+        TO = Instantiate(Resources.Load($"Prefabs/UI/TargetOffer/TO_{index}") as GameObject, TargetedOfferPanel.transform.GetChild(0).transform);
+        TO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = StaticInfo.TODescription[index];
+        TO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StaticInfo.TOBaseValue[index] + "$";
+        TO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = StaticInfo.TOValue[index] + "$";
 
-        var item1_image = TO.transform.Find("Content/Item1/Image").GetComponent<Image>().sprite;
-        var item2_image = TO.transform.Find("Content/Item1 (1)/Image").GetComponent<Image>().sprite;
-        var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
-        var item4_image = TO.transform.Find("Content/Item1 (3)/Image").GetComponent<Image>().sprite;
+        //var item1_image = TO.transform.GetChild(0).GetComponent<Image>().sprite;
+        //var item2_image = TO.transform.GetChild(1).GetChild(1).GetComponent<Image>().sprite;
+        //var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
+        //var item4_image = TO.transform.Find("Content/Item1 (3)/Image").GetComponent<Image>().sprite;
     }
-    void SetUpTO3(GameObject TO)
-    {
-        TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)(10 * (StaticInfo.TO3Value / StaticInfo.TO3BaseValue))) * 10)) + "%";
-        TO = Instantiate(Resources.Load("Prefabs/UI/TargetOffer/TO_3") as GameObject, TargetedOfferPanel.transform.Find("Content").transform);
-        TO.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO3Description;
-        TO.transform.Find("BaseValue").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO3BaseValue + "$";
-        TO.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO3Value + "$";
 
-        var item1_image = TO.transform.Find("Content/Item1/Image").GetComponent<Image>().sprite;
-        var item2_image = TO.transform.Find("Content/Item1 (1)/Image").GetComponent<Image>().sprite;
-        var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
-        var item4_image = TO.transform.Find("Content/Item1 (3)/Image").GetComponent<Image>().sprite;
-    }
-    void SetUpTO4(GameObject TO)
-    {
-        TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)(10 * (StaticInfo.TO4Value / StaticInfo.TO4BaseValue))) * 10)) + "%";
-        TO = Instantiate(Resources.Load("Prefabs/UI/TargetOffer/TO_4") as GameObject, TargetedOfferPanel.transform.Find("Content").transform);
-        TO.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO4Description;
-        TO.transform.Find("BaseValue").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO4BaseValue + "$";
-        TO.transform.Find("Value").GetComponent<TextMeshProUGUI>().text = StaticInfo.TO4Value + "$";
-
-        var item1_image = TO.transform.Find("Content/Item1/Image").GetComponent<Image>().sprite;
-        var item2_image = TO.transform.Find("Content/Item1 (1)/Image").GetComponent<Image>().sprite;
-        var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
-        var item4_image = TO.transform.Find("Content/Item1 (3)/Image").GetComponent<Image>().sprite;
-    }
     void InitChests()
     {
         //Golden Chest

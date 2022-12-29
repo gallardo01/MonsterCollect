@@ -16,6 +16,36 @@ public class UIShopController : MonoBehaviour
 
     public GameObject _go_claim_popup;
 
+    public GameObject Chests_Golden_Label;
+    public GameObject Chests_Golden_Description;
+    public GameObject Chests_Golden_OpenKeyButton_Text;
+    public GameObject Chests_Golden_OpenKeyButton;
+
+    public GameObject Chests_Diamon_Label;
+    public GameObject Chests_Diamon_Description;
+    public GameObject Chests_Diamon_Draw_Text;
+    public GameObject Chests_Diamon_Draw;
+
+    public GameObject Chests_Diamonx10_Label;
+    public GameObject Chests_Diamonx10_Description_1;
+    public GameObject Chests_Diamonx10_Description_2;
+    public GameObject Chests_Diamonx10_BaseValue;
+    public GameObject Chests_Diamonx10_Value;
+    public GameObject Chests_Diamonx10_Draw;
+
+    public GameObject Heroes_Item1_Label;
+    public GameObject Heroes_Item1_SubLabel;
+    public GameObject Heroes_Item1_Price;
+
+    public GameObject Heroes_Item2_Label;
+    public GameObject Heroes_Item2_SubLabel;
+    public GameObject Heroes_Item2_Price;
+
+    public GameObject Heroes_Item3_Label;
+    public GameObject Heroes_Item3_SubLabel;
+    public GameObject Heroes_Item3_Price;
+
+
     void Start()
     {
         InitTargetedOffer();
@@ -66,39 +96,41 @@ public class UIShopController : MonoBehaviour
     void InitChests()
     {
         //Golden Chest
-        ChestsPanel.transform.Find("Content/Top/Golden/Label").GetComponent<TextMeshProUGUI>().text = "Golden Chest";
-        ChestsPanel.transform.Find("Content/Top/Golden/Description").GetComponent<TextMeshProUGUI>().text = "Contains One <color=#7e7e7e> Common </color> or <color=#00ff00>Great</color> equipmet";
-        ChestsPanel.transform.Find("Content/Top/Golden/Button/OpenKeyButton/Text (TMP)").GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=5></size> 1000";
-        ChestsPanel.transform.Find("Content/Top/Golden/Button/OpenKeyButton").GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("coin", 1, 1000));
+        Chests_Golden_Label.GetComponent<TextMeshProUGUI>().text = "Golden Chest";
+        Chests_Golden_Description.GetComponent<TextMeshProUGUI>().text = "Contains One <color=#7e7e7e> Common </color> or <color=#00ff00>Great</color> equipmet";
+        Chests_Golden_OpenKeyButton_Text.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=5></size> 1000";
+        Chests_Golden_OpenKeyButton.GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("coin", 1, 1000));
 
         //Diamon Chest
-        ChestsPanel.transform.Find("Content/Top/Diamon/Label").GetComponent<TextMeshProUGUI>().text = "Diamon Chest";
-        ChestsPanel.transform.Find("Content/Top/Diamon/Description").GetComponent<TextMeshProUGUI>().text = "Contains One <color=#00ff00> Great </color>,<color=#00aaff>Rare</color> or <color=#ff00ff>Epic</color> equipmet";
-        ChestsPanel.transform.Find("Content/Top/Diamon/Button/Draw/Text").GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 200";
-        ChestsPanel.transform.Find("Content/Top/Diamon/Button/Draw").GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("diamond", 1, 200));
+        Chests_Diamon_Label.GetComponent<TextMeshProUGUI>().text = "Diamon Chest";
+        Chests_Diamon_Description.GetComponent<TextMeshProUGUI>().text = "Contains One <color=#00ff00> Great </color>,<color=#00aaff>Rare</color> or <color=#ff00ff>Epic</color> equipmet";
+        Chests_Diamon_Draw_Text.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 200";
+        Chests_Diamon_Draw.GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("diamond", 1, 200));
 
         //X10 Diamon Chest
-        ChestsPanel.transform.Find("Content/Bottom/Content/Label").GetComponent<TextMeshProUGUI>().text = "Diamon Chest X10";
-        ChestsPanel.transform.Find("Content/Bottom/Content/Description_1").GetComponent<TextMeshProUGUI>().text = "Contains 10 <color=#00ff00> Great </color>,<color=#00aaff>Rare</color> or <color=#ff00ff>Epic</color> equipmet";
-        ChestsPanel.transform.Find("Content/Bottom/Content/Description_2").GetComponent<TextMeshProUGUI>().text = "Get an <color=#ff00ff>Epic</color> equipmet";
-        ChestsPanel.transform.Find("Content/Bottom/Content/Button/Draw/Value").GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 1800";
-        ChestsPanel.transform.Find("Content/Bottom/Content/Button/Draw/BaseValue").GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 2000";
-        ChestsPanel.transform.Find("Content/Bottom/Content/Button/Draw").GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("diamond", 10, 1800));
+        Chests_Diamonx10_Label.GetComponent<TextMeshProUGUI>().text = "Diamon Chest X10";
+        Chests_Diamonx10_Description_1.GetComponent<TextMeshProUGUI>().text = "Contains 10 <color=#00ff00> Great </color>,<color=#00aaff>Rare</color> or <color=#ff00ff>Epic</color> equipmet";
+        Chests_Diamonx10_Description_2.GetComponent<TextMeshProUGUI>().text = "Get an <color=#ff00ff>Epic</color> equipmet";
+        Chests_Diamonx10_Value.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 1800";
+        Chests_Diamonx10_BaseValue.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 2000";
+        Chests_Diamonx10_Draw.GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("diamond", 10, 1800));
     }
+
+
     void InitHeroes()
     {
         //Item 1
-        HeroesPanel.transform.Find("Content/Item1/Label").GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Ice Dragon";
-        HeroesPanel.transform.Find("Content/Item1/SubLabelTransform/SubLabel").GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
-        HeroesPanel.transform.Find("Content/Item1/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
+        Heroes_Item1_Label.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Ice Dragon";
+        Heroes_Item1_SubLabel.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
+        Heroes_Item1_Price.GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
         //Item 2
-        HeroesPanel.transform.Find("Content/Item2/Label").GetComponent<TextMeshProUGUI>().text = "<color=#00FFFF>Earth Mamoth";
-        HeroesPanel.transform.Find("Content/Item2/SubLabelTransform/SubLabel").GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
-        HeroesPanel.transform.Find("Content/Item2/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
+        Heroes_Item2_Label.GetComponent<TextMeshProUGUI>().text = "<color=#00FFFF>Earth Mamoth";
+        Heroes_Item2_SubLabel.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
+        Heroes_Item2_Price.GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
         //Item 3
-        HeroesPanel.transform.Find("Content/Item3/Label").GetComponent<TextMeshProUGUI>().text = "<color=#FF0000>Fire Bird";
-        HeroesPanel.transform.Find("Content/Item3/SubLabelTransform/SubLabel").GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
-        HeroesPanel.transform.Find("Content/Item3/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
+        Heroes_Item3_Label.GetComponent<TextMeshProUGUI>().text = "<color=#FF0000>Fire Bird";
+        Heroes_Item3_SubLabel.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
+        Heroes_Item3_Price.GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
     }
 
     void InitGems()

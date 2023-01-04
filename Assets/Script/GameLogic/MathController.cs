@@ -32,11 +32,11 @@ public class MathController : Singleton<MathController>
         float typeRate = type[heroesData.Type, monsterData.Type];
         if (Random.Range(0, 100) < critRate)
         {
-            hp = heroesData.Atk * typeRate * 2f * (100 - armourRate) / 100f;
+            hp = heroesData.Atk * typeRate * 2f * (100 - armourRate) * 0.3f / 100f;
             return (int)hp;
         } else
         {
-            hp = -heroesData.Atk * typeRate * (100 - armourRate) / 100f;
+            hp = -heroesData.Atk * typeRate * (100 - armourRate) * 0.3f / 100f;
             return (int)hp;
         }
     }

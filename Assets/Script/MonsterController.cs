@@ -326,15 +326,22 @@ public class MonsterController : MonoBehaviour
         gameObject.transform.localScale = newScale;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //if (collision.gameObject.tag == "Bullet")
-        //{
-        //    Debug.Log("ABC");
-        //    StartCoroutine(disableObject());
-        //}
-    }
-
+    //float SavedTime = -1f;
+    //float DelayTime = 1f;
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    if ((Time.time - SavedTime) > DelayTime)
+    //    {
+    //        SavedTime = Time.time;
+    //        if (collision.gameObject.tag == "BulletStay")
+    //        {
+    //            MyHeroes heroes = collision.gameObject.GetComponent<BulletOnStayController>().getHeroes();
+    //            enemyHurt(heroes);
+    //            //c.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+    //            GameController.Instance.addParticle(gameObject, 4);
+    //        }
+    //    }
+    //}
     public void stopRunning()
     {
         StartCoroutine(stopRunningSecond(0.5f));

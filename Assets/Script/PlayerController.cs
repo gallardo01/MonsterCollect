@@ -154,7 +154,8 @@ public class PlayerController : Singleton<PlayerController>
         //StartCoroutine(thunder_1());
         //StartCoroutine(thunder_2());
         //StartCoroutine(thunder_3());
-        StartCoroutine(thunder_4());
+        //StartCoroutine(thunder_4());
+        StartCoroutine(thunder_5(1));
     }
     IEnumerator disableObject(float timer, GameObject obj)
     {
@@ -250,14 +251,34 @@ locate.transform.rotation);
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(data, 4, shootTarget);
-                //Vector2 vector = shootFollower(shootTarget);
-                //float angle = calAngle(shootTarget, vector);
-                //projectileNormal.transform.Rotate(0, 0, angle + 90);
-                //projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
         }
         StartCoroutine(thunder_4());
     }
+
+    private IEnumerator thunder_5(int size)
+    {
+        yield return new WaitForSeconds(1f);
+        string bulletText = "Electric_6";
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, gameObject.transform.position,
+gameObject.transform.rotation);
+        projectileNormal.transform.parent = gameObject.transform;
+        projectileNormal.transform.localPosition = new Vector3(0f, -0.2f, 0f);
+        float scaleNumber = 0.7f + (size - 1) * 0.2f;
+        projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
+        projectileNormal.GetComponent<BulletOnStayController>().initBullet(data, 4);
+        //StartCoroutine(reActiveObject(projectileNormal));
+    }
+
+    IEnumerator reActiveObject(GameObject obj)
+    {
+        yield return new WaitForSeconds(1f);
+        obj.SetActive(false);
+        yield return new WaitForSeconds(0.1f);
+        obj.SetActive(true);
+        reActiveObject(obj);
+    }
+
 
     IEnumerator returnToPoolEmpty(GameObject obj)
     {

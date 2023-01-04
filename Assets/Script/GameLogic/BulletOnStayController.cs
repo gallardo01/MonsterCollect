@@ -1,0 +1,99 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using MarchingBytes;
+
+public class BulletOnStayController : MonoBehaviour
+{
+    private MyHeroes heroes;
+    [SerializeField] int id;
+    // Start is called before the first frame update
+    float SavedTime = 0f;
+    float DelayTime = 1f;
+
+    //private void Start()
+    //{
+    //    //StartCoroutine(disableCollider());
+    //}
+
+    void OnDisable()
+    {
+    }
+
+    void OnEnable()
+    {
+
+    }
+
+    IEnumerator disableCollider()
+    {
+        yield return new WaitForSeconds(1f);
+        gameObject.GetComponent<Collider2D>().enabled = false;
+        gameObject.GetComponent<Collider2D>().enabled = true;
+        disableCollider();
+    }
+
+    public void initBullet(MyHeroes myHeroes, int skill)
+    {
+        heroes = myHeroes;
+    }
+
+    public MyHeroes getHeroes()
+    {
+        return heroes;
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //if (collision.gameObject.tag == "Wall")
+        //{
+        //    GameController.Instance.addParticle(collision.gameObject, 1);
+        //    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        //    gameObject.SetActive(false);
+        //}
+        //if (collision.gameObject.tag == "Enemy" && id == 3)
+        //{
+        //    GameController.Instance.addExplosion(heroes, gameObject, 5);
+
+        //    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        //    gameObject.SetActive(false);
+        //}
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Debug.Log("enemy");
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+            GameController.Instance.addParticle(collision.gameObject, 4);
+        }
+    }
+
+    //private void OnTriggerStay2D(Collider2D[] collision)
+    //{
+    //    if ((Time.time - SavedTime) > DelayTime)
+    //    {
+    //        SavedTime = Time.time;
+    //        foreach (Collider2D c in collision)
+    //        {
+    //            if (c.gameObject.tag == "Enemy")
+    //            {
+    //                Debug.Log("BBB");
+    //                c.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+    //                GameController.Instance.addParticle(c.gameObject, 4);
+    //            }
+    //        }
+    //    }
+    //}
+
+    IEnumerator explosion(MyHeroes data)
+    {
+        yield return new WaitForSeconds(0);
+        GameController.Instance.addExplosion(data, gameObject, 3);
+    }
+
+    IEnumerator returnToPool(float time)
+    {
+        yield return new WaitForSeconds(time);
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        gameObject.SetActive(false);
+    }
+}

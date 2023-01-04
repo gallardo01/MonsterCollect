@@ -9,10 +9,6 @@ public class UIShopController : MonoBehaviour
 {
     public GameObject ParentTransform;
     public GameObject TargetedOfferPanel;
-    public GameObject ChestsPanel;
-    public GameObject HeroesPanel;
-    public GameObject GemsPanel;
-    public GameObject CoinsPanel;
 
     public GameObject _go_claim_popup;
 
@@ -45,6 +41,17 @@ public class UIShopController : MonoBehaviour
     public GameObject Heroes_Item3_SubLabel;
     public GameObject Heroes_Item3_Price;
 
+
+    public GameObject[] Gems_Label;
+    public GameObject[] Gems_Description_Text;
+    public GameObject[] Gems_SubLabel;
+    public GameObject[] Gems_Price;
+    public GameObject[] Gems_Btn;
+
+    public GameObject[] Coins_Label;
+    public GameObject[] Coins_SubLabel;
+    public GameObject[] Coins_Price;
+    public GameObject[] Coins_Btn;
 
     void Start()
     {
@@ -83,9 +90,9 @@ public class UIShopController : MonoBehaviour
     {
         //TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)((StaticInfo.TOValue[index] / StaticInfo.TOBaseValue[index]))) * 100)) + "%";
         TO = Instantiate(Resources.Load($"Prefabs/UI/TargetOffer/TO_{index}") as GameObject, TargetedOfferPanel.transform.GetChild(0).transform);
-        TO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = StaticInfo.TODescription[index];
-        TO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StaticInfo.TOBaseValue[index] + "$";
-        TO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = StaticInfo.TOValue[index] + "$";
+        TO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TODescription[index-1]}";
+        TO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TOBaseValue[index-1]} $";
+        TO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TOValue[index-1]} $";
 
         //var item1_image = TO.transform.GetChild(0).GetComponent<Image>().sprite;
         //var item2_image = TO.transform.GetChild(1).GetChild(1).GetComponent<Image>().sprite;
@@ -133,94 +140,89 @@ public class UIShopController : MonoBehaviour
         Heroes_Item3_Price.GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
     }
 
+
     void InitGems()
     {
         //Item 1
-        GemsPanel.transform.Find("Content/Item1/Label").GetComponent<TextMeshProUGUI>().text = "100";
-        GemsPanel.transform.Find("Content/Item1/Description/Text").GetComponent<TextMeshProUGUI>().text = "";
-        GemsPanel.transform.Find("Content/Item1/SubLabel").GetComponent<TextMeshProUGUI>().text = "Pile of Gems";
-        GemsPanel.transform.Find("Content/Item1/Price").GetComponent<TextMeshProUGUI>().text = "0.99$";
-        GemsPanel.transform.Find("Content/Item1").GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(100, 0.99));
+        Gems_Label[0].GetComponent<TextMeshProUGUI>().text = "100";
+        Gems_Description_Text[0].GetComponent<TextMeshProUGUI>().text = "";
+        Gems_SubLabel[0].GetComponent<TextMeshProUGUI>().text = "Pile of Gems";
+        Gems_Price[0].GetComponent<TextMeshProUGUI>().text = "0.99$";
+        Gems_Btn[0].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(100, 0.99));
 
         //Item 2
-        GemsPanel.transform.Find("Content/Item2/Label").GetComponent<TextMeshProUGUI>().text = "200";
-        GemsPanel.transform.Find("Content/Item2/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 10%";
-        GemsPanel.transform.Find("Content/Item2/SubLabel").GetComponent<TextMeshProUGUI>().text = "Heap of Gems";
-        GemsPanel.transform.Find("Content/Item2/Price").GetComponent<TextMeshProUGUI>().text = "1.79$";
-        GemsPanel.transform.Find("Content/Item2").GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(200, 1.79));
+        Gems_Label[1].GetComponent<TextMeshProUGUI>().text = "200";
+        Gems_Description_Text[1].GetComponent<TextMeshProUGUI>().text = "Discount 10%";
+        Gems_SubLabel[1].GetComponent<TextMeshProUGUI>().text = "Heap of Gems";
+        Gems_Price[1].GetComponent<TextMeshProUGUI>().text = "1.79$";
+        Gems_Btn[1].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(200, 1.79));
 
         //Item 3
-        GemsPanel.transform.Find("Content/Item3/Label").GetComponent<TextMeshProUGUI>().text = "500";
-        GemsPanel.transform.Find("Content/Item3/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 20%";
-        GemsPanel.transform.Find("Content/Item3/SubLabel").GetComponent<TextMeshProUGUI>().text = "Bucket of Gems";
-        GemsPanel.transform.Find("Content/Item3/Price").GetComponent<TextMeshProUGUI>().text = "3.99$";
-        GemsPanel.transform.Find("Content/Item3").GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(500, 3.99));
+        Gems_Label[2].GetComponent<TextMeshProUGUI>().text = "500";
+        Gems_Description_Text[2].GetComponent<TextMeshProUGUI>().text = "Discount 20%";
+        Gems_SubLabel[2].GetComponent<TextMeshProUGUI>().text = "Bucket of Gems";
+        Gems_Price[2].GetComponent<TextMeshProUGUI>().text = "3.99$";
+        Gems_Btn[2].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(500, 3.99));
 
         //Item 4
-        GemsPanel.transform.Find("Content/Item4/Label").GetComponent<TextMeshProUGUI>().text = "1000";
-        GemsPanel.transform.Find("Content/Item4/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 30%";
-        GemsPanel.transform.Find("Content/Item4/SubLabel").GetComponent<TextMeshProUGUI>().text = "Barrel of Gems";
-        GemsPanel.transform.Find("Content/Item4/Price").GetComponent<TextMeshProUGUI>().text = "6.99$";
-        GemsPanel.transform.Find("Content/Item4").GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(1000, 6.99));
+        Gems_Label[3].GetComponent<TextMeshProUGUI>().text = "1000";
+        Gems_Description_Text[3].GetComponent<TextMeshProUGUI>().text = "Discount 30%";
+        Gems_SubLabel[3].GetComponent<TextMeshProUGUI>().text = "Barrel of Gems";
+        Gems_Price[3].GetComponent<TextMeshProUGUI>().text = "6.99$";
+        Gems_Btn[3].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(1000, 6.99));
 
         //Item 5
-        GemsPanel.transform.Find("Content/Item5/Label").GetComponent<TextMeshProUGUI>().text = "2000";
-        GemsPanel.transform.Find("Content/Item5/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 40%";
-        GemsPanel.transform.Find("Content/Item5/SubLabel").GetComponent<TextMeshProUGUI>().text = "Chest of Gems";
-        GemsPanel.transform.Find("Content/Item5/Price").GetComponent<TextMeshProUGUI>().text = "11.99$";
-        GemsPanel.transform.Find("Content/Item5").GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(2000, 11.99));
+        Gems_Label[4].GetComponent<TextMeshProUGUI>().text = "2000";
+        Gems_Description_Text[4].GetComponent<TextMeshProUGUI>().text = "Discount 40%";
+        Gems_SubLabel[4].GetComponent<TextMeshProUGUI>().text = "Chest of Gems";
+        Gems_Price[4].GetComponent<TextMeshProUGUI>().text = "11.99$";
+        Gems_Btn[4].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(2000, 11.99));
 
         //Item 6
-        GemsPanel.transform.Find("Content/Item6/Label").GetComponent<TextMeshProUGUI>().text = "5000";
-        GemsPanel.transform.Find("Content/Item6/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 50%";
-        GemsPanel.transform.Find("Content/Item6/SubLabel").GetComponent<TextMeshProUGUI>().text = "Cart of Gems";
-        GemsPanel.transform.Find("Content/Item6/Price").GetComponent<TextMeshProUGUI>().text = "24.99$";
-        GemsPanel.transform.Find("Content/Item6").GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(5000, 24.99));
+        Gems_Label[5].GetComponent<TextMeshProUGUI>().text = "5000";
+        Gems_Description_Text[5].GetComponent<TextMeshProUGUI>().text = "Discount 50%";
+        Gems_SubLabel[5].GetComponent<TextMeshProUGUI>().text = "Cart of Gems";
+        Gems_Price[5].GetComponent<TextMeshProUGUI>().text = "24.99$";
+        Gems_Btn[5].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(5000, 24.99));
 
     }
     void InitCoins()
     {
         //Item 1
-        CoinsPanel.transform.Find("Content/Item1/Label").GetComponent<TextMeshProUGUI>().text = "200";
-        //CoinsPanel.transform.Find("Content/Item1/Description/Text").GetComponent<TextMeshProUGUI>().text = "";
-        CoinsPanel.transform.Find("Content/Item1/SubLabel").GetComponent<TextMeshProUGUI>().text = "Pile of Coins";
-        //CoinsPanel.transform.Find("Content/Item1/Price").GetComponent<TextMeshProUGUI>().text = "0.99$";
-        CoinsPanel.transform.Find("Content/Item1/Button/Watch").GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(200, 0));
+        Coins_Label[0].GetComponent<TextMeshProUGUI>().text = "200";
+        Coins_SubLabel[0].GetComponent<TextMeshProUGUI>().text = "Pile of Coins";
+        //Coins_Price[0].GetComponent<TextMeshProUGUI>().text = "0.99$";
+        Coins_Btn[0].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(200, 0));
 
         //Item 2
-        CoinsPanel.transform.Find("Content/Item2/Label").GetComponent<TextMeshProUGUI>().text = "500";
-        //CoinsPanel.transform.Find("Content/Item2/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 10%";
-        CoinsPanel.transform.Find("Content/Item2/SubLabel").GetComponent<TextMeshProUGUI>().text = "Heap of Coins";
-        CoinsPanel.transform.Find("Content/Item2/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>100";
-        CoinsPanel.transform.Find("Content/Item2").GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(500, 100));
+        Coins_Label[1].GetComponent<TextMeshProUGUI>().text = "500";
+        Coins_SubLabel[1].GetComponent<TextMeshProUGUI>().text = "Heap of Coins";
+        Coins_Price[1].GetComponent<TextMeshProUGUI>().text = "<sprite=0>100";
+        Coins_Btn[1].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(500, 100));
 
         //Item 3
-        CoinsPanel.transform.Find("Content/Item3/Label").GetComponent<TextMeshProUGUI>().text = "1000";
-        //CoinsPanel.transform.Find("Content/Item3/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 20%";
-        CoinsPanel.transform.Find("Content/Item3/SubLabel").GetComponent<TextMeshProUGUI>().text = "Bucket of Coins";
-        CoinsPanel.transform.Find("Content/Item3/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>180";
-        CoinsPanel.transform.Find("Content/Item3").GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(1000, 180));
+        Coins_Label[2].GetComponent<TextMeshProUGUI>().text = "1000";
+        Coins_SubLabel[2].GetComponent<TextMeshProUGUI>().text = "Bucket of Coins";
+        Coins_Price[2].GetComponent<TextMeshProUGUI>().text = "<sprite=0>180";
+        Coins_Btn[2].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(1000, 180));
 
         //Item 4
-        CoinsPanel.transform.Find("Content/Item4/Label").GetComponent<TextMeshProUGUI>().text = "2000";
-        //CoinsPanel.transform.Find("Content/Item4/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 30%";
-        CoinsPanel.transform.Find("Content/Item4/SubLabel").GetComponent<TextMeshProUGUI>().text = "Barrel of Coins";
-        CoinsPanel.transform.Find("Content/Item4/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>320";
-        CoinsPanel.transform.Find("Content/Item4").GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(2000, 320));
+        Coins_Label[3].GetComponent<TextMeshProUGUI>().text = "2000";
+        Coins_SubLabel[3].GetComponent<TextMeshProUGUI>().text = "Barrel of Coins";
+        Coins_Price[3].GetComponent<TextMeshProUGUI>().text = "<sprite=0>320";
+        Coins_Btn[3].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(2000, 320));
 
         //Item 5
-        CoinsPanel.transform.Find("Content/Item5/Label").GetComponent<TextMeshProUGUI>().text = "5000";
-        //CoinsPanel.transform.Find("Content/Item5/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 40%";
-        CoinsPanel.transform.Find("Content/Item5/SubLabel").GetComponent<TextMeshProUGUI>().text = "Chest of Coins";
-        CoinsPanel.transform.Find("Content/Item5/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>700";
-        CoinsPanel.transform.Find("Content/Item5").GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(5000, 700));
+        Coins_Label[4].GetComponent<TextMeshProUGUI>().text = "5000";
+        Coins_SubLabel[4].GetComponent<TextMeshProUGUI>().text = "Chest of Coins";
+        Coins_Price[4].GetComponent<TextMeshProUGUI>().text = "<sprite=0>700";
+        Coins_Btn[4].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(5000, 700));
 
         //Item 6
-        CoinsPanel.transform.Find("Content/Item6/Label").GetComponent<TextMeshProUGUI>().text = "10000";
-        //CoinsPanel.transform.Find("Content/Item6/Description/Text").GetComponent<TextMeshProUGUI>().text = "Discount 50%";
-        CoinsPanel.transform.Find("Content/Item6/SubLabel").GetComponent<TextMeshProUGUI>().text = "Cart of Coins";
-        CoinsPanel.transform.Find("Content/Item6/PriceTransform/Price").GetComponent<TextMeshProUGUI>().text = "<sprite=0>1200";
-        CoinsPanel.transform.Find("Content/Item6").GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(10000, 1200));
+        Coins_Label[5].GetComponent<TextMeshProUGUI>().text = "10000";
+        Coins_SubLabel[5].GetComponent<TextMeshProUGUI>().text = "Cart of Coins";
+        Coins_Price[5].GetComponent<TextMeshProUGUI>().text = "<sprite=0>1200";
+        Coins_Btn[5].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(10000, 1200));
 
     }
     void OnTargetOfferPurchased(string type, double price)

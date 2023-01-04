@@ -271,35 +271,20 @@ namespace MarchingBytes {
 			return listObj[obj].transform;
 		}
 
-
-		public Transform getAllObjectInPosition(GameObject player)
+		public void getAllObjectInPosition(GameObject playerObject, int size, MyHeroes heroes)
 		{
-			playerObj = player;
-			float distance = float.MaxValue;
-			int obj = -1;
+			float distance = 1.35f * (0.7f + (size - 1) * 0.2f) / 0.7f;
 
 			for (int i = 0; i < listObj.Count; i++)
 			{
-				Vector3 delta = player.transform.position - listObj[i].transform.position;
+				Vector3 delta = playerObject.transform.position - listObj[i].transform.position;
 				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
-					&& delta.magnitude < 7f)
+					&& delta.magnitude <= distance)
 				{
-					if (distance > delta.magnitude)
-					{
-						distance = delta.magnitude;
-						obj = i;
-					}
-					if (delta.magnitude < 3f)
-					{
-						listObj[i].GetComponent<MonsterController>().triggerWaypoints();
-					}
+					listObj[i].gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+					GameController.Instance.addParticle(listObj[i].gameObject, 4);
 				}
 			}
-			if (obj < 0)
-			{
-				return null;
-			}
-			return listObj[obj].transform;
 		}
 	}
 }

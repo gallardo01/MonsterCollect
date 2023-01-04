@@ -10,7 +10,8 @@ public class BulletOnStayController : MonoBehaviour
     // Start is called before the first frame update
     float SavedTime = 0f;
     float DelayTime = 1f;
-
+    private GameObject playerObj;
+    private int size = 1;
     //private void Start()
     //{
     //    //StartCoroutine(disableCollider());
@@ -22,20 +23,21 @@ public class BulletOnStayController : MonoBehaviour
 
     void OnEnable()
     {
-
+        StartCoroutine(hurtEnemyAround());
     }
 
-    IEnumerator disableCollider()
+    IEnumerator hurtEnemyAround()
     {
-        yield return new WaitForSeconds(1f);
-        gameObject.GetComponent<Collider2D>().enabled = false;
-        gameObject.GetComponent<Collider2D>().enabled = true;
-        disableCollider();
+        yield return new WaitForSeconds(1.5f);
+        EasyObjectPool.instance.getAllObjectInPosition(playerObj, size, heroes);
+        StartCoroutine(hurtEnemyAround());
     }
 
-    public void initBullet(MyHeroes myHeroes, int skill)
+    public void initBullet(MyHeroes myHeroes, int s, GameObject obj)
     {
         heroes = myHeroes;
+        size = s;
+        playerObj = obj;
     }
 
     public MyHeroes getHeroes()
@@ -61,7 +63,6 @@ public class BulletOnStayController : MonoBehaviour
         //}
         if (collision.gameObject.tag == "Enemy")
         {
-            Debug.Log("enemy");
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
             GameController.Instance.addParticle(collision.gameObject, 4);
         }

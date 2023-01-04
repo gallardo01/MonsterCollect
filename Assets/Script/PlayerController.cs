@@ -266,7 +266,7 @@ gameObject.transform.rotation);
         projectileNormal.transform.localPosition = new Vector3(0f, -0.2f, 0f);
         float scaleNumber = 0.7f + (size - 1) * 0.2f;
         projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
-        projectileNormal.GetComponent<BulletOnStayController>().initBullet(data, 4);
+        projectileNormal.GetComponent<BulletOnStayController>().initBullet(data, size, gameObject);
         //StartCoroutine(reActiveObject(projectileNormal));
     }
 

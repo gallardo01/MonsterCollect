@@ -67,7 +67,7 @@ public class UIShopController : MonoBehaviour
         //init data
 
         GameObject TO = new GameObject();
-        int to = UnityEngine.Random.Range(1, 5);
+        int to = UnityEngine.Random.Range(4, 5);
 
         SetUpTO(TO, to);
 
@@ -94,6 +94,7 @@ public class UIShopController : MonoBehaviour
         TO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TOBaseValue[index-1]} $";
         TO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TOValue[index-1]} $";
 
+        TO.GetComponent<Button>().onClick.AddListener(() => OnTargetOfferPurchased(index, StaticInfo.TOBaseValue[index - 1]));
         //var item1_image = TO.transform.GetChild(0).GetComponent<Image>().sprite;
         //var item2_image = TO.transform.GetChild(1).GetChild(1).GetComponent<Image>().sprite;
         //var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
@@ -225,9 +226,37 @@ public class UIShopController : MonoBehaviour
         Coins_Btn[5].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(10000, 1200));
 
     }
-    void OnTargetOfferPurchased(string type, double price)
+    void OnTargetOfferPurchased(int type, double price)
     {
+        switch (type)
+        {
+            case 1 :
+                Debug.Log("mua hom 1");
+                ItemDatabase.Instance.addNewItem(1, 20);
+                ItemDatabase.Instance.addNewItem(2, 20);
+                ItemDatabase.Instance.addNewItem(3, 10);
+                // tru tien that
 
+                break;
+            case 2 :
+                Debug.Log("mua hom 2");
+                UserDatabase.Instance.gainMoney(0, 1000);
+                // tru tien that
+
+                break;
+            case 3:
+                Debug.Log("mua hom 3");
+                UserDatabase.Instance.gainMoney(10000, 0);
+                // tru tien that
+
+                break;
+            case 4:
+                Debug.Log("mua hom 4");
+                ItemDatabase.Instance.addNewItem(Random.Range(10, 34), 1,4);
+                // tru tien that
+
+                break;
+        }
     }
     void OnChestPurchased(string type, int quantity, int price)
     {
@@ -237,16 +266,86 @@ public class UIShopController : MonoBehaviour
         {
             //Open golden chest
             userdb.reduceMoney(price, 0);
-            itemDb.addNewItem(Random.Range(9, 36), 1);
+            int rate = Random.Range(0, 101);
+
+            if (rate <= 30)
+            {
+                itemDb.addNewItem(Random.Range(1, 3), 1);
+            }
+            else if (rate <= 35)
+            {
+                itemDb.addNewItem(3, 1);
+            }
+            else if (rate <= 65)
+            {
+                itemDb.addNewItem(Random.Range(4, 10), 1);
+
+            }
+            else if (rate <= 93)
+            {
+                itemDb.addNewItem(Random.Range(10, 34), 1, 1);
+
+            }
+            else if (rate <= 98)
+            {
+                itemDb.addNewItem(Random.Range(10, 34), 1, 2);
+
+            }
+            else
+            {
+                itemDb.addNewItem(Random.Range(101, 113), 1);
+
+            }
+            
         }
         else
         {
             //Open Diamon chest
             userdb.reduceMoney(0, price);
+            int rate;
             for (int i = 0; i < quantity; ++i)
             {
-                itemDb.addNewItem(Random.Range(9, 36), 1);
+                rate = Random.Range(0, 101);
+                if (rate <= 20)
+                {
+                    itemDb.addNewItem(Random.Range(1, 3), 1);
+                }
+                else if (rate <= 30)
+                {
+                    itemDb.addNewItem(3, 1);
+                }
+                else if (rate <= 40)
+                {
+                    itemDb.addNewItem(Random.Range(4, 10), 1 );
+
+                }
+                else if (rate <= 60)
+                {
+                    itemDb.addNewItem(Random.Range(10, 34), 1, 1);
+
+                }
+                else if (rate <= 70)
+                {
+                    itemDb.addNewItem(Random.Range(10, 34), 1, 2);
+
+                }
+                else if (rate <= 77)
+                {
+                    itemDb.addNewItem(Random.Range(10, 34), 1, 3);
+
+                }
+                else if (rate <= 80)
+                {
+                    itemDb.addNewItem(Random.Range(10, 34), 1, 4);
+
+                }
+                else
+                {
+                    itemDb.addNewItem(Random.Range(101, 113), 1);
+
+                }
             }
+            // tru tien that
         }
     }
     void OnHeroesPurchased(int id, int price)
@@ -258,6 +357,7 @@ public class UIShopController : MonoBehaviour
         var userdb = UserDatabase.Instance;
 
         userdb.gainMoney(0, value);
+        // tru tien that
      
     }
     void OnCoinPurchased(int value, int price)

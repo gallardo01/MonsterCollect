@@ -19,6 +19,10 @@ public class GameController : Singleton<GameController>
     public TextMeshProUGUI levelText;
     public GameObject bossController;
 
+    public GameController deadPanel;
+    public Button revive;
+    public Button cancelRevive;
+
     private int exp = 0;
     private int playerLevel = 1;
 

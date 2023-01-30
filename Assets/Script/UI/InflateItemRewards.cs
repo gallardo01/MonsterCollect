@@ -15,5 +15,16 @@ public class InflateItemRewards : MonoBehaviour
         
     }
 
-    
+    public void inflateItem(int id, int slot)
+    {
+        ItemData item = ItemDatabase.Instance.fetchItemById(id);
+        backerItem.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + item.Type);
+        iconItem.sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id);
+        slotItem.text = slot.ToString();
+    }
+
+    public void inflateGoldItem(int slot)
+    {
+        slotItem.text = slot.ToString();
+    }
 }

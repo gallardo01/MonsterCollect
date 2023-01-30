@@ -37,7 +37,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         //{
         //    addNewItem(i, 1000);
         //}
-        //Save();
+        //
     }
     private void LoadResourceTextfileItemData(string path)
     {
@@ -228,7 +228,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             {
                 inventoryData[index].Slot += slot;
             }
-            Save();
         }   
         else
         {
@@ -284,7 +283,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
             inventoryData.Add(item);
         }
-        Save();
     }
 
     public void addNewItem(int id, int slot, int rarity)
@@ -315,7 +313,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             {
                 inventoryData[index].Slot += slot;
             }
-            Save();
         }
         else
         {
@@ -361,7 +358,82 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
             inventoryData.Add(item);
         }
-        Save();
+    }
+
+    public ItemInventory getItemObject(int id, int slot, int rarity)
+    {
+        ItemData rawItem = fetchItemById(id);
+        // Add consume item
+        if (rawItem.Type == 0)
+        {
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rawItem.Rarity;
+            item.Type = rawItem.Type;
+            item.ShopId = 0;
+            item.IsUse = 0;
+            item.Level = 0;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            int index = fetchInventoryByIndex(id);
+            if (index == -1)
+            {
+                item.Slot = slot;
+                inventoryData.Add(item);
+            }
+            else
+            {
+                inventoryData[index].Slot += slot;
+            }
+            return item;
+        }
+        else
+        {
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rarity;
+            item.Type = rawItem.Type;
+
+            item.Slot = 1;
+            item.ShopId = Random.Range(0, 999999);
+            item.IsUse = 0;
+            item.Level = 1;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            item.Stats_4 = 0;
+
+            if (item.Rarity >= 1)
+            {
+                int randomValue = Random.Range(1, 7);
+                int randomStat = returnRandomStats(randomValue);
+                item.Stats_1 = randomValue * 100 + randomStat;
+            }
+            if (item.Rarity >= 2)
+            {
+                int randomValue = Random.Range(1, 7);
+                int randomStat = returnRandomStats(randomValue);
+                item.Stats_2 = randomValue * 100 + randomStat;
+            }
+            if (item.Rarity >= 3)
+            {
+                int randomValue = Random.Range(1, 7);
+                int randomStat = returnRandomStats(randomValue);
+                item.Stats_3 = randomValue * 100 + randomStat;
+            }
+            if (item.Rarity >= 4)
+            {
+                int randomValue = Random.Range(1, 7);
+                int randomStat = returnRandomStats(randomValue);
+                item.Stats_4 = randomValue * 100 + randomStat;
+            }
+            return item;
+        }
     }
 
     private int returnRandomStats(int stat)
@@ -405,19 +477,19 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData.RemoveAt(index);
         }
-        Save();
+        
     }
     public void addItemSlotbyShopId(int shopId, int slot)
     {
         int index = fetchInventoryByShopIdIndex(shopId);
         inventoryData[index].Slot += slot;
-        Save();
+        
     }
     public void addItemSlotById(int id, int slot)
     {
         int index = fetchInventoryByIndex(id);
         inventoryData[index].Slot += slot;
-        Save();
+        
     }
     public void reduceItemSlotById(int id, int slot)
     {
@@ -425,11 +497,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
         if (index >= 0)
         {
             inventoryData[index].Slot -= slot;
-            //if (inventoryData[index].Slot <= 0)
-            //{
-            //    inventoryData.RemoveAt(index);
-            //}
-            Save();
         }
     }
 
@@ -453,7 +520,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         }
         int index = fetchInventoryByShopIdIndex(shopId);
         inventoryData.RemoveAt(index);
-        Save();
+        
     }
     public void upgradeItem(int shopId)
     {
@@ -462,7 +529,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData[item].Level++;
         }
-        Save();
+        
     }
 
     public List<ItemInventory> getAllData()
@@ -484,7 +551,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         // Mặc đồ 
         int index = fetchInventoryByShopIdIndex(item.ShopId);
         inventoryData[index].IsUse = -item.Type;
-        Save();
+        
     }
     public void unequipItem(int shopId)
     {
@@ -493,6 +560,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData[index].IsUse = 0;
         }
+        
+    }
+
+    private void OnApplicationQuit()
+    {
         Save();
     }
 }

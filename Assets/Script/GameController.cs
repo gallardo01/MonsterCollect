@@ -25,20 +25,56 @@ public class GameController : Singleton<GameController>
 
     private int exp = 0;
     private int playerLevel = 1;
+    private bool isSpawn = true;
 
+    private int enemyLv = 1;
+    private int countEnemy = 1;
+
+    private int goldAward = 0;
+    private List<ItemInventory> itemAward = new List<ItemInventory>();
 
     // Start is called before the first frame update
     void Start()
     {
+        // get stage
+        enemyLv = 1;
         initInfo();
         playerLevel = PlayerController.Instance.getLevel();
-        for (int i = 0; i < 12; i++)
-        {
-            addEnemy();
-        }
         //addBoss();
         levelText.text = playerLevel.ToString();
         //btnQuit.onClick.AddListener(quitGame);
+        StartCoroutine(addEnemyFirstScene());
+    }
+
+    public IEnumerator addEnemyFirstScene()
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            yield return new WaitForSeconds(0.5f);
+            addEnemy();
+        }
+        StartCoroutine(respawnEnemyDuringTime());
+    }
+
+    private IEnumerator respawnEnemyDuringTime()
+    {
+        yield return new WaitForSeconds(2f);
+        if (isSpawn)
+        {
+            addEnemy();
+            if(countEnemy == 20)
+            {
+                enemyLv++;
+                countEnemy = 0;
+            }
+        }
+        if(enemyLv % 10 == 0)
+        {
+
+        } else
+        {
+            StartCoroutine(respawnEnemyDuringTime());
+        }
     }
 
     private void initInfo()
@@ -54,26 +90,33 @@ public class GameController : Singleton<GameController>
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
 
+    public void setSpawn(bool logic)
+    {
+        isSpawn = logic;
+    }
     public void addEnemy()
     {
-        int playerLv = PlayerController.Instance.getLevel();
-        int chance = Random.Range(2, 14);
-        int enemyId = 0;
-        if (chance < 11)
+        if (isSpawn)
         {
-            enemyId = playerLv;
-        }
-        else
-        {
-            enemyId = playerLv + chance % 10;
-            if(enemyId > ((playerLv - 1)/10 + 9))
+            countEnemy++;
+            int chance = Random.Range(2, 14);
+            int enemyId;
+            if (chance < 11)
             {
-                enemyId = ((playerLv - 1) / 10) + 9;
+                enemyId = enemyLv;
             }
+            else
+            {
+                enemyId = enemyLv + 1;
+                if (enemyId % 10 == 0)
+                {
+                    enemyId -= 1;
+                }
+            }
+            string enemyType = "Enemy" + enemyId;
+            GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
+            enemy.GetComponent<MonsterController>().initData(enemyId);
         }
-        string enemyType = "Enemy" + enemyId;
-        GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
-        enemy.GetComponent<MonsterController>().initData(enemyId);
     }
     public IEnumerator respawnEnemy()
     {
@@ -82,27 +125,23 @@ public class GameController : Singleton<GameController>
         if(chance == 1)
         {
             addEnemy();
-        } else if(chance == 2)
-        {
-            addEnemy();
-            yield return new WaitForSeconds(1f);
-            addEnemy();
         }
     }
+
     public void initEatMonster(int lv)
     {
-        // 10 12 14 16 18 20 22 24 25
-        exp += ((lv % 10) + 2)* 50;
-        if (exp >= playerLevel % 10 * 1000)
-        {
-            playerLevel++;
-            exp = 0;
-            updateProgressBar(true);
-        }
-        else
-        {
-            updateProgressBar(false);
-        }
+        //// 10 12 14 16 18 20 22 24 25
+        //exp += ((lv % 10) + 2)* 50;
+        //if (exp >= playerLevel % 10 * 1000)
+        //{
+        //    playerLevel++;
+        //    exp = 0;
+        //    updateProgressBar(true);
+        //}
+        //else
+        //{
+        //    updateProgressBar(false);
+        //}
         StartCoroutine(respawnEnemy());
     }
     private void updateColorText()
@@ -194,7 +233,12 @@ public class GameController : Singleton<GameController>
         controller.SetActive(false);
         canvas.SetActive(false);
         player.SetActive(false);
-
         result.gameObject.SetActive(true);
+    }
+
+    public void addAwardToInventory(int gold, ItemInventory item)
+    {
+        goldAward += gold;
+        itemAward.Add(item);
     }
 }

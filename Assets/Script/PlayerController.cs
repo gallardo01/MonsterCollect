@@ -14,7 +14,8 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] GameObject hpBar;
 
     [SerializeField] GameObject locate;
-
+    [SerializeField] GameObject joystick;
+ 
     public GameObject runSmoke;
     public GameObject SmokePos;
 
@@ -311,7 +312,27 @@ gameObject.transform.rotation);
             isAtk = true;
             GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("Attack", 0.5f, 1);
             StartCoroutine(replayAnimation());
+        } else if(pos == 4) // dead
+        {
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 1f, 1);
+            StartCoroutine(deadAnimation());
         }
+    }
+
+    public void reviveUser()
+    {
+
+    }
+
+    IEnumerator deadAnimation()
+    {
+        canMove = false;
+        joystick.SetActive(false);
+        yield return new WaitForSeconds(0.99f);
+        GetComponent<DragonBones.UnityArmatureComponent>().animation.Stop();
+        yield return new WaitForSeconds(2f);
+        GameFlowController.Instance.userDeath();
+        this.enabled = false;
     }
 
     IEnumerator replayAnimation()
@@ -372,22 +393,28 @@ gameObject.transform.rotation);
     {
         string floatingText = "FloatingText";
         GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
-        particle.GetComponent<FloatingText>().disableObject(amount);
+        particle.GetComponent<FloatingText>().playerHealth(amount);
 
         currentHp -= amount;
 
         if (currentHp <= 0)
         {
             currentHp = 0;
-            // dead
+            //dead
+            GameController.Instance.setSpawn(false);
+            canHurt = false;
+            StopAllCoroutines();
+            runAnimation(4);
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            for(int i = 0; i < enemies.Length; i++)
+            {
+                enemies[i].SetActive(false);
+            }
         }
-        else
-        {
-            hpText.text = currentHp.ToString();
-            float per = (float)currentHp / data.Hp;
-            hpText.text = currentHp.ToString();
-            hpBar.transform.localScale = new Vector3(per, 1f, 1f);
-        }
+        hpText.text = currentHp.ToString();
+        float per = (float)currentHp / data.Hp;
+        hpText.text = currentHp.ToString();
+        hpBar.transform.localScale = new Vector3(per, 1f, 1f);
     }
 
     private Vector2 shootFollower(Transform en)

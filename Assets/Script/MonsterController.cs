@@ -74,7 +74,9 @@ public class MonsterController : MonoBehaviour
             currentHp -= actualDame;
             if (currentHp <= 0)
             {
-                GameController.Instance.initEatMonster(heroes.Level);
+                //GameController.Instance.initEatMonster(heroes.Level);
+                // drop item
+                dropItemController(monsterData.Id);
                 isMove = false;
                 setAction(2);
                 isDead = true;
@@ -85,6 +87,31 @@ public class MonsterController : MonoBehaviour
             particle.GetComponent<FloatingText>().disableObject(dame);
         }
     }
+
+    private void dropItemController(int monsterLv)
+    {
+        // drop exp 
+        GameObject expObj = EasyObjectPool.instance.GetObjectFromPool("Exp", transform.position, transform.rotation);
+        expObj.GetComponent<ItemDropController>().setExp(returnExpGet(monsterLv));
+        // drop gold
+        if (Random.Range(0, 100) < 10)
+        {
+            GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position, transform.rotation);
+            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv*2, 10 + monsterLv*5));
+        }
+        // drop item
+        if (Random.Range(0, 2000) < monsterLv)
+        {
+
+        }
+    }
+
+    private int returnExpGet(int lv)
+    {
+        // 10 12 14 16 18 20 22 24 25
+        return ((lv % 10) + 2) * 50;
+    }
+
 
     public int getCurrentHp()
     {
@@ -326,22 +353,6 @@ public class MonsterController : MonoBehaviour
         gameObject.transform.localScale = newScale;
     }
 
-    //float SavedTime = -1f;
-    //float DelayTime = 1f;
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    if ((Time.time - SavedTime) > DelayTime)
-    //    {
-    //        SavedTime = Time.time;
-    //        if (collision.gameObject.tag == "BulletStay")
-    //        {
-    //            MyHeroes heroes = collision.gameObject.GetComponent<BulletOnStayController>().getHeroes();
-    //            enemyHurt(heroes);
-    //            //c.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
-    //            GameController.Instance.addParticle(gameObject, 4);
-    //        }
-    //    }
-    //}
     public void stopRunning()
     {
         StartCoroutine(stopRunningSecond(0.5f));

@@ -137,9 +137,16 @@ public class UserDatabase : Singleton<UserDatabase>
         database.Gold += gold;
         database.Diamond += diamond;
         UIController.Instance.InitUI();
-
         Save();
     }
+
+    public void gainMoneyInGame(int gold, int diamond)
+    {
+        database.Gold += gold;
+        database.Diamond += diamond;
+        Save();
+    }
+
     public bool reduceMoney(int gold, int diamond)
     {
         if (database.Gold < gold || database.Diamond < diamond)

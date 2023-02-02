@@ -378,16 +378,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_1 = 0;
             item.Stats_2 = 0;
             item.Stats_3 = 0;
-            int index = fetchInventoryByIndex(id);
-            if (index == -1)
-            {
-                item.Slot = slot;
-                inventoryData.Add(item);
-            }
-            else
-            {
-                inventoryData[index].Slot += slot;
-            }
+            item.Slot = slot;
             return item;
         }
         else
@@ -433,6 +424,32 @@ public class ItemDatabase : Singleton<ItemDatabase>
                 item.Stats_4 = randomValue * 100 + randomStat;
             }
             return item;
+        }
+    }
+
+    public ItemInventory dropItem()
+    {
+        int chance = Random.Range(0, 100);
+        if(chance < 30)
+        {
+            int id = Random.Range(4, 10);
+            return getItemObject(id, 1, 1);
+        } else if(chance < 40)
+        {
+            int id = Random.Range(1, 4);
+            return getItemObject(id, 1, 1);
+        } else if(chance < 60)
+        {
+            int id = Random.Range(34, 38);
+            return getItemObject(id, 1, 1);
+        } else if (chance < 90)
+        {
+            int id = Random.Range(101, 113);
+            return getItemObject(id, 1, 1);
+        } else
+        {
+            int id = Random.Range(10, 34);
+            return getItemObject(id, 1, 1);
         }
     }
 

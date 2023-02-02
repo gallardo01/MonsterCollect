@@ -14,15 +14,30 @@ public class FloatingText : MonoBehaviour
         text.gameObject.transform.position = new Vector3(Random.Range(0.2f, 0.5f), Random.Range(0.2f, 0.5f), 0f);
     }
 
+    public void playerHealth(int dame)
+    {
+        text.text = dame.ToString();
+        text.fontSize = 4;
+        text.color = Color.red;
+        StartCoroutine(disableFloating());
+    }
+
+    public void critHealth()
+    {
+        text.fontSize = 5;
+        text.color = Color.yellow;
+    }
     public void disableObject(int dame)
     {
         int actualDame = Mathf.Abs(dame);
         if (dame > 0)
         {
+            text.fontSize = 5;
             text.color = Color.yellow;
         }
         else
         {
+            text.fontSize = 3;
             text.color = Color.white;
         }
         text.text = actualDame.ToString();

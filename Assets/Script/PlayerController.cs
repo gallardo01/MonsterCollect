@@ -151,11 +151,11 @@ public class PlayerController : Singleton<PlayerController>
 
     private void attackMonster()
     {
-        //StartCoroutine(normalAttack());
-        //StartCoroutine(thunder_1());
-        //StartCoroutine(thunder_2());
-        //StartCoroutine(thunder_3());
-        //StartCoroutine(thunder_4());
+        StartCoroutine(normalAttack());
+        StartCoroutine(thunder_1());
+        StartCoroutine(thunder_2());
+        StartCoroutine(thunder_3());
+        StartCoroutine(thunder_4());
         StartCoroutine(thunder_5(1));
     }
     IEnumerator disableObject(float timer, GameObject obj)
@@ -440,13 +440,11 @@ gameObject.transform.rotation);
     }
     private float AngleTo(Vector2 pos, Vector2 target)
     {
-        Vector2 diference = Vector2.zero;
-
+        Vector2 diference;
         if (target.x > pos.x)
             diference = target - pos;
         else
             diference = pos - target;
-
         return Vector2.Angle(Vector2.right, diference);
     }
 }

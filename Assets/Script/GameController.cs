@@ -48,17 +48,25 @@ public class GameController : Singleton<GameController>
 
     public IEnumerator addEnemyFirstScene()
     {
-        for (int i = 0; i < 12; i++)
-        {
-            yield return new WaitForSeconds(0.5f);
-            addEnemy();
-        }
+        addEnemy();
+        addEnemy();
+
+        addEnemy();
+        addEnemy();
+
+        addEnemy();
+
+        yield return new WaitForSeconds(1f);
         StartCoroutine(respawnEnemyDuringTime());
     }
 
+    public int getEnemyLv()
+    {
+        return enemyLv;
+    }
     private IEnumerator respawnEnemyDuringTime()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         if (isSpawn)
         {
             addEnemy();
@@ -99,7 +107,7 @@ public class GameController : Singleton<GameController>
         if (isSpawn)
         {
             countEnemy++;
-            int chance = Random.Range(2, 14);
+            int chance = Random.Range(0, 14);
             int enemyId;
             if (chance < 11)
             {
@@ -107,7 +115,7 @@ public class GameController : Singleton<GameController>
             }
             else
             {
-                enemyId = enemyLv + 1;
+                enemyId = enemyLv + chance % 10;
                 if (enemyId % 10 == 0)
                 {
                     enemyId -= 1;
@@ -128,22 +136,6 @@ public class GameController : Singleton<GameController>
         }
     }
 
-    public void initEatMonster(int lv)
-    {
-        //// 10 12 14 16 18 20 22 24 25
-        //exp += ((lv % 10) + 2)* 50;
-        //if (exp >= playerLevel % 10 * 1000)
-        //{
-        //    playerLevel++;
-        //    exp = 0;
-        //    updateProgressBar(true);
-        //}
-        //else
-        //{
-        //    updateProgressBar(false);
-        //}
-        StartCoroutine(respawnEnemy());
-    }
     private void updateColorText()
     {
         GameObject[] gos;
@@ -154,18 +146,27 @@ public class GameController : Singleton<GameController>
         }
     }
 
+    public void gainExpChar(int num)
+    {
+        exp += num;
+        updateProgressBar(exp >= playerLevel * 1000);
+    }
+
     private void updateProgressBar(bool levelUp)
     {
-        float progres = (float) exp / (float) (playerLevel % 10 * 1000);
         //expBar.GetComponent<Slider>().value = progres;
-        StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
-        expText.text = exp + "/" + (playerLevel % 10 * 1000);
         if (levelUp)
         {
+            exp -= playerLevel * 1000;
+            playerLevel++;
+            expText.text = exp + "/" + (playerLevel * 1000);
             levelText.text = playerLevel.ToString();
             PlayerController.Instance.gainLv(playerLevel);
             updateColorText();
         }
+        expText.text = exp + "/" + (playerLevel * 1000);
+        float progres = (float)exp / (float)(playerLevel * 1000);
+        StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
     }
 
     private IEnumerator animationprogressBar(float current, float last, bool lvUp)

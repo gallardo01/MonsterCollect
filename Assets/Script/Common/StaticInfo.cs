@@ -50,4 +50,43 @@ public class StaticInfo : MonoBehaviour
     public static int Chest3Price = 1800;
     public static string Chest3PriceType = "gem";
 
+
+    public static string[] skillName =
+    {
+        "",
+        "Thunder Wave",
+        "Electroweb",
+        "Electro Ball",
+        "Thunder Bolt",
+        "Thunder Shock",
+        "Discharge",
+        "Charge",
+        "Electrify",
+        "Spark",
+        "Magnet Rise",
+        "Max Lightning",
+        "Zap Cannon",
+    };
+
+    public static string[] skillContent =
+    {
+        "",
+        "Deal dame to closet enemy",
+        "Throw a web on random target area  ",
+        "Electric Ball fly around player",
+        "Fires a thunder explosion",
+        "Bounce around all enemy",
+        "Generates a dissolving thunder forcefield",
+        "Atk +",
+        "Gold +",
+        "Speed +",
+        "Super effective dame +",
+        "Crit dame +",
+        "Defense +",
+    };
+
+    public static int[] skillDame =
+    {
+        0, 30, 40, 25, 45, 30, 30, 10, 10, 10, 20, 10, 10,
+    };
 }

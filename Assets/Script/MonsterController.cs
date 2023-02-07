@@ -331,7 +331,7 @@ public class MonsterController : MonoBehaviour
     IEnumerator disableObject()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
         EasyObjectPool.instance.ReturnObjectToPool(gameObject);
         gameObject.GetComponent<Collider2D>().enabled = true;
         gameObject.SetActive(false);

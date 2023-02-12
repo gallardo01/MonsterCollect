@@ -85,6 +85,7 @@ public class StaticInfo : MonoBehaviour
         "Defense +",
     };
 
+
     public static int[] skillDame =
     {
         0, 30, 40, 25, 45, 30, 30, 10, 10, 10, 20, 10, 10,

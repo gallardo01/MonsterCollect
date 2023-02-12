@@ -10,7 +10,7 @@ public class MathController : Singleton<MathController>
     private int[] armourPoints = {0, 15, 30, 60, 80, 100, 160, 200, 1000};
 
     private int[] critPercent = { 0, 5, 10, 20, 25, 30, 35, 40, 50 };
-    private int[] critPoints = { 0, 40, 80, 120, 160, 200, 250, 300, 5000};
+    private int[] critPoints = { 0, 200, 400, 700, 1200, 1800, 2500, 3500, 5000};
 
     private float[,] type = {{0, 0, 0, 0, 0 },
                              {0, 0.7f, 1.3f, 1f, 0.7f },
@@ -24,7 +24,7 @@ public class MathController : Singleton<MathController>
    
     }
 
-    public int playerHitEnemy(MyHeroes heroesData, MonsterData monsterData)
+    public int playerHitEnemy(MyHeroes heroesData, MonsterData monsterData, int skillDame)
     {
         float hp;
         int critRate = percentageCrit(heroesData.Crit);
@@ -32,11 +32,11 @@ public class MathController : Singleton<MathController>
         float typeRate = type[heroesData.Type, monsterData.Type];
         if (Random.Range(0, 100) < critRate)
         {
-            hp = heroesData.Atk * typeRate * 2f * (100 - armourRate) * 0.3f / 100f;
+            hp = 100 + heroesData.Atk * skillDame / 100f * typeRate * 2f * (100 - armourRate) * 0.3f / 100f + heroesData.Atk * heroesData.Atk / 3000 * skillDame / 100f * typeRate * 2f * (100 - armourRate) * 0.3f / 100f;
             return (int)hp;
         } else
         {
-            hp = -heroesData.Atk * typeRate * (100 - armourRate) * 0.3f / 100f;
+            hp = -100 + (-heroesData.Atk) * skillDame / 100f * typeRate * (100 - armourRate) * 0.3f / 100f - heroesData.Atk * heroesData.Atk / 3000 * skillDame / 100f * typeRate * (100 - armourRate) * 0.3f / 100f; 
             return (int)hp;
         }
     }
@@ -54,28 +54,7 @@ public class MathController : Singleton<MathController>
 
     private int percentageCrit(int crit)
     {
-        int percent = 0;
-        int step = 1;
-        while (crit > 0)
-        {
-            if (crit >= (critPercent[step] - critPercent[step - 1]) * critPoints[step])
-            {
-                percent += (critPercent[step] - critPercent[step - 1]);
-                crit -= (critPercent[step] - critPercent[step - 1]) * critPoints[step];
-            }
-            else
-            {
-                percent += crit / critPoints[step];
-                crit = 0;
-                break;
-            }
-            step++;
-        }
-        if (percent >= 50)
-        {
-            percent = 50;
-        }
-        return percent;
+        return 5 + (crit/100);
     }
 
     private int percentageArmour(int armour)

@@ -7,14 +7,16 @@ public class ExplosionController : MonoBehaviour
 {
     private MyHeroes data;
     public int id;
+    private int skillDame;
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    public void initData(MyHeroes d)
+    public void initData(MyHeroes d, int dame)
     {
+        skillDame = dame;
         data = d;
     }
 
@@ -30,7 +32,7 @@ public class ExplosionController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(data);
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(data, skillDame);
             if (id != 3)
             {
                 GameController.Instance.addParticle(collision.gameObject, 4);

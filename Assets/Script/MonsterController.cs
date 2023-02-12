@@ -65,11 +65,11 @@ public class MonsterController : MonoBehaviour
         wayMove = 2;
     }
 
-    public void enemyHurt(MyHeroes heroes)
+    public void enemyHurt(MyHeroes heroes, int damePercent)
     {
         if (!isDead)
         {
-            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData);
+            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
             int actualDame = Mathf.Abs(dame);
             currentHp -= actualDame;
             if (currentHp <= 0)
@@ -109,7 +109,7 @@ public class MonsterController : MonoBehaviour
     private int returnExpGet(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        return ((lv % 10) + 2) * 50;
+        return ((lv % 10) + 2) * 100;
     }
 
 

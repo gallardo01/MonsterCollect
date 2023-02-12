@@ -10,8 +10,9 @@ public class BulletController : MonoBehaviour
     private Transform target;
     // Start is called before the first frame update
     private int bounce = 4;
-    private float speed = 0.035f;
+    private float speed = 0.05f;
     private float timer = 0.1f;
+    private int damePercent;
 
     private void Start()
     {
@@ -24,8 +25,7 @@ public class BulletController : MonoBehaviour
         {
             if(id == 4 && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
             {
-                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                gameObject.SetActive(false);
+                target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
             }
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
         } else
@@ -60,8 +60,9 @@ public class BulletController : MonoBehaviour
         StartCoroutine(returnToPool(1.3f));
     }
 
-    public void initBullet(MyHeroes myHeroes, int skill, Transform enemy)
+    public void initBullet(MyHeroes myHeroes, int skill, int dame, Transform enemy)
     {
+        damePercent = dame;
         target = enemy;
         heroes = myHeroes;
         if(id == 4)
@@ -93,7 +94,7 @@ public class BulletController : MonoBehaviour
         else if (collision.gameObject.tag == "Enemy" && id == 4 && !(collision.gameObject == null || collision.gameObject.activeInHierarchy == false || collision.gameObject.GetComponent<MonsterController>().getIsDead()))
         {
             if (bounce > 0) {
-                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
                 GameController.Instance.addParticle(collision.gameObject, 4);
                 target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
                 //isNextTarget = false;
@@ -112,7 +113,7 @@ public class BulletController : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Enemy" && id != 1 && id != 12 && id != 4 && !(collision.gameObject == null || collision.gameObject.activeInHierarchy == false || collision.gameObject.GetComponent<MonsterController>().getIsDead()))
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
             GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
@@ -162,7 +163,7 @@ public class BulletController : MonoBehaviour
     IEnumerator explosion(MyHeroes data)
     {
         yield return new WaitForSeconds(0);
-        GameController.Instance.addExplosion(data, gameObject, 3);
+        GameController.Instance.addExplosion(data, gameObject, damePercent, 3);
     }
 
     IEnumerator returnToPool(float time)

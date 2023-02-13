@@ -8,6 +8,7 @@ public class BulletNoTargetController : MonoBehaviour
     private MyHeroes heroes;
     [SerializeField] int id;
     private Transform target;
+    private int skillDame;
     // Start is called before the first frame update
 
     private void Start()
@@ -31,8 +32,9 @@ public class BulletNoTargetController : MonoBehaviour
         gameObject.GetComponent<Collider2D>().enabled = true;
     }
 
-    public void initBullet(MyHeroes myHeroes, int skill, Transform enemy)
+    public void initBullet(MyHeroes myHeroes, int skill, int dame, Transform enemy)
     {
+        skillDame = dame;
         target = enemy;
         heroes = myHeroes;
 
@@ -48,7 +50,7 @@ public class BulletNoTargetController : MonoBehaviour
         }
         if (collision.gameObject.tag == "Enemy" && id == 3)
         {
-            GameController.Instance.addExplosion(heroes, gameObject, 5);
+            GameController.Instance.addExplosion(heroes, gameObject, skillDame, 5);
 
             //collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
             //GameController.Instance.addParticle(collision.gameObject, 5);
@@ -60,7 +62,7 @@ public class BulletNoTargetController : MonoBehaviour
     IEnumerator explosion(MyHeroes data)
     {
         yield return new WaitForSeconds(0);
-        GameController.Instance.addExplosion(data, gameObject, 3);
+        GameController.Instance.addExplosion(data, gameObject, skillDame, 3);
     }
 
     IEnumerator returnToPool(float time)

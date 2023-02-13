@@ -271,7 +271,7 @@ namespace MarchingBytes {
 			return listObj[obj].transform;
 		}
 
-		public void getAllObjectInPosition(GameObject playerObject, int size, MyHeroes heroes)
+		public void getAllObjectInPosition(GameObject playerObject, int size, MyHeroes heroes, int dame)
 		{
 			float distance = 1.35f * (0.7f + (size - 1) * 0.2f) / 0.7f;
 
@@ -281,7 +281,7 @@ namespace MarchingBytes {
 				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
 					&& delta.magnitude <= distance)
 				{
-					listObj[i].gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+					listObj[i].gameObject.GetComponent<MonsterController>().enemyHurt(heroes, dame);
 					GameController.Instance.addParticle(listObj[i].gameObject, 4);
 				}
 			}

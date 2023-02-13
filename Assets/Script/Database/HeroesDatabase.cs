@@ -25,16 +25,16 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     {
         string fileName = "Heroes.txt";
         string myFileName = "MyHeroes.txt";
-        //firstTimeSetUp();
+        firstTimeSetUp();
 
         LoadResourceTextfileHeroesData(fileName);
-        LoadResourceTextfileCurrentData(myFileName);
-        Save();
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
             unlockHero(10);
             PlayerPrefs.SetInt("HeroesPick", 10);
         }
+
+        LoadResourceTextfileCurrentData(myFileName);
     }
 
     private void firstTimeSetUp()
@@ -94,7 +94,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             newItem.Armour = (int)heroesDataJson[i]["Armour"];
             newItem.Speed = (int)heroesDataJson[i]["Speed"];
             newItem.Crit = (int)heroesDataJson[i]["Crit"];
-            newItem.Spell = (int)heroesDataJson[i]["Spell"];
+            newItem.Move = (int)heroesDataJson[i]["Move"];
             newItem.Type = (int)heroesDataJson[i]["Type"];
             newItem.Skill = heroesDataJson[i]["Skill"].ToString();
             heroesData.Add(newItem);
@@ -108,14 +108,13 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             MyHeroes newItem = new MyHeroes();
             newItem.Name = myHeroesJson[i]["Name"].ToString();
             newItem.Id = (int)myHeroesJson[i]["Id"];
-            //newItem.Unlock = (int)userData[i]["Unlock"];
             newItem.Level = (int)myHeroesJson[i]["Level"];
             newItem.Atk = (int)myHeroesJson[i]["Atk"];
             newItem.Hp = (int)myHeroesJson[i]["Hp"];
             newItem.Armour = (int)myHeroesJson[i]["Armour"];
             newItem.Speed = (int)myHeroesJson[i]["Speed"];
             newItem.Crit = (int)myHeroesJson[i]["Crit"];
-            newItem.Spell = (int)myHeroesJson[i]["Spell"];
+            newItem.Move = (int)myHeroesJson[i]["Move"];
             newItem.Type = (int)myHeroesJson[i]["Type"];
             newItem.Skill = myHeroesJson[i]["Skill"].ToString();
             myHeroes.Add(newItem);
@@ -199,7 +198,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             addNew.Hp = raw.Hp;
             addNew.Armour = raw.Armour;
             addNew.Speed = raw.Speed;
-            addNew.Spell = raw.Spell;
+            addNew.Move = raw.Move;
             addNew.Type = raw.Type;
             addNew.Skill = raw.Skill;
             addNew.Crit = raw.Crit;
@@ -225,7 +224,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             myHeroes[pos].Armour = raw.Armour * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
             myHeroes[pos].Speed = raw.Speed * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
             myHeroes[pos].Crit = raw.Crit * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
-            myHeroes[pos].Spell = raw.Spell * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
+            myHeroes[pos].Move = raw.Move * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
             myHeroes[pos].Name = raw.Name;
 
             Save();
@@ -243,7 +242,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         myHeroes[pos].Armour = raw.Armour * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
-        myHeroes[pos].Spell = raw.Spell * (myHeroes[pos].Level * 5 + 100) / 100;
+        myHeroes[pos].Move = raw.Move * (myHeroes[pos].Level * 5 + 100) / 100;
         myHeroes[pos].Level += 1;
 
         Save();
@@ -381,7 +380,7 @@ public class HeroesData
     public int Armour { get; set; }
     public int Speed { get; set; }
     public int Crit { get; set; }
-    public int Spell { get; set; }
+    public int Move { get; set; }
     public string Skill { get; set; }
 
 }

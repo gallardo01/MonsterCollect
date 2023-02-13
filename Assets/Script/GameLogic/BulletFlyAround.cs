@@ -11,6 +11,7 @@ public class BulletFlyAround : MonoBehaviour
 
     private Transform target;
     private MyHeroes heroes;
+    private int skillDame;
     private void Start()
     {
        
@@ -24,8 +25,9 @@ public class BulletFlyAround : MonoBehaviour
         transform.position = target.position + new Vector3(2.5f * Mathf.Cos(Mathf.PI * ((Time.fixedTime)%3)/1.5f), 2.5f * Mathf.Sin(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f), 0);
     }
 
-    public void initBullet(MyHeroes myHeroes, int skill, Transform enemy)
+    public void initBullet(MyHeroes myHeroes, int skill, int dame, Transform enemy)
     {
+        skillDame = dame;
         target = enemy;
         heroes = myHeroes;
     }
@@ -34,7 +36,7 @@ public class BulletFlyAround : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, skillDame);
             GameController.Instance.addParticle(collision.gameObject, 4);
         }
     }

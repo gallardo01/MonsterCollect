@@ -65,11 +65,11 @@ public class MonsterController : MonoBehaviour
         wayMove = 2;
     }
 
-    public void enemyHurt(MyHeroes heroes)
+    public void enemyHurt(MyHeroes heroes, int damePercent)
     {
         if (!isDead)
         {
-            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData);
+            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
             int actualDame = Mathf.Abs(dame);
             currentHp -= actualDame;
             if (currentHp <= 0)
@@ -90,14 +90,14 @@ public class MonsterController : MonoBehaviour
 
     private void dropItemController(int monsterLv)
     {
-        // drop exp 
+        //drop exp
         GameObject expObj = EasyObjectPool.instance.GetObjectFromPool("Exp", transform.position, transform.rotation);
         expObj.GetComponent<ItemDropController>().setExp(returnExpGet(monsterLv));
         // drop gold
         if (Random.Range(0, 100) < 10)
         {
-            GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position, transform.rotation);
-            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv*2, 10 + monsterLv*5));
+            GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
+            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv * 2, 10 + monsterLv * 5));
         }
         // drop item
         if (Random.Range(0, 2000) < monsterLv)
@@ -109,7 +109,7 @@ public class MonsterController : MonoBehaviour
     private int returnExpGet(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        return ((lv % 10) + 2) * 50;
+        return ((lv % 10) + 2) * 100;
     }
 
 
@@ -142,7 +142,7 @@ public class MonsterController : MonoBehaviour
 
     private void Move()
     {
-        if (isMove)
+        if (isMove && !isDead)
         {
             // move theo waypoints
             if (wayMove == 1)
@@ -217,7 +217,7 @@ public class MonsterController : MonoBehaviour
 
     public void setColor()
     {
-        int playerLv = PlayerController.Instance.getLevel();
+        int playerLv = GameController.Instance.getEnemyLv();
         if (monsterData.Id <= playerLv)
         {
             level.color = Color.white;
@@ -331,9 +331,9 @@ public class MonsterController : MonoBehaviour
     IEnumerator disableObject()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(1f);
-        gameObject.GetComponent<Collider2D>().enabled = true;
+        yield return new WaitForSeconds(2f);
         EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        gameObject.GetComponent<Collider2D>().enabled = true;
         gameObject.SetActive(false);
     }
 

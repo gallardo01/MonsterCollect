@@ -55,6 +55,10 @@ public class ItemDropController : MonoBehaviour
         if (collision.gameObject.tag == "Player" && isActive)
         {
             target = collision.gameObject;
+            if (type == 1)
+            {
+                GameController.Instance.gainExpChar(exp);
+            }
             isActive = false;
             StartCoroutine(pushOut(shootFollower(collision.transform)));
         }  

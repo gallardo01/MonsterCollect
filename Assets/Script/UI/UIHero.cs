@@ -174,7 +174,7 @@ public class UIHero : Singleton<UIHero>
         txtAlibity_3.text = data.Armour.ToString();
         txtAlibity_4.text = data.Speed.ToString();
         txtAlibity_5.text = data.Crit.ToString();
-        txtAlibity_6.text = data.Spell.ToString();
+        txtAlibity_6.text = data.Move.ToString();
 
 
         handleButton(data);
@@ -426,7 +426,7 @@ public class UIHero : Singleton<UIHero>
         txtAlibityBefore[2].text = data_before.Armour.ToString();
         txtAlibityBefore[3].text = data_before.Speed.ToString();
         txtAlibityBefore[4].text = data_before.Crit.ToString();
-        txtAlibityBefore[5].text = data_before.Spell.ToString();
+        txtAlibityBefore[5].text = data_before.Move.ToString();
 
         if (data_before.Level < 25)
         {
@@ -442,14 +442,14 @@ public class UIHero : Singleton<UIHero>
                 addArmor = (data_before_evole.Armour * ((data_before.Level) * 5 + 100) / 100 - data_before.Armour).ToString();
                 addSpeed = (data_before_evole.Speed * ((data_before.Level) * 5 + 100) / 100 - data_before.Speed).ToString();
                 addCrit = (data_before_evole.Crit * ((data_before.Level) * 5 + 100) / 100 - data_before.Crit).ToString();
-                addSpell = (data_before_evole.Spell * ((data_before.Level) * 5 + 100) / 100 - data_before.Spell).ToString();
+                addSpell = (data_before_evole.Move * ((data_before.Level) * 5 + 100) / 100 - data_before.Move).ToString();
 
                 txtAlibityBefore[0].text = data_before.Atk.ToString() + "+(" + "<color=green>" + addAtk + "</color=green>" + ")";
                 txtAlibityBefore[1].text = data_before.Hp.ToString() + "+(" + "<color=green>" + addHp + "</color=green>" + ")";
                 txtAlibityBefore[2].text = data_before.Armour.ToString() + "+(" + "<color=green>" + addArmor + "</color=green>" + ")";
                 txtAlibityBefore[3].text = data_before.Speed.ToString() + "+(" + "<color=green>" + addSpeed + "</color=green>" + ")";
                 txtAlibityBefore[4].text = data_before.Crit.ToString() + "+(" + "<color=green>" + addCrit + "</color=green>" + ")";
-                txtAlibityBefore[5].text = data_before.Spell.ToString() + "+(" + "<color=green>" + addSpell + "</color=green>" + ")";
+                txtAlibityBefore[5].text = data_before.Move.ToString() + "+(" + "<color=green>" + addSpell + "</color=green>" + ")";
             }
             else
             {
@@ -460,7 +460,7 @@ public class UIHero : Singleton<UIHero>
                 addArmor = (data_before_evole_1.Armour * ((data_before.Level) * 5 + 100) / 100 - data_before.Armour).ToString();
                 addSpeed = (data_before_evole_1.Speed * ((data_before.Level) * 5 + 100) / 100 - data_before.Speed).ToString();
                 addCrit = (data_before_evole_1.Crit * ((data_before.Level) * 5 + 100) / 100 - data_before.Crit).ToString();
-                addSpell = (data_before_evole_1.Spell * ((data_before.Level) * 5 + 100) / 100 - data_before.Spell).ToString();
+                addSpell = (data_before_evole_1.Move * ((data_before.Level) * 5 + 100) / 100 - data_before.Move).ToString();
 
                 if (addAtk != "0")
                 {
@@ -484,7 +484,7 @@ public class UIHero : Singleton<UIHero>
                 }
                 if (addSpell != "0")
                 {
-                    txtAlibityBefore[5].text = data_before.Spell.ToString() + "+(" + "<color=green>" + addSpell + "</color=green>" + ")";
+                    txtAlibityBefore[5].text = data_before.Move.ToString() + "+(" + "<color=green>" + addSpell + "</color=green>" + ")";
 
                 }
             }
@@ -639,7 +639,7 @@ public class UIHero : Singleton<UIHero>
             txtAlibityBefore[2].text = (data_before_evole_1.Armour - Int32.Parse(addArmor) + i * Int32.Parse(addArmor) / 19).ToString() + "<color=green>" + " +" + addArmor + "</color=green>";
             txtAlibityBefore[3].text = (data_before_evole_1.Speed - Int32.Parse(addSpeed) + i * Int32.Parse(addSpeed) / 19).ToString() + "<color=green>" + " +" + addSpeed + "</color=green>";
             txtAlibityBefore[4].text = (data_before_evole_1.Crit - Int32.Parse(addCrit) + i * Int32.Parse(addCrit) / 19).ToString() + "<color=green>" + " +" + addCrit + "</color=green>";
-            txtAlibityBefore[5].text = (data_before_evole_1.Spell - Int32.Parse(addSpell) + i * Int32.Parse(addSpell) / 19).ToString() + "<color=green>" + " +" + addSpell + "</color=green>";
+            txtAlibityBefore[5].text = (data_before_evole_1.Move - Int32.Parse(addSpell) + i * Int32.Parse(addSpell) / 19).ToString() + "<color=green>" + " +" + addSpell + "</color=green>";
             yield return new WaitForSeconds(0.04f);
         }
 

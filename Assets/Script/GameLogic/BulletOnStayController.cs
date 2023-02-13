@@ -12,6 +12,7 @@ public class BulletOnStayController : MonoBehaviour
     float DelayTime = 1f;
     private GameObject playerObj;
     private int size = 1;
+    private int skillDame;
     //private void Start()
     //{
     //    //StartCoroutine(disableCollider());
@@ -29,12 +30,13 @@ public class BulletOnStayController : MonoBehaviour
     IEnumerator hurtEnemyAround()
     {
         yield return new WaitForSeconds(1.5f);
-        EasyObjectPool.instance.getAllObjectInPosition(playerObj, size, heroes);
+        EasyObjectPool.instance.getAllObjectInPosition(playerObj, size, heroes, skillDame);
         StartCoroutine(hurtEnemyAround());
     }
 
-    public void initBullet(MyHeroes myHeroes, int s, GameObject obj)
+    public void initBullet(MyHeroes myHeroes, int s, int dame, GameObject obj)
     {
+        skillDame = dame;
         heroes = myHeroes;
         size = s;
         playerObj = obj;
@@ -63,7 +65,7 @@ public class BulletOnStayController : MonoBehaviour
         //}
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
+            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, skillDame);
             GameController.Instance.addParticle(collision.gameObject, 4);
         }
     }
@@ -88,7 +90,7 @@ public class BulletOnStayController : MonoBehaviour
     IEnumerator explosion(MyHeroes data)
     {
         yield return new WaitForSeconds(0);
-        GameController.Instance.addExplosion(data, gameObject, 3);
+        GameController.Instance.addExplosion(data, gameObject, skillDame, 3);
     }
 
     IEnumerator returnToPool(float time)

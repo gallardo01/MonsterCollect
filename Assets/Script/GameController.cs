@@ -23,6 +23,8 @@ public class GameController : Singleton<GameController>
     public Button revive;
     public Button cancelRevive;
 
+    public GameObject pickAbilityPanel;
+
     private int exp = 0;
     private int playerLevel = 1;
     private bool isSpawn = true;
@@ -32,7 +34,13 @@ public class GameController : Singleton<GameController>
 
     private int goldAward = 0;
     private List<ItemInventory> itemAward = new List<ItemInventory>();
-
+    private int playerType = 1;
+    private int[] currentSkill = { 0, 1, 0, 0, 0 };
+    private int[] skillLevel = { 0, 1, 0, 0, 0 };
+    private int[] currentBuff = { 0, 0, 0, 0, 0 };
+    private int[] buffLevel = { 0, 0, 0, 0, 0 };
+    private int[] type = { 0, 0, 0 };
+    private int[] availableOption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     // Start is called before the first frame update
     void Start()
     {
@@ -48,17 +56,22 @@ public class GameController : Singleton<GameController>
 
     public IEnumerator addEnemyFirstScene()
     {
-        for (int i = 0; i < 12; i++)
-        {
-            yield return new WaitForSeconds(0.5f);
-            addEnemy();
-        }
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    addEnemy();
+        //}
+        addEnemy();
+        yield return new WaitForSeconds(1f);
         StartCoroutine(respawnEnemyDuringTime());
     }
 
+    public int getEnemyLv()
+    {
+        return enemyLv;
+    }
     private IEnumerator respawnEnemyDuringTime()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         if (isSpawn)
         {
             addEnemy();
@@ -99,7 +112,7 @@ public class GameController : Singleton<GameController>
         if (isSpawn)
         {
             countEnemy++;
-            int chance = Random.Range(2, 14);
+            int chance = Random.Range(0, 14);
             int enemyId;
             if (chance < 11)
             {
@@ -107,7 +120,7 @@ public class GameController : Singleton<GameController>
             }
             else
             {
-                enemyId = enemyLv + 1;
+                enemyId = enemyLv + chance % 10;
                 if (enemyId % 10 == 0)
                 {
                     enemyId -= 1;
@@ -127,23 +140,6 @@ public class GameController : Singleton<GameController>
             addEnemy();
         }
     }
-
-    public void initEatMonster(int lv)
-    {
-        //// 10 12 14 16 18 20 22 24 25
-        //exp += ((lv % 10) + 2)* 50;
-        //if (exp >= playerLevel % 10 * 1000)
-        //{
-        //    playerLevel++;
-        //    exp = 0;
-        //    updateProgressBar(true);
-        //}
-        //else
-        //{
-        //    updateProgressBar(false);
-        //}
-        StartCoroutine(respawnEnemy());
-    }
     private void updateColorText()
     {
         GameObject[] gos;
@@ -153,18 +149,150 @@ public class GameController : Singleton<GameController>
             go.GetComponent<MonsterController>().setColor();
         }
     }
+    public void gainExpChar(int num)
+    {
+        exp += num;
+        updateProgressBar(exp >= playerLevel * 1000);
+    }
 
     private void updateProgressBar(bool levelUp)
     {
-        float progres = (float) exp / (float) (playerLevel % 10 * 1000);
         //expBar.GetComponent<Slider>().value = progres;
-        StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
-        expText.text = exp + "/" + (playerLevel % 10 * 1000);
         if (levelUp)
         {
+            exp -= playerLevel * 1000;
+            playerLevel++;
+            expText.text = exp + "/" + (playerLevel * 1000);
             levelText.text = playerLevel.ToString();
             PlayerController.Instance.gainLv(playerLevel);
             updateColorText();
+            pickSkillLevelUp();
+        }
+        expText.text = exp + "/" + (playerLevel * 1000);
+        float progres = (float)exp / (float)(playerLevel * 1000);
+        StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
+    }
+    private void pickSkillLevelUp()
+    {
+        Time.timeScale = 0;
+        List<int> chosenSkill = new List<int>();
+        for(int i = 1; i <= 12; i++)
+        {
+            availableOption[i] = 0;
+        }
+        for (int i = 1; i <= 4; i++)
+        {
+            if(currentSkill[i] > 0 && skillLevel[i] < 5)
+            {
+                availableOption[currentSkill[i]] = 1;
+            } else
+            {
+                for(int j = 1; j <= 6; j++)
+                {
+                    availableOption[j] = 1;
+                }
+                break;
+            }
+        }
+        for(int i = 1; i <= 4; i++)
+        {
+            if (currentBuff[i] > 0 && buffLevel[i] < 5)
+            {
+                availableOption[currentBuff[i]] = 1;
+            }
+            else
+            {
+                for (int j = 7; j <= 12; j++)
+                {
+                    availableOption[j] = 1;
+                }
+                break;
+            }
+        }
+        for(int i = 1; i <= 12; i++)
+        {
+            if(availableOption[i] > 0)
+            {
+                chosenSkill.Add(i);
+            }
+        }
+        chosenSkill.Add(-1);
+        chosenSkill.Add(-2);
+        if (chosenSkill.Count <= 3)
+        {
+            for (int i = 0; i < chosenSkill.Count; i++)
+            {
+                type[i] = chosenSkill[i];
+            }
+        } else
+        {
+            int count = 0;
+            while (count < 3)
+            {
+                int ran = Random.Range(0, chosenSkill.Count);
+                type[count] = chosenSkill[ran];
+                chosenSkill.RemoveAt(ran);
+                count++;
+            }
+        }
+        pickAbilityPanel.SetActive(true);
+        pickAbilityPanel.GetComponent<PickAbilityController>().initSkillData(currentSkill, skillLevel, currentBuff, buffLevel, type, playerType);
+    }
+
+    public void pickSkill(int id)
+    {
+        Time.timeScale = 1;
+        // heal
+        if (id == -1)
+        {
+
+        }
+        else if(id == -2) // gold
+        {
+
+        } else if(id > 0) // skill 
+        {
+            for (int i = 1; i <= 4; i++)
+            {
+                if(currentSkill[i] == id)
+                {
+                    skillLevel[i]++;
+                    PlayerController.Instance.setDataSkill(currentSkill, skillLevel);
+                    return;
+                }
+                if(currentBuff[i] == id)
+                {
+                    buffLevel[i]++;
+                    PlayerController.Instance.setDataSkill(currentSkill, skillLevel);
+                    return;
+                }
+            }
+            if(id % 12 > 0 && id % 12 <= 6)
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    if(currentSkill[i] == 0)
+                    {
+                        currentSkill[i] = id;
+                        skillLevel[i] = 1;
+                        PlayerController.Instance.setDataSkill(currentSkill, skillLevel);
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    if (currentBuff[i] == 0)
+                    {
+                        currentBuff[i] = id;
+                        buffLevel[i] = 1;
+                        PlayerController.Instance.setDataSkill(currentSkill, skillLevel);
+                        return;
+                    }
+                }
+            }
         }
     }
 
@@ -213,11 +341,11 @@ public class GameController : Singleton<GameController>
         StartCoroutine(disableParticle(particle));
     }
 
-    public void addExplosion(MyHeroes heroes, GameObject obj, int index)
+    public void addExplosion(MyHeroes heroes, GameObject obj, int skillDame, int index)
     {
         string par = "Particle" + index;
         GameObject particle = EasyObjectPool.instance.GetObjectFromPool(par, obj.transform.position, obj.transform.rotation);
-        particle.GetComponent<ExplosionController>().initData(heroes);
+        particle.GetComponent<ExplosionController>().initData(heroes, skillDame);
         StartCoroutine(disableParticle(particle));
     }
 

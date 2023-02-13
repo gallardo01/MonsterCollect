@@ -222,6 +222,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     private IEnumerator normalAttack()
     {
+        yield return new WaitForSeconds(timer[0]);
         if (isPause == false && thunderType[0] > 0)
         {
             string bulletText = "Electric_1";
@@ -237,7 +238,6 @@ public class PlayerController : Singleton<PlayerController>
                 //projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
         }
-        yield return new WaitForSeconds(timer[0]);
         StartCoroutine(normalAttack());
     }
     private IEnumerator thunder_1()

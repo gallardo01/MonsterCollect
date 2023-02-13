@@ -35,6 +35,8 @@ public class PlayerController : Singleton<PlayerController>
     private bool canHurt = true;
     private int exp = 0;
     private MyHeroes data;
+    private MyHeroes realData;
+
     float timeSmoke = 0;
     public float timeSmokeWait = 1f;
     private bool isPause = false;
@@ -48,7 +50,10 @@ public class PlayerController : Singleton<PlayerController>
     private static int[] timerThunder = { 5, 5, 10, 5, 7, 0 };
     private int[] dameSkill = { 0, 0, 0, 0, 0, 0 };
     private int[] skillLevel = { 1, 0, 0, 0, 0, 0 };
-    private int[] timer = { 1, 3, 10, 5, 7, 0 };
+    private float[] timer = { 1, 3, 10, 5, 7, 0 };
+
+    // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7. SuperEffective 8.Gold 9.Exp
+    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // Start is called before the first frame update
     void Start()
@@ -62,7 +67,7 @@ public class PlayerController : Singleton<PlayerController>
         initStart();
         levelText.text = playerLevel.ToString();
 
-        StartCoroutine(controlAttackTime());
+        StartCoroutine(normalAttack());
     }
     public Transform getPosition()
     {
@@ -160,24 +165,6 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    IEnumerator controlAttackTime()
-    {
-        int timeScale = 0;
-        for (int i = 0; i < 100;)
-        {
-            yield return new WaitForSeconds(1f);
-            timeScale++;
-
-            for (int j = 0; j < 6; j++)
-            {
-                if (timer[j] > 0 && timeScale % timer[j] == 0 && thunderType[j] > 0)
-                {
-                    attackMonster(j, timer[j]);
-                }
-            }
-        }
-    }
-
     public void setDataSkill(int[] typeRaw, int[] skillLv)
     {
         for(int i = 1; i <= 4; i++)
@@ -189,7 +176,7 @@ public class PlayerController : Singleton<PlayerController>
                 skillLevel[idSkill] = skillLv[i];
                 if (timer[idSkill] == 0)
                 {
-                    attackMonster(idSkill, timer[idSkill]);
+                    attackMonster(idSkill);
                 }
             }
         }
@@ -200,31 +187,31 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    private void attackMonster(int id, int timeDelay)
+    public void attackMonster(int id)
     {
         if(id == 0)
         {
-            StartCoroutine(normalAttack(0));
+            StartCoroutine(normalAttack());
         }
         else if(id == 1)
         {
-            StartCoroutine(thunder_1(0));
+            StartCoroutine(thunder_1());
         }
         else if(id == 2)
         {
-            StartCoroutine(thunder_2(0));
+            StartCoroutine(thunder_2());
         }
         else if(id == 3)
         {
-            StartCoroutine(thunder_3(0));
+            StartCoroutine(thunder_3());
         }
         else if(id == 4)
         {
-            StartCoroutine(thunder_4(0));
+            StartCoroutine(thunder_4());
         }
         else if(id == 5)
         {
-            StartCoroutine(thunder_5(0));
+            StartCoroutine(thunder_5());
         };
     }
     IEnumerator disableObject(float timer, GameObject obj)
@@ -233,10 +220,9 @@ public class PlayerController : Singleton<PlayerController>
         EasyObjectPool.instance.ReturnObjectToPool(obj);
         obj.SetActive(false);
     }
-    private IEnumerator normalAttack(float timer)
+    private IEnumerator normalAttack()
     {
-        yield return new WaitForSeconds(timer);
-        if (isPause == false)
+        if (isPause == false && thunderType[0] > 0)
         {
             string bulletText = "Electric_1";
             Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
@@ -251,11 +237,12 @@ public class PlayerController : Singleton<PlayerController>
                 //projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
         }
+        yield return new WaitForSeconds(timer[0]);
+        StartCoroutine(normalAttack());
     }
-    private IEnumerator thunder_1(float timer)
+    private IEnumerator thunder_1()
     {
-        yield return new WaitForSeconds(timer);
-        if (isPause == false)
+        if (isPause == false && thunderType[1] > 0)
         {
             string bulletText = "Electric_2";
             // 3f and 5f
@@ -272,11 +259,12 @@ public class PlayerController : Singleton<PlayerController>
             }
             StartCoroutine(disableObject(5f, shootTarget));
         }
+        yield return new WaitForSeconds(timer[1]);
+        StartCoroutine(thunder_1());
     }
-    private IEnumerator thunder_2(float timer)
+    private IEnumerator thunder_2()
     {
-        yield return new WaitForSeconds(timer);
-        if (isPause == false)
+        if (isPause == false && thunderType[2] > 0)
         {
             string bulletText = "Electric_3";
 
@@ -287,11 +275,12 @@ gameObject.transform.rotation);
             EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
             projectileNormal.SetActive(false);
         }
+        yield return new WaitForSeconds(timer[2]);
+        StartCoroutine(thunder_2());
     }
-    private IEnumerator thunder_3(float timer)
+    private IEnumerator thunder_3()
     {
-        yield return new WaitForSeconds(timer);
-        if (isPause == false)
+        if (isPause == false && thunderType[3] > 0)
         {
             string bulletText = "Electric_4";
 
@@ -305,11 +294,12 @@ locate.transform.rotation);
             projectileNormal.GetComponent<BulletNoTargetController>().initBullet(data, 3, dameSkill[3], gameObject.transform);
             projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 100);
         }
+        yield return new WaitForSeconds(timer[3]);
+        StartCoroutine(thunder_3());
     }
-    private IEnumerator thunder_4(float timer)
+    private IEnumerator thunder_4()
     {
-        yield return new WaitForSeconds(timer);
-        if (isPause == false)
+        if (isPause == false && thunderType[4] > 0)
         {
             string bulletText = "Electric_5";
             Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
@@ -320,30 +310,36 @@ locate.transform.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(data, 4, dameSkill[3], shootTarget);
             }
         }
+        yield return new WaitForSeconds(timer[4]);
+        StartCoroutine(thunder_4());
     }
 
-    private IEnumerator thunder_5(float timer)
+    private IEnumerator thunder_5()
     {
-        yield return new WaitForSeconds(timer);
-        int size = 1;
-        string bulletText = "Electric_6";
-        if (isActiveNonRepeat)
+        if (isPause == false && thunderType[5] > 0)
         {
-            isActiveNonRepeat = false;
-            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, gameObject.transform.position,
-gameObject.transform.rotation);
-            projectileNormal.transform.parent = gameObject.transform;
-            projectileNormal.transform.localPosition = new Vector3(0f, -0.2f, 0f);
-            gameObjectNonRepeat = projectileNormal;
-            float scaleNumber = 0.7f + (size - 1) * 0.2f;
-            projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
-            projectileNormal.GetComponent<BulletOnStayController>().initBullet(data, size, dameSkill[3], gameObject);
-        } else
-        {
-            float scaleNumber = 0.7f + (size - 1) * 0.2f;
-            gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
-            gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(data, size, dameSkill[3], gameObject);
+            int size = skillLevel[5];
+            string bulletText = "Electric_6";
+            if (isActiveNonRepeat)
+            {
+                isActiveNonRepeat = false;
+                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, gameObject.transform.position,
+    gameObject.transform.rotation);
+                projectileNormal.transform.parent = gameObject.transform;
+                projectileNormal.transform.localPosition = new Vector3(0f, -0.2f, 0f);
+                gameObjectNonRepeat = projectileNormal;
+                float scaleNumber = 0.7f + (size - 1) * 0.2f;
+                projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
+                projectileNormal.GetComponent<BulletOnStayController>().initBullet(data, size, dameSkill[3], gameObject);
+            }
+            else
+            {
+                float scaleNumber = 0.7f + (size - 1) * 0.2f;
+                gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
+                gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(data, size, dameSkill[3], gameObject);
+            }
         }
+        yield return new WaitForSeconds(timer[5]);
     }
 
     IEnumerator reActiveObject(GameObject obj)

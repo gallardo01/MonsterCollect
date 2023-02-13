@@ -32,7 +32,7 @@ public class PickAbilityController : MonoBehaviour
         {
             if (currentSkill[i + 1] > 0) {
                 currentSkillImage[i].gameObject.SetActive(true);
-                currentSkillImage[i].sprite = Resources.Load<Sprite>("Contents/Move/" + (currentSkill[i + 1] + playerType * 12));
+                currentSkillImage[i].sprite = Resources.Load<Sprite>("Contents/Move/" + (currentSkill[i + 1] + (playerType - 1) * 12));
             } else
             {
                 currentSkillImage[i].gameObject.SetActive(false);
@@ -40,7 +40,7 @@ public class PickAbilityController : MonoBehaviour
             if (currentBuff[i + 1] > 0)
             {
                 currentBuffImage[i].gameObject.SetActive(true);
-                currentBuffImage[i].sprite = Resources.Load<Sprite>("Contents/Move/" + (currentBuff[i + 1] + playerType * 12));
+                currentBuffImage[i].sprite = Resources.Load<Sprite>("Contents/Move/" + (currentBuff[i + 1] + (playerType - 1) * 12));
             }
             else
             {

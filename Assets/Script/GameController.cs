@@ -51,7 +51,10 @@ public class GameController : Singleton<GameController>
         //addBoss();
         levelText.text = playerLevel.ToString();
         //btnQuit.onClick.AddListener(quitGame);
-        StartCoroutine(addEnemyFirstScene());
+
+        //spawn crep
+        //StartCoroutine(addEnemyFirstScene());
+        addEnemy();
     }
 
     public IEnumerator addEnemyFirstScene()

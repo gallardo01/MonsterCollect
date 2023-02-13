@@ -223,6 +223,7 @@ public class PlayerController : Singleton<PlayerController>
     private IEnumerator normalAttack()
     {
         yield return new WaitForSeconds(timer[0]);
+        Debug.Log("test");
         if (isPause == false && thunderType[0] > 0)
         {
             string bulletText = "Electric_1";

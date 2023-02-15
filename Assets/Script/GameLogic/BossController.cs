@@ -8,14 +8,16 @@ public class BossController : MonoBehaviour
     // Start is called before the first frame update
     private int facingRight = 1;
     private float x = 0f, y = 0f;
-    private float moveSpeed = 3f;
+    public float moveSpeed = 1f;
     private int waypointIndex = 0;
     private Vector2[] waypoints;
 
-    private bool isMove = false;
+    private bool isMove = true;
     public int id;
 
     public TextMeshPro level;
+
+    public Transform player;
 
 
     void Start()
@@ -29,9 +31,10 @@ public class BossController : MonoBehaviour
         };
         x = transform.position.x;
         y = transform.position.y;
-        init();
+        //init();
         initInfo();
-        StartCoroutine(idleBehavior());
+        runAnimation(2);
+        StartCoroutine(castSkill());
     }
 
     public int getLevel()
@@ -76,39 +79,55 @@ public class BossController : MonoBehaviour
         if (isMove)
         {
             transform.position = Vector2.MoveTowards(transform.position,
-                waypoints[waypointIndex],
+                player.position,
                 (moveSpeed / 4 * 3) * Time.deltaTime);
 
-            if (transform.position.x == waypoints[waypointIndex].x && transform.position.y == waypoints[waypointIndex].y)
+            //if (transform.position.x == waypoints[waypointIndex].x && transform.position.y == waypoints[waypointIndex].y)
+            //{
+            //    isMove = false;
+            //    GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+            //    StartCoroutine(castSkill());
+            //}
+
+            if (transform.position.x < player.position.x && facingRight == 0)
             {
-                isMove = false;
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-                StartCoroutine(idleBehavior());
+                flip();
             }
+            else if (transform.position.x > player.position.x && facingRight == 1)
+            {
+                flip();
+            }
+
         }
 
     }
 
-    IEnumerator idleBehavior()
+    IEnumerator castSkill()
     {
         yield return new WaitForSeconds(2f);
-        int chance = Random.Range(0, 2);
-        if (chance % 2 == 0)
+        int chance = Random.Range(0, 10);
+        if (chance <= 4)
         {
+            Debug.Log("dam");
+            isMove = false;
+            //GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
+
+            runAnimation(3);
+            //waypointIndex = Random.Range(0, 4);
+            //if (transform.position.x < waypoints[waypointIndex].x && facingRight == 0)
+            //{
+            //    flip();
+            //}else if(transform.position.x > waypoints[waypointIndex].x && facingRight == 1)
+            //{
+            //    flip();
+            //}
+
             isMove = true;
-            GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
-            waypointIndex = Random.Range(0, 4);
-            if (transform.position.x < waypoints[waypointIndex].x && facingRight == 0)
-            {
-                flip();
-            }else if(transform.position.x > waypoints[waypointIndex].x && facingRight == 1)
-            {
-                flip();
-            }
+
         }
         else
         {
-            StartCoroutine(idleBehavior());
+            StartCoroutine(castSkill());
         }
     }
 
@@ -140,51 +159,25 @@ public class BossController : MonoBehaviour
         //idle
         if (pos == 1)
         {
-            if (id == 48)
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("IDLE");
-            }
-            else
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-            }
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
         }
         //move
         else if (pos == 2)
         {
-            if (id == 33 || id == 47 || id == 63)
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("Move");
-            }
-            else
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
-            }
+
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
+
         }
         //attack
         else if (pos == 3)
         {
-            if (id == 18 || id == 63)
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attacl", 0.5f, 1);
-            }
-            else
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attack", 0.5f, 1);
-            }
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attack", 0.5f, 1);
             StartCoroutine(replayAnimation());
         }
         // die
         else if (pos == 4)
         {
-            if (id == 29 || id == 63 || id == 63)
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("newAnimation", 0.5f, 1);
-            }
-            else
-            {
-                GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 1f, 1);
-            }
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 1f, 1);
             StartCoroutine(disableObject());
         }
     }
@@ -194,11 +187,11 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         if (isMove)
         {
-            runAnimation(1);
+            runAnimation(2);
         }
         else
         {
-            runAnimation(2);
+            runAnimation(1);
         }
     }
 

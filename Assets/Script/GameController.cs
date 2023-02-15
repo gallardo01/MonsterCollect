@@ -54,7 +54,7 @@ public class GameController : Singleton<GameController>
 
         //spawn crep
         //StartCoroutine(addEnemyFirstScene());
-        addEnemy();
+        //addEnemy();
     }
 
     public IEnumerator addEnemyFirstScene()

@@ -53,17 +53,16 @@ public class GameController : Singleton<GameController>
         //btnQuit.onClick.AddListener(quitGame);
 
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
+        StartCoroutine(addEnemyFirstScene());
         //addEnemy();
     }
 
     public IEnumerator addEnemyFirstScene()
     {
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    addEnemy();
-        //}
-        addEnemy();
+        for (int i = 0; i < 10; i++)
+        {
+            addEnemy();
+        }
         yield return new WaitForSeconds(1f);
         StartCoroutine(respawnEnemyDuringTime());
     }
@@ -266,7 +265,6 @@ public class GameController : Singleton<GameController>
                 if(currentBuff[i] == id)
                 {
                     buffLevel[i]++;
-                    PlayerController.Instance.setDataSkill(currentSkill, skillLevel);
                     return;
                 }
             }
@@ -291,7 +289,6 @@ public class GameController : Singleton<GameController>
                     {
                         currentBuff[i] = id;
                         buffLevel[i] = 1;
-                        PlayerController.Instance.setDataSkill(currentSkill, skillLevel);
                         return;
                     }
                 }

@@ -11,14 +11,32 @@ public class BossController : MonoBehaviour
     public float moveSpeed = 1f;
     private int waypointIndex = 0;
     private Vector2[] waypoints;
+    private int wayMove = 1;
+    private BoxCollider2D boxCollider2D;
+
 
     private bool isMove = true;
+    private bool isCast = false;
+
+    private Vector3 playerLastPos;
+
     public int id;
 
     public TextMeshPro level;
 
     public Transform player;
 
+    // boss 1
+    private float rate;
+    [SerializeField] private Transform bossTarget;
+
+    void Awake()
+    {
+        boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
+        //boss 1
+        rate = 2f;
+        bossTarget.gameObject.SetActive(false);
+    }
 
     void Start()
     {
@@ -78,24 +96,39 @@ public class BossController : MonoBehaviour
     {
         if (isMove)
         {
-            transform.position = Vector2.MoveTowards(transform.position,
+            if(wayMove == 1)
+            {
+                transform.position = Vector2.MoveTowards(transform.position,
                 player.position,
                 (moveSpeed / 4 * 3) * Time.deltaTime);
 
-            //if (transform.position.x == waypoints[waypointIndex].x && transform.position.y == waypoints[waypointIndex].y)
-            //{
-            //    isMove = false;
-            //    GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-            //    StartCoroutine(castSkill());
-            //}
+                //if (transform.position.x == waypoints[waypointIndex].x && transform.position.y == waypoints[waypointIndex].y)
+                //{
+                //    isMove = false;
+                //    GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+                //    StartCoroutine(castSkill());
+                //}
 
-            if (transform.position.x < player.position.x && facingRight == 0)
-            {
-                flip();
+                if (transform.position.x < player.position.x && facingRight == 0)
+                {
+                    flip();
+                }
+                else if (transform.position.x > player.position.x && facingRight == 1)
+                {
+                    flip();
+                }
             }
-            else if (transform.position.x > player.position.x && facingRight == 1)
+            else if (wayMove == 2)
             {
-                flip();
+                boxCollider2D.enabled = false;
+                transform.position = Vector2.MoveTowards(transform.position, new Vector3(transform.position.x, 20f, 0f), (moveSpeed * 30) * Time.deltaTime);
+            }
+            else if (wayMove == 3)
+            {   
+                boxCollider2D.enabled = true;
+                transform.position = Vector2.MoveTowards(transform.position,
+                        playerLastPos,
+                        (moveSpeed * 50) * Time.deltaTime);
             }
 
         }
@@ -106,10 +139,9 @@ public class BossController : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         int chance = Random.Range(0, 10);
-        if (chance <= 4)
+        if (chance <= rate && !isCast)
         {
-            Debug.Log("dam");
-            isMove = false;
+            isCast = true; 
             //GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
 
             runAnimation(3);
@@ -122,13 +154,31 @@ public class BossController : MonoBehaviour
             //    flip();
             //}
 
-            isMove = true;
+            
+            StartCoroutine(runSkill());
+        }
 
-        }
-        else
-        {
-            StartCoroutine(castSkill());
-        }
+        StartCoroutine(castSkill());
+
+    }
+
+    IEnumerator runSkill()
+    {
+        wayMove = 2;
+
+        yield return new WaitForSeconds(1f);
+        playerLastPos = player.position;
+
+        bossTarget.position =  new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
+        bossTarget.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        wayMove = 3;
+        bossTarget.gameObject.SetActive(false);
+        yield return new WaitForSeconds(1f);
+        wayMove = 1;
+        isCast = false;
+
+
     }
 
     void init()

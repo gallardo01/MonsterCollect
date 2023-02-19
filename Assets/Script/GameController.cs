@@ -59,7 +59,7 @@ public class GameController : Singleton<GameController>
 
     public IEnumerator addEnemyFirstScene()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 5; i++)
         {
             addEnemy();
         }
@@ -73,11 +73,11 @@ public class GameController : Singleton<GameController>
     }
     private IEnumerator respawnEnemyDuringTime()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         if (isSpawn)
         {
             addEnemy();
-            if(countEnemy == 20)
+            if(countEnemy == 30)
             {
                 enemyLv++;
                 countEnemy = 0;
@@ -116,7 +116,7 @@ public class GameController : Singleton<GameController>
             countEnemy++;
             int chance = Random.Range(0, 14);
             int enemyId;
-            if (chance < 11)
+            if (chance < 13)
             {
                 enemyId = enemyLv;
             }
@@ -265,6 +265,7 @@ public class GameController : Singleton<GameController>
                 if(currentBuff[i] == id)
                 {
                     buffLevel[i]++;
+                    PlayerController.Instance.setDataBuff(currentBuff, buffLevel);
                     return;
                 }
             }
@@ -289,6 +290,7 @@ public class GameController : Singleton<GameController>
                     {
                         currentBuff[i] = id;
                         buffLevel[i] = 1;
+                        PlayerController.Instance.setDataBuff(currentBuff, buffLevel);
                         return;
                     }
                 }

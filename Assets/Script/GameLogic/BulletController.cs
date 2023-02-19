@@ -27,7 +27,14 @@ public class BulletController : MonoBehaviour
             {
                 target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
             }
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
+            if (target != null)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
+            } else
+            {
+                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                gameObject.SetActive(false);
+            }
         } else
         {
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
@@ -87,12 +94,11 @@ public class BulletController : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        if (collision.gameObject.tag == "Enemy" && id == 1 && !(collision.gameObject == null || collision.gameObject.activeInHierarchy == false || collision.gameObject.GetComponent<MonsterController>().getIsDead()))
+        if (collision.gameObject.tag == "Enemy" && id == 1 )
         {
             //collision.gameObject.GetComponent<MonsterController>().stopRunning();
         }
-        else if (collision.gameObject.tag == "Enemy" && id == 4 && !(collision.gameObject == null || collision.gameObject.activeInHierarchy == false || collision.gameObject.GetComponent<MonsterController>().getIsDead()))
-        {
+        else if (collision.gameObject.tag == "Enemy" && id == 4) { 
             if (bounce > 0) {
                 collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
                 GameController.Instance.addParticle(collision.gameObject, 4);
@@ -111,7 +117,7 @@ public class BulletController : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
-        else if (collision.gameObject.tag == "Enemy" && id != 1 && id != 12 && id != 4 && !(collision.gameObject == null || collision.gameObject.activeInHierarchy == false || collision.gameObject.GetComponent<MonsterController>().getIsDead()))
+        else if (collision.gameObject.tag == "Enemy" && id != 1 && id != 4)
         {
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
             GameController.Instance.addParticle(collision.gameObject, 1);

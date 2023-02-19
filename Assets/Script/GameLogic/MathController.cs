@@ -71,7 +71,6 @@ public class MathController : Singleton<MathController>
             else
             {
                 percent += armour/ armourPoints[step];
-                armour = 0;
                 break;
             }
             step++;

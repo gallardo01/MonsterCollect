@@ -42,13 +42,13 @@ public class PlayerController : Singleton<PlayerController>
     private int[] waterType = { 1, 0, 0, 0, 0, 0 };
     private int[] fireType = { 1, 0, 0, 0, 0, 0 };
 
-    private int[] dameSkill = { 0, 0, 0, 0, 0, 0 };
-    private int[] skillLevel = { 1, 0, 0, 0, 0, 0 };
-    private float[] timer = { 1, 3, 10, 5, 7, 0 };
+    public int[] dameSkill = { 0, 0, 0, 0, 0, 0 };
+    public int[] skillLevel = { 1, 0, 0, 0, 0, 0 };
+    private float[] timer = { 0, 0, 0, 0, 0, 0 };
 
-    // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7. SuperEffective 8.Gold 9.Exp
-    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
+    // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
+    public int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     // Start is called before the first frame update
     void Start()
     {
@@ -60,8 +60,8 @@ public class PlayerController : Singleton<PlayerController>
         playerLevel = (PlayerPrefs.GetInt("Map") - 1) * 10 + 1;
         initStart();
         levelText.text = playerLevel.ToString();
-
-        for(int i = 0; i <= 4; i++) {
+        updatePlayerData();
+        for (int i = 0; i <= 4; i++) {
             attackMonster(i);
         }
     }
@@ -83,9 +83,19 @@ public class PlayerController : Singleton<PlayerController>
 
         for (int i = 0; i < 6; i++)
         {
-            //dameSkill[i] = StaticInfo.skillDame[i + (data.Type - 1) * 12];
-            dameSkill[i] = StaticInfo.skillDame[i + 1] * (100 + 20 * (skillLevel[i] - 1)) / 100;
+            timer[i] = SkillDatabase.Instance.fetchSkillIndex(i + 1 + (realData.Type - 1) * 12).Timer;
+            dameSkill[i] = SkillDatabase.Instance.fetchSkillIndex(i + 1 + (realData.Type - 1) * 12).Power;
         }
+    }
+    // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
+    private void updatePlayerData()
+    {
+        realData.Atk = realData.Atk * (100 + bonusPoints[1]) / 100;
+        realData.Hp = realData.Hp * (100 + bonusPoints[2]) / 100;
+        realData.Armour = realData.Armour * (100 + bonusPoints[3]) / 100;
+        realData.Move = realData.Move * (100 + bonusPoints[4]) / 100;
+        realData.Crit = realData.Crit * (100 + bonusPoints[5]) / 100;
+        realData.Speed = realData.Speed * (100 + bonusPoints[6]) / 100;
     }
     public void gainLv(int lv)
     {
@@ -171,10 +181,36 @@ public class PlayerController : Singleton<PlayerController>
         }
         for(int i = 0; i < 6; i++)
         {
-            Debug.Log(i + "  " + thunderType[i] + "  " + skillLevel[i]);
-            //dameSkill[i] = StaticInfo.skillDame[i + (data.Type - 1) * 12];
-            dameSkill[i] = StaticInfo.skillDame[i+1] * (100 + 20*skillLevel[i]) / 100;
+            int skillId = (data.Type - 1) * 12 + i + 1;
+            SkillData skillData = SkillDatabase.Instance.fetchSkillIndex(skillId);
+
+            dameSkill[i] = skillData.Power * (80 + 20*skillLevel[i]) / 100;
+            timer[i] = skillData.Timer - (float)(skillLevel[i] - 1) * skillData.Upgrade/1000;
         }
+    }
+
+    //buff
+    public void setDataBuff(int[] typeRaw, int[] buffLv)
+    {
+        for (int i = 1; i <= 4; i++)
+        {
+            if (typeRaw[i] > 0)
+            {
+                int idSkill = typeRaw[i] - 6;
+                Debug.Log(idSkill + "  " + buffLevel[i]);
+                buffLevel[idSkill] = buffLv[i];
+            }
+        }
+        for (int i = 1; i <= 6; i++)
+        {
+            if (buffLevel[i] > 0)
+            {
+                int skillId = i + 6;
+                SkillData skillData = SkillDatabase.Instance.fetchSkillIndex(skillId);
+                bonusPoints[skillData.Timer] = skillData.Power * (100 + (buffLevel[i] - 1) * 50) / 100;
+            }
+        }
+        updatePlayerData();
     }
 
     public void attackMonster(int id)
@@ -202,7 +238,7 @@ public class PlayerController : Singleton<PlayerController>
         else if(id == 5)
         {
             StartCoroutine(thunder_5());
-        };
+        }
     }
     IEnumerator disableObject(float timer, GameObject obj)
     {
@@ -212,20 +248,28 @@ public class PlayerController : Singleton<PlayerController>
     }
     private IEnumerator normalAttack()
     {
-        yield return new WaitForSeconds(timer[0]);
+        int bonusTimer = realData.Speed / 100;
+        if (bonusTimer > 50) bonusTimer = 50;
+        yield return new WaitForSeconds(timer[0] * (100 - bonusTimer)/100);
         if (isPause == false && thunderType[0] > 0)
         {
             string bulletText = "Electric_1";
             Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
             if (shootTarget != null)
             {
-                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
-    shootTarget.rotation);
+                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, shootTarget.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[0], shootTarget);
                 Vector2 vector = shootFollower(shootTarget);
                 float angle = calAngle(shootTarget, vector);
                 projectileNormal.transform.Rotate(0, 0, angle + 90);
-                //projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 500);
+                if (skillLevel[0] == 5)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, shootTarget.rotation);
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[0], shootTarget);
+                    projectileNormal1.transform.Rotate(0, 0, angle + 90);
+
+                }
             }
         }
         StartCoroutine(normalAttack());
@@ -235,12 +279,10 @@ public class PlayerController : Singleton<PlayerController>
         if (isPause == false && thunderType[1] > 0)
         {
             string bulletText = "Electric_2";
-            // 3f and 5f
             Transform shootTargetObj = EasyObjectPool.instance.getNearestHitPosition(gameObject);
             GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
     locate.transform.rotation);
             shootTarget.transform.position = shootTargetObj.position + new Vector3(giveRandomFloatNumber(0.3f, 1f), giveRandomFloatNumber(0.3f, 1f), 0);
-            //StartCoroutine(returnToPoolEmpty(shootTarget));
             if (shootTarget != null)
             {
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
@@ -279,10 +321,27 @@ gameObject.transform.rotation);
             Vector2 vector3 = new Vector2(-1f, -2f);
             Vector2 vector4 = new Vector2(1f, 2f);
 
-            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
-locate.transform.rotation);
+            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
             projectileNormal.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
             projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 100);
+            if (skillLevel[3] > 1)
+            {
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+                projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector2 * 100);
+            } 
+            if(skillLevel[3] > 2)
+            {
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+                projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector3 * 100);
+            }
+            if (skillLevel[3] > 3)
+            {
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+                projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector4 * 100);
+            }
         }
         yield return new WaitForSeconds(timer[3]);
         StartCoroutine(thunder_3());
@@ -297,7 +356,7 @@ locate.transform.rotation);
             {
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.rotation);
-                projectileNormal.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[3], shootTarget);
+                projectileNormal.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[4], shootTarget);
             }
         }
         yield return new WaitForSeconds(timer[4]);
@@ -319,13 +378,13 @@ locate.transform.rotation);
                 gameObjectNonRepeat = projectileNormal;
                 float scaleNumber = 0.7f + (size - 1) * 0.2f;
                 projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
-                projectileNormal.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[3], gameObject);
+                projectileNormal.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[5], gameObject);
             }
             else
             {
                 float scaleNumber = 0.7f + (size - 1) * 0.2f;
                 gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
-                gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[3], gameObject);
+                gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[5], gameObject);
             }
         }
         yield return new WaitForSeconds(timer[5]);

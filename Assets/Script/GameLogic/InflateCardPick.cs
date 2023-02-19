@@ -36,15 +36,29 @@ public class InflateCardPick : MonoBehaviour
             glowImage.color = Color.cyan;
         }
         iconSkill.sprite = Resources.Load<Sprite>("Contents/Move/" + card.ToString());
-        if (card > 0)
+        if ((card - 1) % 12 < 6 && card > 0)
         {
-            nameSkill.text = StaticInfo.skillName[card];
-            textSkill.text = StaticInfo.skillContent[card];
+            SkillData data = SkillDatabase.Instance.fetchSkillIndex(card);
+            nameSkill.text = data.Skill;
+            if (level == 0)
+            {
+                textSkill.text = data.Content;
+            }
+            else
+            {
+                textSkill.text = data.Second;
+            }
+        } else if ((card - 1) % 12 >= 6 && card > 0)
+        {
+            SkillData data = SkillDatabase.Instance.fetchSkillIndex(card);
+            nameSkill.text = data.Skill;
+            int percent = data.Power * (100 + (level) * 50) / 100;
+            textSkill.text = data.Content + " +" + percent + "%";
         }
         else if(card == -1)
         {
             nameSkill.text = "Max Potion";
-            textSkill.text = "Restore all HP immediately";
+            textSkill.text = "Restore full HP immediately";
         } else if(card == -2)
         {
             nameSkill.text = "Gold";

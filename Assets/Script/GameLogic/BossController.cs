@@ -96,6 +96,7 @@ public class BossController : MonoBehaviour
     {
         if (isMove)
         {
+
             if(wayMove == 1)
             {
                 transform.position = Vector2.MoveTowards(transform.position,
@@ -130,7 +131,10 @@ public class BossController : MonoBehaviour
                         playerLastPos,
                         (moveSpeed * 50) * Time.deltaTime);
             }
-
+            else if(wayMove == 4)
+            {
+                Debug.Log("dcmm");
+            }
         }
 
     }
@@ -164,21 +168,29 @@ public class BossController : MonoBehaviour
 
     IEnumerator runSkill()
     {
-        wayMove = 2;
+        if (id == 10)
+        {
 
-        yield return new WaitForSeconds(1f);
-        playerLastPos = player.position;
+            wayMove = 2;
 
-        bossTarget.position =  new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
-        bossTarget.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        wayMove = 3;
-        bossTarget.gameObject.SetActive(false);
-        yield return new WaitForSeconds(1f);
-        wayMove = 1;
-        isCast = false;
+            yield return new WaitForSeconds(1f);
+            playerLastPos = player.position;
 
+            bossTarget.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
+            bossTarget.gameObject.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            wayMove = 3;
+            bossTarget.gameObject.SetActive(false);
+            yield return new WaitForSeconds(1f);
+            wayMove = 1;
+            isCast = false;
 
+        }
+        else if(id == 20)
+        {
+            wayMove = 4;
+
+        }
     }
 
     void init()

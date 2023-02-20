@@ -182,21 +182,31 @@ public class GameController : Singleton<GameController>
         {
             availableOption[i] = 0;
         }
+        int countSkill = 0;
         for (int i = 1; i <= 4; i++)
         {
+            if(currentSkill[i] == 0)
+            {
+                countSkill++; 
+            }
             if(currentSkill[i] > 0 && skillLevel[i] < 5)
             {
                 availableOption[currentSkill[i]] = 1;
-            } else
+            } 
+        }
+        if(countSkill == 4)
+        {
+            for(int i = 1; i <= 6; i++)
             {
-                for(int j = 1; j <= 6; j++)
-                {
-                    availableOption[j] = 1;
-                }
-                break;
+                availableOption[i] = 1;
             }
         }
-        for(int i = 1; i <= 4; i++)
+
+        for (int j = 1; j <= 6; j++)
+        {
+            availableOption[j] = 1;
+        }
+        for (int i = 1; i <= 4; i++)
         {
             if (currentBuff[i] > 0 && buffLevel[i] < 5)
             {

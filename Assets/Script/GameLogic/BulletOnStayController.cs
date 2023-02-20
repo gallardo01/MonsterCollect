@@ -68,6 +68,12 @@ public class BulletOnStayController : MonoBehaviour
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, skillDame);
             GameController.Instance.addParticle(collision.gameObject, 4);
         }
+        if (collision.gameObject.tag == "Boss")
+        {
+            collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, skillDame);
+            GameController.Instance.addParticle(collision.gameObject, 4);
+        }
+
     }
 
     //private void OnTriggerStay2D(Collider2D[] collision)

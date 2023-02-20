@@ -184,8 +184,14 @@ namespace MarchingBytes {
                     vector2 = result;
                     listObj.Add(vector2);
                 }
-                //scenario when no available object is found in pool
-                if (result == null) {
+				if (isCreateNew && result.tag == "Boss" && result != null)
+				{
+					GameObject vector2;
+					vector2 = result;
+					listObj.Add(vector2);
+				}
+				//scenario when no available object is found in pool
+				if (result == null) {
 					Debug.LogWarning("No object available in pool. Consider setting fixedSize to false.: " + poolName);
 				}
 				
@@ -221,18 +227,35 @@ namespace MarchingBytes {
 			for (int i = 0; i < listObj.Count; i++)
             {
 				Vector3 delta = player.transform.position - listObj[i].transform.position;
-				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
-					&& delta.magnitude < 7f)
+				if (listObj[i].tag == "Enemy")
 				{
-					if (distance > delta.magnitude)
+					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
+						&& delta.magnitude < 7f)
 					{
-						distance = delta.magnitude;
-						obj = i;
+						if (distance > delta.magnitude)
+						{
+							distance = delta.magnitude;
+							obj = i;
+						}
+						if (delta.magnitude < 3f)
+						{
+							listObj[i].GetComponent<MonsterController>().triggerWaypoints();
+						}
 					}
-					if(delta.magnitude < 3f)
-                    {
-						listObj[i].GetComponent<MonsterController>().triggerWaypoints();
-                    }
+				} else if(listObj[i].tag == "Boss")
+                {
+					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<BossController>().getIsDead() == false
+						&& delta.magnitude < 7f)
+					{
+						if (distance > delta.magnitude)
+						{
+							distance = delta.magnitude;
+							obj = i;
+						}
+						if (delta.magnitude < 3f)
+						{
+						}
+					}
 				}
 			}
 			if(obj < 0)
@@ -250,17 +273,34 @@ namespace MarchingBytes {
 			for (int i = 0; i < listObj.Count; i++)
 			{
 				Vector3 delta = playerObj.transform.position - listObj[i].transform.position;
-				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
-					&& listObj[i] != en && delta.magnitude < 7f)
+				if (listObj[i].tag == "Enemy")
 				{
-					if (distance > delta.magnitude)
+					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
+						&& listObj[i] != en && delta.magnitude < 7f)
 					{
-						distance = delta.magnitude;
-						obj = i;
+						if (distance > delta.magnitude)
+						{
+							distance = delta.magnitude;
+							obj = i;
+						}
+						if (delta.magnitude < 3f)
+						{
+							listObj[i].GetComponent<MonsterController>().triggerWaypoints();
+						}
 					}
-					if (delta.magnitude < 3f)
+				} else if(listObj[i].tag == "Boss")
+                {
+					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<BossController>().getIsDead() == false
+						&& listObj[i] != en && delta.magnitude < 7f)
 					{
-						listObj[i].GetComponent<MonsterController>().triggerWaypoints();
+						if (distance > delta.magnitude)
+						{
+							distance = delta.magnitude;
+							obj = i;
+						}
+						if (delta.magnitude < 3f)
+						{
+						}
 					}
 				}
 			}
@@ -278,11 +318,22 @@ namespace MarchingBytes {
 			for (int i = 0; i < listObj.Count; i++)
 			{
 				Vector3 delta = playerObject.transform.position - listObj[i].transform.position;
-				if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
-					&& delta.magnitude <= distance)
-				{
-					listObj[i].gameObject.GetComponent<MonsterController>().enemyHurt(heroes, dame);
-					GameController.Instance.addParticle(listObj[i].gameObject, 4);
+				if(listObj[i].tag == "Enemy")
+                {
+					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
+	&& delta.magnitude <= distance)
+					{
+						listObj[i].gameObject.GetComponent<MonsterController>().enemyHurt(heroes, dame);
+						GameController.Instance.addParticle(listObj[i].gameObject, 4);
+					}
+				} else if (listObj[i].tag == "Boss")
+                {
+					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<BossController>().getIsDead() == false
+	&& delta.magnitude <= distance)
+					{
+						listObj[i].gameObject.GetComponent<BossController>().enemyHurt(heroes, dame);
+						GameController.Instance.addParticle(listObj[i].gameObject, 4);
+					}
 				}
 			}
 		}

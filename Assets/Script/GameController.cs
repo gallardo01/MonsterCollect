@@ -41,6 +41,8 @@ public class GameController : Singleton<GameController>
     private int[] buffLevel = { 0, 0, 0, 0, 0 };
     private int[] type = { 0, 0, 0 };
     private int[] availableOption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    private bool isBossSpawn = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,8 +55,9 @@ public class GameController : Singleton<GameController>
         //btnQuit.onClick.AddListener(quitGame);
 
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
+        StartCoroutine(addEnemyFirstScene());
         //addEnemy();
+        //addBoss();
     }
 
     public IEnumerator addEnemyFirstScene()
@@ -77,16 +80,20 @@ public class GameController : Singleton<GameController>
         if (isSpawn)
         {
             addEnemy();
-            if(countEnemy == 30)
+            if (countEnemy % 4 == 0)
             {
                 enemyLv++;
-                countEnemy = 0;
             }
         }
-        if(enemyLv % 10 == 0)
+        if (enemyLv >= 10)
         {
-
-        } else
+            if (isBossSpawn)
+            {
+                isBossSpawn = false;
+                addBoss();
+            }
+        }
+        else
         {
             StartCoroutine(respawnEnemyDuringTime());
         }
@@ -99,8 +106,10 @@ public class GameController : Singleton<GameController>
 
     private void addBoss()
     {
-        string enemyType = "No." + (playerLevel/10 + 10);
-        GameObject boss = Instantiate(Resources.Load("Prefabs/Pokemon/" + enemyType) as GameObject, bossController.transform);
+        string enemyType = "Enemy" + (10);
+        GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
+
+        boss.GetComponent<BossController>().initInfo(10);
         boss.transform.localPosition = new Vector3(0, 0, 0);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
@@ -123,10 +132,10 @@ public class GameController : Singleton<GameController>
             else
             {
                 enemyId = enemyLv + chance % 10;
-                if (enemyId % 10 == 0)
-                {
-                    enemyId -= 1;
-                }
+            }
+            if (enemyId > 9)
+            {
+                enemyId = 9;
             }
             string enemyType = "Enemy" + enemyId;
             GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
@@ -137,7 +146,7 @@ public class GameController : Singleton<GameController>
     {
         yield return new WaitForSeconds(2f);
         int chance = Random.Range(1, 4);
-        if(chance == 1)
+        if (chance == 1)
         {
             addEnemy();
         }
@@ -146,7 +155,7 @@ public class GameController : Singleton<GameController>
     {
         GameObject[] gos;
         gos = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach(GameObject go in gos)
+        foreach (GameObject go in gos)
         {
             go.GetComponent<MonsterController>().setColor();
         }
@@ -178,27 +187,31 @@ public class GameController : Singleton<GameController>
     {
         Time.timeScale = 0;
         List<int> chosenSkill = new List<int>();
-        for(int i = 1; i <= 12; i++)
+        for (int i = 1; i <= 12; i++)
         {
             availableOption[i] = 0;
         }
         int countSkill = 0;
         for (int i = 1; i <= 4; i++)
         {
-            if(currentSkill[i] == 0)
+            if (currentSkill[i] == 0)
             {
-                countSkill++; 
+                countSkill++;
             }
-            if(currentSkill[i] > 0 && skillLevel[i] < 5)
+            if (currentSkill[i] > 0 && skillLevel[i] < 5)
             {
                 availableOption[currentSkill[i]] = 1;
-            } 
+            }
         }
-        if(countSkill == 4)
+        if (countSkill == 4)
         {
-            for(int i = 1; i <= 6; i++)
+            for (int i = 1; i <= 6; i++)
             {
                 availableOption[i] = 1;
+
+
+
+
             }
         }
 
@@ -221,9 +234,9 @@ public class GameController : Singleton<GameController>
                 break;
             }
         }
-        for(int i = 1; i <= 12; i++)
+        for (int i = 1; i <= 12; i++)
         {
-            if(availableOption[i] > 0)
+            if (availableOption[i] > 0)
             {
                 chosenSkill.Add(i);
             }
@@ -236,7 +249,8 @@ public class GameController : Singleton<GameController>
             {
                 type[i] = chosenSkill[i];
             }
-        } else
+        }
+        else
         {
             int count = 0;
             while (count < 3)
@@ -259,31 +273,32 @@ public class GameController : Singleton<GameController>
         {
 
         }
-        else if(id == -2) // gold
+        else if (id == -2) // gold
         {
 
-        } else if(id > 0) // skill 
+        }
+        else if (id > 0) // skill 
         {
             for (int i = 1; i <= 4; i++)
             {
-                if(currentSkill[i] == id)
+                if (currentSkill[i] == id)
                 {
                     skillLevel[i]++;
                     PlayerController.Instance.setDataSkill(currentSkill, skillLevel);
                     return;
                 }
-                if(currentBuff[i] == id)
+                if (currentBuff[i] == id)
                 {
                     buffLevel[i]++;
                     PlayerController.Instance.setDataBuff(currentBuff, buffLevel);
                     return;
                 }
             }
-            if(id % 12 > 0 && id % 12 <= 6)
+            if (id % 12 > 0 && id % 12 <= 6)
             {
                 for (int i = 1; i <= 4; i++)
                 {
-                    if(currentSkill[i] == 0)
+                    if (currentSkill[i] == 0)
                     {
                         currentSkill[i] = id;
                         skillLevel[i] = 1;
@@ -328,7 +343,7 @@ public class GameController : Singleton<GameController>
         while (current < last)
         {
             current += 0.05f;
-            if(current >= last)
+            if (current >= last)
             {
                 current = last;
             }

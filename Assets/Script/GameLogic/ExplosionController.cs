@@ -30,9 +30,16 @@ public class ExplosionController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss")
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(data, skillDame);
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.gameObject.GetComponent<MonsterController>().enemyHurt(data, skillDame);
+            }
+            else
+            {
+                collision.gameObject.GetComponent<BossController>().enemyHurt(data, skillDame);
+            }
             if (id != 3)
             {
                 GameController.Instance.addParticle(collision.gameObject, 4);

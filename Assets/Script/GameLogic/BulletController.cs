@@ -94,13 +94,19 @@ public class BulletController : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        if (collision.gameObject.tag == "Enemy" && id == 1 )
+        if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 1 )
         {
             //collision.gameObject.GetComponent<MonsterController>().stopRunning();
         }
-        else if (collision.gameObject.tag == "Enemy" && id == 4) { 
+        else if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 4) { 
             if (bounce > 0) {
-                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
+                if (collision.gameObject.tag == "Enemy")
+                {
+                    collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
+                } else
+                {
+                    collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
+                }
                 GameController.Instance.addParticle(collision.gameObject, 4);
                 target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
                 //isNextTarget = false;
@@ -117,9 +123,16 @@ public class BulletController : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
-        else if (collision.gameObject.tag == "Enemy" && id != 1 && id != 4)
+        else if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id != 1 && id != 4)
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
+            }
+            else
+            {
+                collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
+            }
             GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);

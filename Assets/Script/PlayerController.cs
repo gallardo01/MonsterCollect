@@ -282,9 +282,9 @@ public class PlayerController : Singleton<PlayerController>
             Transform shootTargetObj = EasyObjectPool.instance.getNearestHitPosition(gameObject);
             GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
     locate.transform.rotation);
-            shootTarget.transform.position = shootTargetObj.position + new Vector3(giveRandomFloatNumber(0.3f, 1f), giveRandomFloatNumber(0.3f, 1f), 0);
             if (shootTarget != null)
             {
+                shootTarget.transform.position = shootTargetObj.position + new Vector3(giveRandomFloatNumber(0.3f, 1f), giveRandomFloatNumber(0.3f, 1f), 0);
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.transform.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
@@ -490,9 +490,9 @@ gameObject.transform.rotation);
         {
             if (canHurt)
             {
-                //int enemyLv = collision.gameObject.GetComponent<BossController>().getLevel();
+                MonsterData enemyLv = collision.gameObject.GetComponent<BossController>().getLevel();
                 canHurt = false;
-                //StartCoroutine(setHurt(enemyLv));
+                StartCoroutine(setHurt(enemyLv));
                 collision.gameObject.GetComponent<BossController>().setAction(1);
             }
         }

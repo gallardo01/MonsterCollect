@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using MarchingBytes;
 
 public class BossController : MonoBehaviour
 {
@@ -13,25 +14,24 @@ public class BossController : MonoBehaviour
     private Vector2[] waypoints;
     private int wayMove = 1;
     private BoxCollider2D boxCollider2D;
-
-
     private bool isMove = true;
     private bool isCast = false;
-
     private Vector3 playerLastPos;
-
-    public int id;
-
     public TextMeshPro level;
+    private Transform player;
+    private MonsterData monsterData;
 
-    public Transform player;
-
+    private int currentHp;
     // boss 1
     private float rate;
-    [SerializeField] private Transform bossTarget;
+    private Transform bossTarget;
+    private bool isDead = false;
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").transform;
+        bossTarget = GameObject.FindWithTag("Target").transform;
+
         boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
         //boss 1
         rate = 2f;
@@ -50,21 +50,51 @@ public class BossController : MonoBehaviour
         x = transform.position.x;
         y = transform.position.y;
         //init();
-        initInfo();
         runAnimation(2);
         StartCoroutine(castSkill());
     }
 
-    public int getLevel()
+    public MonsterData getLevel()
     {
-        return id;
+        return monsterData;
     }
 
-    private void initInfo()
+    public void initInfo(int id)
     {
+        monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
+        currentHp = monsterData.Hp;
         level.text = "Lv." + id.ToString();
     }
-    
+
+    public void enemyHurt(MyHeroes heroes, int damePercent)
+    {
+        if (!isDead)
+        {
+            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
+            int actualDame = Mathf.Abs(dame);
+            currentHp -= actualDame;
+            Debug.Log(currentHp);
+            if (currentHp <= 0)
+            {
+                //GameController.Instance.initEatMonster(heroes.Level);
+                // drop item
+                dropItemController(monsterData.Id);
+                isMove = false;
+                setAction(2);
+                isDead = true;
+            }
+            disableObject();
+            string floatingText = "FloatingText";
+            GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
+            particle.GetComponent<FloatingText>().disableObject(dame);
+        }
+    }
+
+    public bool getIsDead()
+    {
+        return isDead;
+    }
+
     public void setAction(int action)
     {
         // attack back
@@ -168,7 +198,7 @@ public class BossController : MonoBehaviour
 
     IEnumerator runSkill()
     {
-        if (id == 10)
+        if (monsterData.Id == 10)
         {
 
             wayMove = 2;
@@ -186,7 +216,7 @@ public class BossController : MonoBehaviour
             isCast = false;
 
         }
-        else if(id == 20)
+        else if(monsterData.Id == 20)
         {
             wayMove = 4;
 
@@ -257,12 +287,27 @@ public class BossController : MonoBehaviour
         }
     }
 
-
     IEnumerator disableObject()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(1f);
         gameObject.SetActive(false);
+    }
+
+    private void dropItemController(int monsterLv)
+    {
+        //drop exp
+        // drop gold
+        if (Random.Range(0, 100) < 10)
+        {
+            GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
+            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv * 2, 10 + monsterLv * 5));
+        }
+        // drop item
+        if (Random.Range(0, 2000) < monsterLv)
+        {
+
+        }
     }
 
 }

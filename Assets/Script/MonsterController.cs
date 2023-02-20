@@ -109,7 +109,7 @@ public class MonsterController : MonoBehaviour
     private int returnExpGet(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        return ((lv % 10) + 2) * 100;
+        return ((lv % 10) + 2) * 300;
     }
 
 

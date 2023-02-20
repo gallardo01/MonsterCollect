@@ -48,7 +48,7 @@ public class BulletNoTargetController : MonoBehaviour
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
-        if (collision.gameObject.tag == "Enemy" && id == 3)
+        if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 3)
         {
             GameController.Instance.addExplosion(heroes, gameObject, skillDame, 5);
 

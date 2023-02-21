@@ -26,20 +26,29 @@ public class BossController : MonoBehaviour
     private float rate;
     private Transform bossTarget;
     private bool isDead = false;
+    //boss 2
+
+
 
     void Awake()
     {
         player = GameObject.FindWithTag("Player").transform;
-        bossTarget = GameObject.FindWithTag("Target").transform;
 
-        boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
         //boss 1
         rate = 2f;
+        bossTarget = GameObject.FindWithTag("Target").transform;
+        boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
         bossTarget.gameObject.SetActive(false);
+
+        //boss 2
+
+
     }
 
     void Start()
     {
+        initInfo(20);
+
         waypoints = new Vector2[]
         {
             new Vector2( 0, 0 ),
@@ -161,9 +170,10 @@ public class BossController : MonoBehaviour
                         playerLastPos,
                         (moveSpeed * 50) * Time.deltaTime);
             }
-            else if(wayMove == 4)
+            else if (wayMove == 4)
             {
                 Debug.Log("dcmm");
+
             }
         }
 
@@ -171,26 +181,47 @@ public class BossController : MonoBehaviour
 
     IEnumerator castSkill()
     {
-        yield return new WaitForSeconds(2f);
-        int chance = Random.Range(0, 10);
-        if (chance <= rate && !isCast)
+        if (monsterData.Id == 10)
         {
-            isCast = true; 
-            //GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 10);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+                //GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
 
-            runAnimation(3);
-            //waypointIndex = Random.Range(0, 4);
-            //if (transform.position.x < waypoints[waypointIndex].x && facingRight == 0)
+                runAnimation(3);
+                //waypointIndex = Random.Range(0, 4);
+                //if (transform.position.x < waypoints[waypointIndex].x && facingRight == 0)
+                //{
+                //    flip();
+                //}else if(transform.position.x > waypoints[waypointIndex].x && facingRight == 1)
+                //{
+                //    flip();
+                //}
+
+
+                StartCoroutine(runSkill());
+            }
+        }
+        else if (monsterData.Id == 20)
+        {
+            wayMove = 1;
+            moveSpeed = 2f;
+            GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
+
+            //for (int i = 0; i < 5; i++)
             //{
-            //    flip();
-            //}else if(transform.position.x > waypoints[waypointIndex].x && facingRight == 1)
-            //{
-            //    flip();
+            //    GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position, transform.rotation);
+            //    yield return new WaitForSeconds(1f);
+
             //}
 
+            moveSpeed = 0f;
             
-            StartCoroutine(runSkill());
+            //phut lua
         }
+
 
         StartCoroutine(castSkill());
 
@@ -218,10 +249,15 @@ public class BossController : MonoBehaviour
         }
         else if(monsterData.Id == 20)
         {
-            wayMove = 4;
+ 
+            wayMove = 1;
+            yield return new WaitForSeconds(3f);
 
+            isCast = false;
         }
     }
+
+
 
     void init()
     {

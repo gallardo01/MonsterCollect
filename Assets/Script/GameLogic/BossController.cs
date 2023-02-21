@@ -188,73 +188,66 @@ public class BossController : MonoBehaviour
             if (chance <= rate && !isCast)
             {
                 isCast = true;
-                //GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
 
-                runAnimation(3);
-                //waypointIndex = Random.Range(0, 4);
-                //if (transform.position.x < waypoints[waypointIndex].x && facingRight == 0)
-                //{
-                //    flip();
-                //}else if(transform.position.x > waypoints[waypointIndex].x && facingRight == 1)
-                //{
-                //    flip();
-                //}
+                wayMove = 2;
 
+                yield return new WaitForSeconds(1f);
+                playerLastPos = player.position;
 
-                StartCoroutine(runSkill());
+                bossTarget.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
+                bossTarget.gameObject.SetActive(true);
+                yield return new WaitForSeconds(2f);
+                wayMove = 3;
+                bossTarget.gameObject.SetActive(false);
+                yield return new WaitForSeconds(1f);
+                wayMove = 1;
+                isCast = false;
             }
         }
         else if (monsterData.Id == 20)
         {
+            runAnimation(2);
+
             wayMove = 1;
             moveSpeed = 2f;
-            GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
 
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position, transform.rotation);
-            //    yield return new WaitForSeconds(1f);
 
-            //}
+            for (int i = 0; i < 5; i++)
+            {
+                //GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position, transform.rotation);
+                yield return new WaitForSeconds(1f);
 
-            moveSpeed = 0f;
-            
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                moveSpeed -= 0.2f;
+                yield return new WaitForSeconds(0.1f);
+
+            }
+
+            runAnimation(1);
+            isMove = false;
+            for (int i = 0; i < 4; i++)
+            {
+                flip();
+                yield return new WaitForSeconds(0.75f);
+            }
             //phut lua
+
+            playerLastPos = player.position;
+
+
+            isMove = true;
+
+            moveSpeed = 8f;
+
+            yield return new WaitForSeconds(1f);
         }
 
 
         StartCoroutine(castSkill());
 
-    }
-
-    IEnumerator runSkill()
-    {
-        if (monsterData.Id == 10)
-        {
-
-            wayMove = 2;
-
-            yield return new WaitForSeconds(1f);
-            playerLastPos = player.position;
-
-            bossTarget.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
-            bossTarget.gameObject.SetActive(true);
-            yield return new WaitForSeconds(2f);
-            wayMove = 3;
-            bossTarget.gameObject.SetActive(false);
-            yield return new WaitForSeconds(1f);
-            wayMove = 1;
-            isCast = false;
-
-        }
-        else if(monsterData.Id == 20)
-        {
- 
-            wayMove = 1;
-            yield return new WaitForSeconds(3f);
-
-            isCast = false;
-        }
     }
 
 

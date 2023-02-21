@@ -80,7 +80,7 @@ public class GameController : Singleton<GameController>
         if (isSpawn)
         {
             addEnemy();
-            if (countEnemy % 4 == 0)
+            if (countEnemy % 20 == 0)
             {
                 enemyLv++;
             }
@@ -203,35 +203,27 @@ public class GameController : Singleton<GameController>
                 availableOption[currentSkill[i]] = 1;
             }
         }
-        if (countSkill == 4)
+        if (countSkill > 0)
         {
             for (int i = 1; i <= 6; i++)
             {
                 availableOption[i] = 1;
-
-
-
-
             }
         }
-
-        for (int j = 1; j <= 6; j++)
-        {
-            availableOption[j] = 1;
-        }
+        int countBuff = 0;
         for (int i = 1; i <= 4; i++)
         {
+            if (currentBuff[i] == 0) countBuff++;
             if (currentBuff[i] > 0 && buffLevel[i] < 5)
             {
                 availableOption[currentBuff[i]] = 1;
             }
-            else
+        }
+        if (countBuff > 0)
+        {
+            for (int j = 7; j <= 12; j++)
             {
-                for (int j = 7; j <= 12; j++)
-                {
-                    availableOption[j] = 1;
-                }
-                break;
+                availableOption[j] = 1;
             }
         }
         for (int i = 1; i <= 12; i++)

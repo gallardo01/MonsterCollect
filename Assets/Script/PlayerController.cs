@@ -307,7 +307,7 @@ gameObject.transform.rotation);
             EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
             projectileNormal.SetActive(false);
         }
-        yield return new WaitForSeconds(timer[2]);
+        yield return new WaitForSeconds(timer[2] - 3.5f);
         StartCoroutine(thunder_2());
     }
     private IEnumerator thunder_3()

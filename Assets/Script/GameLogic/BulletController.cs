@@ -21,13 +21,13 @@ public class BulletController : MonoBehaviour
 
     void Update()
     {
-        if (target != null)
+        if (target != null || target.GetComponent<BoxCollider2D>().enabled == false)
         {
             if(id == 4 && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
             {
                 target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
             }
-            if (target != null)
+            if (target != null || target.GetComponent<BoxCollider2D>().enabled == false)
             {
                 transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
             } else

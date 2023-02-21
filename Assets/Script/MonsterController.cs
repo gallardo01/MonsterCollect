@@ -99,6 +99,14 @@ public class MonsterController : MonoBehaviour
             GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
             goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv * 2, 10 + monsterLv * 5));
         }
+        // drop hp
+        if (Random.Range(0, 100) < 5)
+        {
+            GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Hp", transform.position * 1.05f, transform.rotation);
+            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv * 2, 10 + monsterLv * 5));
+        }
+        // drop magnet
+
         // drop item
         if (Random.Range(0, 2000) < monsterLv)
         {
@@ -109,7 +117,7 @@ public class MonsterController : MonoBehaviour
     private int returnExpGet(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        return ((lv % 10) + 2) * 300;
+        return ((lv % 10) + 2) * 150;
     }
 
 

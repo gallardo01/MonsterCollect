@@ -11,6 +11,7 @@ public class ItemDropController : MonoBehaviour
     private int type = 0;
     private int exp = 0;
     private int gold = 0;
+    private int percent = 0;
     private ItemInventory itemAward;
     // Start is called before the first frame update
     void Start()
@@ -36,12 +37,24 @@ public class ItemDropController : MonoBehaviour
         itemAward = item;
     }
 
+    public void setHp(int p)
+    {
+        type = 4;
+        percent = p;
+    }
+
+    public void setMagnet()
+    {
+        type = 5;
+    }
+
     private void Update()
     {
         if (target != null && isFlyBack)
         {
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, 0.035f);
         }
+
     }
 
     void OnEnable()
@@ -52,20 +65,71 @@ public class ItemDropController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && isActive)
+        if (collision.gameObject.tag == "Player" && isActive && type != 5)
         {
-            target = collision.gameObject;
+            if (type == 2)
+            {
+                target = GameObject.FindWithTag("GoldBar");
+                isFlyBack = true;
+            }
+            else
+            {
+                target = collision.gameObject;
+                StartCoroutine(pushOut(shootFollower(collision.transform)));
+            }
             if (type == 1)
             {
                 GameController.Instance.gainExpChar(exp);
             }
+            if (type == 4)
+            {
+                PlayerController.Instance.healPlayer(percent);
+            }
             isActive = false;
-            StartCoroutine(pushOut(shootFollower(collision.transform)));
-        }  
-        if(collision.gameObject.tag == "Player" && isFlyBack)
+        }
+        if (collision.gameObject.tag == "Player" && isActive && type == 5)
+        {
+            GameObject[] respawns = GameObject.FindGameObjectsWithTag("Reward");
+            foreach (GameObject respawn in respawns)
+            {
+                respawn.GetComponent<ItemDropController>().activeAction();
+            }
+        }
+        if (collision.gameObject.tag == "Player" && isFlyBack)
         {
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
+        }
+        if (collision.gameObject.tag == "GoldBar" && isFlyBack)
+        {
+            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void activeAction()
+    {
+        if (isActive && type != 5)
+        {
+            if (type == 2)
+            {
+                target = GameObject.FindWithTag("GoldBar");
+                isFlyBack = true;
+            }
+            else
+            {
+                target = GameObject.FindWithTag("Player"); ;
+                StartCoroutine(pushOut(shootFollower(target.transform)));
+            }
+            if (type == 1)
+            {
+                GameController.Instance.gainExpChar(exp);
+            }
+            if (type == 4)
+            {
+                PlayerController.Instance.healPlayer(percent);
+            }
+            isActive = false;
         }
     }
 

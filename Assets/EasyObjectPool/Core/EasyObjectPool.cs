@@ -278,7 +278,7 @@ namespace MarchingBytes {
 					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
 						&& listObj[i] != en && delta.magnitude < 7f)
 					{
-						if (distance > delta.magnitude && delta.magnitude > 0.5f)
+						if (distance > delta.magnitude && delta.magnitude > 0.7f)
 						{
 							distance = delta.magnitude;
 							obj = i;

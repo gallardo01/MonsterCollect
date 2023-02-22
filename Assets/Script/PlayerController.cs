@@ -533,6 +533,15 @@ gameObject.transform.rotation);
         hpBar.transform.localScale = new Vector3(per, 1f, 1f);
     }
 
+    public void healPlayer(int amount)
+    {
+        int c = amount * currentHp / 100;
+        currentHp += c;
+        if (currentHp >= realData.Hp) currentHp = realData.Hp;
+        GameObject floatText = EasyObjectPool.instance.GetObjectFromPool("FloatingText", transform.position, transform.rotation);
+        floatText.GetComponent<FloatingText>().healPlayer(c);
+    }
+
     private Vector2 shootFollower(Transform en)
     {
         Vector2 vector = new Vector2(-gameObject.transform.position.x + en.transform.position.x, -gameObject.transform.position.y + en.transform.position.y);

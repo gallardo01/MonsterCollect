@@ -48,7 +48,6 @@ public class BossController : MonoBehaviour
     void Start()
     {
         initInfo(20);
-
         waypoints = new Vector2[]
         {
             new Vector2( 0, 0 ),
@@ -214,7 +213,8 @@ public class BossController : MonoBehaviour
 
             for (int i = 0; i < 5; i++)
             {
-                //GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position, transform.rotation);
+                GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
+                fileGround.GetComponent<ParticleSystem>().Play();
                 yield return new WaitForSeconds(1f);
 
             }

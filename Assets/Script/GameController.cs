@@ -55,9 +55,9 @@ public class GameController : Singleton<GameController>
         //btnQuit.onClick.AddListener(quitGame);
 
         //spawn crep
-        StartCoroutine(addEnemyFirstScene());
+        //StartCoroutine(addEnemyFirstScene());
         //addEnemy();
-        //addBoss();
+        addBoss();
     }
 
     public IEnumerator addEnemyFirstScene()
@@ -106,11 +106,11 @@ public class GameController : Singleton<GameController>
 
     private void addBoss()
     {
-        string enemyType = "Enemy" + (10);
+        string enemyType = "Enemy" + (20);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
 
-        boss.GetComponent<BossController>().initInfo(10);
-        boss.transform.localPosition = new Vector3(0, 0, 0);
+        boss.GetComponent<BossController>().initInfo(20);
+        boss.transform.localPosition = new Vector3(5, 5, 5);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
 

@@ -15,7 +15,6 @@ public class GameController : Singleton<GameController>
     public GameObject controller;
 
     public GameObject expBar;
-    public TextMeshProUGUI expText;
     public TextMeshProUGUI levelText;
     public GameObject bossController;
 
@@ -55,9 +54,9 @@ public class GameController : Singleton<GameController>
         //btnQuit.onClick.AddListener(quitGame);
 
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
+        StartCoroutine(addEnemyFirstScene());
         //addEnemy();
-        addBoss();
+        //addBoss();
     }
 
     public IEnumerator addEnemyFirstScene()
@@ -173,13 +172,10 @@ public class GameController : Singleton<GameController>
         {
             exp -= playerLevel * 1000;
             playerLevel++;
-            expText.text = exp + "/" + (playerLevel * 1000);
             levelText.text = playerLevel.ToString();
             PlayerController.Instance.gainLv(playerLevel);
             updateColorText();
-            pickSkillLevelUp();
         }
-        expText.text = exp + "/" + (playerLevel * 1000);
         float progres = (float)exp / (float)(playerLevel * 1000);
         StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
     }
@@ -325,6 +321,8 @@ public class GameController : Singleton<GameController>
                 if (current >= 1)
                 {
                     current = 1;
+                    expBar.GetComponent<Slider>().value = current;
+                    pickSkillLevelUp();
                 }
                 expBar.GetComponent<Slider>().value = current;
                 yield return new WaitForSeconds(0.03f);

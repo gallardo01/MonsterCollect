@@ -102,11 +102,15 @@ public class MonsterController : MonoBehaviour
         // drop hp
         if (Random.Range(0, 100) < 5)
         {
-            GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Hp", transform.position * 1.05f, transform.rotation);
-            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv * 2, 10 + monsterLv * 5));
+            GameObject hpObj = EasyObjectPool.instance.GetObjectFromPool("Hp", transform.position * 1.05f, transform.rotation);
+            hpObj.GetComponent<ItemDropController>().setHp(Random.Range(10, 31));
         }
         // drop magnet
-
+        if (Random.Range(0, 100) < 5)
+        {
+            GameObject hpObj = EasyObjectPool.instance.GetObjectFromPool("Magnet", transform.position * 1.05f, transform.rotation);
+            hpObj.GetComponent<ItemDropController>().setMagnet();
+        }
         // drop item
         if (Random.Range(0, 2000) < monsterLv)
         {

@@ -21,21 +21,29 @@ public class BulletController : MonoBehaviour
 
     void Update()
     {
-        if (target != null && (target.gameObject.GetComponent<MonsterController>().getIsDead() == false || id == 4))
+        if (target != null && target.tag == "Enemy")
         {
-            if(id == 4 && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
+            if (id != 1 && (target.gameObject.GetComponent<MonsterController>().getIsDead() == false || id == 4))
             {
-                target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                if (id == 4 && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
+                {
+                    target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                }
+                if (target != null && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
+                }
+                else
+                {
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
+                }
             }
-            if (target != null && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
-            } else
-            {
-                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                gameObject.SetActive(false);
-            }
-        } else
+        } else if(target != null && target.tag == "Boss")
+        {
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
+        }
+        else
         {
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);

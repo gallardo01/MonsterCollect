@@ -21,7 +21,7 @@ public class BulletController : MonoBehaviour
 
     void Update()
     {
-        if (target != null && (target.gameObject.GetComponent<MonsterController>().getIsDead() == false || id == 4))
+        if (target != null && id != 1 && (target.gameObject.GetComponent<MonsterController>().getIsDead() == false || id == 4))
         {
             if(id == 4 && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
             {

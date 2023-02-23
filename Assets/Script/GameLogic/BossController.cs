@@ -148,14 +148,7 @@ public class BossController : MonoBehaviour
                 //    StartCoroutine(castSkill());
                 //}
 
-                if (transform.position.x < player.position.x && facingRight == 0)
-                {
-                    flip();
-                }
-                else if (transform.position.x > player.position.x && facingRight == 1)
-                {
-                    flip();
-                }
+                faceToPlayer();
             }
             else if (wayMove == 2)
             {
@@ -214,8 +207,9 @@ public class BossController : MonoBehaviour
             for (int i = 0; i < 5; i++)
             {
                 GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
-                fileGround.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(returnObjectToPool(fileGround, 5f));
                 yield return new WaitForSeconds(1f);
+
 
             }
 
@@ -227,22 +221,39 @@ public class BossController : MonoBehaviour
             }
 
             runAnimation(1);
+
             isMove = false;
+
             for (int i = 0; i < 4; i++)
             {
                 flip();
                 yield return new WaitForSeconds(0.75f);
             }
+
             //phut lua
 
             playerLastPos = player.position;
 
+            for (int i = 0; i < 5; i++)
+            {
+                faceToPlayer();
+                runAnimation(3);
+                GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss", transform.position, transform.rotation);
+
+                Vector3 direction = Vector3.Normalize(player.position - transform.position);
+                fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction);
+
+
+                float angle = calAngle(player.transform, direction);
+                fileBullet.transform.Rotate(0, 0, angle);
+
+                yield return new WaitForSeconds(1f);
+
+            }
+
 
             isMove = true;
 
-            moveSpeed = 8f;
-
-            yield return new WaitForSeconds(1f);
         }
 
 
@@ -250,6 +261,15 @@ public class BossController : MonoBehaviour
 
     }
 
+
+    IEnumerator returnObjectToPool(GameObject gameObject, float timer)
+    {
+
+        yield return new WaitForSeconds(timer);
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        gameObject.SetActive(false);
+
+    }
 
 
     void init()
@@ -303,6 +323,18 @@ public class BossController : MonoBehaviour
         }
     }
 
+    void faceToPlayer()
+    {
+        if (transform.position.x < player.position.x && facingRight == 0)
+        {
+            flip();
+        }
+        else if (transform.position.x > player.position.x && facingRight == 1)
+        {
+            flip();
+        }
+    }
+
     IEnumerator replayAnimation()
     {
         yield return new WaitForSeconds(0.5f);
@@ -339,4 +371,29 @@ public class BossController : MonoBehaviour
         }
     }
 
+    private float calAngle(Transform en, Vector2 vector)
+    {
+        Vector2 cur = new Vector2(-1, 0);
+        float y = gameObject.transform.position.y;
+        float n = en.transform.position.y;
+        float angle = 0;
+
+        if (y <= n)
+            angle = 2 * AngleTo(cur, vector);
+        else
+            angle = -2 * AngleTo(cur, vector);
+
+        return angle;
+    }
+
+    private float AngleTo(Vector2 pos, Vector2 target)
+    {
+        Vector2 diference;
+        if (target.x > pos.x)
+            diference = target - pos;
+        else
+            diference = pos - target;
+        return Vector2.Angle(Vector2.right, diference);
+    }
+    
 }

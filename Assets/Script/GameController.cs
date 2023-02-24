@@ -54,9 +54,9 @@ public class GameController : Singleton<GameController>
         //btnQuit.onClick.AddListener(quitGame);
 
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
+        StartCoroutine(addEnemyFirstScene());
         //addEnemy();
-        addBoss();
+        //addBoss();
     }
 
     public IEnumerator addEnemyFirstScene()

@@ -31,6 +31,7 @@ public class MonsterController : MonoBehaviour
 
     void OnEnable()
     {
+        isMove = true;
         StartCoroutine(stopIdle());
     }
 
@@ -47,10 +48,25 @@ public class MonsterController : MonoBehaviour
         setText(id);
         setupWaypoints();
     }
+
+    public void initData(int id, bool useWaypoint)
+    {
+        isDead = false;
+        monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
+        wayMove = 2;
+
+        currentHp = monsterData.Hp;
+        setText(id);
+        isMove = true;
+        playerPos = GameObject.FindGameObjectsWithTag("Player")[0].transform;
+        runAnimation(2);
+    }
+
     public bool isFullHp()
     {
         return currentHp == monsterData.Hp;
     }
+
     public bool getIsDead()
     {
         return isDead;
@@ -186,7 +202,6 @@ public class MonsterController : MonoBehaviour
         int chance = Random.Range(0, 2);
         if (chance % 2 == 0)
         {
-            isMove = true;
             runAnimation(2);
             waypointIndex = Random.Range(0, 25);
             checkFlip();
@@ -267,57 +282,7 @@ public class MonsterController : MonoBehaviour
 
     private void runAnimation(int pos)
     {
-        ////idle
-        //if (pos == 1)
-        //{
-        //    if (monsterData.Id == 48)
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("IDLE");
-        //    }
-        //    else
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-        //    }
-        //}
-        ////move
-        //else if (pos == 2)
-        //{
-        //    if (monsterData.Id == 33 || monsterData.Id == 47 || monsterData.Id == 63)
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("Move");
-        //    }
-        //    else
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("move");
-        //    }
-        //}
-        ////attack
-        //else if (pos == 3)
-        //{
-        //    if (monsterData.Id == 18 || monsterData.Id == 63)
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attacl", 0.5f, 1);
-        //    }
-        //    else
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("attack", 0.5f, 1);
-        //    }
-        //    StartCoroutine(replayAnimation());
-        //}
-        //// die
-        //else if (pos == 4)
-        //{
-        //    if (monsterData.Id == 29 || monsterData.Id == 63 || monsterData.Id == 63)
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("newAnimation", 0.5f, 1);
-        //    }
-        //    else
-        //    {
-        //        GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 1f, 1);
-        //    }
-        //    StartCoroutine(disableObject());
-        //}
-
+      
 
         //fix stupid animation 
 

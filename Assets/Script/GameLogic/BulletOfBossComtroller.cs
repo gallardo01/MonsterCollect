@@ -10,6 +10,8 @@ public class BulletOfBossComtroller : MonoBehaviour
     private float speed = 5f;
     private Transform target;
     private Vector3 direction;
+    private int type = 0;
+    private MonsterData monsterData;
 
     
     // Start is called before the first frame update
@@ -24,13 +26,14 @@ public class BulletOfBossComtroller : MonoBehaviour
         }
     }
 
-    public void initBullet(Transform Target, Vector3 Direction)
+    public void initBullet(Transform Target, Vector3 Direction, float Speed, int type, MonsterData monsterData)
     {
         target = Target;
-
+        speed = Speed;
         direction = Direction;
+        this.type = type;
+        this.monsterData = monsterData;
         //direction = Vector3.Normalize(target.position -Source.position);
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -44,11 +47,25 @@ public class BulletOfBossComtroller : MonoBehaviour
 
         if (collision.gameObject.tag == "Player")
         {
-            GameController.Instance.addParticle(collision.gameObject, 1);
-            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-            gameObject.SetActive(false);
+            collision.gameObject.GetComponent<PlayerController>().setPlayerHurt(monsterData, type);
+
+            if (type == 1)
+            {
+                speed = 0f;
+                transform.position = collision.transform.position;
+
+                StartCoroutine( returnToPool(1f));
+
+            }
+            else
+            {
+                GameController.Instance.addParticle(collision.gameObject, 1);
+                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                gameObject.SetActive(false);
+            }
         }
     }
+
 
 
     IEnumerator returnToPool(float time)

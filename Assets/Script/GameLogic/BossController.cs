@@ -47,7 +47,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(20);
+        initInfo(30);
         waypoints = new Vector2[]
         {
             new Vector2( 0, 0 ),
@@ -74,6 +74,11 @@ public class BossController : MonoBehaviour
         level.text = "Lv." + id.ToString();
     }
 
+    public bool isRage()
+    {
+        return currentHp <= monsterData.Hp / 3;
+
+    }
     public void enemyHurt(MyHeroes heroes, int damePercent)
     {
         if (!isDead)
@@ -134,7 +139,7 @@ public class BossController : MonoBehaviour
     {
         if (isMove)
         {
-
+            // lao vao nguoi choi
             if(wayMove == 1)
             {
                 transform.position = Vector2.MoveTowards(transform.position,
@@ -150,11 +155,13 @@ public class BossController : MonoBehaviour
 
                 faceToPlayer();
             }
+            //nhay ra khoi man hinh
             else if (wayMove == 2)
             {
                 boxCollider2D.enabled = false;
                 transform.position = Vector2.MoveTowards(transform.position, new Vector3(transform.position.x, 20f, 0f), (moveSpeed * 30) * Time.deltaTime);
             }
+            //roi tu ngoai man hinh vao
             else if (wayMove == 3)
             {   
                 boxCollider2D.enabled = true;
@@ -241,7 +248,7 @@ public class BossController : MonoBehaviour
                 GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss", transform.position, transform.rotation);
 
                 Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction);
+                fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 0, monsterData);
 
 
                 float angle = calAngle(player.transform, direction);
@@ -256,7 +263,48 @@ public class BossController : MonoBehaviour
 
         }
 
+        else if (monsterData.Id == 30)
+        {
+            runAnimation(2);
+            wayMove = 1;
 
+            moveSpeed = 1;
+
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 10);
+
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+
+                runAnimation(3);
+
+                GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy14", transform.position, transform.rotation);
+                fellow.GetComponent<MonsterController>().initData(14,false);
+                fellow.GetComponent<MonsterController>().triggerWaypoints();
+
+
+                if (true)
+                {
+                    moveSpeed = 0;
+                    yield return new WaitForSeconds(1f);
+
+                    runAnimation(3);
+                    GameObject silkBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_silk_boss", transform.position, transform.rotation);
+
+                    Vector3 direction = Vector3.Normalize(player.position - transform.position);
+                    silkBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 15f, 1, monsterData);
+
+                    yield return new WaitForSeconds(1f);
+
+                    moveSpeed = 1;
+
+
+                }
+
+                isCast = false;
+            }
+        }
         StartCoroutine(castSkill());
 
     }

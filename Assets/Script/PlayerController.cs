@@ -504,6 +504,18 @@ gameObject.transform.rotation);
         yield return new WaitForSeconds(0.5f);
         canHurt = true;
     }
+
+    public void setPlayerHurt(MonsterData monsterData, int status)
+    {
+        // 1 root
+        if (status == 1)
+        {
+            rootPlayer();
+        }
+        // 2 stun
+
+        // 3 vua stun vua mat mau 
+    }
     private void reduceHealth(int amount)
     {
         string floatingText = "FloatingText";

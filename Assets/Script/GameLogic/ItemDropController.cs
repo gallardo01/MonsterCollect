@@ -67,16 +67,9 @@ public class ItemDropController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player" && isActive && type != 5)
         {
-            if (type == 2)
-            {
-                target = GameObject.FindWithTag("GoldBar");
-                isFlyBack = true;
-            }
-            else
-            {
-                target = collision.gameObject;
-                StartCoroutine(pushOut(shootFollower(collision.transform)));
-            }
+            target = collision.gameObject;
+            StartCoroutine(pushOut(shootFollower(collision.transform)));
+
             if (type == 1)
             {
                 GameController.Instance.gainExpChar(exp);
@@ -94,6 +87,7 @@ public class ItemDropController : MonoBehaviour
             {
                 respawn.GetComponent<ItemDropController>().activeAction();
             }
+            StartCoroutine(pushOutMagnet(shootFollower(collision.transform)));
         }
         if (collision.gameObject.tag == "Player" && isFlyBack)
         {
@@ -147,4 +141,14 @@ public class ItemDropController : MonoBehaviour
         isFlyBack = true;
         gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
     }
+
+    IEnumerator pushOutMagnet(Vector2 vector)
+    {
+        gameObject.GetComponent<Rigidbody2D>().AddForce(vector * 250);
+        yield return new WaitForSeconds(0.1f);
+        gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        gameObject.SetActive(false);
+    }
+
 }

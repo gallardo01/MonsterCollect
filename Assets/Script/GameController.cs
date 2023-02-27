@@ -4,26 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using MarchingBytes;
 using TMPro;
+using DG.Tweening;
 
 public class GameController : Singleton<GameController>
 {
-    public Button btnQuit;
+    [SerializeField] Button btnQuit;
 
-    public Canvas result;
-    public GameObject canvas;
-    public GameObject player;
-    public GameObject controller;
+    [SerializeField] Canvas result;
+    [SerializeField] GameObject canvas;
+    [SerializeField] GameObject player;
+    [SerializeField] GameObject controller;
 
-    public GameObject expBar;
-    public TextMeshProUGUI levelText;
-    public GameObject bossController;
+    [SerializeField] GameObject expBar;
+    [SerializeField] TextMeshProUGUI levelText;
+    [SerializeField] GameObject bossController;
 
-    public GameController deadPanel;
-    public Button revive;
-    public Button cancelRevive;
+    [SerializeField] GameController deadPanel;
+    [SerializeField] Button revive;
+    [SerializeField] Button cancelRevive;
 
-    public GameObject pickAbilityPanel;
-
+    [SerializeField] GameObject pickAbilityPanel;
+    [SerializeField] TextMeshProUGUI goldText;
     private int exp = 0;
     private int playerLevel = 1;
     private bool isSpawn = true;
@@ -57,6 +58,12 @@ public class GameController : Singleton<GameController>
         StartCoroutine(addEnemyFirstScene());
         //addEnemy();
         //addBoss();
+    }
+
+    public void updateGold(int gold)
+    {
+        goldAward += gold;
+        
     }
 
     public IEnumerator addEnemyFirstScene()

@@ -197,7 +197,6 @@ public class PlayerController : Singleton<PlayerController>
             if (typeRaw[i] > 0)
             {
                 int idSkill = typeRaw[i] - 6;
-                Debug.Log(idSkill + "  " + buffLevel[i]);
                 buffLevel[idSkill] = buffLv[i];
             }
         }
@@ -282,14 +281,14 @@ public class PlayerController : Singleton<PlayerController>
             Transform shootTargetObj = EasyObjectPool.instance.getNearestHitPosition(gameObject);
             GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
     locate.transform.rotation);
-            if (shootTarget != null)
+            if (shootTargetObj != null)
             {
                 shootTarget.transform.position = shootTargetObj.position + new Vector3(giveRandomFloatNumber(0.3f, 1f), giveRandomFloatNumber(0.3f, 1f), 0);
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.transform.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
             }
-            StartCoroutine(disableObject(5f, shootTarget));
+            StartCoroutine(disableObject(5f, shootTarget)); 
         }
         yield return new WaitForSeconds(timer[1]);
         StartCoroutine(thunder_1());

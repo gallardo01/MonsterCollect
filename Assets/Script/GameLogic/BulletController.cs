@@ -38,6 +38,9 @@ public class BulletController : MonoBehaviour
                     EasyObjectPool.instance.ReturnObjectToPool(gameObject);
                     gameObject.SetActive(false);
                 }
+            } else
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
             }
         } else if(target != null && target.tag == "Boss")
         {

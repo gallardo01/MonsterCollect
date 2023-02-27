@@ -21,7 +21,7 @@ public class BulletController : MonoBehaviour
 
     void Update()
     {
-        if (target != null && target.tag == "Enemy")
+        if (target != null && (target.tag == "Enemy"))
         {
             if (id != 1 && (target.gameObject.GetComponent<MonsterController>().getIsDead() == false || id == 4))
             {
@@ -42,7 +42,7 @@ public class BulletController : MonoBehaviour
             {
                 transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
             }
-        } else if(target != null && target.tag == "Boss")
+        } else if(target != null && (target.tag == "Boss" || target.tag == "Empty"))
         {
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
         }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7316896615406942057}
   - component: {fileID: 7316896615406071571}
   - component: {fileID: 8328247364800106266}
-  - component: {fileID: 1745769572521609743}
   - component: {fileID: 7691671693325103389}
   m_Layer: 0
   m_Name: Thunder_5
@@ -4648,27 +4647,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2
---- !u!50 &1745769572521609743
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7316896615392558589}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 0
 --- !u!114 &7691671693325103389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4682,9 +4660,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 5
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!1 &7316896615392559257
 GameObject:
   m_ObjectHideFlags: 0

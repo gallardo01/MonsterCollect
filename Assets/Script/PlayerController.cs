@@ -61,7 +61,7 @@ public class PlayerController : Singleton<PlayerController>
         initStart();
         levelText.text = playerLevel.ToString();
         updatePlayerData();
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 5; i++) {
             attackMonster(i);
         }
     }
@@ -275,6 +275,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     private IEnumerator thunder_1()
     {
+        yield return new WaitForSeconds(timer[1]/4);
         if (isPause == false && thunderType[1] > 0)
         {
             string bulletText = "Electric_2";
@@ -283,14 +284,13 @@ public class PlayerController : Singleton<PlayerController>
     locate.transform.rotation);
             if (shootTargetObj != null)
             {
-                shootTarget.transform.position = shootTargetObj.position + new Vector3(giveRandomFloatNumber(0.3f, 1f), giveRandomFloatNumber(0.3f, 1f), 0);
+                shootTarget.transform.position = shootTargetObj.position;
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.transform.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
             }
             StartCoroutine(disableObject(5f, shootTarget)); 
         }
-        yield return new WaitForSeconds(timer[1]);
         StartCoroutine(thunder_1());
     }
     private IEnumerator thunder_2()
@@ -526,7 +526,6 @@ gameObject.transform.rotation);
                 enemies[i].SetActive(false);
             }
         }
-        hpText.text = currentHp.ToString();
         float per = (float)currentHp / data.Hp;
         hpText.text = currentHp.ToString();
         hpBar.transform.localScale = new Vector3(per, 1f, 1f);
@@ -539,6 +538,9 @@ gameObject.transform.rotation);
         if (currentHp >= realData.Hp) currentHp = realData.Hp;
         GameObject floatText = EasyObjectPool.instance.GetObjectFromPool("FloatingText", transform.position, transform.rotation);
         floatText.GetComponent<FloatingText>().healPlayer(c);
+        float per = (float)currentHp / data.Hp;
+        hpText.text = currentHp.ToString();
+        hpBar.transform.localScale = new Vector3(per, 1f, 1f);
     }
 
     private Vector2 shootFollower(Transform en)
@@ -570,5 +572,18 @@ gameObject.transform.rotation);
         else
             diference = pos - target;
         return Vector2.Angle(Vector2.right, diference);
+    }
+
+    public void rootPlayer()
+    {
+        StartCoroutine(slowSpeed());
+    }
+
+    private IEnumerator slowSpeed()
+    {
+        int cacheSpeed = realData.Speed;
+        realData.Speed = 0;
+        yield return new WaitForSeconds(1f);
+        realData.Speed = cacheSpeed;
     }
 }

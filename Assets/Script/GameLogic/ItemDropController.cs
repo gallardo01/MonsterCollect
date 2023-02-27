@@ -5,6 +5,7 @@ using MarchingBytes;
 
 public class ItemDropController : MonoBehaviour
 {
+    [SerializeField] GameObject goldBar;
     private GameObject target;
     bool isActive = true;
     bool isFlyBack = false;
@@ -13,6 +14,7 @@ public class ItemDropController : MonoBehaviour
     private int gold = 0;
     private int percent = 0;
     private ItemInventory itemAward;
+    private float speed = 0.035f;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,7 @@ public class ItemDropController : MonoBehaviour
     {
         type = 2;
         gold = g;
+        target = GameObject.FindWithTag("GoldBar");
     }
    
     public void setItem(ItemInventory item)
@@ -52,7 +55,7 @@ public class ItemDropController : MonoBehaviour
     {
         if (target != null && isFlyBack)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, 0.035f);
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
         }
 
     }
@@ -65,7 +68,7 @@ public class ItemDropController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && isActive && type != 5)
+        if (collision.gameObject.tag == "Player" && isActive && type != 5 && type != 2)
         {
             target = collision.gameObject;
             StartCoroutine(pushOut(shootFollower(collision.transform)));
@@ -80,7 +83,7 @@ public class ItemDropController : MonoBehaviour
             }
             isActive = false;
         }
-        if (collision.gameObject.tag == "Player" && isActive && type == 5)
+        else if (collision.gameObject.tag == "Player" && isActive && type == 5)
         {
             GameObject[] respawns = GameObject.FindGameObjectsWithTag("Reward");
             foreach (GameObject respawn in respawns)
@@ -89,13 +92,20 @@ public class ItemDropController : MonoBehaviour
             }
             StartCoroutine(pushOutMagnet(shootFollower(collision.transform)));
         }
-        if (collision.gameObject.tag == "Player" && isFlyBack)
+        else if (collision.gameObject.tag == "Player" && isActive && type == 2)
+        {
+            target = GameObject.FindWithTag("GoldBar");
+            speed = 1f;
+            isFlyBack = true;
+        }
+        else if (collision.gameObject.tag == "Player" && (isFlyBack) && type != 2)
         {
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
-        if (collision.gameObject.tag == "GoldBar" && isFlyBack)
+        else if (collision.gameObject.tag == "GoldBar" && isFlyBack)
         {
+            GameController.Instance.updateGold(gold);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }

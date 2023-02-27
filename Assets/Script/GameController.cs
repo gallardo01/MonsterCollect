@@ -63,7 +63,17 @@ public class GameController : Singleton<GameController>
     public void updateGold(int gold)
     {
         goldAward += gold;
+        goldText.text = goldAward.ToString();
+        string floatingText = "FloatingText";
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, goldText.transform.position - new Vector3(0f, 1f, 0f), transform.rotation);
+        particle.transform.SetParent(goldText.transform);
+        particle.GetComponent<FloatingText>().showGold(gold);
+    }
+
+    private void tweenText()
+    {
         
+
     }
 
     public IEnumerator addEnemyFirstScene()
@@ -108,6 +118,7 @@ public class GameController : Singleton<GameController>
     private void initInfo()
     {
         expBar.GetComponent<Slider>().value = 0;
+        updateGold(0);
     }
 
     private void addBoss()

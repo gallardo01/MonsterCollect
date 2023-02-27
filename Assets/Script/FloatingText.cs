@@ -52,6 +52,11 @@ public class FloatingText : MonoBehaviour
         StartCoroutine(disableFloating());
     }
 
+    public void showGold(int gold)
+    {
+        text.text = "+" + gold.ToString();
+        text.color = Color.yellow;
+    }
     private IEnumerator disableFloating()
     {
         yield return new WaitForSeconds(1f);

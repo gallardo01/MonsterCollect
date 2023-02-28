@@ -182,6 +182,10 @@ public class BossController : MonoBehaviour
     {
         if (monsterData.Id == 10)
         {
+            if (isRage())
+            {
+                rate = 4f;
+            }
             yield return new WaitForSeconds(2f);
             int chance = Random.Range(0, 10);
             if (chance <= rate && !isCast)
@@ -284,7 +288,7 @@ public class BossController : MonoBehaviour
                 fellow.GetComponent<MonsterController>().triggerWaypoints();
 
 
-                if (true)
+                if (isRage())
                 {
                     moveSpeed = 0;
                     yield return new WaitForSeconds(1f);

@@ -764,6 +764,11 @@ public class UltimateJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler
 		return VerticalAxis;
 	}
 
+	public void resetAxis()
+    {
+		HorizontalAxis = 0;
+		VerticalAxis = 0;
+    }
 	/// <summary>
 	/// Returns a value of -1, 0 or 1 representing the raw horizontal value of the Ultimate Joystick.
 	/// </summary>
@@ -905,7 +910,10 @@ public class UltimateJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler
 		// Disable the gameObject.
 		gameObject.SetActive( false );
 	}
-
+	public void resetJoystickController()
+    {
+		joystick.position = joystickCenter;
+	}
 	/// <summary>
 	/// Enables the Ultimate Joystick.
 	/// </summary>
@@ -1038,6 +1046,13 @@ public class UltimateJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler
 			return;
 
 		UltimateJoysticks[ joystickName ].EnableJoystick();
+	}
+	public static void ResetJoystick(string joystickName)
+	{
+		if (!JoystickConfirmed(joystickName))
+			return;
+
+		UltimateJoysticks[joystickName].resetAxis();
 	}
 	/* ------------------------------------------- *** END STATIC FUNCTIONS FOR THE USER *** ------------------------------------------- */
 }

@@ -42,8 +42,8 @@ public class PlayerController : Singleton<PlayerController>
     private int[] waterType = { 1, 0, 0, 0, 0, 0 };
     private int[] fireType = { 1, 0, 0, 0, 0, 0 };
 
-    public int[] dameSkill = { 0, 0, 0, 0, 0, 0 };
-    public int[] skillLevel = { 1, 0, 0, 0, 0, 0 };
+    private int[] dameSkill = { 0, 0, 0, 0, 0, 0 };
+    private int[] skillLevel = { 1, 0, 0, 0, 0, 0 };
     private float[] timer = { 0, 0, 0, 0, 0, 0 };
 
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
@@ -439,10 +439,6 @@ gameObject.transform.rotation);
             StartCoroutine(deadAnimation());
         }
     }
-    public void reviveUser()
-    {
-
-    }
     IEnumerator deadAnimation()
     {
         canMove = false;
@@ -451,7 +447,7 @@ gameObject.transform.rotation);
         GetComponent<DragonBones.UnityArmatureComponent>().animation.Stop();
         yield return new WaitForSeconds(2f);
         GameFlowController.Instance.userDeath();
-        this.enabled = false;
+        isPause = true;
     }
 
     IEnumerator replayAnimation()
@@ -534,7 +530,7 @@ gameObject.transform.rotation);
             //dead
             GameController.Instance.setSpawn(false);
             canHurt = false;
-            StopAllCoroutines();
+            //StopAllCoroutines();
             runAnimation(4);
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             for (int i = 0; i < enemies.Length; i++)
@@ -546,26 +542,35 @@ gameObject.transform.rotation);
         hpText.text = currentHp.ToString();
         hpBar.transform.localScale = new Vector3(per, 1f, 1f);
     }
-
+    public void revivePlayer()
+    {
+        canMove = true;
+        joystick.SetActive(true);
+        isPause = false;
+        currentHp = data.Hp;
+        GameController.Instance.setSpawn(true);
+        UltimateJoystick.ResetJoystick("Movement");
+        runAnimation(1);
+    }
     public void healPlayer(int amount)
     {
-        int c = amount * currentHp / 100;
-        currentHp += c;
+        int healHp = amount * currentHp / 100;
+        int previousHp = currentHp;
+        currentHp += healHp;
         if (currentHp >= realData.Hp) currentHp = realData.Hp;
+        int actualHeal = currentHp - previousHp;
         GameObject floatText = EasyObjectPool.instance.GetObjectFromPool("FloatingText", transform.position, transform.rotation);
-        floatText.GetComponent<FloatingText>().healPlayer(c);
+        floatText.GetComponent<FloatingText>().healPlayer(actualHeal);
         float per = (float)currentHp / data.Hp;
         hpText.text = currentHp.ToString();
         hpBar.transform.localScale = new Vector3(per, 1f, 1f);
     }
-
     private Vector2 shootFollower(Transform en)
     {
         Vector2 vector = new Vector2(-gameObject.transform.position.x + en.transform.position.x, -gameObject.transform.position.y + en.transform.position.y);
         vector = vector.normalized;
         return vector;
     }
-
     private float calAngle(Transform en, Vector2 vector)
     {
         Vector2 cur = new Vector2(-1, 0);

@@ -35,10 +35,10 @@ public class ItemDropController : MonoBehaviour
         speed = 1f;
     }
    
-    public void setItem(ItemInventory item)
+    public void setItem()
     {
         type = 3;
-        itemAward = item;
+        itemAward = ItemDatabase.Instance.dropItem();
     }
 
     public void setHp(int p)
@@ -51,7 +51,6 @@ public class ItemDropController : MonoBehaviour
     {
         type = 5;
     }
-
     private void Update()
     {
         if (target != null && isFlyBack)
@@ -81,6 +80,10 @@ public class ItemDropController : MonoBehaviour
             if (type == 4)
             {
                 PlayerController.Instance.healPlayer(percent);
+            }
+            if (type == 3)
+            {
+                GameController.Instance.addItemToDb(itemAward);
             }
             isActive = false;
         }
@@ -144,7 +147,6 @@ public class ItemDropController : MonoBehaviour
         vector = vector.normalized;
         return vector;
     }
-
     IEnumerator pushOut(Vector2 vector)
     {
         gameObject.GetComponent<Rigidbody2D>().AddForce(vector * 350);

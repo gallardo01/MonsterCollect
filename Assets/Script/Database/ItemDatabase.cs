@@ -218,6 +218,8 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_1 = 0;
             item.Stats_2 = 0;
             item.Stats_3 = 0;
+            item.Stats_4 = 0;
+
             int index = fetchInventoryByIndex(id);
             if (index == -1)
             {
@@ -303,6 +305,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_1 = 0;
             item.Stats_2 = 0;
             item.Stats_3 = 0;
+            item.Stats_4 = 0;
             int index = fetchInventoryByIndex(id);
             if (index == -1)
             {
@@ -331,7 +334,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_2 = 0;
             item.Stats_3 = 0;
             item.Stats_4 = 0;
-
             if (item.Rarity >= 1)
             {
                 int randomValue = Random.Range(1, 7);           
@@ -378,6 +380,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_1 = 0;
             item.Stats_2 = 0;
             item.Stats_3 = 0;
+            item.Stats_4 = 0;
             item.Slot = slot;
             return item;
         }
@@ -449,10 +452,26 @@ public class ItemDatabase : Singleton<ItemDatabase>
         } else
         {
             int id = Random.Range(10, 34);
-            return getItemObject(id, 1, 1);
+            return getItemObject(id, 1, returnRandomRarity());
         }
     }
-
+    private int returnRandomRarity()
+    {
+        int chance = Random.Range(0, 100);
+        if(chance <= 60)
+        {
+            return 1;
+        } else if(chance <= 85)
+        {
+            return 2;
+        } else if(chance <= 95)
+        {
+            return 3;
+        } else
+        {
+            return 4;
+        }
+    }
     private int returnRandomStats(int stat)
     {
         switch (stat)

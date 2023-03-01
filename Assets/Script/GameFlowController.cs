@@ -6,31 +6,26 @@ using TMPro;
 
 public class GameFlowController : Singleton<GameFlowController>
 {
-    public GameObject dead;
-    public TextMeshProUGUI countdown;
-    public Button watchAds;
-    public Button closeBtn;
-    public GameObject sumaryObj;
+    [SerializeField] GameObject dead;
+    [SerializeField] TextMeshProUGUI countdown;
+    [SerializeField] Button watchAds;
+    [SerializeField] Button closeBtn;
+    [SerializeField] GameObject sumaryObj;
+    [SerializeField] Button acceptRevive;
+    [SerializeField] Button cancelRevive;
     private bool isAction = true;
 
     int variable_progress = 0;
     int variable_stage = 0;
     int variable_gold = 0;
-    ItemInventory[] variable_rewards;
+    List<ItemInventory> rewards = new List<ItemInventory>();
 
     // Start is called before the first frame update
     void Start()
     {
-        List<ItemInventory> rewards = new List<ItemInventory>();
-        rewards.Add(ItemDatabase.Instance.getItemObject(30, 1, 2));
-        rewards.Add(ItemDatabase.Instance.getItemObject(30, 1, 2));
-        rewards.Add(ItemDatabase.Instance.getItemObject(30, 1, 2));
-        rewards.Add(ItemDatabase.Instance.getItemObject(30, 1, 2));
-        rewards.Add(ItemDatabase.Instance.getItemObject(30, 1, 2));
-        rewards.Add(ItemDatabase.Instance.getItemObject(30, 1, 2));
-        initData(60, 4, 3000, rewards.ToArray());
-
         closeBtn.onClick.AddListener(() => closeButton());
+        acceptRevive.onClick.AddListener(() => reviveButton());
+        cancelRevive.onClick.AddListener(() => cancelReviveAction());
     }
 
     public void userDeath()
@@ -38,14 +33,13 @@ public class GameFlowController : Singleton<GameFlowController>
         StartCoroutine(revive());
     }
 
-    public void initData(int progress, int stage, int gold, ItemInventory[] rewards)
+    public void initData(int progress, int stage, int gold, List<ItemInventory> listRewards)
     {
         variable_progress = progress;
         variable_stage = stage;
         variable_gold = gold;
-        variable_rewards = rewards;
+        rewards = listRewards;
     }
-
     IEnumerator revive()
     {
         dead.SetActive(true);
@@ -61,18 +55,23 @@ public class GameFlowController : Singleton<GameFlowController>
     }
     private void reviveButton()
     {
-
+        dead.SetActive(false);
+        isAction = false;
+        PlayerController.Instance.revivePlayer();
+    }
+    private void cancelReviveAction()
+    {
+        closeButton();
     }
     private void closeButton()
     {
         isAction = false;
-        endGame(variable_progress, variable_stage, variable_gold, variable_rewards);
+        endGame(variable_progress, variable_stage, variable_gold, rewards);
         dead.SetActive(false);
     }
-
-    public void endGame(int progress, int stage, int gold, ItemInventory[] rewards)
+    public void endGame(int progress, int stage, int gold, List<ItemInventory> listItem)
     {
         sumaryObj.SetActive(true);
-        sumaryObj.GetComponent<SumaryController>().initEndingData(progress, stage, gold, rewards);
+        sumaryObj.GetComponent<SumaryController>().initEndingData(progress, stage, gold, listItem);
     }
 }

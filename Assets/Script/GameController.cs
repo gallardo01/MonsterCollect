@@ -19,10 +19,6 @@ public class GameController : Singleton<GameController>
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] GameObject bossController;
 
-    [SerializeField] GameController deadPanel;
-    [SerializeField] Button revive;
-    [SerializeField] Button cancelRevive;
-
     [SerializeField] GameObject pickAbilityPanel;
     [SerializeField] TextMeshProUGUI goldText;
 
@@ -31,6 +27,7 @@ public class GameController : Singleton<GameController>
     private int playerLevel = 1;
     private bool isSpawn = true;
 
+    private int stage = 1;
     private int enemyLv = 1;
     private int countEnemy = 1;
 
@@ -46,8 +43,8 @@ public class GameController : Singleton<GameController>
 
     private bool isBossSpawn = true;
 
-    public Sprite[] sheetTextures;
-    public string[] sheetNames;
+    //private Sprite[] sheetTextures;
+    //private string[] sheetNames;
 
     // Start is called before the first frame update
     void Start()
@@ -68,8 +65,6 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         //addBoss();
         levelText.text = playerLevel.ToString();
-        //btnQuit.onClick.AddListener(quitGame);
-
         //spawn crep
         StartCoroutine(addEnemyFirstScene());
         //addEnemy();
@@ -94,13 +89,10 @@ public class GameController : Singleton<GameController>
         particle.transform.SetParent(goldText.transform);
         particle.GetComponent<FloatingText>().showGold(gold);
     }
-
     private void tweenText()
     {
-        
 
     }
-
     public IEnumerator addEnemyFirstScene()
     {
         for (int i = 0; i < 5; i++)
@@ -110,7 +102,6 @@ public class GameController : Singleton<GameController>
         yield return new WaitForSeconds(1f);
         StartCoroutine(respawnEnemyDuringTime());
     }
-
     public int getEnemyLv()
     {
         return enemyLv;
@@ -118,34 +109,35 @@ public class GameController : Singleton<GameController>
     private IEnumerator respawnEnemyDuringTime()
     {
         yield return new WaitForSeconds(1.5f);
-        if (isSpawn)
+        if (isSpawn && isBossSpawn)
         {
             addEnemy();
-            if (countEnemy % 20 == 0)
+            if (countEnemy / 20 == enemyLv)
             {
                 enemyLv++;
             }
         }
         if (enemyLv >= 10)
         {
-            if (isBossSpawn)
-            {
-                isBossSpawn = false;
-                addBoss();
-            }
+            isSpawn = false;
+            StartCoroutine(spawnBoss());
         }
         else
         {
             StartCoroutine(respawnEnemyDuringTime());
         }
     }
-
+    IEnumerator spawnBoss()
+    {
+        yield return new WaitForSeconds(10f);
+        isBossSpawn = false;
+        addBoss();
+    }
     private void initInfo()
     {
         expBar.GetComponent<Slider>().value = 0;
         updateGold(0);
     }
-
     private void addBoss()
     {
         string enemyType = "Enemy" + (20);
@@ -155,7 +147,6 @@ public class GameController : Singleton<GameController>
         boss.transform.localPosition = new Vector3(5, 5, 5);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }
-
     public void setSpawn(bool logic)
     {
         isSpawn = logic;
@@ -193,6 +184,10 @@ public class GameController : Singleton<GameController>
             addEnemy();
         }
     }
+    public void addItemToDb(ItemInventory item)
+    {
+        itemAward.Add(item);
+    }
     private void updateColorText()
     {
         GameObject[] gos;
@@ -207,7 +202,6 @@ public class GameController : Singleton<GameController>
         exp += num;
         updateProgressBar(exp >= playerLevel * 1000);
     }
-
     private void updateProgressBar(bool levelUp)
     {
         //expBar.GetComponent<Slider>().value = progres;
@@ -295,18 +289,22 @@ public class GameController : Singleton<GameController>
         pickAbilityPanel.SetActive(true);
         pickAbilityPanel.GetComponent<PickAbilityController>().initSkillData(currentSkill, skillLevel, currentBuff, buffLevel, type, playerType);
     }
-
     public void pickSkill(int id)
     {
         Time.timeScale = 1;
         // heal
         if (id == -1)
         {
-
+            PlayerController.Instance.healPlayer(100);
         }
         else if (id == -2) // gold
         {
-
+            int bonusGold = Random.Range(0, 200);
+            if(Random.Range(0,10) == 9)
+            {
+                bonusGold += Random.Range(0, 800);
+            }
+            updateGold(bonusGold);
         }
         else if (id > 0) // skill 
         {
@@ -353,7 +351,6 @@ public class GameController : Singleton<GameController>
             }
         }
     }
-
     private IEnumerator animationprogressBar(float current, float last, bool lvUp)
     {
         if (lvUp)
@@ -384,7 +381,6 @@ public class GameController : Singleton<GameController>
             yield return new WaitForSeconds(0.03f);
         }
     }
-
     public int getLevel()
     {
         return playerLevel;
@@ -415,18 +411,13 @@ public class GameController : Singleton<GameController>
         EasyObjectPool.instance.ReturnObjectToPool(obj);
         obj.SetActive(false);
     }
-
-    void quitGame()
-    {
-        controller.SetActive(false);
-        canvas.SetActive(false);
-        player.SetActive(false);
-        result.gameObject.SetActive(true);
-    }
-
     public void addAwardToInventory(int gold, ItemInventory item)
     {
         goldAward += gold;
         itemAward.Add(item);
+    }
+    public void updateEndGameInformation()
+    {
+        GameFlowController.Instance.initData(countEnemy, stage, goldAward, itemAward);
     }
 }

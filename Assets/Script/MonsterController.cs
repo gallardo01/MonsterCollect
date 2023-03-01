@@ -129,9 +129,10 @@ public class MonsterController : MonoBehaviour
             hpObj.GetComponent<ItemDropController>().setMagnet();
         }
         // drop item
-        if (Random.Range(0, 2000) < monsterLv)
+        if (Random.Range(0, 200) < monsterLv * 10 % 10)
         {
-
+            GameObject hpObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+            hpObj.GetComponent<ItemDropController>().setItem();
         }
     }
 

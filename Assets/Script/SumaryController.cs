@@ -22,7 +22,7 @@ public class SumaryController : MonoBehaviour
 
     }
 
-    public void initEndingData(int progress, int stage, int gold, ItemInventory[] rewards)
+    public void initEndingData(int progress, int stage, int gold, List<ItemInventory> rewards)
     {
         hide.SetActive(false);
         //Time.timeScale = 0;
@@ -42,7 +42,7 @@ public class SumaryController : MonoBehaviour
         StartCoroutine(animationItem(gold, rewards));
     }
 
-    IEnumerator animationItem(int gold, ItemInventory[] rewards)
+    IEnumerator animationItem(int gold, List<ItemInventory> rewards)
     {
         int num = -1;
         if (gold > 0)
@@ -52,7 +52,7 @@ public class SumaryController : MonoBehaviour
             item[num].GetComponent<InflateItemRewards>().inflateGoldItem(gold);
         }
         yield return new WaitForSeconds(0.5f);
-        for (int i = 0; i < rewards.Length; i++)
+        for (int i = 0; i < rewards.Count; i++)
         {
             item[i + num + 1].SetActive(true);
             item[i + num + 1].gameObject.GetComponent<InflateItemRewards>().inflateItem(rewards[i]);

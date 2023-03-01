@@ -97,6 +97,10 @@ public class PlayerController : Singleton<PlayerController>
         realData.Crit = realData.Crit * (100 + bonusPoints[5]) / 100;
         realData.Speed = realData.Speed * (100 + bonusPoints[6]) / 100;
     }
+    public int getBonusPoints(int i)
+    {
+        return bonusPoints[i];
+    }
     public void gainLv(int lv)
     {
         playerLevel = lv;

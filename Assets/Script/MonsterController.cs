@@ -86,6 +86,7 @@ public class MonsterController : MonoBehaviour
         if (!isDead)
         {
             int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
+            int type = MathController.Instance.getTypeValue(heroes, monsterData);
             int actualDame = Mathf.Abs(dame);
             currentHp -= actualDame;
             if (currentHp <= 0)
@@ -99,8 +100,8 @@ public class MonsterController : MonoBehaviour
             }
             disableObject();
             string floatingText = "FloatingText";
-            GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
-            particle.GetComponent<FloatingText>().disableObject(dame);
+            GameObject floatText = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
+            floatText.GetComponent<FloatingText>().disableObject(dame, type);
         }
     }
 
@@ -137,7 +138,7 @@ public class MonsterController : MonoBehaviour
     private int returnExpGet(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        return ((lv % 10) + 2) * 150;
+        return ((lv % 10) + 2) * 150 * (PlayerController.Instance.getBonusPoints(9) + 100) / 100;
     }
 
 

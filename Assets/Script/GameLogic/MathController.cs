@@ -30,6 +30,10 @@ public class MathController : Singleton<MathController>
         int critRate = percentageCrit(heroesData.Crit);
         int armourRate = percentageArmour(monsterData.Armour);
         float typeRate = type[heroesData.Type, monsterData.Type];
+        if(typeRate > 1)
+        {
+            typeRate += (float)PlayerController.Instance.getBonusPoints(7) / 10;
+        }
         if (Random.Range(0, 100) < critRate)
         {
             hp = 100 + heroesData.Atk * skillDame / 100f * typeRate * 2f * (100 - armourRate) * 0.3f / 100f + heroesData.Atk * heroesData.Atk / 3000 * skillDame / 100f * typeRate * 2f * (100 - armourRate) * 0.3f / 100f;
@@ -38,6 +42,21 @@ public class MathController : Singleton<MathController>
         {
             hp = -100 + (-heroesData.Atk) * skillDame / 100f * typeRate * (100 - armourRate) * 0.3f / 100f - heroesData.Atk * heroesData.Atk / 3000 * skillDame / 100f * typeRate * (100 - armourRate) * 0.3f / 100f; 
             return (int)hp;
+        }
+    }
+    public int getTypeValue(MyHeroes heroesData, MonsterData monsterData)
+    {
+        float typeRate = type[heroesData.Type, monsterData.Type];
+        if (typeRate == 1f)
+        {
+            return 0;
+        } else if (typeRate > 1f)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
         }
     }
 

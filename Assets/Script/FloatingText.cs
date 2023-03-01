@@ -35,7 +35,7 @@ public class FloatingText : MonoBehaviour
         text.fontSize = 5;
         text.color = Color.yellow;
     }
-    public void disableObject(int dame)
+    public void disableObject(int dame, int type)
     {
         int actualDame = Mathf.Abs(dame);
         if (dame > 0)

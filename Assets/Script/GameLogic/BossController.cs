@@ -84,6 +84,7 @@ public class BossController : MonoBehaviour
         if (!isDead)
         {
             int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
+            int typeValue = MathController.Instance.getTypeValue(heroes, monsterData);
             int actualDame = Mathf.Abs(dame);
             currentHp -= actualDame;
             Debug.Log(currentHp);
@@ -98,8 +99,8 @@ public class BossController : MonoBehaviour
             }
             disableObject();
             string floatingText = "FloatingText";
-            GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
-            particle.GetComponent<FloatingText>().disableObject(dame);
+            GameObject floatText = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
+            floatText.GetComponent<FloatingText>().disableObject(dame, typeValue);
         }
     }
 

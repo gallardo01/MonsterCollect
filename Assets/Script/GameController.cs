@@ -62,10 +62,10 @@ public class GameController : Singleton<GameController>
 
     public void updateGold(int gold)
     {
-        goldAward += gold;
+        goldAward += gold * (100 + PlayerController.Instance.getBonusPoints(8))/100;
         goldText.text = goldAward.ToString();
         string floatingText = "FloatingText";
-        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, goldText.transform.position - new Vector3(0f, 1f, 0f), transform.rotation);
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, goldText.transform.position - new Vector3(0f, 0.5f, 0f), transform.rotation);
         particle.transform.SetParent(goldText.transform);
         particle.GetComponent<FloatingText>().showGold(gold);
     }

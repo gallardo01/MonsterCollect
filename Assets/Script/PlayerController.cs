@@ -15,7 +15,7 @@ public class PlayerController : Singleton<PlayerController>
 
     [SerializeField] GameObject locate;
     [SerializeField] GameObject joystick;
-
+        
     public GameObject runSmoke;
     public GameObject SmokePos;
     private int currentHp;

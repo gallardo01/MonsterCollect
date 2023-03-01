@@ -40,15 +40,26 @@ public class FloatingText : MonoBehaviour
         int actualDame = Mathf.Abs(dame);
         if (dame > 0)
         {
-            text.fontSize = 5;
-            text.color = Color.yellow;
+            text.fontSize = 4;
+            text.text = "<sprite=0>" + actualDame.ToString();
         }
         else
         {
             text.fontSize = 3;
+            text.text = actualDame.ToString();
+        }
+        if (type < 0)
+        {
+            text.color = Color.gray;
+        }
+        else if (type > 0)
+        {
+            text.color = Color.magenta;
+        }
+        else
+        {
             text.color = Color.white;
         }
-        text.text = actualDame.ToString();
         StartCoroutine(disableFloating());
     }
 

@@ -25,6 +25,8 @@ public class GameController : Singleton<GameController>
 
     [SerializeField] GameObject pickAbilityPanel;
     [SerializeField] TextMeshProUGUI goldText;
+
+    [SerializeField] Image iconImage;
     private int exp = 0;
     private int playerLevel = 1;
     private bool isSpawn = true;
@@ -43,9 +45,23 @@ public class GameController : Singleton<GameController>
     private int[] availableOption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     private bool isBossSpawn = true;
+
+    public Sprite[] sheetTextures;
+    public string[] sheetNames;
+
     // Start is called before the first frame update
     void Start()
     {
+        //sheetTextures = Resources.LoadAll<Sprite>("UI/Sprites/Stat");
+        //sheetNames = new string[sheetTextures.Length];
+        //for (int i = 0; i < sheetNames.Length; i++)
+        //{
+        //    sheetNames[i] = sheetTextures[i].name;
+        //}
+        //int textureIndex = TextureIndexLookUp(sheetNames, "Stat_3");
+
+        //iconImage.sprite = Resources.LoadAll<Sprite>("UI/Sprites/Stat")[textureIndex];
+
         // get stage
         enemyLv = 1;
         initInfo();
@@ -59,7 +75,16 @@ public class GameController : Singleton<GameController>
         //addEnemy();
         //addBoss();
     }
-
+    //private int TextureIndexLookUp(string[] nameArray, string spriteName)
+    //{
+    //    // Return sprite's texture index based on given spriteName
+    //    for (int i = 0; i < nameArray.Length; i++)
+    //    {
+    //        if (nameArray[i] == spriteName)
+    //            return i;
+    //    }
+    //    return 0;
+    //}
     public void updateGold(int gold)
     {
         goldAward += gold * (100 + PlayerController.Instance.getBonusPoints(8))/100;

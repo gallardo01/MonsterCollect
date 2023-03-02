@@ -79,7 +79,7 @@ public class BulletOfBossComtroller : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.tag == "Boss")
+        if (collision.gameObject.tag == "Boss" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "Bullet")
         {
             if (type == 2) // ice spike
             {
@@ -91,7 +91,7 @@ public class BulletOfBossComtroller : MonoBehaviour
                     //dir[i] = Quaternion.Euler(ran, ran, 0) * dir[i];
 
                     Vector3 temp = new Vector3(dir[i].x * Mathf.Cos(ran) + dir[i].y * Mathf.Sin(ran), -dir[i].x * Mathf.Sin(ran) + dir[i].y * Mathf.Cos(ran), 0);
-                    Debug.Log(Vector3.Normalize(temp));
+                    //Debug.Log(Vector3.Normalize(temp));
 
                     Vector3 direction = Vector3.Normalize(temp);
                     iceFrag.GetComponent<BulletOfBossComtroller>().initBullet(target, direction, 5f, 0, monsterData);
@@ -110,6 +110,44 @@ public class BulletOfBossComtroller : MonoBehaviour
     }
 
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall")
+        {
+            GameController.Instance.addParticle(collision.gameObject, 1);
+            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+            gameObject.SetActive(false);
+        }
+
+        if (collision.gameObject.tag == "Bullet")
+        {
+            if (type == 2) // ice spike
+            {
+                int ran = Random.Range(-30, 0);
+
+                for (int i = 0; i < 6; i++)
+                {
+                    GameObject iceFrag = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_fragment", transform.position, transform.rotation);
+                    //dir[i] = Quaternion.Euler(ran, ran, 0) * dir[i];
+
+                    Vector3 temp = new Vector3(dir[i].x * Mathf.Cos(ran) + dir[i].y * Mathf.Sin(ran), -dir[i].x * Mathf.Sin(ran) + dir[i].y * Mathf.Cos(ran), 0);
+                    //Debug.Log(Vector3.Normalize(temp));
+
+                    Vector3 direction = Vector3.Normalize(temp);
+                    iceFrag.GetComponent<BulletOfBossComtroller>().initBullet(target, direction, 5f, 0, monsterData);
+
+                    float angle = Mathf.Atan2(-dir[i].x * Mathf.Sin(ran) + dir[i].y * Mathf.Cos(ran), dir[i].x * Mathf.Cos(ran) + dir[i].y * Mathf.Sin(ran));
+                    iceFrag.transform.Rotate(0, 0, angle * 180 / Mathf.PI);
+                }
+
+                GameController.Instance.addParticle(collision.gameObject, 1);
+                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                gameObject.SetActive(false);
+
+
+            }
+        }
+    }
 
     IEnumerator returnToPool(float time)
     {

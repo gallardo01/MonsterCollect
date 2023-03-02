@@ -512,9 +512,24 @@ gameObject.transform.rotation);
         {
             rootPlayer();
         }
-        // 2 stun
-
+        // 2 bi dau
+        else if (status == 2)
+        {
+            if (canHurt)
+            {
+                canHurt = false;
+                StartCoroutine(setHurt(monsterData));
+            }
+        }
         // 3 vua stun vua mat mau 
+        else
+        {
+            if (canHurt)
+            {
+                canHurt = false;
+                StartCoroutine(setHurt(monsterData));
+            }
+        }
     }
     private void reduceHealth(int amount)
     {

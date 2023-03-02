@@ -24,7 +24,7 @@ public class BossController : MonoBehaviour
     private int currentHp;
     // boss 1
     private float rate;
-    private Transform bossTarget;
+    private GameObject bossTargetGlobal;
     private bool isDead = false;
     //boss 2
 
@@ -34,11 +34,23 @@ public class BossController : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player").transform;
 
+        //if (monsterData.Id == 10)
+        //{
+        //    bossTarget = GameObject.FindWithTag("Target_boss_1").transform;
+
+        //}
+        //else if (monsterData.Id == 40)
+        //{
+        //    bossTarget.gameObject = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
+
+        //}
+        //bossTarget.gameObject.SetActive(false);
+
+        boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
+
         //boss 1
         rate = 2f;
-        bossTarget = GameObject.FindWithTag("Target").transform;
-        boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
-        bossTarget.gameObject.SetActive(false);
+
 
         //boss 2
 
@@ -48,6 +60,7 @@ public class BossController : MonoBehaviour
     void Start()
     {
         initInfo(40);
+
         waypoints = new Vector2[]
         {
             new Vector2( 0, 0 ),
@@ -172,9 +185,8 @@ public class BossController : MonoBehaviour
             }
             else if (wayMove == 4)
             {
-                faceToỌbject(bossTarget);
                 transform.position = Vector2.MoveTowards(transform.position,
-                bossTarget.position,
+                bossTargetGlobal.transform.position,
                 (moveSpeed / 4 * 30) * Time.deltaTime);
             }
         }
@@ -185,6 +197,10 @@ public class BossController : MonoBehaviour
     {
         if (monsterData.Id == 10)
         {
+            GameObject bossTarget = EasyObjectPool.instance.GetObjectFromPool("Boss_1_Target", transform.position, transform.rotation);
+            bossTargetGlobal = bossTarget;
+            bossTarget.SetActive(false);
+
             if (isRage())
             {
                 rate = 4f;
@@ -200,7 +216,7 @@ public class BossController : MonoBehaviour
                 yield return new WaitForSeconds(1f);
                 playerLastPos = player.position;
 
-                bossTarget.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
+                bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
                 bossTarget.gameObject.SetActive(true);
                 yield return new WaitForSeconds(2f);
                 wayMove = 3;
@@ -314,6 +330,22 @@ public class BossController : MonoBehaviour
         }
         else if (monsterData.Id == 40)
         {
+            GameObject bossTarget = EasyObjectPool.instance.GetObjectFromPool("Boss_4_Target", transform.position, transform.rotation);
+            bossTargetGlobal = bossTarget;
+            bossTarget.SetActive(false);
+
+            List<GameObject> bossTargetSub = new List<GameObject>();
+
+            for (int i = 0; i < 6; i++)
+            {
+                bossTargetSub.Add(EasyObjectPool.instance.GetObjectFromPool("Boss_4_Target", transform.position, transform.rotation));
+            }
+
+            for (int i = 0; i < 6; i++)
+            {
+                bossTargetSub[i].SetActive(false);
+            }
+
             runAnimation(2);
             wayMove = 1;
 
@@ -323,28 +355,81 @@ public class BossController : MonoBehaviour
             {
                 isCast = true;
 
-                moveSpeed = 0;
-                runAnimation(1);
+                if (isRage())
+                {
+                    moveSpeed = 0;
+                    runAnimation(1);
+
+                    yield return new WaitForSeconds(1f);
+                    playerLastPos = player.position;
+
+                    bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y , playerLastPos.z);
+                    bossTarget.gameObject.SetActive(true);
+
+                    float mulNum = 3f;
+
+                    bossTargetSub[1].transform.position = new Vector3(playerLastPos.x, playerLastPos.y + mulNum, playerLastPos.z);
+                    bossTargetSub[2].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y + mulNum*0.6f, playerLastPos.z);
+                    bossTargetSub[3].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y - mulNum*0.6f, playerLastPos.z);
+                    bossTargetSub[4].transform.position = new Vector3(playerLastPos.x, playerLastPos.y - mulNum, playerLastPos.z);
+                    bossTargetSub[5].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y - mulNum * 0.6f, playerLastPos.z);
+                    bossTargetSub[0].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y + mulNum * 0.6f, playerLastPos.z);
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        bossTargetSub[i].SetActive(true);
+                    }
+                    yield return new WaitForSeconds(2f);
+
+                    runAnimation(3);
+                    GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
+                    iceSpiked.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                    bossTarget.gameObject.SetActive(false);
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        GameObject iceSpikedSub = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTargetSub[i].transform.position, transform.rotation);
+                        iceSpikedSub.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                        bossTargetSub[i].gameObject.SetActive(false);
+                    }
+
+                    yield return new WaitForSeconds(2f);
+                    moveSpeed = 1;
+
+                    wayMove = 4;
+                    faceToỌbject(bossTarget.transform);
+
+                    yield return new WaitForSeconds(2f);
 
 
-                yield return new WaitForSeconds(1f);
-                playerLastPos = player.position;
+                }
+                else
+                {
+                    moveSpeed = 0;
+                    runAnimation(1);
 
-                bossTarget.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
-                bossTarget.gameObject.SetActive(true);
-                yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(1f);
+                    playerLastPos = player.position;
 
-                runAnimation(3);
-                GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.position, transform.rotation);
+                    bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y, playerLastPos.z);
+                    bossTarget.gameObject.SetActive(true);
+                    yield return new WaitForSeconds(2f);
 
-                iceSpiked.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
-                bossTarget.gameObject.SetActive(false);
+                    runAnimation(3);
+                    GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
 
-                yield return new WaitForSeconds(2f);
-                moveSpeed = 1;
+                    iceSpiked.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                    bossTarget.gameObject.SetActive(false);
 
-                wayMove = 4;
-                yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(2f);
+                    moveSpeed = 1;
+
+                    wayMove = 4;
+                    faceToỌbject(bossTarget.transform);
+
+                    yield return new WaitForSeconds(2f);
+                }
+
 
                 isCast = false;
             }

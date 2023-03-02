@@ -66,9 +66,9 @@ public class GameController : Singleton<GameController>
         //addBoss();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        StartCoroutine(addEnemyFirstScene());
+        //StartCoroutine(addEnemyFirstScene());
         //addEnemy();
-        //addBoss();
+        addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{
@@ -140,7 +140,7 @@ public class GameController : Singleton<GameController>
     }
     private void addBoss()
     {
-        string enemyType = "Enemy" + (20);
+        string enemyType = "Enemy" + (40);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
 
         boss.GetComponent<BossController>().initInfo(20);

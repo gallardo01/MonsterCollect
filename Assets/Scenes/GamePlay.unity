@@ -452,87 +452,6 @@ Transform:
   m_Father: {fileID: 1384058219}
   m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &34639770
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 34639772}
-  - component: {fileID: 34639771}
-  m_Layer: 0
-  m_Name: Boss_1_target
-  m_TagString: Target
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!212 &34639771
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 34639770}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 07c795cae870dfd469e97804f1a405d9, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 4.99, y: 0.99}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &34639772
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 34639770}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -15.04, y: -0.41, z: 0}
-  m_LocalScale: {x: 0.26667, y: 0.46293, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &36502541
 GameObject:
   m_ObjectHideFlags: 0
@@ -26879,12 +26798,14 @@ MonoBehaviour:
     prefab: {fileID: 642612856194691488, guid: c45cd131c645bed47969f1754250422d, type: 3}
     poolSize: 0
     fixedSize: 0
-  - poolName: Thunder
-    prefab: {fileID: 642612856194691488, guid: c45cd131c645bed47969f1754250422d, type: 3}
+  - poolName: Boss_1_Target
+    prefab: {fileID: 4002121021985389746, guid: 7ccdd146d980a804faf6c14ae06a74c6,
+      type: 3}
     poolSize: 0
     fixedSize: 0
-  - poolName: Fire
-    prefab: {fileID: 642612856194691488, guid: c45cd131c645bed47969f1754250422d, type: 3}
+  - poolName: Boss_4_Target
+    prefab: {fileID: 8711651871701887811, guid: f13b83c137f5a7a45b47663d5feabdf2,
+      type: 3}
     poolSize: 0
     fixedSize: 0
   - poolName: Grass
@@ -45065,6 +44986,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TIleMap
       objectReference: {fileID: 0}
+    - target: {fileID: 8070432420890229432, guid: 2b79b21136605164dbde786a59cccf20,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8070432420890229434, guid: 2b79b21136605164dbde786a59cccf20,
         type: 3}
       propertyPath: m_IsActive
@@ -45074,6 +45000,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070432421052439586, guid: 2b79b21136605164dbde786a59cccf20,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8070432421052439588, guid: 2b79b21136605164dbde786a59cccf20,
         type: 3}
@@ -45090,6 +45021,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8070432421314771030, guid: 2b79b21136605164dbde786a59cccf20,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8070432421314771034, guid: 2b79b21136605164dbde786a59cccf20,
         type: 3}
       propertyPath: m_IsActive
@@ -45109,6 +45045,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070432421699162081, guid: 2b79b21136605164dbde786a59cccf20,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8070432421699162083, guid: 2b79b21136605164dbde786a59cccf20,
         type: 3}

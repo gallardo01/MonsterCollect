@@ -30,7 +30,14 @@ public class InventoryController : Singleton<InventoryController>
 
     public int[] baseAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
     public int[] bonusAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
-    // Start is called before the first frame update
+
+    private Sprite[] itemsSprite;
+
+    void Awake()
+    {
+        itemsSprite = Resources.LoadAll<Sprite>("Contents/Item/ItemAtlas");
+    }
+    
     void Start()
     {
         Init();
@@ -93,6 +100,8 @@ public class InventoryController : Singleton<InventoryController>
             if (item.IsUse < 0)
             {
                 InitEquipment(item, (-item.IsUse) - 1);
+                //GetComponent<EquimentController>().ShowEquipment(item.Id, item.Type, item.Level);                
+                Equipment[item.Type-1].GetComponent<Equipment>().InitData(item, GetSprite(item.Id-1));
             }
         }
     }
@@ -107,13 +116,12 @@ public class InventoryController : Singleton<InventoryController>
     void SetInfoPanelData(ItemInventory data)
     {
         var main = InfoPanel.transform;
-
+        
         main.Find("Panel/Top/TopHub/Name").GetComponent<TextMeshProUGUI>().text = data.Name;
         main.Find("Panel/Top/TopHub/Name").GetComponent<TextMeshProUGUI>().color = rarityColor[data.Rarity - 1];
         main.Find("Panel/Top/TopHub/Rarity").GetComponent<TextMeshProUGUI>().text = rarity[data.Rarity - 1];
         main.Find("Panel/Top/TopHub/Rarity").GetComponent<TextMeshProUGUI>().color = rarityColor[data.Rarity - 1];
         main.Find("Panel/Top/Info/Description/Level").GetComponent<TextMeshProUGUI>().text = "Level: " + data.Level + " / 50";
-
         main.Find("Panel/Top/Info/Description/Des").GetComponent<TextMeshProUGUI>().text = data.Contents;
         //main.Find("Panel/Top/Info/ItemSprite").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Icon/UI/" + data.Rarity.ToString());
         main.Find("Panel/Top/Info/ItemSprite/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + data.Id.ToString());
@@ -124,8 +132,9 @@ public class InventoryController : Singleton<InventoryController>
             main.Find("Panel/Top/Info/Description/Level").gameObject.SetActive(false);
             main.Find("Panel/Bottom/Upgrade").gameObject.SetActive(false);
             main.Find("Panel/Bottom/Button/ButtonFuse").gameObject.SetActive(false);
-            main.Find("Panel/Bottom/Button/ButtonUpgrade").gameObject.SetActive(false);
-            main.Find("Panel/Bottom/Button/ButtonEquip/Text (TMP)").GetComponent<TextMeshProUGUI>().text = "Use";
+            main.Find("Panel/Bottom/Button/ButtonUpgrade").gameObject.SetActive(false);            
+            main.Find("Panel/Bottom/Button/ButtonEquip/Text (TMP)").GetComponent<TextMeshProUGUI>().text = data.IsUse < 0 ? "Unequip" : "Equip";
+            
         }
         else
         {
@@ -133,9 +142,8 @@ public class InventoryController : Singleton<InventoryController>
             main.Find("Panel/Bottom/Upgrade").gameObject.SetActive(true);
             main.Find("Panel/Bottom/Button/ButtonFuse").gameObject.SetActive(true);
             main.Find("Panel/Bottom/Button/ButtonUpgrade").gameObject.SetActive(true);
-
             main.Find("Panel/Bottom/Button/ButtonUpgrade/Text (TMP)").GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=5></size>x" + data.Level * 1000 + " \n Upgrade";
-            main.Find("Panel/Bottom/Button/ButtonEquip/Text (TMP)").GetComponent<TextMeshProUGUI>().text = "Equip";
+            main.Find("Panel/Bottom/Button/ButtonEquip/Text (TMP)").GetComponent<TextMeshProUGUI>().text = data.IsUse < 0 ? "Unequip" : "Equip";
         }
         ItemInventory upgrade_item = ItemDatabase.Instance.fetchInventoryById(8);
 
@@ -167,10 +175,21 @@ public class InventoryController : Singleton<InventoryController>
         }
         main.Find("Panel/Bottom/Button/ButtonEquip").GetComponent<Button>().onClick.AddListener(() =>
         {
-            if (data.IsUse > 0) return;
+            //if (data.IsUse > 0) return;
             if (data.Slot > 1) return;
-            ItemDatabase.Instance.equipItemPosition(data);
+            if (data.IsUse < 0)
+            {
+                ItemDatabase.Instance.unequipItem(data.ShopId);
+                Equipment[data.Type - 1].GetComponent<Equipment>().SwitchToDefaultSprite();
+            }
+            else
+            {
+                ItemDatabase.Instance.equipItemPosition(data);                
+                Equipment[data.Type - 1].GetComponent<Equipment>().InitData(data,GetSprite(data.Id-1));
+            }
+            //ItemDatabase.Instance.equipItemPosition(data);
             InitEquipment(data, data.Type - 1);
+            //Debug.Log( string.Format("{0} | {1}",data.Name,data.IsUse));
             InfoPanel.SetActive(false);
             Hero.gameObject.SetActive(true);
         }
@@ -238,9 +257,9 @@ public class InventoryController : Singleton<InventoryController>
     void InitEquipment(ItemInventory item, int itemSlot)
     {
         string[] Rarity = { "", "Common", "Great", "Rare", "Epic", "Mythic", "Legendary" };
-        Equipment[itemSlot].transform.Find("Contain/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
-        Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + Rarity[item.Rarity]);
-        Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
+        //Equipment[itemSlot].transform.Find("Contain/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
+        //Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + Rarity[item.Rarity]);
+        //Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
         InitAlbilities();
 
     }
@@ -263,5 +282,18 @@ public class InventoryController : Singleton<InventoryController>
             int num = baseAlbility[i] + bonusAlbility[i];
             albilitiesText[i].GetComponent<TextMeshProUGUI>().text = num.ToString();
         }
+    }
+    public Sprite GetSprite(int itemID)
+    {
+        string temp = "ItemAtlas_" + itemID.ToString();
+        Sprite outputSprite = null;
+        foreach (Sprite s in itemsSprite)
+        {
+            if (s.name == temp)
+            {
+                outputSprite = s;
+            }
+        }
+        return outputSprite;
     }
 }

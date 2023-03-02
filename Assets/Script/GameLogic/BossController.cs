@@ -47,7 +47,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(30);
+        initInfo(40);
         waypoints = new Vector2[]
         {
             new Vector2( 0, 0 ),
@@ -87,7 +87,7 @@ public class BossController : MonoBehaviour
             int typeValue = MathController.Instance.getTypeValue(heroes, monsterData);
             int actualDame = Mathf.Abs(dame);
             currentHp -= actualDame;
-            Debug.Log(currentHp);
+            //Debug.Log(currentHp);
             if (currentHp <= 0)
             {
                 //GameController.Instance.initEatMonster(heroes.Level);
@@ -172,7 +172,9 @@ public class BossController : MonoBehaviour
             }
             else if (wayMove == 4)
             {
-                Debug.Log("dcmm");
+                transform.position = Vector2.MoveTowards(transform.position,
+                bossTarget.position,
+                (moveSpeed / 4 * 30) * Time.deltaTime);
 
             }
         }
@@ -310,6 +312,45 @@ public class BossController : MonoBehaviour
                 isCast = false;
             }
         }
+        else if (monsterData.Id == 40)
+        {
+            runAnimation(2);
+            wayMove = 1;
+
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 5);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+
+                moveSpeed = 0;
+                runAnimation(1);
+
+
+                yield return new WaitForSeconds(1f);
+                playerLastPos = player.position;
+
+                bossTarget.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
+                bossTarget.gameObject.SetActive(true);
+                yield return new WaitForSeconds(2f);
+
+                runAnimation(3);
+                GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.position, transform.rotation);
+
+                iceSpiked.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                bossTarget.gameObject.SetActive(false);
+
+                yield return new WaitForSeconds(2f);
+                moveSpeed = 1;
+
+                wayMove = 4;
+                yield return new WaitForSeconds(2f);
+
+                isCast = false;
+            }
+        }
+
+
         StartCoroutine(castSkill());
 
     }

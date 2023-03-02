@@ -83,7 +83,7 @@ public class BulletOfBossComtroller : MonoBehaviour
         {
             if (type == 2) // ice spike
             {
-                int ran = 0;
+                int ran = Random.Range(-30, 0);
 
                 for (int i = 0; i < 6; i++)
                 {
@@ -96,8 +96,8 @@ public class BulletOfBossComtroller : MonoBehaviour
                     Vector3 direction = Vector3.Normalize(temp);
                     iceFrag.GetComponent<BulletOfBossComtroller>().initBullet(target, direction, 5f, 0, monsterData);
 
-                    float angle = calAngle(temp, direction);
-                    iceFrag.transform.Rotate(0, 0, angle);
+                    float angle = Mathf.Atan2(-dir[i].x * Mathf.Sin(ran) + dir[i].y * Mathf.Cos(ran), dir[i].x * Mathf.Cos(ran) + dir[i].y * Mathf.Sin(ran));
+                    iceFrag.transform.Rotate(0, 0, angle * 180 /Mathf.PI);
                 }
 
                 GameController.Instance.addParticle(collision.gameObject, 1);
@@ -118,38 +118,5 @@ public class BulletOfBossComtroller : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private float calAngle(Vector3 en, Vector2 vector)
-    {
-        Vector2 cur = new Vector2(-1, 0);
-        float y = gameObject.transform.position.y;
-        float n = en.y;
-        float angle = 0;
-
-        if (y <= n)
-        {
-            Debug.Log("if");
-            angle = 2 * AngleTo(cur, vector);
-        }
-
-        else
-        {
-            Debug.Log("else");
-
-            angle = -2 * AngleTo(cur, vector);
-
-        }
-
-        return angle;
-    }
-
-    private float AngleTo(Vector2 pos, Vector2 target)
-    {
-        Vector2 diference;
-        if (target.x > pos.x)
-            diference = target - pos;
-        else
-            diference = pos - target;
-        return Vector2.Angle(Vector2.right, diference);
-    }
 
 }

@@ -172,10 +172,10 @@ public class BossController : MonoBehaviour
             }
             else if (wayMove == 4)
             {
+                faceToỌbject(bossTarget);
                 transform.position = Vector2.MoveTowards(transform.position,
                 bossTarget.position,
                 (moveSpeed / 4 * 30) * Time.deltaTime);
-
             }
         }
 
@@ -428,6 +428,18 @@ public class BossController : MonoBehaviour
             flip();
         }
     }
+    void faceToỌbject(Transform Obj)
+    {
+        if (transform.position.x < Obj.position.x && facingRight == 0)
+        {
+            flip();
+        }
+        else if (transform.position.x > Obj.position.x && facingRight == 1)
+        {
+            flip();
+        }
+    }
+
 
     IEnumerator replayAnimation()
     {

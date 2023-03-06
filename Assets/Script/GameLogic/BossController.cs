@@ -28,7 +28,8 @@ public class BossController : MonoBehaviour
     private bool isDead = false;
     //boss 2
 
-
+    // boss 5
+    private Vector3 bossDirection;
 
     void Awake()
     {
@@ -59,7 +60,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(40);
+        initInfo(50);
 
         waypoints = new Vector2[]
         {
@@ -189,6 +190,11 @@ public class BossController : MonoBehaviour
                 bossTargetGlobal.transform.position,
                 (moveSpeed / 4 * 30) * Time.deltaTime);
             }
+            else if (wayMove == 5)
+            {
+                transform.position += bossDirection * moveSpeed * Time.deltaTime;
+            } 
+
         }
 
     }
@@ -430,6 +436,38 @@ public class BossController : MonoBehaviour
                     yield return new WaitForSeconds(2f);
                 }
 
+
+                isCast = false;
+            }
+        }
+        else if (monsterData.Id == 50)
+        {
+           
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 5);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+                wayMove = 5;
+
+                runAnimation(3);
+                yield return new WaitForSeconds(1f);
+                runAnimation(2);
+
+
+                for (int i = 0; i < 4; i++)
+                {
+                    bossDirection = Vector3.Normalize(player.position - transform.position);
+                    moveSpeed = 5f;
+                    yield return new WaitForSeconds(1f);
+                    moveSpeed = 0;
+                    yield return new WaitForSeconds(1f);
+                }
+
+
+
+                moveSpeed = 1;
+                wayMove = 1;
 
                 isCast = false;
             }

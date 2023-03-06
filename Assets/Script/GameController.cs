@@ -140,7 +140,7 @@ public class GameController : Singleton<GameController>
     }
     private void addBoss()
     {
-        string enemyType = "Enemy" + (40);
+        string enemyType = "Enemy" + (50);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
 
         boss.GetComponent<BossController>().initInfo(20);

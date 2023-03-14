@@ -50,6 +50,9 @@ public class PlayerController : Singleton<PlayerController>
     public int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     // Start is called before the first frame update
+
+    int cacheSpeed;
+
     void Start()
     {
         //Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
@@ -521,6 +524,11 @@ gameObject.transform.rotation);
                 StartCoroutine(setHurt(monsterData));
             }
         }
+        else if (status == 3) //slow Speed
+        {
+            slowPlayer(50);
+        }
+
         // 3 vua stun vua mat mau 
         else
         {
@@ -556,6 +564,11 @@ gameObject.transform.rotation);
         float per = (float)currentHp / data.Hp;
         hpText.text = currentHp.ToString();
         hpBar.transform.localScale = new Vector3(per, 1f, 1f);
+    }
+    public void setPlayerNormal()
+    {
+        realData.Speed = cacheSpeed;
+
     }
     public void revivePlayer()
     {
@@ -612,13 +625,19 @@ gameObject.transform.rotation);
 
     public void rootPlayer()
     {
-        StartCoroutine(slowSpeed());
+        StartCoroutine(slowSpeed(100));
     }
 
-    private IEnumerator slowSpeed()
+    public void slowPlayer(int percent)
+    {
+        cacheSpeed = realData.Speed;
+        realData.Speed = (100 - percent) * realData.Speed / 100;
+    }
+
+    private IEnumerator slowSpeed(int percent)
     {
         int cacheSpeed = realData.Speed;
-        realData.Speed = 0;
+        realData.Speed = (100 - percent) * realData.Speed /100;
         yield return new WaitForSeconds(1f);
         realData.Speed = cacheSpeed;
     }

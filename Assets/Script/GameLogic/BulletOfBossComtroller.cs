@@ -71,6 +71,12 @@ public class BulletOfBossComtroller : MonoBehaviour
 
 
             }
+            else if (type == 3) // slow wind
+            {
+                speed = 0f;
+                StartCoroutine(returnToPool(3f));
+
+            }
             else
             {
                 GameController.Instance.addParticle(collision.gameObject, 1);
@@ -109,6 +115,17 @@ public class BulletOfBossComtroller : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {   
+            if (type == 3) // slow wind
+            {
+                collision.gameObject.GetComponent<PlayerController>().setPlayerNormal();
+            }
+
+        }
+    }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -148,6 +165,9 @@ public class BulletOfBossComtroller : MonoBehaviour
             }
         }
     }
+
+
+
 
     IEnumerator returnToPool(float time)
     {

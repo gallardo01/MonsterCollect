@@ -60,7 +60,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(50);
+        initInfo(60);
 
         waypoints = new Vector2[]
         {
@@ -245,8 +245,6 @@ public class BossController : MonoBehaviour
                 GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
                 StartCoroutine(returnObjectToPool(fileGround, 5f));
                 yield return new WaitForSeconds(1f);
-
-
             }
 
             for (int i = 0; i < 10; i++)
@@ -449,7 +447,7 @@ public class BossController : MonoBehaviour
             {
                 isCast = true;
                 wayMove = 5;
-
+                moveSpeed = 0;
                 runAnimation(3);
                 yield return new WaitForSeconds(1f);
                 runAnimation(2);
@@ -469,6 +467,44 @@ public class BossController : MonoBehaviour
                 moveSpeed = 1;
                 wayMove = 1;
 
+                isCast = false;
+            }
+        }
+
+        else if (monsterData.Id == 60)
+        {
+
+            wayMove = 1;
+
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 5);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+                moveSpeed = 0;
+                runAnimation(3);
+
+                GameObject windFog = EasyObjectPool.instance.GetObjectFromPool("Boss_6_Target", transform.position, transform.rotation);
+                Vector3 directionFog = Vector3.Normalize(player.position - transform.position);
+                windFog.GetComponent<BulletOfBossComtroller>().initBullet(player, directionFog, 6f, 3, monsterData);
+
+
+                // ban dan
+                for (int i = 0; i < 5; i++)
+                {
+                    faceToPlayer();
+                    runAnimation(3);
+                    GameObject windBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_wind_boss", transform.position, transform.rotation);
+                    Vector3 direction = Vector3.Normalize(player.position - transform.position);
+                    windBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 0, monsterData);
+
+                    float angle = calAngle(player.transform, direction);
+                    windBullet.transform.Rotate(0, 0, angle);
+
+                    yield return new WaitForSeconds(1f);
+                }
+
+                moveSpeed = 1;
                 isCast = false;
             }
         }

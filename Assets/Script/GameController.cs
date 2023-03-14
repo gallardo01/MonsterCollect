@@ -8,13 +8,6 @@ using DG.Tweening;
 
 public class GameController : Singleton<GameController>
 {
-    [SerializeField] Button btnQuit;
-
-    [SerializeField] Canvas result;
-    [SerializeField] GameObject canvas;
-    [SerializeField] GameObject player;
-    [SerializeField] GameObject controller;
-
     [SerializeField] GameObject expBar;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] GameObject bossController;
@@ -56,19 +49,16 @@ public class GameController : Singleton<GameController>
         //    sheetNames[i] = sheetTextures[i].name;
         //}
         //int textureIndex = TextureIndexLookUp(sheetNames, "Stat_3");
-
         //iconImage.sprite = Resources.LoadAll<Sprite>("UI/Sprites/Stat")[textureIndex];
 
         // get stage
         enemyLv = 1;
         initInfo();
         playerLevel = PlayerController.Instance.getLevel();
-        //addBoss();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        //addEnemy();
-        addBoss();
+        StartCoroutine(addEnemyFirstScene());
+        //addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{

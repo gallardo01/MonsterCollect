@@ -240,7 +240,7 @@ public class MonsterController : MonoBehaviour
 
     private void setText(int lv)
     {
-        level.text = "Lv." + lv.ToString();
+        level.text = " <sprite=" + (monsterData.Type+10) +  "> Lv." + lv.ToString();
         setColor();
     }
 

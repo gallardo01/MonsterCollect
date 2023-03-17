@@ -40,13 +40,13 @@ public class MonsterController : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(5f, 9f));
         wayMove = 2;
     }
-    public void initData(int id)
+    public void initDataWaypoints(int id, int way)
     {
         isDead = false;
         monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
         currentHp = monsterData.Hp;
         setText(id);
-        setupWaypoints();
+        setupWaypoints(way);
     }
 
     public void initData(int id, bool useWaypoint)
@@ -129,7 +129,7 @@ public class MonsterController : MonoBehaviour
             hpObj.GetComponent<ItemDropController>().setMagnet();
         }
         // drop item
-        if (Random.Range(0, 200) < monsterLv * 10 % 10)
+        if (Random.Range(0, 100) < 1)
         {
             GameObject hpObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
             hpObj.GetComponent<ItemDropController>().setItem();
@@ -265,7 +265,7 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    public void setupWaypoints()
+    public void setupWaypoints(int way)
     {
         isMove = true;
         wayMove = 1;
@@ -273,7 +273,8 @@ public class MonsterController : MonoBehaviour
         GameObject[] waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
         waypoints = waypoints1;
-        int pos = Random.Range(0, waypoints.Length);
+        //int pos = Random.Range(0, waypoints.Length);
+        int pos = way;
         gameObject.SetActive(true);
         transform.position = waypoints[pos].transform.position;
         waypointIndex = Random.Range(0, waypoints.Length);

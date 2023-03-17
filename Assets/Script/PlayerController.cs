@@ -19,8 +19,6 @@ public class PlayerController : Singleton<PlayerController>
     public GameObject runSmoke;
     public GameObject SmokePos;
     private int currentHp;
-    private int bonusExp;
-    private int bonusGold;
 
     private int facingRight = 1;
     private bool walk = true;
@@ -93,12 +91,13 @@ public class PlayerController : Singleton<PlayerController>
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
     private void updatePlayerData()
     {
-        realData.Atk = realData.Atk * (100 + bonusPoints[1]) / 100;
-        realData.Hp = realData.Hp * (100 + bonusPoints[2]) / 100;
-        realData.Armour = realData.Armour * (100 + bonusPoints[3]) / 100;
-        realData.Move = realData.Move * (100 + bonusPoints[4]) / 100;
-        realData.Crit = realData.Crit * (100 + bonusPoints[5]) / 100;
-        realData.Speed = realData.Speed * (100 + bonusPoints[6]) / 100;
+        MyHeroes currentHeroes = HeroesDatabase.Instance.fetchMyData(realData.Id);
+        realData.Atk = currentHeroes.Atk * (100 + bonusPoints[1]) / 100;
+        realData.Hp = currentHeroes.Hp * (100 + bonusPoints[2]) / 100;
+        realData.Armour = currentHeroes.Armour * (100 + bonusPoints[3]) / 100;
+        realData.Move = currentHeroes.Move * (100 + bonusPoints[4]) / 100;
+        realData.Crit = currentHeroes.Crit * (100 + bonusPoints[5]) / 100;
+        realData.Speed = currentHeroes.Speed * (100 + bonusPoints[6]) / 100;
     }
     public int getBonusPoints(int i)
     {
@@ -446,6 +445,7 @@ gameObject.transform.rotation);
     {
         canMove = false;
         joystick.SetActive(false);
+        GameController.Instance.updateEndGameInformation();
         yield return new WaitForSeconds(0.99f);
         GetComponent<DragonBones.UnityArmatureComponent>().animation.Stop();
         yield return new WaitForSeconds(2f);
@@ -504,7 +504,7 @@ gameObject.transform.rotation);
         int dame = MathController.Instance.enemyHitPlayer(data, monsterData);
         reduceHealth(dame);
         body.GetComponent<Animator>().SetTrigger("hurt");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.7f);
         canHurt = true;
     }
 
@@ -561,7 +561,7 @@ gameObject.transform.rotation);
                 enemies[i].SetActive(false);
             }
         }
-        float per = (float)currentHp / data.Hp;
+        float per = (float)currentHp / realData.Hp;
         hpText.text = currentHp.ToString();
         hpBar.transform.localScale = new Vector3(per, 1f, 1f);
     }
@@ -575,7 +575,8 @@ gameObject.transform.rotation);
         canMove = true;
         joystick.SetActive(true);
         isPause = false;
-        currentHp = data.Hp;
+        currentHp = realData.Hp;
+        hpText.text = currentHp.ToString();
         GameController.Instance.setSpawn(true);
         UltimateJoystick.ResetJoystick("Movement");
         runAnimation(1);

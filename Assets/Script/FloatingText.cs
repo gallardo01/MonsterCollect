@@ -21,19 +21,12 @@ public class FloatingText : MonoBehaviour
         text.color = Color.green;
         StartCoroutine(disableFloating());
     }
-
     public void playerHealth(int dame)
     {
         text.text = dame.ToString();
         text.fontSize = 4;
         text.color = Color.red;
         StartCoroutine(disableFloating());
-    }
-
-    public void critHealth()
-    {
-        text.fontSize = 5;
-        text.color = Color.yellow;
     }
     public void disableObject(int dame, int type)
     {
@@ -50,11 +43,11 @@ public class FloatingText : MonoBehaviour
         }
         if (type < 0)
         {
-            text.color = Color.gray;
+            text.color = new Color(195f/255f, 195f / 255f, 195f / 255f);
         }
         else if (type > 0)
         {
-            text.color = Color.magenta;
+            text.color = new Color(245f / 255f, 231f / 255f, 31f / 255f);
         }
         else
         {

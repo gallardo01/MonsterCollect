@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SumaryController : MonoBehaviour
 {
@@ -15,11 +16,12 @@ public class SumaryController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        closePanel.onClick.AddListener(() => closeGame());
     }
 
     private void closeGame()
     {
-
+        SceneManager.LoadScene(0);
     }
 
     public void initEndingData(int progress, int stage, int gold, List<ItemInventory> rewards)

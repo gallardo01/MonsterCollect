@@ -33,7 +33,7 @@ public class GameController : Singleton<GameController>
     private int[] buffLevel = { 0, 0, 0, 0, 0 };
     private int[] type = { 0, 0, 0 };
     private int[] availableOption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
+    private GameObject[] waypoints1;
     private bool isBossSpawn = true;
 
     //private Sprite[] sheetTextures;
@@ -52,13 +52,17 @@ public class GameController : Singleton<GameController>
         //iconImage.sprite = Resources.LoadAll<Sprite>("UI/Sprites/Stat")[textureIndex];
 
         // get stage
+        string route = "Route1";
+        waypoints1 = GameObject.FindGameObjectsWithTag(route);
+        System.Array.Sort(waypoints1, CompareObNames);
+
         enemyLv = 1;
         initInfo();
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        addBoss();
+        StartCoroutine(addEnemyFirstScene());
+        //addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{
@@ -130,7 +134,7 @@ public class GameController : Singleton<GameController>
     }
     private void addBoss()
     {
-        string enemyType = "Enemy" + (60);
+        string enemyType = "Enemy" + (10);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
 
         boss.GetComponent<BossController>().initInfo(20);
@@ -145,26 +149,37 @@ public class GameController : Singleton<GameController>
     {
         if (isSpawn)
         {
-            countEnemy++;
-            int chance = Random.Range(0, 14);
-            int enemyId;
-            if (chance < 13)
-            {
-                enemyId = enemyLv;
-            }
-            else
-            {
-                enemyId = enemyLv + chance % 10;
-            }
-            if (enemyId > 9)
-            {
-                enemyId = 9;
-            }
-            string enemyType = "Enemy" + enemyId;
-            GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
-            enemy.GetComponent<MonsterController>().initData(enemyId);
+            StartCoroutine(addEnemyNow());
         }
     }
+    private IEnumerator addEnemyNow()
+    {
+        int pos = Random.Range(0, waypoints1.Length);
+        GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", waypoints1[pos].transform.position, waypoints1[pos].transform.rotation);
+        yield return new WaitForSeconds(1.5f);
+        EasyObjectPool.instance.ReturnObjectToPool(warning);
+        warning.SetActive(false);
+        countEnemy++;
+        int chance = Random.Range(0, 14);
+        int enemyId;
+        if (chance < 13)
+        {
+            enemyId = enemyLv;
+        }
+        else
+        {
+            enemyId = enemyLv + chance % 10;
+        }
+        if (enemyId > 9)
+        {
+            enemyId = 9;
+        }
+        string enemyType = "Enemy" + enemyId;
+        GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
+        enemy.GetComponent<MonsterController>().initDataWaypoints(enemyId, pos);
+    }
+
+
     public IEnumerator respawnEnemy()
     {
         yield return new WaitForSeconds(2f);
@@ -410,4 +425,9 @@ public class GameController : Singleton<GameController>
     {
         GameFlowController.Instance.initData(countEnemy, stage, goldAward, itemAward);
     }
+    private int CompareObNames(GameObject x, GameObject y)
+    {
+        return x.name.CompareTo(y.name);
+    }
+
 }

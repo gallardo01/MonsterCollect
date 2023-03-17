@@ -13,10 +13,10 @@ public class MathController : Singleton<MathController>
     private int[] critPoints = { 0, 200, 400, 700, 1200, 1800, 2500, 3500, 5000};
 
     private float[,] type = {{0, 0, 0, 0, 0 },
-                             {0, 0.7f, 1.3f, 1f, 0.7f },
-                             { 0, 0.7f, 0.7f, 1.3f, 0.7f },
-                             { 0, 1f, 0.7f, 0.7f, 1.3f },
-                             { 0, 1.3f, 1f, 0.7f, 0.7f }
+                             {0, 0.7f, 0.7f, 1f, 1.3f },
+                             { 0, 1.3f, 0.7f, 0.7f, 1f },
+                             { 0, 1f, 1.3f, 0.7f, 0.7f },
+                             { 0, 0.7f, 1f, 1.3f, 0.7f }
     };
 
     private void Start()
@@ -64,8 +64,7 @@ public class MathController : Singleton<MathController>
     {
         float hp;
         int armourRate = percentageArmour(heroesData.Armour);
-        float typeRate = type[monsterData.Type, heroesData.Type];
-        
+        float typeRate = type[heroesData.Type, monsterData.Type];
         hp = monsterData.Atk * typeRate * (100 - armourRate) / 100f;
         return (int)hp;
     }

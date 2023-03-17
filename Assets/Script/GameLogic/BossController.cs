@@ -622,18 +622,11 @@ public class BossController : MonoBehaviour
 
     private void dropItemController(int monsterLv)
     {
-        //drop exp
-        // drop gold
-        if (Random.Range(0, 100) < 10)
-        {
-            GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
-            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv * 2, 10 + monsterLv * 5));
-        }
-        // drop item
-        if (Random.Range(0, 2000) < monsterLv)
-        {
+        GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
+        goldObj.GetComponent<ItemDropController>().setGold(Random.Range(100, 100 + monsterLv * 10));
 
-        }
+        GameObject hpObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+        hpObj.GetComponent<ItemDropController>().setItem();
     }
 
     private float calAngle(Transform en, Vector2 vector)

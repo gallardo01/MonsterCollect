@@ -529,6 +529,11 @@ gameObject.transform.rotation);
         {
             slowPlayer(50);
         }
+        else if (status == 4) //slow Speed
+        {
+            rootPlayer();
+
+        }
 
         // 3 vua stun vua mat mau 
         else

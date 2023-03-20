@@ -527,15 +527,15 @@ public class BossController : MonoBehaviour
 
                 GameObject waterBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
                 Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                waterBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 1, monsterData);
+                waterBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 6f, 4, monsterData);
 
                 GameObject waterBullet_1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
-                Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.3f,0,0);
-                waterBullet_1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_1, 5f, 1, monsterData);
+                Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.4f,Random.Range(0, 0.3f),0);
+                waterBullet_1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_1, 6f, 4, monsterData);
 
                 GameObject waterBullet_2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
-                Vector3 direction_2 = Vector3.Normalize(player.position - transform.position) + new Vector3(-0.3f, 0, 0); ;
-                waterBullet_2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_2, 5f, 1, monsterData);
+                Vector3 direction_2 = Vector3.Normalize(player.position - transform.position) + new Vector3(-0.4f, Random.Range(0, 0.3f), 0); ;
+                waterBullet_2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_2, 6f, 4, monsterData);
 
 
                 moveSpeed = 1;

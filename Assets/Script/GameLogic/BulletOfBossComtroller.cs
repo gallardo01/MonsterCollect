@@ -12,6 +12,9 @@ public class BulletOfBossComtroller : MonoBehaviour
     private int type = 0;
     private MonsterData monsterData;
 
+    const string AC_BUBBLE_SACLE = "bubble_scale";
+    const string AC_RETURN_POOL = "return_pool";
+
     private Vector3[] dir = {
         new Vector3(1, 0.6f, 0),
         new Vector3(1, -0.6f, 0),
@@ -43,6 +46,15 @@ public class BulletOfBossComtroller : MonoBehaviour
         this.type = type;
         this.monsterData = monsterData;
         //direction = Vector3.Normalize(target.position -Source.position);
+
+        if (type == 4 ) // bubble
+        {
+            StartCoroutine(runAnimeScaleBubble(1f));
+
+            StartCoroutine(returnToPool(10f));
+
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -75,6 +87,12 @@ public class BulletOfBossComtroller : MonoBehaviour
             {
                 speed = 0f;
                 StartCoroutine(returnToPool(3f));
+
+            }
+            else if (type == 4) // bubble 
+            {
+                transform.position = collision.transform.position;
+                StartCoroutine(returnToPool(1f));
 
             }
             else
@@ -160,8 +178,6 @@ public class BulletOfBossComtroller : MonoBehaviour
                 GameController.Instance.addParticle(collision.gameObject, 1);
                 EasyObjectPool.instance.ReturnObjectToPool(gameObject);
                 gameObject.SetActive(false);
-
-
             }
         }
     }
@@ -172,9 +188,22 @@ public class BulletOfBossComtroller : MonoBehaviour
     IEnumerator returnToPool(float time)
     {
         yield return new WaitForSeconds(time);
+        if (type == 4)
+        {
+            gameObject.GetComponent<Animator>().SetTrigger(AC_RETURN_POOL);
+
+        }
         EasyObjectPool.instance.ReturnObjectToPool(gameObject);
         gameObject.SetActive(false);
+
+        
     }
 
+    IEnumerator runAnimeScaleBubble(float time)
+    {
+        yield return new WaitForSeconds(time);
+        gameObject.GetComponent<Animator>().SetTrigger(AC_BUBBLE_SACLE);
+        speed = 0f;
+    }
 
 }

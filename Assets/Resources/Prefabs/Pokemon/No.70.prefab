@@ -251,11 +251,11 @@ GameObject:
   - component: {fileID: 5195258502662227748}
   - component: {fileID: 626027783771315318}
   - component: {fileID: 6128576013350540619}
-  - component: {fileID: 6215805241556093501}
   - component: {fileID: -539370569344344838}
+  - component: {fileID: 4638978719923035021}
   m_Layer: 0
   m_Name: No.70
-  m_TagString: Enemy
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -356,21 +356,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2707392, y: 1.5413151}
   m_EdgeRadius: 0
---- !u!114 &6215805241556093501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992950652128048804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa363a857d450304ead3f0fe6b4d7f24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 70
-  level: {fileID: 97789244883995922}
-  speed: 170
 --- !u!50 &-539370569344344838
 Rigidbody2D:
   serializedVersion: 4
@@ -392,6 +377,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &4638978719923035021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992950652128048804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11206a91933582344ad0bca7b74e6f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 1
+  level: {fileID: 97789244883995922}
 --- !u!1 &3388790230944282613
 GameObject:
   m_ObjectHideFlags: 0

@@ -60,7 +60,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(60);
+        initInfo(70);
 
         waypoints = new Vector2[]
         {
@@ -307,7 +307,7 @@ public class BossController : MonoBehaviour
                 runAnimation(3);
 
                 GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy14", transform.position, transform.rotation);
-                fellow.GetComponent<MonsterController>().initData(14,false);
+                fellow.GetComponent<MonsterController>().initData(14, false);
                 fellow.GetComponent<MonsterController>().triggerWaypoints();
 
 
@@ -367,14 +367,14 @@ public class BossController : MonoBehaviour
                     yield return new WaitForSeconds(1f);
                     playerLastPos = player.position;
 
-                    bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y , playerLastPos.z);
+                    bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y, playerLastPos.z);
                     bossTarget.gameObject.SetActive(true);
 
                     float mulNum = 3f;
 
                     bossTargetSub[1].transform.position = new Vector3(playerLastPos.x, playerLastPos.y + mulNum, playerLastPos.z);
-                    bossTargetSub[2].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y + mulNum*0.6f, playerLastPos.z);
-                    bossTargetSub[3].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y - mulNum*0.6f, playerLastPos.z);
+                    bossTargetSub[2].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y + mulNum * 0.6f, playerLastPos.z);
+                    bossTargetSub[3].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y - mulNum * 0.6f, playerLastPos.z);
                     bossTargetSub[4].transform.position = new Vector3(playerLastPos.x, playerLastPos.y - mulNum, playerLastPos.z);
                     bossTargetSub[5].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y - mulNum * 0.6f, playerLastPos.z);
                     bossTargetSub[0].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y + mulNum * 0.6f, playerLastPos.z);
@@ -440,7 +440,7 @@ public class BossController : MonoBehaviour
         }
         else if (monsterData.Id == 50)
         {
-           
+
             yield return new WaitForSeconds(2f);
             int chance = Random.Range(0, 5);
             if (chance <= rate && !isCast)
@@ -507,6 +507,41 @@ public class BossController : MonoBehaviour
                 moveSpeed = 1;
                 isCast = false;
             }
+        }
+
+        else if (monsterData.Id == 70)
+        {
+            wayMove = 1;
+
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 5);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+
+                // ban dan
+                moveSpeed = 0;
+         
+                faceToPlayer();
+                runAnimation(3);
+
+                GameObject waterBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
+                Vector3 direction = Vector3.Normalize(player.position - transform.position);
+                waterBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 1, monsterData);
+
+                GameObject waterBullet_1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
+                Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.3f,0,0);
+                waterBullet_1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_1, 5f, 1, monsterData);
+
+                GameObject waterBullet_2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
+                Vector3 direction_2 = Vector3.Normalize(player.position - transform.position) + new Vector3(-0.3f, 0, 0); ;
+                waterBullet_2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_2, 5f, 1, monsterData);
+
+
+                moveSpeed = 1;
+                isCast = false;
+            }
+
         }
 
 

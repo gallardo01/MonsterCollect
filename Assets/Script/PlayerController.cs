@@ -50,6 +50,7 @@ public class PlayerController : Singleton<PlayerController>
     // Start is called before the first frame update
 
     int cacheSpeed;
+    bool isPlayerRooted = false;
 
     void Start()
     {
@@ -626,7 +627,10 @@ gameObject.transform.rotation);
 
     public void rootPlayer()
     {
-        StartCoroutine(slowSpeed(100));
+        if (isPlayerRooted == false) {
+            isPlayerRooted = true;
+            StartCoroutine(slowSpeed(100));
+        }
     }
 
     public void slowPlayer(int percent)
@@ -641,5 +645,6 @@ gameObject.transform.rotation);
         realData.Speed = (100 - percent) * realData.Speed /100;
         yield return new WaitForSeconds(1f);
         realData.Speed = cacheSpeed;
+        isPlayerRooted = false;
     }
 }

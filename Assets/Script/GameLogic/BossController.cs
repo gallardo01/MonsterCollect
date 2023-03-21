@@ -60,7 +60,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(70);
+        initInfo(100);
 
         waypoints = new Vector2[]
         {
@@ -544,6 +544,45 @@ public class BossController : MonoBehaviour
 
         }
 
+
+        else if (monsterData.Id == 100)
+        {
+            wayMove = 1;
+
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 5);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+
+                // ban dan
+                moveSpeed = 0;
+
+                faceToPlayer();
+                runAnimation(3);
+
+
+                GameObject explosionBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
+                Vector3 direction = Vector3.Normalize(player.position - transform.position);
+
+                explosionBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 0, monsterData);
+
+                //GameObject explosionBullet_1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
+                //Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.4f, Random.Range(0, 0.3f), 0);
+                //explosionBullet_1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_1, 6f, 0, monsterData);
+
+                //GameObject explosionBullet_2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
+                //Vector3 direction_2 = Vector3.Normalize(player.position - transform.position) + new Vector3(-0.4f, Random.Range(0, 0.3f), 0); ;
+                //explosionBullet_2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_2, 6f, 0, monsterData);
+
+
+
+
+                moveSpeed = 1;
+                isCast = false;
+            }
+
+        }
 
         StartCoroutine(castSkill());
 

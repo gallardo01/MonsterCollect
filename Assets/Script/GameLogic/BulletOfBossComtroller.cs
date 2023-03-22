@@ -12,8 +12,9 @@ public class BulletOfBossComtroller : MonoBehaviour
     private int type = 0;
     private MonsterData monsterData;
 
-    const string AC_BUBBLE_SACLE = "bubble_scale";
-    const string AC_RETURN_POOL = "return_pool";
+    const string AC_SCALE_B7 = "is_trigger_scale";
+    const string AC_EXPLOSION_B10 = "is_trigger_explosion";
+
 
     private Vector3[] dir = {
         new Vector3(1, 0.6f, 0),
@@ -49,9 +50,14 @@ public class BulletOfBossComtroller : MonoBehaviour
 
         if (type == 4 ) // bubble
         {
-            StartCoroutine(runAnimeScaleBubble(1f));
+            StartCoroutine(runAnimScaleBubble(1f));
 
             StartCoroutine(returnToPool(10f));
+
+        }else if (type == 5 )
+        {
+            StartCoroutine(runAnimExplosion(1f));
+            StartCoroutine(returnToPool(5f));
 
         }
 
@@ -75,7 +81,7 @@ public class BulletOfBossComtroller : MonoBehaviour
                 speed = 0f;
                 transform.position = collision.transform.position;
 
-                StartCoroutine( returnToPool(1f));
+                StartCoroutine(returnToPool(1f));
 
             }
             else if (type == 2) // ice spike
@@ -93,6 +99,12 @@ public class BulletOfBossComtroller : MonoBehaviour
             {
                 transform.position = collision.transform.position;
                 StartCoroutine(returnToPool(1f));
+
+            }
+            else if (type == 5) // explosion 
+            {
+                StartCoroutine(runAnimExplosion(1f));
+                StartCoroutine(returnToPool(5f));
 
             }
             else
@@ -188,9 +200,15 @@ public class BulletOfBossComtroller : MonoBehaviour
     IEnumerator returnToPool(float time)
     {
         yield return new WaitForSeconds(time);
+
         if (type == 4)
         {
-            gameObject.GetComponent<Animator>().SetTrigger(AC_RETURN_POOL);
+            gameObject.GetComponent<Animator>().SetBool(AC_SCALE_B7, false);
+
+        }
+        else if (type == 5)
+        {
+            gameObject.GetComponent<Animator>().SetBool(AC_EXPLOSION_B10, false);
 
         }
         EasyObjectPool.instance.ReturnObjectToPool(gameObject);
@@ -199,10 +217,17 @@ public class BulletOfBossComtroller : MonoBehaviour
         
     }
 
-    IEnumerator runAnimeScaleBubble(float time)
+    IEnumerator runAnimExplosion(float time)
     {
         yield return new WaitForSeconds(time);
-        gameObject.GetComponent<Animator>().SetTrigger(AC_BUBBLE_SACLE);
+        gameObject.GetComponent<Animator>().SetBool(AC_EXPLOSION_B10, true);
+        speed = 0f;
+    }
+
+    IEnumerator runAnimScaleBubble(float time)
+    {
+        yield return new WaitForSeconds(time);
+        gameObject.GetComponent<Animator>().SetBool(AC_SCALE_B7, true);
         speed = 0f;
     }
 

@@ -565,7 +565,7 @@ public class BossController : MonoBehaviour
                 GameObject explosionBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
                 Vector3 direction = Vector3.Normalize(player.position - transform.position);
 
-                explosionBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 0, monsterData);
+                explosionBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 6f, 5, monsterData);
 
                 //GameObject explosionBullet_1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
                 //Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.4f, Random.Range(0, 0.3f), 0);

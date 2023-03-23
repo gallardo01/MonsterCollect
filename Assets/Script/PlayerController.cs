@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using MarchingBytes;
-
+using UnityEngine.UI;
 public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] GameObject body;
-    [SerializeField] TextMeshPro levelText;
+    //[SerializeField] TextMeshPro levelText;
     [SerializeField] GameObject particle;
-
-    [SerializeField] TextMeshPro hpText;
+    [SerializeField] Image typeImage;
+    [SerializeField] TextMeshProUGUI hpText;
     [SerializeField] GameObject hpBar;
 
     [SerializeField] GameObject locate;
@@ -61,7 +61,6 @@ public class PlayerController : Singleton<PlayerController>
         }
         playerLevel = (PlayerPrefs.GetInt("Map") - 1) * 10 + 1;
         initStart();
-        levelText.text = playerLevel.ToString();
         updatePlayerData();
         for (int i = 0; i <= 5; i++) {
             attackMonster(i);
@@ -73,7 +72,6 @@ public class PlayerController : Singleton<PlayerController>
     }
     public void initStart()
     {
-        levelText.text = playerLevel.ToString();
         // pick con nao?
         int heroesId = 10;
         data = HeroesDatabase.Instance.fetchMyData(heroesId);
@@ -107,7 +105,6 @@ public class PlayerController : Singleton<PlayerController>
     public void gainLv(int lv)
     {
         playerLevel = lv;
-        levelText.text = playerLevel.ToString();
         StartCoroutine(runVFX());
     }
 

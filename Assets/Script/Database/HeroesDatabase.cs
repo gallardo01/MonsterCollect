@@ -31,6 +31,8 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
             unlockHero(10);
+            unlockHero(11);
+
             PlayerPrefs.SetInt("HeroesPick", 10);
         }
 
@@ -151,6 +153,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     {
         for (int i = 0; i < myHeroes.Count; i++)
         {
+            Debug.Log(myHeroes[i].Id);
             if (myHeroes[i].Id == id)
             {
                 return myHeroes[i];

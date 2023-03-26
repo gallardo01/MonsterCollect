@@ -19,7 +19,7 @@ public class BulletFollowPlayer : MonoBehaviour
     {
         if (target != null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, .4f);
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, .6f);
         } 
     }
 

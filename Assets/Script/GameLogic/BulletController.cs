@@ -10,7 +10,7 @@ public class BulletController : MonoBehaviour
     private Transform target;
     // Start is called before the first frame update
     private int bounce = 4;
-    private float speed = 0.08f;
+    private float speed = 0.16f;
     private float timer = 0.1f;
     private int damePercent;
 
@@ -86,7 +86,7 @@ public class BulletController : MonoBehaviour
         if(id == 4)
         {
             bounce = 4;
-            speed = 0.08f;
+            speed = 0.16f;
         }
 
         if (skill == 1)

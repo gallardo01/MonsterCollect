@@ -61,8 +61,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        addBoss();
+        StartCoroutine(addEnemyFirstScene());
+        //addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{
@@ -179,7 +179,6 @@ public class GameController : Singleton<GameController>
         enemy.GetComponent<MonsterController>().initDataWaypoints(enemyId, pos);
     }
 
-
     public IEnumerator respawnEnemy()
     {
         yield return new WaitForSeconds(2f);
@@ -236,7 +235,7 @@ public class GameController : Singleton<GameController>
             {
                 countSkill++;
             }
-            if (currentSkill[i] > 0 && skillLevel[i] < 5)
+            if (currentSkill[i] > 0 && skillLevel[i] <= 5)
             {
                 availableOption[currentSkill[i]] = 1;
             }
@@ -252,7 +251,7 @@ public class GameController : Singleton<GameController>
         for (int i = 1; i <= 4; i++)
         {
             if (currentBuff[i] == 0) countBuff++;
-            if (currentBuff[i] > 0 && buffLevel[i] < 5)
+            if (currentBuff[i] > 0 && buffLevel[i] <= 5)
             {
                 availableOption[currentBuff[i]] = 1;
             }

@@ -14,7 +14,7 @@ public class ItemDropController : MonoBehaviour
     private int gold = 0;
     private int percent = 0;
     private ItemInventory itemAward;
-    private float speed = 0.05f;
+    private float speed = 0.1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +32,7 @@ public class ItemDropController : MonoBehaviour
         type = 2;
         gold = g;
         target = GameObject.FindWithTag("GoldBar");
-        speed = 1f;
+        speed = 2f;
     }
    
     public void setItem()

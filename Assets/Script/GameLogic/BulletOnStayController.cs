@@ -13,10 +13,26 @@ public class BulletOnStayController : MonoBehaviour
     private GameObject playerObj;
     private int size = 1;
     private int skillDame;
+    private GameObject player;
     //private void Start()
     //{
     //    //StartCoroutine(disableCollider());
     //}
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectsWithTag("Player")[0];
+    }
+
+    private void initStart()
+    {
+      
+    }
+
+    private void Update()
+    {
+        gameObject.transform.position = player.transform.position;
+    }
 
     void OnDisable()
     {

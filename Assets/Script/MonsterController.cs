@@ -192,7 +192,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     playerPos.position,
-                    (monsterData.Speed / 1200f) * Time.deltaTime);
+                    (monsterData.Speed / 1000f) * Time.deltaTime);
                 checkFlipPlayer();
             }
         }

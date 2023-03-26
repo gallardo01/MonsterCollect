@@ -15,6 +15,7 @@ public class PlayerController : Singleton<PlayerController>
 
     [SerializeField] GameObject locate;
     [SerializeField] GameObject joystick;
+    [SerializeField] int idPick;
         
     public GameObject runSmoke;
     public GameObject SmokePos;
@@ -59,7 +60,6 @@ public class PlayerController : Singleton<PlayerController>
         {
             PlayerPrefs.SetInt("Map", 1);
         }
-        playerLevel = (PlayerPrefs.GetInt("Map") - 1) * 10 + 1;
         initStart();
         updatePlayerData();
         for (int i = 0; i <= 5; i++) {
@@ -73,13 +73,13 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         // pick con nao?
-        int heroesId = 10;
-        data = HeroesDatabase.Instance.fetchMyData(heroesId);
+        Debug.Log(idPick);
+        data = HeroesDatabase.Instance.fetchMyData(idPick);
         realData = data;
         currentHp = data.Hp;
 
         hpText.text = currentHp.ToString();
-        hpBar.transform.localScale = new Vector3(1f, 1f, 1f);
+        hpBar.GetComponent<Slider>().value = 1f;
 
         for (int i = 0; i < 6; i++)
         {
@@ -124,7 +124,7 @@ public class PlayerController : Singleton<PlayerController>
         if (canMove)
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
-            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (realData.Speed / 400) * Time.deltaTime;
+            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized *(float)(realData.Move / 800f) * Time.deltaTime;
         }
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
@@ -279,7 +279,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     private IEnumerator thunder_1()
     {
-        yield return new WaitForSeconds(timer[1]/4);
+        yield return new WaitForSeconds(timer[1]);
         if (isPause == false && thunderType[1] > 0)
         {
             string bulletText = "Electric_2";
@@ -376,16 +376,18 @@ gameObject.transform.rotation);
                 isActiveNonRepeat = false;
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, gameObject.transform.position,
     gameObject.transform.rotation);
-                projectileNormal.transform.parent = gameObject.transform;
-                projectileNormal.transform.localPosition = new Vector3(0f, -0.2f, 0f);
+                //projectileNormal.transform.parent = gameObject.transform;
+                //projectileNormal.transform.localPosition = new Vector3(0f, -0.2f, 0f);
+                projectileNormal.transform.position = gameObject.transform.position;
+
                 gameObjectNonRepeat = projectileNormal;
-                float scaleNumber = 0.7f + (size - 1) * 0.2f;
+                float scaleNumber = 0.5f + (size - 1) * 0.2f;
                 projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 projectileNormal.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[5], gameObject);
             }
             else
             {
-                float scaleNumber = 0.7f + (size - 1) * 0.2f;
+                float scaleNumber = 0.5f + (size - 1) * 0.2f;
                 gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[5], gameObject);
             }
@@ -484,7 +486,6 @@ gameObject.transform.rotation);
                 StartCoroutine(setHurt(enemyLv));
                 collision.gameObject.GetComponent<MonsterController>().setAction(1);
             }
-
         }
         if (collision.gameObject.tag == "Boss")
         {
@@ -566,7 +567,7 @@ gameObject.transform.rotation);
         }
         float per = (float)currentHp / realData.Hp;
         hpText.text = currentHp.ToString();
-        hpBar.transform.localScale = new Vector3(per, 1f, 1f);
+        hpBar.GetComponent<Slider>().value = per;
     }
     public void setPlayerNormal()
     {
@@ -595,7 +596,7 @@ gameObject.transform.rotation);
         floatText.GetComponent<FloatingText>().healPlayer(actualHeal);
         float per = (float)currentHp / data.Hp;
         hpText.text = currentHp.ToString();
-        hpBar.transform.localScale = new Vector3(per, 1f, 1f);
+        hpBar.GetComponent<Slider>().value = per;    
     }
     private Vector2 shootFollower(Transform en)
     {

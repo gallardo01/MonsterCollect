@@ -68,11 +68,22 @@ public class InflateCardPick : MonoBehaviour
         {
             stars[i].SetActive(false);
         }
-        for(int i = 0; i <= level; i++)
+        if (level == 5)
         {
-            stars[i].SetActive(true);
-            starsAnimation[i].GetComponent<Animator>().SetBool("isFade", false);
+            for (int i = 0; i < 5; i++)
+            {
+                stars[i].GetComponent<Image>().color = Color.red;
+            }
         }
-        starsAnimation[level].GetComponent<Animator>().SetBool("isFade", true);
+        else
+        {
+            for (int i = 0; i <= level; i++)
+            {
+                stars[i].SetActive(true);
+                stars[i].GetComponent<Image>().color = Color.white;
+                starsAnimation[i].GetComponent<Animator>().SetBool("isFade", false);
+            }
+            starsAnimation[level].GetComponent<Animator>().SetBool("isFade", true);
+        }
     }
 }

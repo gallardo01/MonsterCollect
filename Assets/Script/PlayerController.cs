@@ -46,7 +46,7 @@ public class PlayerController : Singleton<PlayerController>
     private float[] timer = { 0, 0, 0, 0, 0, 0 };
 
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
-    public int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     // Start is called before the first frame update
 
@@ -265,13 +265,12 @@ public class PlayerController : Singleton<PlayerController>
                 Vector2 vector = shootFollower(shootTarget);
                 float angle = calAngle(shootTarget, vector);
                 projectileNormal.transform.Rotate(0, 0, angle + 90);
-                if (skillLevel[0] == 5)
+                if (skillLevel[0] == 6)
                 {
                     yield return new WaitForSeconds(0.1f);
                     GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, shootTarget.rotation);
                     projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[0], shootTarget);
                     projectileNormal1.transform.Rotate(0, 0, angle + 90);
-
                 }
             }
         }
@@ -292,6 +291,14 @@ public class PlayerController : Singleton<PlayerController>
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.transform.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
+
+                if (skillLevel[1] == 6)
+                {
+                    yield return new WaitForSeconds(0.5f);
+                    GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+        shootTarget.transform.rotation);
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
+                }
             }
             StartCoroutine(disableObject(5f, shootTarget)); 
         }
@@ -299,6 +306,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     private IEnumerator thunder_2()
     {
+        float timeDelay = 3.5f;
         if (isPause == false && thunderType[2] > 0)
         {
             string bulletText = "Electric_3";
@@ -309,8 +317,12 @@ gameObject.transform.rotation);
             yield return new WaitForSeconds(3.5f);
             EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
             projectileNormal.SetActive(false);
+            if(skillLevel[2] == 6)
+            {
+                timeDelay = 4f;
+            }
         }
-        yield return new WaitForSeconds(timer[2] - 3.5f);
+        yield return new WaitForSeconds(timer[2] - timeDelay);
         StartCoroutine(thunder_2());
     }
     private IEnumerator thunder_3()
@@ -323,6 +335,9 @@ gameObject.transform.rotation);
             Vector2 vector2 = new Vector2(1f, -2f);
             Vector2 vector3 = new Vector2(-1f, -2f);
             Vector2 vector4 = new Vector2(1f, 2f);
+            Vector2 vector5 = new Vector2(0f, 2f);
+            Vector2 vector6 = new Vector2(0f, -2f);
+
 
             GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
             projectileNormal.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
@@ -345,6 +360,15 @@ gameObject.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
                 projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector4 * 100);
             }
+            if(skillLevel[3] == 6)
+            {
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+                projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector5 * 100);
+                GameObject projectileNormal2 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+                projectileNormal2.GetComponent<BulletNoTargetController>().initBullet(realData, 3, dameSkill[3], gameObject.transform);
+                projectileNormal2.GetComponent<Rigidbody2D>().AddForce(vector6 * 100);
+            }
         }
         yield return new WaitForSeconds(timer[3]);
         StartCoroutine(thunder_3());
@@ -360,6 +384,17 @@ gameObject.transform.rotation);
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[4], shootTarget);
+            }
+            if(skillLevel[4] == 6)
+            {
+                yield return new WaitForSeconds(0.5f);
+                Transform shootTarget2 = EasyObjectPool.instance.getNearestHitPosition(gameObject);
+                if (shootTarget2 != null)
+                {
+                    GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+        shootTarget2.rotation);
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[4], shootTarget2);
+                }
             }
         }
         yield return new WaitForSeconds(timer[4]);
@@ -381,13 +416,13 @@ gameObject.transform.rotation);
                 projectileNormal.transform.position = gameObject.transform.position;
 
                 gameObjectNonRepeat = projectileNormal;
-                float scaleNumber = 0.5f + (size - 1) * 0.2f;
+                float scaleNumber = 0.5f + (size - 1) * 0.1f;
                 projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 projectileNormal.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[5], gameObject);
             }
             else
             {
-                float scaleNumber = 0.5f + (size - 1) * 0.2f;
+                float scaleNumber = 0.5f + (size - 1) * 0.1f;
                 gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(realData, size, dameSkill[5], gameObject);
             }
@@ -444,6 +479,7 @@ gameObject.transform.rotation);
     IEnumerator deadAnimation()
     {
         canMove = false;
+        gameObject.tag = "Wall";
         joystick.SetActive(false);
         GameController.Instance.updateEndGameInformation();
         yield return new WaitForSeconds(0.99f);
@@ -506,7 +542,6 @@ gameObject.transform.rotation);
         yield return new WaitForSeconds(0.7f);
         canHurt = true;
     }
-
     public void setPlayerHurt(MonsterData monsterData, int status)
     {
         // 1 root
@@ -579,6 +614,7 @@ gameObject.transform.rotation);
         canMove = true;
         joystick.SetActive(true);
         isPause = false;
+        gameObject.tag = "Player";
         currentHp = realData.Hp;
         hpText.text = currentHp.ToString();
         GameController.Instance.setSpawn(true);
@@ -627,7 +663,6 @@ gameObject.transform.rotation);
             diference = pos - target;
         return Vector2.Angle(Vector2.right, diference);
     }
-
     public void rootPlayer()
     {
         if (isPlayerRooted == false) {
@@ -635,13 +670,11 @@ gameObject.transform.rotation);
             StartCoroutine(slowSpeed(100));
         }
     }
-
     public void slowPlayer(int percent)
     {
         cacheSpeed = realData.Speed;
         realData.Speed = (100 - percent) * realData.Speed / 100;
     }
-
     private IEnumerator slowSpeed(int percent)
     {
         int cacheSpeed = realData.Speed;

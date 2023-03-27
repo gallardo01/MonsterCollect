@@ -28,7 +28,7 @@ public class GameController : Singleton<GameController>
     private List<ItemInventory> itemAward = new List<ItemInventory>();
     private int playerType = 1;
     private int[] currentSkill = { 0, 1, 0, 0, 0 };
-    private int[] skillLevel = { 0, 1, 0, 0, 0 };
+    public int[] skillLevel = { 0, 1, 0, 0, 0 };
     private int[] currentBuff = { 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0 };
     private int[] type = { 0, 0, 0 };

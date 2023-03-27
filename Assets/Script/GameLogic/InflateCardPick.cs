@@ -72,7 +72,9 @@ public class InflateCardPick : MonoBehaviour
         {
             for (int i = 0; i < 5; i++)
             {
+                stars[i].SetActive(true);
                 stars[i].GetComponent<Image>().color = Color.red;
+                starsAnimation[i].GetComponent<Animator>().SetBool("isFade", true);
             }
         }
         else

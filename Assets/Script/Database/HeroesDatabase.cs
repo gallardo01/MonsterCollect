@@ -153,7 +153,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     {
         for (int i = 0; i < myHeroes.Count; i++)
         {
-            Debug.Log(myHeroes[i].Id);
             if (myHeroes[i].Id == id)
             {
                 return myHeroes[i];

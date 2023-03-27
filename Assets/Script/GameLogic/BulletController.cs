@@ -28,8 +28,7 @@ public class BulletController : MonoBehaviour
                 if (id == 4 && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
                 {
                     target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
-                }
-                if (target != null && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
+                }else if (target != null && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
                 }
@@ -100,7 +99,7 @@ public class BulletController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Wall" && id != 1)
         {
-            GameController.Instance.addParticle(collision.gameObject, 1);
+            //GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }

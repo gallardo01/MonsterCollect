@@ -44,7 +44,7 @@ public class BulletNoTargetController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Wall")
         {
-            GameController.Instance.addParticle(collision.gameObject, 1);
+            //GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }

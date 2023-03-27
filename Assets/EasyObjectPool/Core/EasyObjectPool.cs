@@ -101,7 +101,7 @@ namespace MarchingBytes {
 				 * While that would have been more robust, it would have made this method O(n) 
 				 */
 				if(po.isPooled) {
-					Debug.LogWarning(po.gameObject.name + " is already in pool. Why are you trying to return it again? Check usage.");	
+					//Debug.LogWarning(po.gameObject.name + " is already in pool. Why are you trying to return it again? Check usage.");	
 				} else {
 					AddObjectToPool(po);
 				}

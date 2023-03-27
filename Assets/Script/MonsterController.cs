@@ -139,7 +139,7 @@ public class MonsterController : MonoBehaviour
     private int returnExpGet(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        return ((lv % 10) + 2) * 150 * (PlayerController.Instance.getBonusPoints(9) + 100) / 100;
+        return ((lv % 10) + 2) * 350 * (PlayerController.Instance.getBonusPoints(9) + 100) / 100;
     }
 
 

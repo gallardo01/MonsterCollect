@@ -53,6 +53,10 @@ public class PlayerController : Singleton<PlayerController>
     int cacheSpeed;
     bool isPlayerRooted = false;
 
+    private void Awake()
+    {
+        joystick = GameObject.FindGameObjectWithTag("JoyStick");
+    }
     void Start()
     {
         //Vector3 pos = new Vector3(Screen.width, Screen.height, 0);

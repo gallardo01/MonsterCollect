@@ -179,7 +179,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     waypoints[waypointIndex].transform.position,
-                    (monsterData.Speed / 1200f) * Time.deltaTime);
+                    (monsterData.Speed / 800f) * Time.deltaTime);
                 if (transform.position.x == waypoints[waypointIndex].transform.position.x && transform.position.y == waypoints[waypointIndex].transform.position.y)
                 {
                     isMove = false;
@@ -196,6 +196,34 @@ public class MonsterController : MonoBehaviour
                 checkFlipPlayer();
             }
         }
+    }
+    // Skill Monster
+
+    private void skillGainSpeed()
+    {
+        StartCoroutine(skillSpeed());
+    }
+
+    IEnumerator skillSpeed()
+    {
+        int cacheSpeed = monsterData.Speed;
+        yield return new WaitForSeconds(4f);
+        monsterData.Speed *= 3/2;
+    }
+    private void skillGainArmour()
+    {
+        StartCoroutine(skillArmour());
+    }
+    IEnumerator skillArmour()
+    {
+        int cacheArmour = monsterData.Armour;
+        yield return new WaitForSeconds(4f);
+        monsterData.Armour += 10000;
+        level.text = "<sprite=3>";
+        yield return new WaitForSeconds(2f);
+        level.text = " <sprite=" + (monsterData.Type + 10) + "> Lv." + monsterData.Id.ToString();
+        monsterData.Armour -= 10000;
+        StartCoroutine(skillArmour());
     }
 
     IEnumerator idleBehavior()

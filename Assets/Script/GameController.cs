@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using MarchingBytes;
 using TMPro;
 using DG.Tweening;
-
+using Cinemachine;
 public class GameController : Singleton<GameController>
 {
     [SerializeField] GameObject expBar;
@@ -28,17 +28,24 @@ public class GameController : Singleton<GameController>
     private List<ItemInventory> itemAward = new List<ItemInventory>();
     private int playerType = 1;
     private int[] currentSkill = { 0, 1, 0, 0, 0 };
-    public int[] skillLevel = { 0, 1, 0, 0, 0 };
+    private int[] skillLevel = { 0, 1, 0, 0, 0 };
     private int[] currentBuff = { 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0 };
     private int[] type = { 0, 0, 0 };
     private int[] availableOption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private GameObject[] waypoints1;
     private bool isBossSpawn = true;
+    [SerializeField] GameObject camera;
 
     //private Sprite[] sheetTextures;
     //private string[] sheetNames;
 
+    private void Awake()
+    {
+        GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No.11") as GameObject);
+        pl.transform.position = new Vector3(0f, 0f, 0f);
+        camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +62,6 @@ public class GameController : Singleton<GameController>
         string route = "Route1";
         waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
-
         enemyLv = 1;
         initInfo();
         playerLevel = PlayerController.Instance.getLevel();
@@ -123,7 +129,7 @@ public class GameController : Singleton<GameController>
     }
     IEnumerator spawnBoss()
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(1f);
         isBossSpawn = false;
         addBoss();
     }

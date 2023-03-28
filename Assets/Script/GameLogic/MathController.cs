@@ -6,11 +6,7 @@ public class MathController : Singleton<MathController>
 {
     // Start is called before the first frame update
 
-    private int[] armourPercent = {0, 10, 20, 25, 30, 35, 40, 50, 1000};
-    private int[] armourPoints = {0, 15, 30, 60, 80, 100, 160, 200, 1000};
-
-    private int[] critPercent = { 0, 5, 10, 20, 25, 30, 35, 40, 50 };
-    private int[] critPoints = { 0, 200, 400, 700, 1200, 1800, 2500, 3500, 5000};
+    private int[] armourPercent = {20, 40, 60, 85, 120, 175, 200};
 
     private float[,] type = {{0, 0, 0, 0, 0 },
                              {0, 0.7f, 0.7f, 1f, 1.3f },
@@ -32,15 +28,15 @@ public class MathController : Singleton<MathController>
         float typeRate = type[heroesData.Type, monsterData.Type];
         if(typeRate > 1)
         {
-            typeRate += (float)PlayerController.Instance.getBonusPoints(7) / 10;
+            typeRate += (float)PlayerController.Instance.getBonusPoints(7) / 100;
         }
         if (Random.Range(0, 100) < critRate)
         {
-            hp = 100 + heroesData.Atk * skillDame / 100f * typeRate * 2f * (100 - armourRate) * 0.3f / 100f + heroesData.Atk * heroesData.Atk / 3000 * skillDame / 100f * typeRate * 2f * (100 - armourRate) * 0.3f / 100f;
+            hp = (heroesData.Atk / 3)  * (skillDame / 100f) * typeRate * 2f * (100 - armourRate)/ 100f;
             return (int)hp;
         } else
         {
-            hp = -100 + (-heroesData.Atk) * skillDame / 100f * typeRate * (100 - armourRate) * 0.3f / 100f - heroesData.Atk * heroesData.Atk / 3000 * skillDame / 100f * typeRate * (100 - armourRate) * 0.3f / 100f; 
+            hp = -(heroesData.Atk / 3) * (skillDame / 100f) * typeRate * (100 - armourRate)/ 100f; 
             return (int)hp;
         }
     }
@@ -78,24 +74,22 @@ public class MathController : Singleton<MathController>
     private int percentageArmour(int armour)
     {
         int percent = 0;
-        int step = 1;
-        while(armour > 0)
+
+        for (int i = 0; i <= 6; i++)
         {
-            if(armour >= (armourPercent[step] - armourPercent[step-1]) * armourPoints[step])
+            if (armour > armourPercent[i] * 10)
             {
-                percent += (armourPercent[step] - armourPercent[step - 1]);
-                armour -= (armourPercent[step] - armourPercent[step - 1]) * armourPoints[step];
-            }
-            else
+                percent += 10;
+                armour -= armourPercent[i] * 10;
+            } else
             {
-                percent += armour/ armourPoints[step];
+                percent += armour / armourPercent[i];
                 break;
             }
-            step++;
         }
-        if(percent >= 50)
+        if(percent >= 70)
         {
-            percent = 50;
+            percent = 700;
         }
         return percent;
     }

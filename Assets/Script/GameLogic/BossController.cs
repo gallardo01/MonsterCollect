@@ -60,7 +60,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(100);
+        initInfo(80);
 
         waypoints = new Vector2[]
         {
@@ -544,6 +544,33 @@ public class BossController : MonoBehaviour
 
         }
 
+        else if (monsterData.Id == 80)
+        {
+            wayMove = 1;
+
+            if (!isCast)
+            {
+                GameObject fireRoundBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
+                fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 0, monsterData);
+                fireRoundBullet.transform.SetParent(transform);
+                isCast = true;
+            }
+
+
+            //yield return new WaitForSeconds(2f);
+            //int chance = Random.Range(0, 5);
+            //if (chance <= rate && !isCast)
+            //{
+            //    isCast = true;
+
+            //    // ban dan
+            //    moveSpeed = 0;
+
+            //    moveSpeed = 1;
+            //    isCast = false;
+            //}
+
+        }
 
         else if (monsterData.Id == 100)
         {

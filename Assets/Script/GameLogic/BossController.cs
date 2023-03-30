@@ -550,25 +550,19 @@ public class BossController : MonoBehaviour
 
             if (!isCast)
             {
-                GameObject fireRoundBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
-                fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 0, monsterData);
-                fireRoundBullet.transform.SetParent(transform);
+                for (int i = 0; i < 3; i++)
+                {
+                    GameObject fireRoundBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
+                    fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 0, monsterData);
+                    fireRoundBullet.transform.SetParent(transform);
+                    fireRoundBullet.transform.localScale = new Vector3(-1, 1, 1);
+                    
+                    yield return new WaitForSeconds(.75f);
+                }
+
                 isCast = true;
             }
-
-
-            //yield return new WaitForSeconds(2f);
-            //int chance = Random.Range(0, 5);
-            //if (chance <= rate && !isCast)
-            //{
-            //    isCast = true;
-
-            //    // ban dan
-            //    moveSpeed = 0;
-
-            //    moveSpeed = 1;
-            //    isCast = false;
-            //}
+            yield return new WaitForSeconds(2f);
 
         }
 

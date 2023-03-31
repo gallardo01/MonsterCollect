@@ -11,6 +11,7 @@ public class BulletOfBossComtroller : MonoBehaviour
     private Vector3 direction;
     private int type = 0;
     private MonsterData monsterData;
+    private Transform boss;
 
     const string AC_SCALE_B7 = "is_trigger_scale";
     const string AC_EXPLOSION_B10 = "is_trigger_explosion";
@@ -27,7 +28,8 @@ public class BulletOfBossComtroller : MonoBehaviour
 
 
 
-    // Start is called before the first frame update
+    private float temp_circle = 0;
+    private bool is_round = true;
 
 
     // Update is called once per frame
@@ -35,9 +37,21 @@ public class BulletOfBossComtroller : MonoBehaviour
     {
         if (target != null)
         {
-            transform.position += direction * speed *Time.deltaTime;
+
+            if (type == 6 && is_round)
+            {
+                transform.position = boss.position + new Vector3(2.5f * Mathf.Cos(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle/3), 2.5f * Mathf.Sin(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle/3), 0);
+                
+            }else
+            {
+                transform.position += direction * speed * Time.deltaTime;
+
+            }
         }
+        
     }
+
+
 
     public void initBullet(Transform Target, Vector3 Direction, float Speed, int type, MonsterData monsterData)
     {
@@ -48,19 +62,47 @@ public class BulletOfBossComtroller : MonoBehaviour
         this.monsterData = monsterData;
         //direction = Vector3.Normalize(target.position -Source.position);
 
-        if (type == 4 ) // bubble
+        if (type == 4) // bubble
         {
             StartCoroutine(runAnimScaleBubble(1f));
 
             StartCoroutine(returnToPool(10f));
 
-        }else if (type == 5 )
+        }
+        else if (type == 5)
+        {
+            StartCoroutine(runAnimExplosion(1f));
+            StartCoroutine(returnToPool(5f));
+
+        }
+    }
+
+    public void initBullet(Transform Target, Transform Boss, Vector3 Direction, float Speed, int type, MonsterData monsterData, float temp_circle)
+    {
+        target = Target;
+        speed = Speed;
+        direction = Direction;
+        this.type = type;
+        this.monsterData = monsterData;
+        //direction = Vector3.Normalize(target.position -Source.position);
+        this.boss = Boss;
+        this.temp_circle = temp_circle;
+
+        if (type == 4) // bubble
+        {
+            StartCoroutine(runAnimScaleBubble(1f));
+
+            StartCoroutine(returnToPool(10f));
+
+        }
+        else if (type == 5)
         {
             StartCoroutine(runAnimExplosion(1f));
             StartCoroutine(returnToPool(5f));
 
         }
 
+        //StartCoroutine(fireToPlayer(5f));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -105,6 +147,10 @@ public class BulletOfBossComtroller : MonoBehaviour
             {
                 StartCoroutine(runAnimExplosion(1f));
                 StartCoroutine(returnToPool(5f));
+
+            }
+            else if (type == 6) // 
+            {
 
             }
             else
@@ -231,4 +277,9 @@ public class BulletOfBossComtroller : MonoBehaviour
         speed = 0f;
     }
 
+    IEnumerator fireToPlayer(float time)
+    {
+        yield return new WaitForSeconds(time);
+        is_round = false;
+    }
 }

@@ -547,22 +547,35 @@ public class BossController : MonoBehaviour
         else if (monsterData.Id == 80)
         {
             wayMove = 1;
-
-            if (!isCast)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    GameObject fireRoundBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
-                    fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 0, monsterData);
-                    fireRoundBullet.transform.SetParent(transform);
-                    fireRoundBullet.transform.localScale = new Vector3(-1, 1, 1);
-                    
-                    yield return new WaitForSeconds(.75f);
-                }
-
-                isCast = true;
-            }
             yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 5);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+
+                GameObject fireRoundBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
+                fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 0f);
+
+                GameObject fireRoundBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
+                fireRoundBullet1.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 2f);
+
+                GameObject fireRoundBullet2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
+                fireRoundBullet2.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 4f);
+
+                yield return new WaitForSeconds(5f);
+
+                fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
+                yield return new WaitForSeconds(.5f);
+
+                fireRoundBullet1.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
+                yield return new WaitForSeconds(.5f);
+                
+                fireRoundBullet2.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
+                yield return new WaitForSeconds(.5f);
+
+
+                isCast = false;
+            }
 
         }
 

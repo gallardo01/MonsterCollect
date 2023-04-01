@@ -303,13 +303,10 @@ public class BossController : MonoBehaviour
             if (chance <= rate && !isCast)
             {
                 isCast = true;
-
                 runAnimation(3);
-
                 GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy14", transform.position, transform.rotation);
                 fellow.GetComponent<MonsterController>().initData(14, false);
                 fellow.GetComponent<MonsterController>().triggerWaypoints();
-
 
                 if (isRage())
                 {

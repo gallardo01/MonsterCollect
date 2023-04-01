@@ -111,7 +111,10 @@ public class PlayerController : Singleton<PlayerController>
         playerLevel = lv;
         StartCoroutine(runVFX());
     }
-
+    public Transform returnObj()
+    {
+        return this.gameObject.transform;
+    }
     IEnumerator runVFX()
     {
         particle.SetActive(true);

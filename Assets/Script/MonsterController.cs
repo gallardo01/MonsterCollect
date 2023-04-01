@@ -7,37 +7,41 @@ public class MonsterController : MonoBehaviour
 {
     // Start is called before the first frame update
     public TextMeshPro level;
-    private GameObject[] waypoints;
+    private GameObject waypoints;
     private int waypointIndex = 0;
     private bool isMove = true;
     private int wayMove = 1;
     private int facingRight = 1;
     private Transform playerPos;
-    private BoxCollider2D collider;
     private MonsterData monsterData;
     private int currentHp;
     private bool isDead = false;
 
     void Start()
     {
-        collider = GetComponent<BoxCollider2D>();
-        //gameObject.GetComponent<Collider2D>().enabled = true;
-        StartCoroutine(stopIdle());
+        playerPos = PlayerController.Instance.returnObj();
     }
     void FixedUpdate()
     {
         Move();
     }
 
+    private void Awake()
+    {
+        waypoints = EasyObjectPool.instance.GetObjectFromPool("Empty_NoCollider", transform.position, transform.rotation);
+        waypoints.transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
+    }
+
     void OnEnable()
     {
+        waypoints.transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
         isMove = true;
         StartCoroutine(stopIdle());
     }
 
     IEnumerator stopIdle()
     {
-        yield return new WaitForSeconds(Random.Range(5f, 9f));
+        yield return new WaitForSeconds(Random.Range(10f, 20f));
         wayMove = 2;
     }
     public void initDataWaypoints(int id, int way)
@@ -46,22 +50,28 @@ public class MonsterController : MonoBehaviour
         monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
         currentHp = monsterData.Hp;
         setText(id);
-        setupWaypoints(way);
+        setupWaypoints();
     }
-
     public void initData(int id, bool useWaypoint)
     {
+        //transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
         isDead = false;
         monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
-        wayMove = 2;
-
         currentHp = monsterData.Hp;
         setText(id);
         isMove = true;
-        playerPos = GameObject.FindGameObjectsWithTag("Player")[0].transform;
+        abilityMonster();
+        wayMove = 1;
         runAnimation(2);
     }
-
+    public void setupWaypoints()
+    {
+        isMove = true;
+        wayMove = 1;
+        gameObject.SetActive(true);
+        checkFlip();
+        runAnimation(2);
+    }
     public bool isFullHp()
     {
         return currentHp == monsterData.Hp;
@@ -98,7 +108,6 @@ public class MonsterController : MonoBehaviour
                 setAction(2);
                 isDead = true;
             }
-            disableObject();
             string floatingText = "FloatingText";
             GameObject floatText = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
             floatText.GetComponent<FloatingText>().disableObject(dame, type);
@@ -178,12 +187,11 @@ public class MonsterController : MonoBehaviour
             if (wayMove == 1)
             {
                 transform.position = Vector2.MoveTowards(transform.position,
-                    waypoints[waypointIndex].transform.position,
+                    waypoints.transform.position,
                     (monsterData.Speed / 800f) * Time.deltaTime);
-                if (transform.position.x == waypoints[waypointIndex].transform.position.x && transform.position.y == waypoints[waypointIndex].transform.position.y)
+                if (transform.position.x == waypoints.transform.position.x && transform.position.y == waypoints.transform.position.y)
                 {
                     isMove = false;
-                    runAnimation(1);
                     StartCoroutine(idleBehavior());
                 }
             }
@@ -228,12 +236,14 @@ public class MonsterController : MonoBehaviour
 
     IEnumerator idleBehavior()
     {
-        yield return new WaitForSeconds(2f);
+        runAnimation(1);
+        yield return new WaitForSeconds(1f);
         int chance = Random.Range(0, 2);
         if (chance % 2 == 0)
         {
+            waypoints.transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
+            isMove = true;
             runAnimation(2);
-            waypointIndex = Random.Range(0, 25);
             checkFlip();
         }
         else
@@ -244,11 +254,11 @@ public class MonsterController : MonoBehaviour
 
     private void checkFlip()
     {
-        if (transform.position.x < waypoints[waypointIndex].transform.position.x && facingRight == 0)
+        if (transform.position.x < waypoints.transform.position.x && facingRight == 0)
         {
             flip();
         }
-        else if (transform.position.x > waypoints[waypointIndex].transform.position.x && facingRight == 1)
+        else if (transform.position.x > waypoints.transform.position.x && facingRight == 1)
         {
             flip();
         }
@@ -293,30 +303,9 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    public void setupWaypoints(int way)
-    {
-        isMove = true;
-        wayMove = 1;
-        string route = "Route1";
-        GameObject[] waypoints1 = GameObject.FindGameObjectsWithTag(route);
-        System.Array.Sort(waypoints1, CompareObNames);
-        waypoints = waypoints1;
-        //int pos = Random.Range(0, waypoints.Length);
-        int pos = way;
-        gameObject.SetActive(true);
-        transform.position = waypoints[pos].transform.position;
-        waypointIndex = Random.Range(0, waypoints.Length);
-        playerPos = GameObject.FindGameObjectsWithTag("Player")[0].transform;
-        checkFlip();
-        runAnimation(2);
-    }
 
     private void runAnimation(int pos)
     {
-      
-
-        //fix stupid animation 
-
         //idle
         if (pos == 1)
         {
@@ -366,8 +355,38 @@ public class MonsterController : MonoBehaviour
 
     IEnumerator disableObject()
     {
+
         gameObject.GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(2f);
+        if (monsterData.Id == 3)
+        {
+            GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_1", transform.position, transform.rotation);
+            Vector2 force = playerPos.position - transform.position;
+            force = force.normalized;
+            bullet.GetComponent<MonsterBullet>().initData(monsterData, false);
+            bullet.GetComponent<Rigidbody2D>().AddForce(force * 300);
+            float angle = calAngle(playerPos, force);
+            bullet.transform.Rotate(0, 0, angle + 90);
+        }
+        else if (monsterData.Id == 13)
+        {
+            GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_2", transform.position, transform.rotation);
+            Vector2 force = playerPos.position - transform.position;
+            force = force.normalized;
+            bullet.GetComponent<MonsterBullet>().initData(monsterData, false);
+            bullet.GetComponent<Rigidbody2D>().AddForce(force * 300);
+            float angle = calAngle(playerPos, force);
+            bullet.transform.Rotate(0, 0, angle + 90);
+        }
+        else if (monsterData.Id == 7)
+        {
+            GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_2", transform.position, transform.rotation);
+            Vector2 force = playerPos.position - transform.position;
+            force = force.normalized;
+            bullet.GetComponent<MonsterBullet>().initData(monsterData, true);
+            float angle = calAngle(playerPos, force);
+            bullet.transform.Rotate(0, 0, angle + 90);
+        }
         EasyObjectPool.instance.ReturnObjectToPool(gameObject);
         gameObject.GetComponent<Collider2D>().enabled = true;
         gameObject.SetActive(false);
@@ -401,4 +420,39 @@ public class MonsterController : MonoBehaviour
         yield return new WaitForSeconds(timer);
         monsterData.Speed = s;
     }
+
+    private void abilityMonster()
+    {
+        if(monsterData.Id == 5)
+        {
+            skillGainArmour();
+        } else if(monsterData.Id == 9)
+        {
+            skillGainSpeed();
+        }
+    }
+    private float calAngle(Transform en, Vector2 vector)
+    {
+        Vector2 cur = new Vector2(-1, 0);
+        float y = gameObject.transform.position.y;
+        float n = en.transform.position.y;
+        float angle = 0;
+
+        if (y <= n)
+            angle = 2 * AngleTo(cur, vector);
+        else
+            angle = -2 * AngleTo(cur, vector);
+
+        return angle;
+    }
+    private float AngleTo(Vector2 pos, Vector2 target)
+    {
+        Vector2 diference;
+        if (target.x > pos.x)
+            diference = target - pos;
+        else
+            diference = pos - target;
+        return Vector2.Angle(Vector2.right, diference);
+    }
+
 }

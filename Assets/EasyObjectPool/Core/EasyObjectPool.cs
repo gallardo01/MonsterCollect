@@ -237,7 +237,7 @@ namespace MarchingBytes {
 							distance = delta.magnitude;
 							obj = i;
 						}
-						if (delta.magnitude < 3f)
+						if (delta.magnitude < 1f)
 						{
 							listObj[i].GetComponent<MonsterController>().triggerWaypoints();
 						}
@@ -251,9 +251,6 @@ namespace MarchingBytes {
 						{
 							distance = delta.magnitude;
 							obj = i;
-						}
-						if (delta.magnitude < 3f)
-						{
 						}
 					}
 				}
@@ -285,10 +282,6 @@ namespace MarchingBytes {
 							distance = delta.magnitude;
 							obj = i;
 						}
-						if (delta.magnitude < 3f)
-						{
-							listObj[i].GetComponent<MonsterController>().triggerWaypoints();
-						}
 					}
 				} else if(listObj[i].tag == "Boss")
                 {
@@ -299,9 +292,6 @@ namespace MarchingBytes {
 						{
 							distance = delta.magnitude;
 							obj = i;
-						}
-						if (delta.magnitude < 3f)
-						{
 						}
 					}
 				}

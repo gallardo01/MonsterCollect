@@ -23,19 +23,19 @@ public class BulletController : MonoBehaviour
     {
         if (target != null && (target.tag == "Enemy"))
         {
-            if (id != 1 && (target.gameObject.GetComponent<MonsterController>().getIsDead() == false || id == 4))
+            if (id != 1 && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
             {
                 if (id == 4 && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
                 {
                     target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
-                }else if (target != null && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
+                }
+                else if (target != null && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
                 }
                 else
                 {
-                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                    gameObject.SetActive(false);
+                    target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
                 }
             } else
             {

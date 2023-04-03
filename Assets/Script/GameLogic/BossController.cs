@@ -60,7 +60,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        initInfo(80);
+        initInfo(90);
 
         waypoints = new Vector2[]
         {
@@ -569,6 +569,54 @@ public class BossController : MonoBehaviour
                 
                 fireRoundBullet2.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
                 yield return new WaitForSeconds(.5f);
+
+
+                isCast = false;
+            }
+
+        }
+
+        else if (monsterData.Id == 90)
+        {
+            wayMove = 1;
+            yield return new WaitForSeconds(2f);
+            int chance = Random.Range(0, 5);
+            if (chance <= rate && !isCast)
+            {
+                isCast = true;
+
+                //phut 3 la
+
+                for (int i = 0; i < 3; i++)
+                {
+                    faceToPlayer();
+                    runAnimation(3);
+
+                    GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss", transform.position, transform.rotation);
+                    Vector3 direction = Vector3.Normalize(player.position - transform.position);
+                    fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 4f, 0, monsterData);
+                    float angle = calAngle(player.transform, direction);
+                    fileBullet.transform.Rotate(0, 0, angle);
+
+                    GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss", transform.position, transform.rotation);
+                    Vector3 direction1 = Vector3.Normalize(player.position - transform.position + new Vector3(3f, 0, 0));
+                    fileBullet1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction1, 4f, 0, monsterData);
+                    float angle1 = calAngle(player.transform, direction1);
+                    fileBullet1.transform.Rotate(0, 0, angle1);
+
+                    GameObject fileBullet2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss", transform.position, transform.rotation);
+                    Vector3 direction2 = Vector3.Normalize(player.position - transform.position + new Vector3(-6f, 0, 0));
+                    fileBullet2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction2, 4f, 0, monsterData);
+                    float angle2 = calAngle(player.transform, direction2);
+                    fileBullet2.transform.Rotate(0, 0, angle2);
+
+                    yield return new WaitForSeconds(1f);
+
+                }
+
+                //GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss_2", transform.position, transform.rotation);
+                //Vector3 direction = Vector3.Normalize(player.position - transform.position);
+                //fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 4f, 7, monsterData);
 
 
                 isCast = false;

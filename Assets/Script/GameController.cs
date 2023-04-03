@@ -67,8 +67,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        StartCoroutine(addEnemyFirstScene());
-        //addBoss();
+        //StartCoroutine(addEnemyFirstScene());
+        addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{
@@ -140,10 +140,10 @@ public class GameController : Singleton<GameController>
     }
     private void addBoss()
     {
-        string enemyType = "Enemy" + (80);
+        string enemyType = "Enemy" + (90);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
 
-        boss.GetComponent<BossController>().initInfo(20);
+        boss.GetComponent<BossController>().initInfo(90);
         boss.transform.localPosition = new Vector3(5, 5, 5);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
     }

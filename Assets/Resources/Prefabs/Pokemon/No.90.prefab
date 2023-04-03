@@ -537,10 +537,10 @@ GameObject:
   - component: {fileID: 529030274947959572}
   - component: {fileID: 888788477401461296}
   - component: {fileID: 6614857060354426563}
-  - component: {fileID: 7254811552095513186}
+  - component: {fileID: 4509832642181447341}
   m_Layer: 0
   m_Name: No.90
-  m_TagString: Enemy
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -581,7 +581,7 @@ MonoBehaviour:
   armatureName: Armature
   isUGUI: 0
   debugDraw: 0
-  animationName: die
+  animationName: idle
   _playTimes: 0
   _timeScale: 1
   _sortingMode: 0
@@ -656,7 +656,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.7909609}
   m_EdgeRadius: 0
---- !u!114 &7254811552095513186
+--- !u!114 &4509832642181447341
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -665,9 +665,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 529030274947959573}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa363a857d450304ead3f0fe6b4d7f24, type: 3}
+  m_Script: {fileID: 11500000, guid: 11206a91933582344ad0bca7b74e6f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 1
   level: {fileID: 529030274762840545}
 --- !u!1 &529030274976546635
 GameObject:

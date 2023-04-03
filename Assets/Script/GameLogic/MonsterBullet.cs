@@ -30,6 +30,7 @@ public class MonsterBullet : MonoBehaviour
     public void initData(MonsterData data, bool type)
     {
         this.data = data;
+        this.type = type;
         if (type)
         {
             player = GameObject.FindGameObjectWithTag("Player");

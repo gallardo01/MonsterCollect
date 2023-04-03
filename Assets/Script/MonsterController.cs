@@ -48,6 +48,7 @@ public class MonsterController : MonoBehaviour
     {
         isDead = false;
         monsterData = MonsterDatabase.Instance.fetchMonsterIndex(id);
+        abilityMonster();
         currentHp = monsterData.Hp;
         setText(id);
         setupWaypoints();
@@ -60,7 +61,6 @@ public class MonsterController : MonoBehaviour
         currentHp = monsterData.Hp;
         setText(id);
         isMove = true;
-        abilityMonster();
         wayMove = 1;
         runAnimation(2);
     }
@@ -217,6 +217,9 @@ public class MonsterController : MonoBehaviour
         int cacheSpeed = monsterData.Speed;
         yield return new WaitForSeconds(4f);
         monsterData.Speed *= 3/2;
+        yield return new WaitForSeconds(3f);
+        monsterData.Speed = cacheSpeed;
+        StartCoroutine(skillSpeed());
     }
     private void skillGainArmour()
     {
@@ -228,9 +231,9 @@ public class MonsterController : MonoBehaviour
         yield return new WaitForSeconds(4f);
         monsterData.Armour += 10000;
         level.text = "<sprite=3>";
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
         level.text = " <sprite=" + (monsterData.Type + 10) + "> Lv." + monsterData.Id.ToString();
-        monsterData.Armour -= 10000;
+        monsterData.Armour = cacheArmour;
         StartCoroutine(skillArmour());
     }
 
@@ -380,7 +383,7 @@ public class MonsterController : MonoBehaviour
         }
         else if (monsterData.Id == 7)
         {
-            GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_2", transform.position, transform.rotation);
+            GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_3", transform.position, transform.rotation);
             Vector2 force = playerPos.position - transform.position;
             force = force.normalized;
             bullet.GetComponent<MonsterBullet>().initData(monsterData, true);

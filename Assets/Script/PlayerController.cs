@@ -16,7 +16,10 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] GameObject locate;
     [SerializeField] GameObject joystick;
     [SerializeField] int idPick;
-        
+
+    [SerializeField] GameObject line_hp;
+    [SerializeField] GameObject line;
+
     public GameObject runSmoke;
     public GameObject SmokePos;
     private int currentHp;
@@ -84,7 +87,12 @@ public class PlayerController : Singleton<PlayerController>
 
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
-
+        for(int i = 0; i < currentHp / 1000; i++){
+            GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
+            line_obj.transform.SetParent(line_hp.transform);
+            line_obj.transform.localPosition = new Vector3 (0f, 0f, 0f);
+            line_obj.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
         for (int i = 0; i < 6; i++)
         {
             timer[i] = SkillDatabase.Instance.fetchSkillIndex(i + 1 + (realData.Type - 1) * 12).Timer;

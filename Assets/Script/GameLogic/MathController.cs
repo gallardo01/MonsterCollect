@@ -89,7 +89,7 @@ public class MathController : Singleton<MathController>
         }
         if(percent >= 70)
         {
-            percent = 700;
+            percent = 70;
         }
         return percent;
     }

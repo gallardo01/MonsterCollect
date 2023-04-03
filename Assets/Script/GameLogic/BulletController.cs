@@ -7,11 +7,10 @@ public class BulletController : MonoBehaviour
 {
     private MyHeroes heroes;
     [SerializeField] int id;
-    private Transform target;
+    public Transform target;
     // Start is called before the first frame update
     private int bounce = 4;
     private float speed = 0.16f;
-    private float timer = 0.1f;
     private int damePercent;
 
     private void Start()
@@ -29,13 +28,13 @@ public class BulletController : MonoBehaviour
                 {
                     target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
                 }
-                else if (target != null && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
+                else if (target != null && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
-                }
-                else
+                } else
                 {
-                    target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
                 }
             } else
             {
@@ -151,44 +150,8 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        //if (id == 4 && collision.gameObject.tag == "Enemy")
-        //{
-        //    timer -= Time.deltaTime;
-        //    if (timer < 0)
-        //    {
-        //        timer = 0.1f;
-        //        if (bounce > 0)
-        //        {
-        //            if (target == null || target.gameObject.activeInHierarchy == false || target.GetComponent<MonsterController>().getIsDead())
-        //            {
-        //                bounce = 0;
-        //                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-        //                gameObject.SetActive(false);
-        //            }
-        //            else
-        //            {
-        //                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes);
-        //                GameController.Instance.addParticle(collision.gameObject, 4);
-        //                target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
-        //                bounce--;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-        //            gameObject.SetActive(false);
-        //        }
-        //    }
-        //}
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (id == 4)
-        {
-            timer = 0.1f;
-        }
-    }
     IEnumerator explosion(MyHeroes data)
     {
         yield return new WaitForSeconds(0);

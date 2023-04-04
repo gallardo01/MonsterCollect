@@ -216,7 +216,7 @@ public class MonsterController : MonoBehaviour
     {
         int cacheSpeed = monsterData.Speed;
         yield return new WaitForSeconds(4f);
-        monsterData.Speed *= 3/2;
+        monsterData.Speed += 1000;
         yield return new WaitForSeconds(3f);
         monsterData.Speed = cacheSpeed;
         StartCoroutine(skillSpeed());

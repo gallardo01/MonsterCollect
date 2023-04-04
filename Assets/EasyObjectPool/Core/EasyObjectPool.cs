@@ -329,5 +329,21 @@ namespace MarchingBytes {
 				}
 			}
 		}
+
+		public bool getObjAvailable()
+		{
+			for (int i = 0; i < listObj.Count; i++)
+			{
+				if (listObj[i].tag == "Enemy")
+				{
+					if (listObj[i].activeInHierarchy == true)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 	}
 }

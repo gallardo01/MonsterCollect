@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 901070450619524153}
   - component: {fileID: 308168186766035884}
   - component: {fileID: 4807076750969747541}
-  - component: {fileID: 3983902053255077345}
   - component: {fileID: 2568368640131689498}
+  - component: {fileID: 1958360871126363655}
   m_Layer: 0
   m_Name: MonsterBullet_3
   m_TagString: Untagged
@@ -103,19 +103,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3983902053255077345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7967603458855333870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8817485c37553e84ca1846d7f5a779b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0
 --- !u!61 &2568368640131689498
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -142,3 +129,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.52, y: 0.38}
   m_EdgeRadius: 0
+--- !u!114 &1958360871126363655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7967603458855333870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de82049ed3ee3764ca75f6c1efd2939c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -12,21 +12,20 @@ public class BulletFlyAround : MonoBehaviour
     private Transform target;
     private MyHeroes heroes;
     private int skillDame;
+    private int temp_circle = 0;
     private void Start()
     {
        
-
-
     }
-
 
     void Update()
     {
-        transform.position = target.position + new Vector3(2.5f * Mathf.Cos(Mathf.PI * ((Time.fixedTime)%3)/1.5f), 2.5f * Mathf.Sin(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f), 0);
+        transform.position = target.position + new Vector3(2.5f * Mathf.Cos(Mathf.PI * ((Time.fixedTime)%3)/1.5f + Mathf.PI * temp_circle / 3), 2.5f * Mathf.Sin(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle / 3), 0);
     }
 
     public void initBullet(MyHeroes myHeroes, int skill, int dame, Transform enemy)
     {
+        temp_circle = skill;
         skillDame = dame;
         target = enemy;
         heroes = myHeroes;

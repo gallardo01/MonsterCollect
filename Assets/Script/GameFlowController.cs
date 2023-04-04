@@ -69,6 +69,10 @@ public class GameFlowController : Singleton<GameFlowController>
         endGame(variable_progress, variable_stage, variable_gold, rewards);
         dead.SetActive(false);
     }
+    public void gameOver()
+    {
+        endGame(variable_progress, variable_stage, variable_gold, rewards);
+    }
     public void endGame(int progress, int stage, int gold, List<ItemInventory> listItem)
     {
         sumaryObj.SetActive(true);

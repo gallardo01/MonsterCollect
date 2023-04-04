@@ -39,6 +39,12 @@ public class GameController : Singleton<GameController>
 
     //private Sprite[] sheetTextures;
     //private string[] sheetNames;
+    [SerializeField] GameObject fillImage;
+    [SerializeField] GameObject bossIcon;
+    [SerializeField] TextMeshProUGUI bossHp;
+    [SerializeField] GameObject warningBoss;
+
+    private int[] numberCreep = { 0, 40, 60, 70, 90, 105, 130, 150, 170, 200};
 
     private void Awake()
     {
@@ -67,8 +73,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        addBoss();
+        StartCoroutine(addEnemyFirstScene());
+        //addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{
@@ -89,10 +95,6 @@ public class GameController : Singleton<GameController>
         particle.transform.SetParent(goldText.transform);
         particle.GetComponent<FloatingText>().showGold(gold);
     }
-    private void tweenText()
-    {
-
-    }
     public IEnumerator addEnemyFirstScene()
     {
         for (int i = 0; i < 5; i++)
@@ -112,7 +114,7 @@ public class GameController : Singleton<GameController>
         if (isSpawn && isBossSpawn)
         {
             addEnemy();
-            if (countEnemy / 20 == enemyLv)
+            if (enemyLv < 10 && countEnemy >= numberCreep[enemyLv])
             {
                 enemyLv++;
             }
@@ -130,8 +132,32 @@ public class GameController : Singleton<GameController>
     IEnumerator spawnBoss()
     {
         yield return new WaitForSeconds(1f);
-        isBossSpawn = false;
+        if(EasyObjectPool.instance.getObjAvailable() == false)
+        {
+            isBossSpawn = false;
+            addBoss();
+        } else
+        {
+            StartCoroutine(bossAnimationShowUp());
+        }
+    }
+    IEnumerator bossAnimationShowUp()
+    {
+        warningBoss.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", PlayerController.Instance.getPosition().position, transform.rotation);
+        yield return new WaitForSeconds(2f);
         addBoss();
+        warning.SetActive(false);
+        fillImage.SetActive(true);
+        bossIcon.SetActive(true);
+        bossHp.gameObject.SetActive(true);
+        bossHp.text = BossController.Instance.getLevel().Hp.ToString();
+    }
+    public void updateHpBoss(int number, int maxHp)
+    {
+        bossHp.text = number.ToString();
+        expBar.GetComponent<Slider>().value = (float) number/maxHp;
     }
     private void initInfo()
     {
@@ -140,12 +166,22 @@ public class GameController : Singleton<GameController>
     }
     private void addBoss()
     {
-        string enemyType = "Enemy" + (90);
+        string enemyType = "Enemy" + (10);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
 
-        boss.GetComponent<BossController>().initInfo(90);
+        boss.GetComponent<BossController>().initInfo(10);
         boss.transform.localPosition = new Vector3(5, 5, 5);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+    }
+    public void endGame()
+    {
+        StartCoroutine(endGameFlow());
+    }
+    IEnumerator endGameFlow()
+    {
+        yield return new WaitForSeconds(5f);
+        updateEndGameInformation();
+        GameFlowController.Instance.gameOver();
     }
     public void setSpawn(bool logic)
     {
@@ -210,20 +246,20 @@ public class GameController : Singleton<GameController>
     public void gainExpChar(int num)
     {
         exp += num;
-        updateProgressBar(exp >= playerLevel * 1000);
+        updateProgressBar(exp >= playerLevel * 800);
     }
     private void updateProgressBar(bool levelUp)
     {
         //expBar.GetComponent<Slider>().value = progres;
         if (levelUp)
         {
-            exp -= playerLevel * 1000;
+            exp -= playerLevel * 800;
             playerLevel++;
             levelText.text = playerLevel.ToString();
             PlayerController.Instance.gainLv(playerLevel);
             updateColorText();
         }
-        float progres = (float)exp / (float)(playerLevel * 1000);
+        float progres = (float)exp / (float)(playerLevel * 800);
         StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
     }
     private void pickSkillLevelUp()

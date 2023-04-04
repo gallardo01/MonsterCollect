@@ -40,8 +40,7 @@ public class BulletOfBossComtroller : MonoBehaviour
 
             if (type == 6 && is_round)
             {
-                transform.position = boss.position + new Vector3(2.5f * Mathf.Cos(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle/3), 2.5f * Mathf.Sin(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle/3), 0);
-                
+                transform.position = boss.position + new Vector3(2.5f * Mathf.Cos(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle/3), 2.5f * Mathf.Sin(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle/3), 0);    
             }
             else if (type == 7)
             {

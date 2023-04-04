@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using MarchingBytes;
 
-public class BossController : MonoBehaviour
+public class BossController : Singleton<BossController>
 {
     // Start is called before the first frame update
     private int facingRight = 1;
@@ -110,6 +110,7 @@ public class BossController : MonoBehaviour
                 isMove = false;
                 setAction(2);
                 isDead = true;
+                GameController.Instance.endGame();
             }
             disableObject();
             string floatingText = "FloatingText";
@@ -778,8 +779,19 @@ public class BossController : MonoBehaviour
         GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
         goldObj.GetComponent<ItemDropController>().setGold(Random.Range(100, 100 + monsterLv * 10));
 
-        GameObject hpObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
-        hpObj.GetComponent<ItemDropController>().setItem();
+        GameObject itemObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+        itemObj.GetComponent<ItemDropController>().setItem();
+
+        if(Random.Range(0, 100) < 50)
+        {
+            GameObject itemObj2 = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+            itemObj2.GetComponent<ItemDropController>().setItem();
+        }
+        if (Random.Range(0, 100) < 30)
+        {
+            GameObject itemObj3 = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+            itemObj3.GetComponent<ItemDropController>().setItem();
+        }
     }
 
     private float calAngle(Transform en, Vector2 vector)

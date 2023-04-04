@@ -267,8 +267,8 @@ public class PlayerController : Singleton<PlayerController>
     private IEnumerator normalAttack()
     {
         int bonusTimer = realData.Speed / 100;
-        if (bonusTimer > 50) bonusTimer = 50;
-        yield return new WaitForSeconds(timer[0] * (100 - bonusTimer)/100);
+        if (bonusTimer > 30) bonusTimer = 3;
+        yield return new WaitForSeconds(timer[0] * (100 - bonusTimer)/100 + 0.5f);
         if (isPause == false && thunderType[0] > 0)
         {
             string bulletText = "Electric_1";
@@ -306,7 +306,15 @@ public class PlayerController : Singleton<PlayerController>
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.transform.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
-
+                if (skillLevel[1] >= 3)
+                {
+                    Transform shootTargetObj1;
+                    //shootTargetObj1 = shootTargetObj.position + new Vector3(-0.5f, 0f, 0f);
+                    yield return new WaitForSeconds(0.5f);
+                    GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+        shootTarget.transform.rotation);
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
+                }
                 if (skillLevel[1] == 6)
                 {
                     yield return new WaitForSeconds(0.5f);
@@ -321,24 +329,36 @@ public class PlayerController : Singleton<PlayerController>
     }
     private IEnumerator thunder_2()
     {
-        float timeDelay = 3.5f;
         if (isPause == false && thunderType[2] > 0)
         {
-            string bulletText = "Electric_3";
-
-            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
-gameObject.transform.rotation);
-            projectileNormal.GetComponent<BulletFlyAround>().initBullet(realData, 1, dameSkill[2], gameObject.transform);
-            yield return new WaitForSeconds(3.5f);
-            EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
-            projectileNormal.SetActive(false);
-            if(skillLevel[2] == 6)
+            if(skillLevel[2] < 3)
             {
-                timeDelay = 4f;
+                StartCoroutine(thunder_2_clone(0));
+            }           
+            else if (skillLevel[2] > 3 && skillLevel[2] < 6)
+            {
+                StartCoroutine(thunder_2_clone(0)); 
+                StartCoroutine(thunder_2_clone(3));
+            }
+            else 
+            {
+                StartCoroutine(thunder_2_clone(0));
+                StartCoroutine(thunder_2_clone(2));
+                StartCoroutine(thunder_2_clone(4));
             }
         }
-        yield return new WaitForSeconds(timer[2] - timeDelay);
+        yield return new WaitForSeconds(timer[2]);
         StartCoroutine(thunder_2());
+    }
+    private IEnumerator thunder_2_clone(int circle)
+    {
+        string bulletText = "Electric_3";
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+gameObject.transform.rotation);
+        projectileNormal.GetComponent<BulletFlyAround>().initBullet(realData, circle, dameSkill[2], gameObject.transform);
+        yield return new WaitForSeconds(3.5f);
+        EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
+        projectileNormal.SetActive(false);
     }
     private IEnumerator thunder_3()
     {
@@ -400,7 +420,18 @@ gameObject.transform.rotation);
     shootTarget.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[4], shootTarget);
             }
-            if(skillLevel[4] == 6)
+            if(skillLevel[4] == 3)
+            {
+                yield return new WaitForSeconds(0.5f);
+                Transform shootTarget2 = EasyObjectPool.instance.getNearestHitPosition(gameObject);
+                if (shootTarget2 != null)
+                {
+                    GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+        shootTarget2.rotation);
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[4], shootTarget2);
+                }
+            }
+            if (skillLevel[4] == 6)
             {
                 yield return new WaitForSeconds(0.5f);
                 Transform shootTarget2 = EasyObjectPool.instance.getNearestHitPosition(gameObject);
@@ -494,6 +525,7 @@ gameObject.transform.rotation);
     IEnumerator deadAnimation()
     {
         canMove = false;
+        isPause = true;
         gameObject.tag = "Wall";
         joystick.SetActive(false);
         GameController.Instance.updateEndGameInformation();
@@ -501,9 +533,7 @@ gameObject.transform.rotation);
         GetComponent<DragonBones.UnityArmatureComponent>().animation.Stop();
         yield return new WaitForSeconds(2f);
         GameFlowController.Instance.userDeath();
-        isPause = true;
     }
-
     IEnumerator replayAnimation()
     {
         yield return new WaitForSeconds(0.5f);

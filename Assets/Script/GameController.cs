@@ -73,8 +73,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        StartCoroutine(addEnemyFirstScene());
-        //addBoss();
+        //StartCoroutine(addEnemyFirstScene());
+        addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{

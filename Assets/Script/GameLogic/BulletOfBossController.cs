@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
+using System.Diagnostics.Eventing.Reader;
 
 public class BulletOfBossController : MonoBehaviour
 {
@@ -155,6 +156,15 @@ public class BulletOfBossController : MonoBehaviour
             }
             else if (type == 6) // 
             {
+
+            }
+            else if (type == 7) // dan test
+            {
+
+            }
+            else if (type == 8) // bullet not return to pool
+            {
+
 
             }
             else

@@ -208,6 +208,14 @@ public class BossController : Singleton<BossController>
             bossTargetGlobal = bossTarget;
             bossTarget.SetActive(false);
 
+            GameObject bossJumpOut = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_out", transform.position, transform.rotation);
+            bossJumpOut.SetActive(false);
+
+            GameObject bossJumpIn = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_in", transform.position, transform.rotation);
+            bossJumpIn.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0,0,0), 0, 8, monsterData);
+            bossJumpIn.SetActive(false);
+
+
             if (isRage())
             {
                 rate = 4f;
@@ -219,16 +227,28 @@ public class BossController : Singleton<BossController>
                 isCast = true;
 
                 wayMove = 2;
+                bossJumpOut.transform.position = transform.position;
+                bossJumpOut.SetActive(true);
 
                 yield return new WaitForSeconds(1f);
                 playerLastPos = player.position;
+                bossJumpOut.SetActive(false);
 
                 bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
                 bossTarget.gameObject.SetActive(true);
-                yield return new WaitForSeconds(2f);
-                wayMove = 3;
-                bossTarget.gameObject.SetActive(false);
                 yield return new WaitForSeconds(1f);
+
+                wayMove = 3;
+
+                yield return new WaitForSeconds(0.3f);
+                bossTarget.gameObject.SetActive(false);
+
+                bossJumpIn.SetActive(true);
+                bossJumpIn.transform.position = bossTarget.transform.position;
+                
+                yield return new WaitForSeconds(0.7f);
+                bossJumpIn.SetActive(false);
+
                 wayMove = 1;
                 isCast = false;
             }

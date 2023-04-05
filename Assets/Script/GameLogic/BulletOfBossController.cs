@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
 
-public class BulletOfBossComtroller : MonoBehaviour
+public class BulletOfBossController : MonoBehaviour
 {
 
     private float speed = 5f;
@@ -180,7 +180,7 @@ public class BulletOfBossComtroller : MonoBehaviour
                     //Debug.Log(Vector3.Normalize(temp));
 
                     Vector3 direction = Vector3.Normalize(temp);
-                    iceFrag.GetComponent<BulletOfBossComtroller>().initBullet(target, direction, 5f, 0, monsterData);
+                    iceFrag.GetComponent<BulletOfBossController>().initBullet(target, direction, 5f, 0, monsterData);
 
                     float angle = Mathf.Atan2(-dir[i].x * Mathf.Sin(ran) + dir[i].y * Mathf.Cos(ran), dir[i].x * Mathf.Cos(ran) + dir[i].y * Mathf.Sin(ran));
                     iceFrag.transform.Rotate(0, 0, angle * 180 /Mathf.PI);
@@ -231,7 +231,7 @@ public class BulletOfBossComtroller : MonoBehaviour
                     //Debug.Log(Vector3.Normalize(temp));
 
                     Vector3 direction = Vector3.Normalize(temp);
-                    iceFrag.GetComponent<BulletOfBossComtroller>().initBullet(target, direction, 5f, 0, monsterData);
+                    iceFrag.GetComponent<BulletOfBossController>().initBullet(target, direction, 5f, 0, monsterData);
 
                     float angle = Mathf.Atan2(-dir[i].x * Mathf.Sin(ran) + dir[i].y * Mathf.Cos(ran), dir[i].x * Mathf.Cos(ran) + dir[i].y * Mathf.Sin(ran));
                     iceFrag.transform.Rotate(0, 0, angle * 180 / Mathf.PI);

@@ -60,7 +60,7 @@ public class BossController : Singleton<BossController>
 
     void Start()
     {
-        initInfo(90);
+        //initInfo(90);
 
         waypoints = new Vector2[]
         {
@@ -276,7 +276,7 @@ public class BossController : Singleton<BossController>
                 GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss", transform.position, transform.rotation);
 
                 Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 0, monsterData);
+                fileBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 5f, 0, monsterData);
 
 
                 float angle = calAngle(player.transform, direction);
@@ -318,7 +318,7 @@ public class BossController : Singleton<BossController>
                     GameObject silkBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_silk_boss", transform.position, transform.rotation);
 
                     Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                    silkBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 15f, 1, monsterData);
+                    silkBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 15f, 1, monsterData);
 
                     yield return new WaitForSeconds(1f);
 
@@ -385,13 +385,13 @@ public class BossController : Singleton<BossController>
 
                     runAnimation(3);
                     GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
-                    iceSpiked.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                    iceSpiked.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
                     bossTarget.gameObject.SetActive(false);
 
                     for (int i = 0; i < 6; i++)
                     {
                         GameObject iceSpikedSub = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTargetSub[i].transform.position, transform.rotation);
-                        iceSpikedSub.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                        iceSpikedSub.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
                         bossTargetSub[i].gameObject.SetActive(false);
                     }
 
@@ -420,7 +420,7 @@ public class BossController : Singleton<BossController>
                     runAnimation(3);
                     GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
 
-                    iceSpiked.GetComponent<BulletOfBossComtroller>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                    iceSpiked.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
                     bossTarget.gameObject.SetActive(false);
 
                     yield return new WaitForSeconds(2f);
@@ -484,7 +484,7 @@ public class BossController : Singleton<BossController>
 
                 GameObject windFog = EasyObjectPool.instance.GetObjectFromPool("Boss_6_Target", transform.position, transform.rotation);
                 Vector3 directionFog = Vector3.Normalize(player.position - transform.position);
-                windFog.GetComponent<BulletOfBossComtroller>().initBullet(player, directionFog, 6f, 3, monsterData);
+                windFog.GetComponent<BulletOfBossController>().initBullet(player, directionFog, 6f, 3, monsterData);
 
 
                 // ban dan
@@ -494,7 +494,7 @@ public class BossController : Singleton<BossController>
                     runAnimation(3);
                     GameObject windBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_wind_boss", transform.position, transform.rotation);
                     Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                    windBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 5f, 0, monsterData);
+                    windBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 5f, 0, monsterData);
 
                     float angle = calAngle(player.transform, direction);
                     windBullet.transform.Rotate(0, 0, angle);
@@ -525,15 +525,15 @@ public class BossController : Singleton<BossController>
 
                 GameObject waterBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
                 Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                waterBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 6f, 4, monsterData);
+                waterBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 6f, 4, monsterData);
 
                 GameObject waterBullet_1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
                 Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.4f,Random.Range(0, 0.3f),0);
-                waterBullet_1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_1, 6f, 4, monsterData);
+                waterBullet_1.GetComponent<BulletOfBossController>().initBullet(player, direction_1, 6f, 4, monsterData);
 
                 GameObject waterBullet_2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
                 Vector3 direction_2 = Vector3.Normalize(player.position - transform.position) + new Vector3(-0.4f, Random.Range(0, 0.3f), 0); ;
-                waterBullet_2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_2, 6f, 4, monsterData);
+                waterBullet_2.GetComponent<BulletOfBossController>().initBullet(player, direction_2, 6f, 4, monsterData);
 
 
                 moveSpeed = 1;
@@ -552,23 +552,23 @@ public class BossController : Singleton<BossController>
                 isCast = true;
 
                 GameObject fireRoundBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
-                fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 0f);
+                fireRoundBullet.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 0f);
 
                 GameObject fireRoundBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
-                fireRoundBullet1.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 2f);
+                fireRoundBullet1.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 2f);
 
                 GameObject fireRoundBullet2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss_2", transform.position, transform.rotation);
-                fireRoundBullet2.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 4f);
+                fireRoundBullet2.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 5f, 6, monsterData, 4f);
 
                 yield return new WaitForSeconds(5f);
 
-                fireRoundBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
+                fireRoundBullet.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
                 yield return new WaitForSeconds(.5f);
 
-                fireRoundBullet1.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
+                fireRoundBullet1.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
                 yield return new WaitForSeconds(.5f);
                 
-                fireRoundBullet2.GetComponent<BulletOfBossComtroller>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
+                fireRoundBullet2.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
                 yield return new WaitForSeconds(.5f);
 
 
@@ -595,19 +595,19 @@ public class BossController : Singleton<BossController>
 
                     GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss", transform.position, transform.rotation);
                     Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                    fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 4f, 0, monsterData);
+                    fileBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 4f, 0, monsterData);
                     float angle = calAngle(player.transform, direction);
                     fileBullet.transform.Rotate(0, 0, angle);
 
                     GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss", transform.position, transform.rotation);
                     Vector3 direction1 = Vector3.Normalize(player.position - transform.position + new Vector3(3f, 0, 0));
-                    fileBullet1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction1, 4f, 0, monsterData);
+                    fileBullet1.GetComponent<BulletOfBossController>().initBullet(player, direction1, 4f, 0, monsterData);
                     float angle1 = calAngle(player.transform, direction1);
                     fileBullet1.transform.Rotate(0, 0, angle1);
 
                     GameObject fileBullet2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss", transform.position, transform.rotation);
                     Vector3 direction2 = Vector3.Normalize(player.position - transform.position + new Vector3(-6f, 0, 0));
-                    fileBullet2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction2, 4f, 0, monsterData);
+                    fileBullet2.GetComponent<BulletOfBossController>().initBullet(player, direction2, 4f, 0, monsterData);
                     float angle2 = calAngle(player.transform, direction2);
                     fileBullet2.transform.Rotate(0, 0, angle2);
 
@@ -617,7 +617,7 @@ public class BossController : Singleton<BossController>
 
                 //GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_grass_boss_2", transform.position, transform.rotation);
                 //Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                //fileBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 4f, 7, monsterData);
+                //fileBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 4f, 7, monsterData);
 
 
                 isCast = false;
@@ -645,15 +645,15 @@ public class BossController : Singleton<BossController>
                 GameObject explosionBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
                 Vector3 direction = Vector3.Normalize(player.position - transform.position);
 
-                explosionBullet.GetComponent<BulletOfBossComtroller>().initBullet(player, direction, 6f, 5, monsterData);
+                explosionBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 6f, 5, monsterData);
 
                 //GameObject explosionBullet_1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
                 //Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.4f, Random.Range(0, 0.3f), 0);
-                //explosionBullet_1.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_1, 6f, 0, monsterData);
+                //explosionBullet_1.GetComponent<BulletOfBossController>().initBullet(player, direction_1, 6f, 0, monsterData);
 
                 //GameObject explosionBullet_2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
                 //Vector3 direction_2 = Vector3.Normalize(player.position - transform.position) + new Vector3(-0.4f, Random.Range(0, 0.3f), 0); ;
-                //explosionBullet_2.GetComponent<BulletOfBossComtroller>().initBullet(player, direction_2, 6f, 0, monsterData);
+                //explosionBullet_2.GetComponent<BulletOfBossController>().initBullet(player, direction_2, 6f, 0, monsterData);
 
 
 

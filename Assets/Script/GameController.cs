@@ -73,8 +73,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        addBoss();
+        StartCoroutine(addEnemyFirstScene());
+        //addBoss();
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{
@@ -218,7 +218,7 @@ public class GameController : Singleton<GameController>
         }
         string enemyType = "Enemy" + enemyId;
         GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, waypoints1[pos].transform.position, waypoints1[pos].transform.rotation);
-        enemy.GetComponent<MonsterController>().initDataWaypoints(enemyId, pos);
+        enemy.GetComponent<MonsterController>().initDataWaypoints(enemyId, countEnemy);
     }
 
     public IEnumerator respawnEnemy()

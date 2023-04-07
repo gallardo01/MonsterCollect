@@ -8,6 +8,7 @@ public class MonsterBullet : MonoBehaviour
     private MonsterData monsterData;
     private GameObject player;
     private bool type = false;
+    private int percent = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,11 +28,11 @@ public class MonsterBullet : MonoBehaviour
         }
     }
 
-    public void initData(MonsterData data, bool type)
+    public void initData(MonsterData data, bool type, int percent)
     {
+        this.percent = percent;
         monsterData = data;
         this.type = type;
-        monsterData.Atk = monsterData.Atk / 2;
         if (type)
         {
             player = GameObject.FindGameObjectWithTag("Player");
@@ -48,7 +49,7 @@ public class MonsterBullet : MonoBehaviour
 
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<PlayerController>().setPlayerHurt(monsterData, 2);
+            collision.gameObject.GetComponent<PlayerController>().setPlayerHurt(monsterData, percent);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }

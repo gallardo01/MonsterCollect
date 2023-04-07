@@ -16,6 +16,9 @@ public class MonsterController : MonoBehaviour
     private MonsterData monsterData;
     private int currentHp;
     private bool isDead = false;
+    private float slowRate = 1f;
+    private bool raiseArmour = false;
+    private int idData = 0;
 
     void Start()
     {
@@ -51,6 +54,7 @@ public class MonsterController : MonoBehaviour
         abilityMonster();
         currentHp = monsterData.Hp;
         setText(id);
+        idData = way;
         setupWaypoints();
     }
     public void initData(int id, bool useWaypoint)
@@ -64,11 +68,14 @@ public class MonsterController : MonoBehaviour
         wayMove = 1;
         runAnimation(2);
     }
+    public int getIdData()
+    {
+        return idData;
+    }
     public void setupWaypoints()
     {
         isMove = true;
         wayMove = 1;
-        gameObject.SetActive(true);
         checkFlip();
         runAnimation(2);
     }
@@ -85,7 +92,6 @@ public class MonsterController : MonoBehaviour
     {
         return monsterData;
     }
-
     public void triggerWaypoints()
     {
         wayMove = 2;
@@ -97,6 +103,10 @@ public class MonsterController : MonoBehaviour
         {
             int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
             int type = MathController.Instance.getTypeValue(heroes, monsterData);
+            if (raiseArmour)
+            {
+                dame = dame * 4 / 10;
+            }
             int actualDame = Mathf.Abs(dame);
             currentHp -= actualDame;
             if (currentHp <= 0)
@@ -188,7 +198,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     waypoints.transform.position,
-                    (monsterData.Speed / 800f) * Time.deltaTime);
+                    (monsterData.Speed * slowRate / 800f) * Time.deltaTime);
                 if (transform.position.x == waypoints.transform.position.x && transform.position.y == waypoints.transform.position.y)
                 {
                     isMove = false;
@@ -200,7 +210,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     playerPos.position,
-                    (monsterData.Speed / 1000f) * Time.deltaTime);
+                    (monsterData.Speed * slowRate / 1000f) * Time.deltaTime);
                 checkFlipPlayer();
             }
         }
@@ -214,11 +224,10 @@ public class MonsterController : MonoBehaviour
 
     IEnumerator skillSpeed()
     {
-        int cacheSpeed = monsterData.Speed;
         yield return new WaitForSeconds(4f);
-        monsterData.Speed += 1000;
+        slowRate = 2f;
         yield return new WaitForSeconds(3f);
-        monsterData.Speed = cacheSpeed;
+        slowRate = 1f;
         StartCoroutine(skillSpeed());
     }
     private void skillGainArmour()
@@ -227,13 +236,11 @@ public class MonsterController : MonoBehaviour
     }
     IEnumerator skillArmour()
     {
-        int cacheArmour = monsterData.Armour;
         yield return new WaitForSeconds(4f);
-        monsterData.Armour += 10000;
+        raiseArmour = true;
         level.text = "<sprite=3>";
         yield return new WaitForSeconds(3f);
         level.text = " <sprite=" + (monsterData.Type + 10) + "> Lv." + monsterData.Id.ToString();
-        monsterData.Armour = cacheArmour;
         StartCoroutine(skillArmour());
     }
 
@@ -266,7 +273,6 @@ public class MonsterController : MonoBehaviour
             flip();
         }
     }
-
     private void checkFlipPlayer()
     {
         if (transform.position.x < playerPos.transform.position.x && facingRight == 0)
@@ -278,13 +284,11 @@ public class MonsterController : MonoBehaviour
             flip();
         }
     }
-
     private void setText(int lv)
     {
         level.text = " <sprite=" + (monsterData.Type+10) +  "> Lv." + lv.ToString();
         setColor();
     }
-
     public void setColor()
     {
         int playerLv = GameController.Instance.getEnemyLv();
@@ -305,8 +309,6 @@ public class MonsterController : MonoBehaviour
             level.color = Color.red;
         }
     }
-
-
     private void runAnimation(int pos)
     {
         //idle
@@ -334,7 +336,6 @@ public class MonsterController : MonoBehaviour
             StartCoroutine(disableObject());
         }
     }
-
     IEnumerator replayAnimation()
     {
         yield return new WaitForSeconds(0.5f);
@@ -347,15 +348,12 @@ public class MonsterController : MonoBehaviour
             runAnimation(2);
         }
     }
-
     IEnumerator returnObjectToPool(float timer, GameObject obj)
     {
         yield return new WaitForSeconds(timer);
         EasyObjectPool.instance.ReturnObjectToPool(obj);
         obj.SetActive(false);
     }
-
-
     IEnumerator disableObject()
     {
 
@@ -366,7 +364,7 @@ public class MonsterController : MonoBehaviour
             GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_1", transform.position, transform.rotation);
             Vector2 force = playerPos.position - transform.position;
             force = force.normalized;
-            bullet.GetComponent<MonsterBullet>().initData(monsterData, false);
+            bullet.GetComponent<MonsterBullet>().initData(monsterData, false, 50);
             bullet.GetComponent<Rigidbody2D>().AddForce(force * 300);
             float angle = calAngle(playerPos, force);
             bullet.transform.Rotate(0, 0, angle + 90);
@@ -376,7 +374,7 @@ public class MonsterController : MonoBehaviour
             GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_2", transform.position, transform.rotation);
             Vector2 force = playerPos.position - transform.position;
             force = force.normalized;
-            bullet.GetComponent<MonsterBullet>().initData(monsterData, false);
+            bullet.GetComponent<MonsterBullet>().initData(monsterData, false, 50);
             bullet.GetComponent<Rigidbody2D>().AddForce(force * 300);
             float angle = calAngle(playerPos, force);
             bullet.transform.Rotate(0, 0, angle + 90);
@@ -386,7 +384,7 @@ public class MonsterController : MonoBehaviour
             GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_3", transform.position, transform.rotation);
             Vector2 force = playerPos.position - transform.position;
             force = force.normalized;
-            bullet.GetComponent<MonsterBullet>().initData(monsterData, true);
+            bullet.GetComponent<MonsterBullet>().initData(monsterData, true, 30);
             float angle = calAngle(playerPos, force);
             bullet.transform.Rotate(0, 0, angle + 90);
         }
@@ -418,10 +416,9 @@ public class MonsterController : MonoBehaviour
 
     IEnumerator stopRunningSecond(float timer)
     {
-        int s = monsterData.Speed;
-        monsterData.Speed = 0;
+        slowRate = 0;
         yield return new WaitForSeconds(timer);
-        monsterData.Speed = s;
+        slowRate = 1;
     }
 
     private void abilityMonster()

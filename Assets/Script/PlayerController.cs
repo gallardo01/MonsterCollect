@@ -308,16 +308,16 @@ public class PlayerController : Singleton<PlayerController>
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
                 if (skillLevel[1] >= 3)
                 {
-                    Transform shootTargetObj1;
-                    //shootTargetObj1 = shootTargetObj.position + new Vector3(-0.5f, 0f, 0f);
-                    yield return new WaitForSeconds(0.5f);
+                    shootTarget.transform.position = shootTargetObj.position;
+                    shootTarget.transform.position = shootTargetObj.position + new Vector3(-0.5f, 0f, 0f);
                     GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
         shootTarget.transform.rotation);
                     projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
                 }
-                if (skillLevel[1] == 6)
+                if (skillLevel[1] >= 6)
                 {
-                    yield return new WaitForSeconds(0.5f);
+                    shootTarget.transform.position = shootTargetObj.position;
+                    shootTarget.transform.position = shootTargetObj.position + new Vector3(+0.5f, 0f, 0f);
                     GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
         shootTarget.transform.rotation);
                     projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
@@ -335,7 +335,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 StartCoroutine(thunder_2_clone(0));
             }           
-            else if (skillLevel[2] > 3 && skillLevel[2] < 6)
+            else if (skillLevel[2] >= 3 && skillLevel[2] < 6)
             {
                 StartCoroutine(thunder_2_clone(0)); 
                 StartCoroutine(thunder_2_clone(3));
@@ -419,19 +419,8 @@ gameObject.transform.rotation);
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[4], shootTarget);
-            }
-            if(skillLevel[4] == 3)
-            {
-                yield return new WaitForSeconds(0.5f);
-                Transform shootTarget2 = EasyObjectPool.instance.getNearestHitPosition(gameObject);
-                if (shootTarget2 != null)
-                {
-                    GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
-        shootTarget2.rotation);
-                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 4, dameSkill[4], shootTarget2);
-                }
-            }
-            if (skillLevel[4] == 6)
+            }   
+            if (skillLevel[4] >= 6)
             {
                 yield return new WaitForSeconds(0.5f);
                 Transform shootTarget2 = EasyObjectPool.instance.getNearestHitPosition(gameObject);
@@ -587,6 +576,15 @@ gameObject.transform.rotation);
         yield return new WaitForSeconds(0.7f);
         canHurt = true;
     }
+    IEnumerator setHurtPercent(MonsterData monsterData, int percent)
+    {
+        int dame = MathController.Instance.enemyHitPlayer(data, monsterData);
+        dame = dame * percent / 100;
+        reduceHealth(dame);
+        body.GetComponent<Animator>().SetTrigger("hurt");
+        yield return new WaitForSeconds(0.7f);
+        canHurt = true;
+    }
     public void setPlayerHurt(MonsterData monsterData, int status)
     {
         // 1 root
@@ -610,11 +608,16 @@ gameObject.transform.rotation);
         else if (status == 4) //slow Speed
         {
             rootPlayer();
-
+        } 
+        else if (status > 10) // chi gay x % dame
+        {
+            if (canHurt)
+            {
+                canHurt = false;
+                StartCoroutine(setHurtPercent(monsterData, status));
+            }
         }
-
-        // 3 vua stun vua mat mau 
-        else
+        else // 3 vua stun vua mat mau
         {
             if (canHurt)
             {

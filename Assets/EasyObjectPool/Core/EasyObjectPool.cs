@@ -264,6 +264,10 @@ namespace MarchingBytes {
 
 		public Transform getNearestExcludeGameObjectPosition(GameObject en)
 		{
+			if(en.tag == "Boss")
+            {
+				return null;
+            }
 			float distance = float.MaxValue;
 			int obj = -1;
 

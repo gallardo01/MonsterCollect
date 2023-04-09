@@ -92,7 +92,7 @@ public class GameController : Singleton<GameController>
         goldAward += gold * (100 + PlayerController.Instance.getBonusPoints(8))/100;
         goldText.text = goldAward.ToString();
         string floatingText = "FloatingText";
-        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, goldText.transform.position - new Vector3(0f, 0.5f, 0f), transform.rotation);
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(floatingText, goldText.transform.position - new Vector3(0f, 0.7f, 0f), transform.rotation);
         particle.transform.SetParent(goldText.transform);
         particle.GetComponent<FloatingText>().showGold(gold);
     }
@@ -281,13 +281,19 @@ public class GameController : Singleton<GameController>
             if (currentSkill[i] > 0 && skillLevel[i] <= 5)
             {
                 availableOption[currentSkill[i]] = 1;
+            } else if (currentSkill[i] > 0 && skillLevel[i] == 6)
+            {
+                availableOption[currentSkill[i]] = 2;
             }
         }
         if (countSkill > 0)
         {
             for (int i = 1; i <= 6; i++)
             {
-                availableOption[i] = 1;
+                if (availableOption[i] != 2)
+                {
+                    availableOption[i] = 1;
+                }
             }
         }
         int countBuff = 0;
@@ -298,17 +304,24 @@ public class GameController : Singleton<GameController>
             {
                 availableOption[currentBuff[i]] = 1;
             }
+            else if (currentSkill[i] > 0 && skillLevel[i] == 6)
+            {
+                availableOption[currentBuff[i]] = 2;
+            }
         }
         if (countBuff > 0)
         {
             for (int j = 7; j <= 12; j++)
             {
-                availableOption[j] = 1;
+                if (availableOption[j] != 2)
+                {
+                    availableOption[j] = 1;
+                }
             }
         }
         for (int i = 1; i <= 12; i++)
         {
-            if (availableOption[i] > 0)
+            if (availableOption[i] == 1)
             {
                 chosenSkill.Add(i);
             }

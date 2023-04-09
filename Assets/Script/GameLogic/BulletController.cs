@@ -28,16 +28,22 @@ public class BulletController : MonoBehaviour
                 if (target != null && target.gameObject.activeInHierarchy)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
-                } else
+                    if(id == 4)
+                    {
+                        if(transform.position.x == target.position.x && transform.position.y == target.position.y)
+                        {
+                            target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                        }
+                    }
+                } else 
                 {
                     EasyObjectPool.instance.ReturnObjectToPool(gameObject);
                     gameObject.SetActive(false);
                 }
             } else if (target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
             {
-                if (id == 4 && switchTarget)
+                if (id == 4)
                 {
-                    switchTarget = false;
                     target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
                 }
                 else
@@ -126,11 +132,11 @@ public class BulletController : MonoBehaviour
                     collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
                 }
                 GameController.Instance.addParticle(collision.gameObject, 4);
-                if (switchTarget)
-                {
-                    switchTarget = false;
-                    target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
-                }
+                //if (switchTarget)
+                //{
+                //    switchTarget = false;
+                //    target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                //}
                 //isNextTarget = false;
                 bounce--;
                 if (target == null || target.gameObject.activeInHierarchy == false)

@@ -80,7 +80,6 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         // pick con nao?
-        Debug.Log(idPick);
         data = HeroesDatabase.Instance.fetchMyData(idPick);
         realData = data;
         currentHp = data.Hp;
@@ -169,7 +168,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     public void disablePlayer()
     {
-        gameObject.SetActive(false);
+        this.enabled = false;
     }
     private void FixedUpdate()
     {
@@ -208,7 +207,7 @@ public class PlayerController : Singleton<PlayerController>
             int skillId = (data.Type - 1) * 12 + i + 1;
             SkillData skillData = SkillDatabase.Instance.fetchSkillIndex(skillId);
 
-            dameSkill[i] = skillData.Power * (80 + 20*skillLevel[i]) / 100;
+            dameSkill[i] = skillData.Power * (100 + 5*(skillLevel[i]-1)) / 100;
             timer[i] = skillData.Timer - (float)(skillLevel[i] - 1) * skillData.Upgrade/1000;
         }
     }
@@ -678,6 +677,7 @@ gameObject.transform.rotation);
         isPause = false;
         gameObject.tag = "Player";
         currentHp = realData.Hp;
+        hpBar.GetComponent<Slider>().value = 1f;
         hpText.text = currentHp.ToString();
         GameController.Instance.setSpawn(true);
         UltimateJoystick.ResetJoystick("Movement");

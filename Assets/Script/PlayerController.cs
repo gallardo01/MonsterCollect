@@ -87,8 +87,9 @@ public class PlayerController : Singleton<PlayerController>
 
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
-        for(int i = 0; i < currentHp / 1000; i++){
+        for(int i = 0; i < currentHp / 400; i++){
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
+            line_obj.GetComponent<Image>().color = new Color(255f, 255f, 255f, 255f);
             line_obj.transform.SetParent(line_hp.transform);
             line_obj.transform.localPosition = new Vector3 (0f, 0f, 0f);
             line_obj.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -133,7 +134,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         return playerLevel;
     }
-    // Update is called once per frame
+    // Update is called once per frame;
     void Update()
     {
         if (canMove)

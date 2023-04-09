@@ -230,7 +230,7 @@ namespace MarchingBytes {
 				if (listObj[i].tag == "Enemy")
 				{
 					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
-						&& delta.magnitude < 7f)
+						&& delta.magnitude < 6f)
 					{
 						if (distance > delta.magnitude)
 						{
@@ -245,7 +245,7 @@ namespace MarchingBytes {
 				} else if(listObj[i].tag == "Boss")
                 {
 					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<BossController>().getIsDead() == false
-						&& delta.magnitude < 7f)
+						&& delta.magnitude < 6f)
 					{
 						if (distance > delta.magnitude)
 						{
@@ -275,7 +275,7 @@ namespace MarchingBytes {
 				if (listObj[i].tag == "Enemy")
 				{
 					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false
-						&& listObj[i].GetComponent<MonsterController>().getIdData() != en.GetComponent<MonsterController>().getIdData() && delta.magnitude < 7f)
+						&& listObj[i].GetComponent<MonsterController>().getIdData() != en.GetComponent<MonsterController>().getIdData() && delta.magnitude < 6f)
 					{
 						if (distance > delta.magnitude && deltaPrevious.magnitude > 0.7f)
 						{
@@ -285,7 +285,7 @@ namespace MarchingBytes {
 					}
 				} else if(listObj[i].tag == "Boss")
                 {
-					obj = i;
+					return null;
 				}
 			}
 			if (obj < 0)

@@ -9,10 +9,11 @@ public class MonsterBullet : MonoBehaviour
     private GameObject player;
     private bool type = false;
     private int percent = 0;
+    private float speed = 0.07f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        speed = 0.07f * Application.targetFrameRate / 60f;
     }
 
     private void OnEnable()
@@ -24,7 +25,7 @@ public class MonsterBullet : MonoBehaviour
     {
         if (type)
         {
-            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, 0.07f);
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed);
         }
     }
 

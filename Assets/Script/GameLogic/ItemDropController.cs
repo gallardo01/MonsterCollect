@@ -14,11 +14,11 @@ public class ItemDropController : MonoBehaviour
     private int gold = 0;
     private int percent = 0;
     private ItemInventory itemAward;
-    private float speed = 0.1f;
+    private float speed = 0.2f;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        speed = speed * Application.targetFrameRate / 60f;
     }
 
     public void setExp(int ex)
@@ -32,9 +32,10 @@ public class ItemDropController : MonoBehaviour
         type = 2;
         gold = g;
         target = GameObject.FindWithTag("GoldBar");
-        speed = 2f;
+        speed = 3f;
+        speed = speed * Application.targetFrameRate / 60f;
     }
-   
+
     public void setItem()
     {
         type = 3;
@@ -99,7 +100,6 @@ public class ItemDropController : MonoBehaviour
         else if (collision.gameObject.tag == "Player" && isActive && type == 2)
         {
             target = GameObject.FindWithTag("GoldBar");
-            speed = 1f;
             isFlyBack = true;
         }
         else if (collision.gameObject.tag == "Player" && (isFlyBack) && type != 2)

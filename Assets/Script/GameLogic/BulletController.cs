@@ -10,12 +10,13 @@ public class BulletController : MonoBehaviour
     public Transform target;
     // Start is called before the first frame update
     private int bounce = 4;
-    private float speed = 0.16f;
+    private float speed = 0.25f;
     private int damePercent;
+    private bool switchTarget = true;
 
     private void Start()
     {
-       
+        speed = Application.targetFrameRate * 0.25f / 60f;
     }
 
     void Update()
@@ -24,7 +25,7 @@ public class BulletController : MonoBehaviour
         {
             if (id != 1 && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
             {
-                if (target != null && target.gameObject.activeInHierarchy && target.gameObject.GetComponent<MonsterController>().getIsDead() == false && bounce > 0)
+                if (target != null && target.gameObject.activeInHierarchy && bounce > 0)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
                 } else
@@ -34,8 +35,9 @@ public class BulletController : MonoBehaviour
                 }
             } else if (target.gameObject.GetComponent<MonsterController>().getIsDead() == true)
             {
-                if (id == 4)
+                if (id == 4 && switchTarget)
                 {
+                    switchTarget = false;
                     target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
                 }
                 else
@@ -91,7 +93,6 @@ public class BulletController : MonoBehaviour
         if(id == 4)
         {
             bounce = 4;
-            speed = 0.16f;
         }
 
         if (skill == 1)
@@ -116,6 +117,7 @@ public class BulletController : MonoBehaviour
         }
         else if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 4) { 
             if (bounce > 0) {
+                switchTarget = true;
                 if (collision.gameObject.tag == "Enemy")
                 {
                     collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
@@ -124,7 +126,11 @@ public class BulletController : MonoBehaviour
                     collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
                 }
                 GameController.Instance.addParticle(collision.gameObject, 4);
-                target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                if (switchTarget)
+                {
+                    switchTarget = false;
+                    target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
+                }
                 //isNextTarget = false;
                 bounce--;
                 if (target == null || target.gameObject.activeInHierarchy == false)

@@ -32,6 +32,10 @@ public class BulletOfBossController : MonoBehaviour
     private float temp_circle = 0;
     private bool is_round = true;
 
+    private void Start()
+    {
+        speed = 6f * Application.targetFrameRate / 60f;
+    }
 
     // Update is called once per frame
     void Update()

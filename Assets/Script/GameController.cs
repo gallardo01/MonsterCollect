@@ -48,6 +48,7 @@ public class GameController : Singleton<GameController>
 
     private void Awake()
     {
+        Application.targetFrameRate = 60;
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No.11") as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;

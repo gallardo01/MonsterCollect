@@ -36,7 +36,7 @@ public class GameController : Singleton<GameController>
     private GameObject[] waypoints1;
     private bool isBossSpawn = true;
     [SerializeField] GameObject camera;
-
+    private bool bossDead = false;
     //private Sprite[] sheetTextures;
     //private string[] sheetNames;
     [SerializeField] GameObject fillImage;
@@ -75,7 +75,7 @@ public class GameController : Singleton<GameController>
         levelText.text = playerLevel.ToString();
         //spawn crep
         StartCoroutine(addEnemyFirstScene());
-        //addBoss();
+        //StartCoroutine(spawnBoss());
     }
     //private int TextureIndexLookUp(string[] nameArray, string spriteName)
     //{
@@ -136,10 +136,11 @@ public class GameController : Singleton<GameController>
         if(EasyObjectPool.instance.getObjAvailable() == false)
         {
             isBossSpawn = false;
-            addBoss();
-        } else
-        {
             StartCoroutine(bossAnimationShowUp());
+        }
+        else
+        {
+            StartCoroutine(spawnBoss());
         }
     }
     IEnumerator bossAnimationShowUp()
@@ -148,12 +149,18 @@ public class GameController : Singleton<GameController>
         yield return new WaitForSeconds(3f);
         GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", PlayerController.Instance.getPosition().position, transform.rotation);
         yield return new WaitForSeconds(2f);
-        addBoss();
+
+        string enemyType = "Enemy" + (10);
+        GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, warning.transform.position, transform.rotation);
+        boss.GetComponent<BossController>().initInfo(10);
+        boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+
         warning.SetActive(false);
         fillImage.SetActive(true);
         bossIcon.SetActive(true);
         bossHp.gameObject.SetActive(true);
         bossHp.text = BossController.Instance.getLevel().Hp.ToString();
+        expBar.GetComponent<Slider>().value = 1f;
     }
     public void updateHpBoss(int number, int maxHp)
     {
@@ -165,21 +172,14 @@ public class GameController : Singleton<GameController>
         expBar.GetComponent<Slider>().value = 0;
         updateGold(0);
     }
-    private void addBoss()
-    {
-        string enemyType = "Enemy" + (20);
-        GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, transform.position, transform.rotation);
-
-        boss.GetComponent<BossController>().initInfo(20);
-        boss.transform.localPosition = new Vector3(5, 5, 5);
-        boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-    }
     public void endGame()
     {
         StartCoroutine(endGameFlow());
     }
     IEnumerator endGameFlow()
     {
+        PlayerController.Instance.disablePlayer();
+        bossDead = true;
         yield return new WaitForSeconds(5f);
         updateEndGameInformation();
         GameFlowController.Instance.gameOver();
@@ -465,7 +465,9 @@ public class GameController : Singleton<GameController>
     }
     public void updateEndGameInformation()
     {
-        GameFlowController.Instance.initData(countEnemy, stage, goldAward, itemAward);
+        int progress = countEnemy * 100 / 200  - 10;
+        if (bossDead) progress = 100;
+        GameFlowController.Instance.initData(progress, stage, goldAward, itemAward);
     }
     private int CompareObNames(GameObject x, GameObject y)
     {

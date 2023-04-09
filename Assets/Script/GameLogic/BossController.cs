@@ -112,6 +112,7 @@ public class BossController : Singleton<BossController>
                 isDead = true;
                 GameController.Instance.endGame();
             }
+            GameController.Instance.updateHpBoss(currentHp, monsterData.Hp);
             disableObject();
             string floatingText = "FloatingText";
             GameObject floatText = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
@@ -142,8 +143,9 @@ public class BossController : Singleton<BossController>
 
     IEnumerator setMove()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         isMove = true;
+        StartCoroutine(replayAnimation());
     }
 
     private void Update()
@@ -674,10 +676,6 @@ public class BossController : Singleton<BossController>
                 //GameObject explosionBullet_2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_explosion_boss", transform.position, transform.rotation);
                 //Vector3 direction_2 = Vector3.Normalize(player.position - transform.position) + new Vector3(-0.4f, Random.Range(0, 0.3f), 0); ;
                 //explosionBullet_2.GetComponent<BulletOfBossController>().initBullet(player, direction_2, 6f, 0, monsterData);
-
-
-
-
                 moveSpeed = 1;
                 isCast = false;
             }

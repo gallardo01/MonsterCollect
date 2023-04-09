@@ -16,10 +16,20 @@ public class FloatingText : MonoBehaviour
 
     public void healPlayer(int amount)
     {
-        text.text = "+" + amount.ToString();
-        text.fontSize = 5;
-        text.color = Color.green;
-        StartCoroutine(disableFloating());
+        if (amount == 0)
+        {
+            text.text = "FULL";
+            text.fontSize = 5;
+            text.color = Color.green;
+            StartCoroutine(disableFloating());
+        }
+        else
+        {
+            text.text = "+" + amount.ToString();
+            text.fontSize = 5;
+            text.color = Color.green;
+            StartCoroutine(disableFloating());
+        }
     }
     public void playerHealth(int dame)
     {

@@ -25,7 +25,7 @@ public class BulletController : MonoBehaviour
         {
             if (id != 1 && target.gameObject.GetComponent<MonsterController>().getIsDead() == false)
             {
-                if (target != null && target.gameObject.activeInHierarchy && bounce > 0)
+                if (target != null && target.gameObject.activeInHierarchy)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
                 } else
@@ -75,7 +75,7 @@ public class BulletController : MonoBehaviour
     IEnumerator disableCollider()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         gameObject.GetComponent<Collider2D>().enabled = true;
     }
     IEnumerator thunder_2()
@@ -111,9 +111,9 @@ public class BulletController : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 1 )
+        if ((collision.gameObject.tag == "Enemy") && id == 1 )
         {
-            //collision.gameObject.GetComponent<MonsterController>().stopRunning();
+            collision.gameObject.GetComponent<MonsterController>().stopRunning();
         }
         else if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 4) { 
             if (bounce > 0) {

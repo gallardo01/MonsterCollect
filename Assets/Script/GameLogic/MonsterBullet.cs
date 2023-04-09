@@ -26,6 +26,11 @@ public class MonsterBullet : MonoBehaviour
         if (type)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed);
+            if(transform.position.x == player.transform.position.x && transform.position.y == player.transform.position.y)
+            {
+                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                gameObject.SetActive(false);
+            }
         }
     }
 

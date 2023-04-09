@@ -167,6 +167,10 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
     }
+    public void disablePlayer()
+    {
+        gameObject.SetActive(false);
+    }
     private void FixedUpdate()
     {
         if (UltimateJoystick.GetHorizontalAxis("Movement") != 0 || UltimateJoystick.GetVerticalAxis("Movement") != 0)
@@ -268,7 +272,7 @@ public class PlayerController : Singleton<PlayerController>
     private IEnumerator normalAttack()
     {
         int bonusTimer = realData.Speed / 100;
-        if (bonusTimer > 30) bonusTimer = 3;
+        if (bonusTimer > 100) bonusTimer = 100;
         yield return new WaitForSeconds(timer[0] * (100 - bonusTimer)/100 + 0.5f);
         if (isPause == false && thunderType[0] > 0)
         {
@@ -301,30 +305,39 @@ public class PlayerController : Singleton<PlayerController>
             Transform shootTargetObj = EasyObjectPool.instance.getNearestHitPosition(gameObject);
             GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
     locate.transform.rotation);
+            StartCoroutine(disableObject(2f, shootTarget));
+
             if (shootTargetObj != null)
             {
                 shootTarget.transform.position = shootTargetObj.position;
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.transform.rotation);
+                StartCoroutine(disableObject(3f, projectileNormal));
+
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
                 if (skillLevel[1] >= 3)
                 {
-                    shootTarget.transform.position = shootTargetObj.position;
-                    shootTarget.transform.position = shootTargetObj.position + new Vector3(-0.5f, 0f, 0f);
+                    GameObject shootTarget1 = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
+locate.transform.rotation);
+                    StartCoroutine(disableObject(3f, shootTarget1));
+                    shootTarget1.transform.position = shootTargetObj.position + new Vector3(-1f, 0f, 0f);
                     GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
-        shootTarget.transform.rotation);
-                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
+        shootTarget1.transform.rotation);
+                    StartCoroutine(disableObject(3f, projectileNormal1));
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget1.transform);
                 }
                 if (skillLevel[1] >= 6)
                 {
-                    shootTarget.transform.position = shootTargetObj.position;
-                    shootTarget.transform.position = shootTargetObj.position + new Vector3(+0.5f, 0f, 0f);
+                    GameObject shootTarget2 = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
+locate.transform.rotation);
+                    StartCoroutine(disableObject(3f, shootTarget2));
+                    shootTarget2.transform.position = shootTargetObj.position + new Vector3(-1f, 0f, 0f);
                     GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
-        shootTarget.transform.rotation);
-                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget.transform);
+        shootTarget2.transform.rotation);
+                    StartCoroutine(disableObject(3f, projectileNormal1));
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, dameSkill[1], shootTarget2.transform);
                 }
             }
-            StartCoroutine(disableObject(5f, shootTarget)); 
         }
         StartCoroutine(thunder_1());
     }
@@ -574,7 +587,7 @@ gameObject.transform.rotation);
         int dame = MathController.Instance.enemyHitPlayer(data, monsterData);
         reduceHealth(dame);
         body.GetComponent<Animator>().SetTrigger("hurt");
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.5f);
         canHurt = true;
     }
     IEnumerator setHurtPercent(MonsterData monsterData, int percent)

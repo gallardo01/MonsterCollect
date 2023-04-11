@@ -17,15 +17,12 @@ public class UIController : Singleton<UIController>
     public Button heroesBtn;
     public Button mainMenuBtn;
     public Button upgradeBtn;
-
-    public Button addGoldBtn;
-    public Button addDiamondBtn;
+    public Button eventBtn;
 
     public TextMeshProUGUI txtGold;
     public TextMeshProUGUI txtDiamond;
 
     public GameObject[] hightlight;
-    public GameObject[] menuSprite;
     public GameObject[] menuText;
 
     private int currentSite = 3;
@@ -43,12 +40,9 @@ public class UIController : Singleton<UIController>
         heroesBtn.onClick.AddListener(() => heoresButton());
         mainMenuBtn.onClick.AddListener(() => mainMenuButton());
         upgradeBtn.onClick.AddListener(() => upgradeButton());
+        eventBtn.onClick.AddListener(() => eventsButton());
 
-        addGoldBtn.onClick.AddListener(() => shopButton());
-        addDiamondBtn.onClick.AddListener(() => shopButton());
         mainMenuButton();
-        menuText[currentSite].gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,25);
-
     }
 
     public void InitUI()
@@ -140,13 +134,25 @@ public class UIController : Singleton<UIController>
         setupHightLight();
     }
 
+    private void eventsButton()
+    {
+        currentSite = 5;
+        shop.DOAnchorPos(new Vector2(-8000, 0), 0.25f);
+        heroes.DOAnchorPos(new Vector2(-6000, 0), 0.25f);
+        mainMenu.DOAnchorPos(new Vector2(-4000, 0), 0.25f);
+        upgrade.DOAnchorPos(new Vector2(0, 0), 0.25f);
+        setupHightLight();
+    }
+
     private void setupHightLight()
     {
-        for (int i = 1; i <= 4; i++)
+        for (int i = 0; i < 5; i++)
         {
+            menuText[i].SetActive(false);
             hightlight[i].SetActive(false);
         }
-        hightlight[currentSite].SetActive(true);     
+        menuText[currentSite - 1].SetActive(true);
+        hightlight[currentSite - 1].SetActive(true);     
     }
 
     public void detectSwipe(int direction)
@@ -180,9 +186,12 @@ public class UIController : Singleton<UIController>
             {
                 mainMenuButton();
             }
-            else
+            else if(currentSite == 4)
             {
                 upgradeButton();
+            } else
+            {
+                eventsButton();
             }
         }
 

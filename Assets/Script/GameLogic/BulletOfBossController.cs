@@ -118,7 +118,7 @@ public class BulletOfBossController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Wall")
         {
-            GameController.Instance.addParticle(collision.gameObject, 1);
+            //GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
@@ -173,7 +173,7 @@ public class BulletOfBossController : MonoBehaviour
             }
             else
             {
-                GameController.Instance.addParticle(collision.gameObject, 1);
+                //GameController.Instance.addParticle(collision.gameObject, 1);
                 EasyObjectPool.instance.ReturnObjectToPool(gameObject);
                 gameObject.SetActive(false);
             }
@@ -200,7 +200,7 @@ public class BulletOfBossController : MonoBehaviour
                     iceFrag.transform.Rotate(0, 0, angle * 180 /Mathf.PI);
                 }
 
-                GameController.Instance.addParticle(collision.gameObject, 1);
+                //GameController.Instance.addParticle(collision.gameObject, 1);
                 EasyObjectPool.instance.ReturnObjectToPool(gameObject);
                 gameObject.SetActive(false);
 
@@ -225,7 +225,7 @@ public class BulletOfBossController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Wall")
         {
-            GameController.Instance.addParticle(collision.gameObject, 1);
+            //GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
@@ -251,7 +251,7 @@ public class BulletOfBossController : MonoBehaviour
                     iceFrag.transform.Rotate(0, 0, angle * 180 / Mathf.PI);
                 }
 
-                GameController.Instance.addParticle(collision.gameObject, 1);
+                //GameController.Instance.addParticle(collision.gameObject, 1);
                 EasyObjectPool.instance.ReturnObjectToPool(gameObject);
                 gameObject.SetActive(false);
             }

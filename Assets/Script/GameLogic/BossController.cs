@@ -266,6 +266,7 @@ public class BossController : Singleton<BossController>
             for (int i = 0; i < 5; i++)
             {
                 GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
+                fileGround.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0,0,0), 0f, 8, monsterData);
                 StartCoroutine(returnObjectToPool(fileGround, 5f));
                 yield return new WaitForSeconds(1f);
             }

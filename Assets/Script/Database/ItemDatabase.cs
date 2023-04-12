@@ -29,15 +29,18 @@ public class ItemDatabase : Singleton<ItemDatabase>
         LoadResourceTextfileItemData(fileName);
         LoadResourceTextfileCurrentData(myFileName);
 
-        for (int i = 1; i <= 37; i++)
+        if (PlayerPrefs.HasKey("Init") == false)
         {
-            addNewItem(i, 1000);
+            PlayerPrefs.SetInt("Init", 1);
+            for (int i = 1; i <= 37; i++)
+            {
+                addNewItem(i, 1);
+            }
+            for (int i = 101; i <= 112; i++)
+            {
+                addNewItem(i, 1);
+            }
         }
-        for (int i = 101; i <= 112; i++)
-        {
-            addNewItem(i, 1000);
-        }
-
     }
     private void LoadResourceTextfileItemData(string path)
     {
@@ -573,6 +576,42 @@ public class ItemDatabase : Singleton<ItemDatabase>
         return inventoryData;
     }
 
+    public List<ItemInventory> getEquipmentData()
+    {
+        List<ItemInventory> itemInv = new List<ItemInventory>();
+        for (int i = 0; i < inventoryData.Count; i++)
+        {
+            if(inventoryData[i].Type > 0 && inventoryData[i].Type < 10)
+            {
+                itemInv.Add(inventoryData[i]);
+            }
+        }
+        return itemInv;
+    }
+    public List<ItemInventory> getMaterialData()
+    {
+        List<ItemInventory> itemInv = new List<ItemInventory>();
+        for (int i = 0; i < inventoryData.Count; i++)
+        {
+            if (inventoryData[i].Type == 0)
+            {
+                itemInv.Add(inventoryData[i]);
+            }
+        }
+        return itemInv;
+    }
+    public List<ItemInventory> getShardData()
+    {
+        List<ItemInventory> itemInv = new List<ItemInventory>();
+        for (int i = 0; i < inventoryData.Count; i++)
+        {
+            if (inventoryData[i].Type == 10)
+            {
+                itemInv.Add(inventoryData[i]);
+            }
+        }
+        return itemInv;
+    }
     public void equipItemPosition(ItemInventory item)
     {
         for (int i = 0; i < inventoryData.Count; i++)

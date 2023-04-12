@@ -33,7 +33,7 @@ public class UIInventoryFilter : MonoBehaviour
             filterByEquipment.GetComponent<Image>().color = Color.white;
 
         }
-        InventoryController.Instance.InitInventory(filterStatus);
+        //InventoryController.Instance.InitInventory(filterStatus);
     }
     public void FilterByEquipmentClicked()
     {
@@ -51,6 +51,6 @@ public class UIInventoryFilter : MonoBehaviour
             filterByItem.GetComponent<Image>().color = Color.white;
            
         }
-        InventoryController.Instance.InitInventory(filterStatus);
+        //InventoryController.Instance.InitInventory(filterStatus);
     }
 }

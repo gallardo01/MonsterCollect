@@ -13,32 +13,26 @@ public class ItemInflate : MonoBehaviour
     public Image item;
     public Image type;
     public TextMeshProUGUI slot;
-    public GameObject focus;
-    public GameObject[] itemVFX;
+    public TextMeshProUGUI level;
+
 
     private ItemInventory itemData;
-    private string[] Rarity = { "", "Common", "Great", "Rare", "Epic", "Mythic", "Legendary" };
     public void InitData(ItemInventory iteminfo)
     {
         itemData = iteminfo;
         item.sprite = Resources.Load<Sprite>("Contents/Item/" + iteminfo.Id.ToString());
-        rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + Rarity[iteminfo.Rarity]);
-        foreach (var item in itemVFX)
-        {
-            item.SetActive(false);
-        }
-        if (iteminfo.Rarity > 2)
-            itemVFX[iteminfo.Rarity - 2].SetActive(true);
-        type.sprite = Resources.Load<Sprite>("Contents/Icon/DameType/" + iteminfo.Type.ToString());
-        if (iteminfo.Type == 0)
+        rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + iteminfo.Rarity.ToString());
+        type.sprite = Resources.Load<Sprite>("UI/Inventory/PlaceHolder/" + iteminfo.Type.ToString());
+        if (iteminfo.Type == 0 || iteminfo.Type == 10)
         {
             slot.text = iteminfo.Slot.ToString();
+            level.text = "";
         }
         else
         {
             slot.text = "";
+            level.text = "Lv." + iteminfo.Level.ToString();
         }
-
     }
 
     //// Start is called before the first frame update
@@ -49,19 +43,11 @@ public class ItemInflate : MonoBehaviour
     }
     private void onClickItem()
     {
+        gameObject.GetComponent<Animator>().SetTrigger("Click_Animation1");
         if (itemData != null)
         {
-            InventoryController.Instance.onClickItem(itemData);
+            //InventoryController.Instance.onClickItem(itemData);
             InventoryController.Instance.selectingItem = this;
-            setFocus(true);
         }
-    }
-    public void setFocus(bool enable)
-    {
-        focus.SetActive(enable);
-    }
-    public bool isFocus()
-    {
-        return focus.active;
     }
 }

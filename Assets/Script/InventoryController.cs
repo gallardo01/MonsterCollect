@@ -48,11 +48,8 @@ public class InventoryController : Singleton<InventoryController>
     void Init()
     {
         InfoPanel.SetActive(false);
-        PopupPanel = Instantiate(PopupPrefab, ParentPanel.transform);
-        PopupPanel.SetActive(false);
         //fix inventory to center
         ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
-
         initEquipment();
         initMaterial();
         initShard();
@@ -145,14 +142,6 @@ public class InventoryController : Singleton<InventoryController>
         }
     }
 
-    public void onClickItem(ItemInventory data)
-    {
-        foreach (var item in listItem)
-        {
-            item.GetComponent<ItemInflate>().setFocus(false);
-        }
-        //SetInfoPanelData(data);
-    }
 
     void UpgradeItem(int itemShopID, int stoneRequired, int coinRequired)
     {

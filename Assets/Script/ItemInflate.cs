@@ -43,11 +43,10 @@ public class ItemInflate : MonoBehaviour
     }
     private void onClickItem()
     {
-        gameObject.GetComponent<Animator>().SetTrigger("Click_Animation1");
+        gameObject.GetComponent<Animator>().Play("Click_Animation");
         if (itemData != null)
         {
             //InventoryController.Instance.onClickItem(itemData);
-            InventoryController.Instance.selectingItem = this;
         }
     }
 }

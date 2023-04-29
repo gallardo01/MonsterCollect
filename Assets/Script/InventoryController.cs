@@ -20,15 +20,9 @@ public class InventoryController : Singleton<InventoryController>
     public GameObject PopupPrefab;
     public GameObject ParentPanel;
     public GameObject[] albilitiesText;
-    private GameObject PopupPanel;
     public ItemInflate selectingItem;
     private List<GameObject> listItem = new List<GameObject>();
 
-    string[] rarity = new string[4] { "Common", "Great", "Rare", "Epic" };
-    string[] Albility = new string[6] { "Attack", "HP", "Armor", "Speed", "Exp Bonus", "Gold Bonus" };
-    //int[] fuseReturnByRarity = new int[4] { 2, 3, 4, 5 };
-    int[] iconSort = new int[6] { 4, 3, 0, 1, 2, 5 };
-    Color[] rarityColor = new Color[4] { Color.white, Color.green, Color.blue, Color.magenta };
     int upgradeItemID = -1;
 
     public int[] baseAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
@@ -142,64 +136,4 @@ public class InventoryController : Singleton<InventoryController>
         }
     }
 
-
-    void UpgradeItem(int itemShopID, int stoneRequired, int coinRequired)
-    {
-        if (ItemDatabase.Instance.canReduceItemSlotEvol(8, stoneRequired) == true && UserDatabase.Instance.reduceMoney(coinRequired, 0))
-        {
-            ItemDatabase.Instance.upgradeItem(itemShopID);
-            ItemDatabase.Instance.reduceItemSlotById(8, stoneRequired);
-        }
-        //Init();
-        ItemInventory upgradeItem = ItemDatabase.Instance.fetchInventoryById(8);
-        if (upgradeItem.Slot > 0)
-            listItem[upgradeItemID].transform.Find("Slot/Count").GetComponent<TextMeshProUGUI>().text = upgradeItem.Slot.ToString();
-        else
-            listItem[upgradeItemID].transform.Find("Slot/Count").gameObject.SetActive(false);
-        ItemInventory data = ItemDatabase.Instance.fetchInventoryByShopId(itemShopID);
-        //SetInfoPanelData(data);
-        InitAlbilities();
-    }
-    void InitEquipment(ItemInventory item, int itemSlot)
-    {
-        string[] Rarity = { "", "Common", "Great", "Rare", "Epic", "Mythic", "Legendary" };
-        //Equipment[itemSlot].transform.Find("Contain/Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
-        //Equipment[itemSlot].GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + Rarity[item.Rarity]);
-        //Equipment[itemSlot].transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lvl " + item.Level.ToString();
-        InitAlbilities();
-
-    }
-    void InitAlbilities()
-    {
-
-        baseAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
-        bonusAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
-        foreach (var item in ItemDatabase.Instance.getAllData())
-        {
-            if (item.IsUse < 0)
-            {
-                if (item.Stats_1 > 0) { baseAlbility[((item.Stats_1 / 100) - 1)] += item.Stats_1 % 100; bonusAlbility[(item.Stats_1 / 100) - 1] += item.Level - 1; }
-                if (item.Stats_2 > 0) { baseAlbility[((item.Stats_2 / 100) - 1)] += item.Stats_2 % 100; bonusAlbility[(item.Stats_2 / 100) - 1] += item.Level - 1; }
-                if (item.Stats_3 > 0) { baseAlbility[((item.Stats_3 / 100) - 1)] += item.Stats_2 % 100; bonusAlbility[(item.Stats_3 / 100) - 1] += item.Level - 1; }
-            }
-        }
-        for (int i = 0; i < 6; ++i)
-        {
-            int num = baseAlbility[i] + bonusAlbility[i];
-            albilitiesText[i].GetComponent<TextMeshProUGUI>().text = num.ToString();
-        }
-    }
-    public Sprite GetSprite(int itemID)
-    {
-        string temp = "ItemAtlas_" + itemID.ToString();
-        Sprite outputSprite = null;
-        foreach (Sprite s in itemsSprite)
-        {
-            if (s.name == temp)
-            {
-                outputSprite = s;
-            }
-        }
-        return outputSprite;
-    }
 }

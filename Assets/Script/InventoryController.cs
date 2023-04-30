@@ -20,11 +20,8 @@ public class InventoryController : Singleton<InventoryController>
     public GameObject PopupPrefab;
     public GameObject ParentPanel;
     public GameObject[] albilitiesText;
-    public ItemInflate selectingItem;
-    private List<GameObject> listItem = new List<GameObject>();
 
-    int upgradeItemID = -1;
-
+    public GameObject itemDetailPanel;
     public int[] baseAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
     public int[] bonusAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
 
@@ -134,6 +131,11 @@ public class InventoryController : Singleton<InventoryController>
                 _slotitem.GetComponent<ItemInflate>().InitData(itemArr[i]);
             }
         }
+    }
+    public void onClickItem(ItemInventory item)
+    {
+        itemDetailPanel.SetActive(true);
+        itemDetailPanel.GetComponent<InflateShowItemController>().initItem(item);
     }
 
 }

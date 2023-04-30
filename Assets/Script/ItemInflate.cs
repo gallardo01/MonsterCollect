@@ -46,7 +46,7 @@ public class ItemInflate : MonoBehaviour
         gameObject.GetComponent<Animator>().Play("Click_Animation");
         if (itemData != null)
         {
-            //InventoryController.Instance.onClickItem(itemData);
+            InventoryController.Instance.onClickItem(itemData);
         }
     }
 }

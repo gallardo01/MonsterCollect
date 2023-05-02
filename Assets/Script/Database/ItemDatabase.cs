@@ -198,7 +198,18 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
         }
         return -1;
-
+    }
+    public List<ItemInventory> fetchUsedItem()
+    {
+        List<ItemInventory> usedItem = new List<ItemInventory>(); 
+        for (int i = 0; i < inventoryData.Count; i++)
+        {
+            if (inventoryData[i].IsUse < 0)
+            {
+                usedItem.Add(inventoryData[i]);
+            }
+        }
+        return usedItem;
     }
     public List<ItemInventory> fetchAllData()
     {
@@ -221,7 +232,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     {
         ItemData rawItem = fetchItemById(id);
         // Add consume item
-        if (rawItem.Type == 0)
+        if (rawItem.Type == 0 || rawItem.Type == 10)
         {
             ItemInventory item = new ItemInventory();
             item.Id = rawItem.Id;
@@ -265,20 +276,24 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
-            if((item.Id-10) % 4 == 0) { item.Stats_1 = 100 + randomStatsRarity(item.Rarity); }
-            else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 400 + randomStatsRarity(item.Rarity); }
-            else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 300 + randomStatsRarity(item.Rarity); }
-            else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 200 + randomStatsRarity(item.Rarity); }
-            if (item.Rarity >= 2)
+            if((item.Id-10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 4000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 3000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 2000 + randomStatsRarity(item.Rarity); }
+            if (item.Rarity >= 1)
             {
-                item.Stats_2 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
-            } else if(item.Rarity >= 3)
+                item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            } else if(item.Rarity >= 2)
             {
-                item.Stats_3 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
+                item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if(item.Rarity >= 4)
+            else if(item.Rarity >= 3)
             {
-                item.Stats_4 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
+                item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            else if (item.Rarity >= 4)
+            {
+                item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
             inventoryData.Add(item);
         }
@@ -311,44 +326,79 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public void addNewItem(int id, int slot, int rarity)
     {
         ItemData rawItem = fetchItemById(id);
-        ItemInventory item = new ItemInventory();
-        item.Id = rawItem.Id;
-        item.Name = rawItem.Name;
-        item.Contents = rawItem.Contents;
-        item.Rarity = rarity;
-        item.Type = rawItem.Type;
-        item.Slot = 1;
-        item.ShopId = Random.Range(0, 999999);
-        item.IsUse = 0;
-        item.Level = 1;
-        item.Stats_1 = 0;
-        item.Stats_2 = 0;
-        item.Stats_3 = 0;
-        item.Stats_4 = 0;
-        item.Stats_5 = 0;
-        if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 100 + randomStatsRarity(item.Rarity); }
-        else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 400 + randomStatsRarity(item.Rarity); }
-        else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 300 + randomStatsRarity(item.Rarity); }
-        else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 200 + randomStatsRarity(item.Rarity); }
-        if (item.Rarity >= 2)
+        // Add consume item
+        if (rawItem.Type == 0 || rawItem.Type == 10)
         {
-            item.Stats_2 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rawItem.Rarity;
+            item.Type = rawItem.Type;
+            item.ShopId = 0;
+            item.IsUse = 0;
+            item.Level = 0;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            item.Stats_4 = 0;
+            item.Stats_5 = 0;
+            int index = fetchInventoryByIndex(id);
+            if (index == -1)
+            {
+                item.Slot = slot;
+                inventoryData.Add(item);
+            }
+            else
+            {
+                inventoryData[index].Slot += slot;
+            }
         }
-        else if (item.Rarity >= 3)
+        else
         {
-            item.Stats_3 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rarity;
+            item.Type = rawItem.Type;
+            item.Slot = 1;
+            item.ShopId = Random.Range(0, 999999);
+            item.IsUse = 0;
+            item.Level = 1;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            item.Stats_4 = 0;
+            item.Stats_5 = 0;
+            if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 4000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 3000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 2000 + randomStatsRarity(item.Rarity); }
+            if (item.Rarity >= 1)
+            {
+                item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            else if (item.Rarity >= 2)
+            {
+                item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            else if (item.Rarity >= 3)
+            {
+                item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            else if (item.Rarity >= 4)
+            {
+                item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            inventoryData.Add(item);
         }
-        else if (item.Rarity >= 4)
-        {
-            item.Stats_4 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
-        }
-        inventoryData.Add(item);
     }
     public ItemInventory getItemObject(int id, int slot, int rarity)
     {
         ItemData rawItem = fetchItemById(id);
         // Add consume item
-        if (rawItem.Type == 0)
+        if (rawItem.Type == 0 || rawItem.Type == 10)
         {
             ItemInventory item = new ItemInventory();
             item.Id = rawItem.Id;
@@ -382,7 +432,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Id = rawItem.Id;
             item.Name = rawItem.Name;
             item.Contents = rawItem.Contents;
-            item.Rarity = rawItem.Rarity;
+            item.Rarity = rarity;
             item.Type = rawItem.Type;
             item.Slot = 1;
             item.ShopId = Random.Range(0, 999999);
@@ -393,21 +443,25 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
-            if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 100 + randomStatsRarity(item.Rarity); }
-            else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 400 + randomStatsRarity(item.Rarity); }
-            else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 300 + randomStatsRarity(item.Rarity); }
-            else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 200 + randomStatsRarity(item.Rarity); }
-            if (item.Rarity >= 2)
+            if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 4000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 3000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 2000 + randomStatsRarity(item.Rarity); }
+            if (item.Rarity >= 1)
             {
-                item.Stats_2 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
+                item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            else if (item.Rarity >= 2)
+            {
+                item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
             else if (item.Rarity >= 3)
             {
-                item.Stats_3 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
+                item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
             else if (item.Rarity >= 4)
             {
-                item.Stats_4 = Random.Range(1, 9) * 100 + randomStatsRarity(item.Rarity);
+                item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
             inventoryData.Add(item);
             return item;
@@ -483,7 +537,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData.RemoveAt(index);
         }
-        
     }
     public void addItemSlotbyShopId(int shopId, int slot)
     {
@@ -530,11 +583,34 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public void upgradeItem(int shopId)
     {
         var item = fetchInventoryByShopIdIndex(shopId);
+
         if (inventoryData[item].Level < 20)
         {
+            int goldRequire = (inventoryData[item].Level) * 500 + 500 * (inventoryData[item].Rarity - 1);
+            int shardRequire = (inventoryData[item].Level) * 4 / 8 + (inventoryData[item].Rarity);
+            UserDatabase.Instance.reduceMoney(goldRequire, 0);
+            reduceItemSlotById(5 + (inventoryData[item].Id - 10) % 4, shardRequire);
+            int upgradeValue = getUpgradeValue(inventoryData[item].Rarity);
             inventoryData[item].Level++;
+            inventoryData[item].Stats_1 += upgradeValue;
+            inventoryData[item].Stats_1 += upgradeValue;
+            inventoryData[item].Stats_1 += upgradeValue;
+            inventoryData[item].Stats_1 += upgradeValue;
+            inventoryData[item].Stats_1 += upgradeValue;
         }
-        
+    }
+    private int getUpgradeValue(int rarity)
+    {
+        if(rarity == 1 || rarity == 2)
+        {
+            return 2;
+        } else if(rarity == 3 || rarity == 4)
+        {
+            return 3;
+        } else
+        {
+            return 4;
+        }
     }
 
     public List<ItemInventory> getAllData()
@@ -547,7 +623,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         List<ItemInventory> itemInv = new List<ItemInventory>();
         for (int i = 0; i < inventoryData.Count; i++)
         {
-            if(inventoryData[i].Type > 0 && inventoryData[i].Type < 10)
+            if(inventoryData[i].Type > 0 && inventoryData[i].Type < 10 && inventoryData[i].IsUse >= 0)
             {
                 itemInv.Add(inventoryData[i]);
             }
@@ -592,7 +668,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
         // Mặc đồ 
         int index = fetchInventoryByShopIdIndex(item.ShopId);
         inventoryData[index].IsUse = -item.Type;
-        
     }
     public void unequipItem(int shopId)
     {
@@ -600,10 +675,8 @@ public class ItemDatabase : Singleton<ItemDatabase>
         if (index >= 0)
         {
             inventoryData[index].IsUse = 0;
-        }
-        
+        }   
     }
-
     private void OnApplicationQuit()
     {
         Save();

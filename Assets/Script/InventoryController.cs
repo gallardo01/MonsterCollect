@@ -41,9 +41,27 @@ public class InventoryController : Singleton<InventoryController>
         InfoPanel.SetActive(false);
         //fix inventory to center
         ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
+        initItemData();
+    }
+    public void initItemData()
+    {
+        initUsedItem();
         initEquipment();
         initMaterial();
         initShard();
+    }
+    public void initUsedItem()
+    {
+        for(int i = 0; i < 6; i++)
+        {
+            Equipment[i].SetActive(false);
+        }
+        List<ItemInventory> items = ItemDatabase.Instance.fetchUsedItem();
+        for (int i = 0; i < items.Count; i++)
+        {
+            Equipment[items[i].Type - 1].SetActive(true);
+            Equipment[items[i].Type - 1].GetComponent<ItemInflate>().InitData(items[i]);
+        }
     }
     public void initEquipment()
     {
@@ -134,8 +152,18 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void onClickItem(ItemInventory item)
     {
+        StartCoroutine(clickItem(item));
+    }
+    IEnumerator clickItem(ItemInventory item)
+    {
+        yield return new WaitForSeconds(0.3f);
+        Hero.SetActive(false);
         itemDetailPanel.SetActive(true);
         itemDetailPanel.GetComponent<InflateShowItemController>().initItem(item);
     }
-
+    public void enableHeroes()
+    {
+        initItemData();
+        Hero.SetActive(true);
+    }
 }

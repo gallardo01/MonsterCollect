@@ -50,9 +50,9 @@ public class UIController : Singleton<UIController>
         UserData database = UserDatabase.Instance.getUserData();
         if (isInit)
         {
-            //txtGold.text = database.Gold.ToString();
-            //txtDiamond.text = database.Diamond.ToString();
-            //isInit = false;
+            txtGold.text = database.Gold.ToString();
+            txtDiamond.text = database.Diamond.ToString();
+            isInit = false;
         }
         else
         {

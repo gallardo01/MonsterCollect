@@ -22,9 +22,11 @@ public class InventoryController : Singleton<InventoryController>
     public GameObject[] albilitiesText;
 
     public GameObject itemDetailPanel;
-    public int[] baseAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
-    public int[] bonusAlbility = new int[6] { 0, 0, 0, 0, 0, 0 };
+    public GameObject consumeDetailPanel;
 
+    [SerializeField] Button filterItem;
+    [SerializeField] TextMeshProUGUI textFilter;
+    private bool filterBool = true;
     private Sprite[] itemsSprite;
 
     void Awake()
@@ -35,6 +37,19 @@ public class InventoryController : Singleton<InventoryController>
     void Start()
     {
         Init();
+        filterItem.onClick.AddListener(() => filterItems());
+    }
+    private void filterItems()
+    {
+        filterBool = !filterBool;
+        if(filterBool == true)
+        {
+            textFilter.text = "By Level";
+        } else
+        {
+            textFilter.text = "By Type";
+        }
+        initEquipment();
     }
     void Init()
     {
@@ -65,7 +80,7 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void initEquipment()
     {
-        List<ItemInventory> itemArr = ItemDatabase.Instance.getEquipmentData();
+        List<ItemInventory> itemArr = ItemDatabase.Instance.getEquipmentData(filterBool);
 
         List<GameObject> child = new List<GameObject>();
         for (int i = 0; i < ItemPanel.transform.childCount; i++)
@@ -83,6 +98,7 @@ public class InventoryController : Singleton<InventoryController>
         {
             if(i < child.Count)
             {
+                child[i].SetActive(true);
                 child[i].GetComponent<ItemInflate>().InitData(itemArr[i]);
             } else
             {
@@ -158,8 +174,15 @@ public class InventoryController : Singleton<InventoryController>
     {
         yield return new WaitForSeconds(0.3f);
         Hero.SetActive(false);
-        itemDetailPanel.SetActive(true);
-        itemDetailPanel.GetComponent<InflateShowItemController>().initItem(item);
+        if (item.Type > 0 && item.Type < 10)
+        {
+            itemDetailPanel.SetActive(true);
+            itemDetailPanel.GetComponent<InflateShowItemController>().initItem(item);
+        } else
+        {
+            consumeDetailPanel.SetActive(true);
+            consumeDetailPanel.GetComponent<InflateShowItemController>().consumeItem(item);
+        }
     }
     public void enableHeroes()
     {

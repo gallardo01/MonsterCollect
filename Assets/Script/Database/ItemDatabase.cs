@@ -593,10 +593,10 @@ public class ItemDatabase : Singleton<ItemDatabase>
             int upgradeValue = getUpgradeValue(inventoryData[item].Rarity);
             inventoryData[item].Level++;
             inventoryData[item].Stats_1 += upgradeValue;
-            inventoryData[item].Stats_1 += upgradeValue;
-            inventoryData[item].Stats_1 += upgradeValue;
-            inventoryData[item].Stats_1 += upgradeValue;
-            inventoryData[item].Stats_1 += upgradeValue;
+            inventoryData[item].Stats_2 += upgradeValue;
+            inventoryData[item].Stats_3 += upgradeValue;
+            inventoryData[item].Stats_4 += upgradeValue;
+            inventoryData[item].Stats_5 += upgradeValue;
         }
     }
     private int getUpgradeValue(int rarity)
@@ -618,7 +618,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         return inventoryData;
     }
 
-    public List<ItemInventory> getEquipmentData()
+    public List<ItemInventory> getEquipmentData(bool isSort)
     {
         List<ItemInventory> itemInv = new List<ItemInventory>();
         for (int i = 0; i < inventoryData.Count; i++)
@@ -628,7 +628,38 @@ public class ItemDatabase : Singleton<ItemDatabase>
                 itemInv.Add(inventoryData[i]);
             }
         }
+        if (isSort)
+        {
+            itemInv = sortByLevel(itemInv);
+        }
         return itemInv;
+    }
+    private List<ItemInventory> sortByLevel(List<ItemInventory> arr)
+    {
+        for(int i = 0; i < arr.Count; i++)
+        {
+            int max = arr[i].Level;
+            int index = i;
+            for(int j = i; j < arr.Count; j++)
+            {
+                if (arr[i].Level >= max)
+                {
+                    max = arr[i].Level;
+                    index = j;
+                }
+            }
+            if (index != i)
+            {
+                ItemInventory cache = arr[i];
+                arr[i] = arr[index];
+                arr[index] = cache;
+            }
+        }
+        return arr;
+    }
+    private void sortByType()
+    {
+
     }
     public List<ItemInventory> getMaterialData()
     {

@@ -26,7 +26,12 @@ public class InventoryController : Singleton<InventoryController>
 
     [SerializeField] Button filterItem;
     [SerializeField] TextMeshProUGUI textFilter;
+
+    [SerializeField] Button craftButton;
+    [SerializeField] GameObject craftItemObj;
+    [SerializeField] GameObject hideScreenWhenCraft;
     private bool filterBool = true;
+    private bool isCraftItem = false;
     private Sprite[] itemsSprite;
 
     void Awake()
@@ -38,6 +43,23 @@ public class InventoryController : Singleton<InventoryController>
     {
         Init();
         filterItem.onClick.AddListener(() => filterItems());
+        craftButton.onClick.AddListener(() => craftButtonAction());
+    }
+    private void craftButtonAction()
+    {
+        isCraftItem = true;
+        craftItemObj.SetActive(true);
+        hideScreenWhenCraft.SetActive(false);
+    }
+    public void closeCraftScreen()
+    {
+        isCraftItem = false;
+        craftItemObj.SetActive(false);
+        hideScreenWhenCraft.SetActive(true);
+    }
+    public bool getCraftItem()
+    {
+        return isCraftItem;
     }
     private void filterItems()
     {
@@ -85,13 +107,11 @@ public class InventoryController : Singleton<InventoryController>
         List<GameObject> child = new List<GameObject>();
         for (int i = 0; i < ItemPanel.transform.childCount; i++)
         {
-            if (i < itemArr.Count)
+            child.Add(ItemPanel.transform.GetChild(i).gameObject);
+
+            if (i >= itemArr.Count)
             {
-                child.Add(ItemPanel.transform.GetChild(i).gameObject);
-            }
-            else
-            {
-                Destroy(ItemPanel.transform.GetChild(i).gameObject);
+                ItemPanel.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
         for (int i = 0; i < itemArr.Count; i++)

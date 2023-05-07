@@ -529,11 +529,10 @@ public class ItemDatabase : Singleton<ItemDatabase>
         }
         return 0;
     }
-    public void reduceItemSlot(int shopId, int slot)
+    public void removeItemEquipment(int shopId)
     {
         int index = fetchInventoryByShopIdIndex(shopId);
-        inventoryData[index].Slot -= slot;
-        if (inventoryData[index].Slot <= 0)
+        if (index >= 0)
         {
             inventoryData.RemoveAt(index);
         }
@@ -642,9 +641,9 @@ public class ItemDatabase : Singleton<ItemDatabase>
             int index = i;
             for(int j = i; j < arr.Count; j++)
             {
-                if (arr[i].Level >= max)
+                if (arr[j].Level >= max)
                 {
-                    max = arr[i].Level;
+                    max = arr[j].Level;
                     index = j;
                 }
             }
@@ -657,9 +656,21 @@ public class ItemDatabase : Singleton<ItemDatabase>
         }
         return arr;
     }
-    private void sortByType()
+    public void craftItem(int shopId)
     {
-
+        int index = fetchInventoryByShopIdIndex(shopId);
+        if (index >= 0)
+        {
+            inventoryData[index].IsUse = -10;
+        }
+    }
+    public void unCraftItem(int shopId)
+    {
+        int index = fetchInventoryByShopIdIndex(shopId);
+        if (index >= 0)
+        {
+            inventoryData[index].IsUse = 0;
+        }
     }
     public List<ItemInventory> getMaterialData()
     {

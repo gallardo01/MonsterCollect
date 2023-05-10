@@ -37,8 +37,12 @@ public class InventoryController : Singleton<InventoryController>
     void Awake()
     {
         itemsSprite = Resources.LoadAll<Sprite>("Contents/Item/ItemAtlas");
+        ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
+        MaterialPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
+        ShardPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
+
     }
-    
+
     void Start()
     {
         Init();
@@ -47,15 +51,20 @@ public class InventoryController : Singleton<InventoryController>
     }
     private void craftButtonAction()
     {
-        isCraftItem = true;
-        craftItemObj.SetActive(true);
-        hideScreenWhenCraft.SetActive(false);
-    }
-    public void closeCraftScreen()
-    {
-        isCraftItem = false;
-        craftItemObj.SetActive(false);
-        hideScreenWhenCraft.SetActive(true);
+        if (isCraftItem == false)
+        {
+            craftItemObj.SetActive(true);
+            craftItemObj.GetComponent<CraftItemController>().initFunction();
+            hideScreenWhenCraft.SetActive(false);
+        }
+        else
+        {
+            ItemDatabase.Instance.unCraftAllItem();
+            craftItemObj.SetActive(false);
+            hideScreenWhenCraft.SetActive(true);
+            initEquipment();
+        }
+        isCraftItem = !isCraftItem;
     }
     public bool getCraftItem()
     {
@@ -77,7 +86,6 @@ public class InventoryController : Singleton<InventoryController>
     {
         InfoPanel.SetActive(false);
         //fix inventory to center
-        ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
         initItemData();
     }
     public void initItemData()

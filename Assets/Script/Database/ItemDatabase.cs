@@ -34,7 +34,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             PlayerPrefs.SetInt("Init", 1);
             for (int i = 1; i <= 37; i++)
             {
-                addNewItem(i, 1);
+                addNewItem(i, 1, Random.Range(1,6));
             }
             for (int i = 101; i <= 112; i++)
             {
@@ -283,15 +283,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
             if (item.Rarity >= 1)
             {
                 item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
-            } else if(item.Rarity >= 2)
+            } if(item.Rarity >= 2)
             {
                 item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if(item.Rarity >= 3)
+            if(item.Rarity >= 3)
             {
                 item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if (item.Rarity >= 4)
+            if (item.Rarity >= 4)
             {
                 item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
@@ -379,20 +379,24 @@ public class ItemDatabase : Singleton<ItemDatabase>
             {
                 item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if (item.Rarity >= 2)
+            if (item.Rarity >= 2)
             {
                 item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if (item.Rarity >= 3)
+            if (item.Rarity >= 3)
             {
                 item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if (item.Rarity >= 4)
+            if (item.Rarity >= 4)
             {
                 item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
             inventoryData.Add(item);
         }
+    }
+    public void addNewItemByObject(ItemInventory item)
+    {
+        inventoryData.Add(item);
     }
     public ItemInventory getItemObject(int id, int slot, int rarity)
     {
@@ -443,6 +447,8 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
+            Debug.Log(item.Rarity);
+
             if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
             else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 4000 + randomStatsRarity(item.Rarity); }
             else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 3000 + randomStatsRarity(item.Rarity); }
@@ -451,15 +457,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
             {
                 item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if (item.Rarity >= 2)
+            if (item.Rarity >= 2)
             {
                 item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if (item.Rarity >= 3)
+            if (item.Rarity >= 3)
             {
                 item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            else if (item.Rarity >= 4)
+            if (item.Rarity >= 4)
             {
                 item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
@@ -552,7 +558,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public void reduceItemSlotById(int id, int slot)
     {
         int index = fetchInventoryByIndex(id);
-        if (index >= 0)
+        if (index >= 0 && inventoryData[index].Slot >= slot)
         {
             inventoryData[index].Slot -= slot;
         }
@@ -672,6 +678,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
             inventoryData[index].IsUse = 0;
         }
     }
+    public void unCraftAllItem()
+    {
+        for(int i = 0; i < inventoryData.Count; i++) {
+            if (inventoryData[i].IsUse == -10)
+            {
+                inventoryData[i].IsUse = 0;
+            }
+        }
+    }
     public List<ItemInventory> getMaterialData()
     {
         List<ItemInventory> itemInv = new List<ItemInventory>();
@@ -721,6 +736,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     }
     private void OnApplicationQuit()
     {
+        unCraftAllItem();
         Save();
     }
 }

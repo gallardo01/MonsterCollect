@@ -13,7 +13,7 @@ public class CraftItemController : Singleton<CraftItemController>
     [SerializeField] Button startCraft;
     [SerializeField] GameObject result;
     [SerializeField] TextMeshProUGUI rateText;
-
+    [SerializeField] GameObject overlayAllObj;
     private ItemInventory[] listItem = {null, null, null};
     private bool[] isItemOnList = { false, false, false };
     private int[] rateItem = { 0, 0, 0, 0, 0, 0 };
@@ -24,7 +24,8 @@ public class CraftItemController : Singleton<CraftItemController>
         itemButton[0].onClick.AddListener(() => clickItem(0));
         itemButton[1].onClick.AddListener(() => clickItem(1));
         itemButton[2].onClick.AddListener(() => clickItem(2));
-        initFunction();
+
+        startCraft.onClick.AddListener(() => startCraftAction());
     }
     public void initFunction()
     {
@@ -36,6 +37,8 @@ public class CraftItemController : Singleton<CraftItemController>
             textCraftShard.text = "<color=red>" + ItemDatabase.Instance.fetchInventoryById(9).Slot + "</color>" + "/1";
         }
         rateText.text = "";
+        for(int i = 0; i < 3; i++) { isItemOnList[i] = false; itemShow[i].SetActive(false);}
+        activeButton();
     }
     private void updateTextRate()
     {
@@ -54,23 +57,71 @@ public class CraftItemController : Singleton<CraftItemController>
             }
         }
         rateText.text = text;
+        overlayAllObj.SetActive(false);
     }
     private void startCraftAction()
     {
-        for(int i = 0; i < 3; i++)
+        startCraft.interactable = false;
+        overlayAllObj.SetActive(true);
+        StartCoroutine(animationCraft());
+     
+    }
+    IEnumerator animationCraft()
+    {
+        particleItem[0].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        particleItem[1].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        particleItem[2].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        particleItem[0].SetActive(false);
+        itemShow[0].SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        particleItem[1].SetActive(false);
+        itemShow[1].SetActive(false); 
+        yield return new WaitForSeconds(0.5f);
+        particleItem[2].SetActive(false);
+        itemShow[2].SetActive(false);
+        for (int i = 0; i < 3; i++)
         {
             ItemDatabase.Instance.removeItemEquipment(listItem[i].ShopId);
         }
-
+        ItemDatabase.Instance.reduceItemSlotById(9, 1);
+        ItemInventory givenItem = ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, getRarityItem());
+        particleItem[3].SetActive(true);
+        ItemDatabase.Instance.addNewItemByObject(givenItem);
+        yield return new WaitForSeconds(0.5f);
+        particleItem[3].SetActive(false);
+        itemShow[3].SetActive(true);
+        itemShow[3].GetComponent<ItemInflate>().InitData(givenItem);
+        yield return new WaitForSeconds(0.5f);
+        itemShow[3].SetActive(false);
+        InventoryController.Instance.initEquipment();
+        overlayAllObj.SetActive(false);
+        activeButton();
+    }
+    private int getRarityItem()
+    {
+        int rate = Random.Range(0, 300);
+        int totalRate = 0;
+        for (int i = 1; i < 6; i++)
+        {
+            totalRate += rateItem[i];
+            if(rate < totalRate)
+            {
+                return i;
+            }
+        }
+        return 1;
     }
     private void activeButton()
     {
         if(findNearestAvailable() == -1 && ItemDatabase.Instance.fetchInventoryById(9).Slot > 0)
         {
-            startCraft.enabled = true;
+            startCraft.interactable = true;
         } else
         {
-            startCraft.enabled = false;
+            startCraft.interactable = false;
         }
     }
     public void addItemOnList(ItemInventory item)
@@ -84,6 +135,7 @@ public class CraftItemController : Singleton<CraftItemController>
             itemShow[index].GetComponent<ItemInflate>().InitData(item);
             ItemDatabase.Instance.craftItem(item.ShopId);
             InventoryController.Instance.initEquipment();
+            activeButton();
             updateTextRate();
         }
     }

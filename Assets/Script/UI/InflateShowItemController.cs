@@ -102,7 +102,7 @@ public class InflateShowItemController : MonoBehaviour
         else if ((item.Id - 10) % 4 == 3) { nameItem.color = new Color(15f, 255f, 0f, 255f); }
 
         typeItem.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + item.Rarity.ToString());
-        iconItem.sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
+        iconItem.sprite = InventoryController.Instance.getSpriteIndex(item.Id);
         levelItem.text = $"Level: {item.Level}/20";
         iconFirstStat.sprite = Resources.Load<Sprite>("Contents/Icon/DameType/" + (item.Stats_1/1000).ToString());
         textFirstStat.text = "+" + (item.Stats_1 % 100).ToString();

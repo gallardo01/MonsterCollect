@@ -20,7 +20,7 @@ public class ItemInflate : MonoBehaviour
     public void InitData(ItemInventory iteminfo)
     {
         itemData = iteminfo;
-        item.sprite = Resources.Load<Sprite>("Contents/Item/" + iteminfo.Id.ToString());
+        item.sprite = InventoryController.Instance.getSpriteIndex(iteminfo.Id);
         rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + iteminfo.Rarity.ToString());
         type.sprite = Resources.Load<Sprite>("UI/Inventory/PlaceHolder/" + iteminfo.Type.ToString());
         if (iteminfo.Type == 0 || iteminfo.Type == 10)

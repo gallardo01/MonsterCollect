@@ -36,7 +36,7 @@ public class InventoryController : Singleton<InventoryController>
 
     void Awake()
     {
-        itemsSprite = Resources.LoadAll<Sprite>("Contents/Item/ItemAtlas");
+        itemsSprite = Resources.LoadAll<Sprite>("Contents/Item/Item");
         ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
         MaterialPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
         ShardPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2((ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5, (ItemPanel.GetComponent<RectTransform>().rect.size.x - 190) / 5);
@@ -48,6 +48,18 @@ public class InventoryController : Singleton<InventoryController>
         Init();
         filterItem.onClick.AddListener(() => filterItems());
         craftButton.onClick.AddListener(() => craftButtonAction());
+    }
+    public Sprite getSpriteIndex(int index)
+    {
+        int indexSprite;
+        if(index < 100)
+        {
+            indexSprite = index - 1;
+        } else
+        {
+            indexSprite = index - 68;
+        }
+        return itemsSprite[indexSprite];
     }
     private void craftButtonAction()
     {

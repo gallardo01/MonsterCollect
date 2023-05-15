@@ -33,6 +33,7 @@ public class UIController : Singleton<UIController>
 
     void Start()
     {
+        Application.targetFrameRate = 100;
         enableSwipe = true;
 
         InitUI();

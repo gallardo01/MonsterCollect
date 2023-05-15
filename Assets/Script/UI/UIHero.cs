@@ -60,8 +60,8 @@ public class UIHero : Singleton<UIHero>
     Animator evolAnimator;
 
 
-    public GameObject maskBtnBuyGold;
-    public GameObject maskBtnBuyDiamond;
+    //public GameObject maskBtnBuyGold;
+    //public GameObject maskBtnBuyDiamond;
 
     string addAtk;
     string addHp;
@@ -103,8 +103,8 @@ public class UIHero : Singleton<UIHero>
 
         evolAnimator = pnEvolve.GetComponent<Animator>();
 
-        maskBtnBuyGold.SetActive(true);
-        maskBtnBuyDiamond.SetActive(true);
+        //maskBtnBuyGold.SetActive(true);
+        //maskBtnBuyDiamond.SetActive(true);
     }
 
     public void updateCacheSelection(int id)
@@ -211,8 +211,8 @@ public class UIHero : Singleton<UIHero>
 
     public void backToInventory()
     {
-        maskBtnBuyGold.SetActive(false);
-        maskBtnBuyDiamond.SetActive(false);
+        //maskBtnBuyGold.SetActive(false);
+        //maskBtnBuyDiamond.SetActive(false);
 
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
         onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));

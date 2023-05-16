@@ -55,7 +55,10 @@ public class InflateShowItemController : MonoBehaviour
     {
         if (canClose)
         {
-            particle.SetActive(false);
+            if(itemData.Type % 10 > 0)
+            {
+                particle.SetActive(false);
+            }
             InventoryController.Instance.enableHeroes();
             gameObject.SetActive(false);
         }
@@ -96,10 +99,10 @@ public class InflateShowItemController : MonoBehaviour
         nameItem.text = item.Name;
         if((item.Id-10)%4 == 0)
         {
-            nameItem.color = new Color(255f, 136f, 0f, 255f);
+            nameItem.color = Color.red;
         } else if((item.Id - 10) % 4 == 1) { nameItem.color = Color.yellow; }
-        else if ((item.Id - 10) % 4 == 2) { nameItem.color = new Color(0f, 201f, 255f, 255f); }
-        else if ((item.Id - 10) % 4 == 3) { nameItem.color = new Color(15f, 255f, 0f, 255f); }
+        else if ((item.Id - 10) % 4 == 2) { nameItem.color = Color.blue; }
+        else if ((item.Id - 10) % 4 == 3) { nameItem.color = Color.green; }
 
         typeItem.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + item.Rarity.ToString());
         iconItem.sprite = InventoryController.Instance.getSpriteIndex(item.Id);
@@ -116,10 +119,10 @@ public class InflateShowItemController : MonoBehaviour
 
         if(ItemDatabase.Instance.getBonusItemSameType(item.Id) >= 3)
         {
-            textAllStats += $"[Actived with 3 {textTypes[(item.Id-10)%4 + 1]}Type Items]\n      <sprite={10+ (item.Id - 10) % 4}>All {textTypes[(item.Id - 10) % 4 + 1]} Monster +5% Stats\n";
+            textAllStats += $"[Actived with 3 {textTypes[(item.Id-10)%4 + 1]}Type Items]\n<sprite={11 + (item.Id - 10) % 4}>All {textTypes[(item.Id - 10) % 4 + 1]} Monster +5% Stats\n";
         } else
         {
-            textAllStats += $"<color=#8A8A8A>[Active with 3 {textTypes[(item.Id - 10) % 4 + 1]}Type Items]\n      <sprite=11>All {textTypes[(item.Id - 10) % 4 + 1]} Monster +5% Stats </color>\n";
+            textAllStats += $"<color=#8A8A8A>[Active with 3 {textTypes[(item.Id - 10) % 4 + 1]}Type Items]\n<sprite={11 + (item.Id - 10) % 4}>All {textTypes[(item.Id - 10) % 4 + 1]} Monster +5% Stats </color>\n";
         }
         if (ItemDatabase.Instance.getBonusItemSameType(item.Id) >= 6)
         {
@@ -131,12 +134,12 @@ public class InflateShowItemController : MonoBehaviour
         }
         allStatsText.text = textAllStats;
         upgradeButton.interactable = true;
-        iconShard.sprite = Resources.Load<Sprite>("Contents/Item/" + (5 + (item.Id - 10) % 4).ToString());
+        iconShard.sprite = InventoryController.Instance.getSpriteIndex(5 + (item.Id - 10) % 4);
         int goldRequire = (item.Level) * 500 + 500 * (item.Rarity - 1);
         goldText.text = goldRequire.ToString();
         if(goldRequire <= UserDatabase.Instance.getUserData().Gold) { goldText.color = Color.white; } else { goldText.color = Color.red; upgradeButton.interactable = false;}
         int shardRequire = (item.Level) * 4/8 + (item.Rarity);
-        string colorText = "white";
+        string colorText;
         if (shardRequire <= ItemDatabase.Instance.fetchInventoryById(5+ (item.Id - 10) % 4).Slot) { colorText = "white"; } else { colorText = "red"; upgradeButton.interactable = false;}
         shardText.text = $"<color={colorText}> {ItemDatabase.Instance.fetchInventoryById(5 + (item.Id - 10) % 4).Slot} </color>/{shardRequire}";
 
@@ -153,16 +156,10 @@ public class InflateShowItemController : MonoBehaviour
     {
         itemData = item;
         nameItem.text = item.Name;
-        if ((item.Id - 10) % 4 == 0)
-        {
-            nameItem.color = new Color(255f, 136f, 0f, 255f);
-        }
-        else if ((item.Id - 10) % 4 == 1) { nameItem.color = Color.yellow; }
-        else if ((item.Id - 10) % 4 == 2) { nameItem.color = new Color(0f, 201f, 255f, 255f); }
-        else if ((item.Id - 10) % 4 == 3) { nameItem.color = new Color(15f, 255f, 0f, 255f); }
+        nameItem.color = Color.white;
 
         typeItem.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + item.Rarity.ToString());
-        iconItem.sprite = Resources.Load<Sprite>("Contents/Item/" + item.Id.ToString());
+        iconItem.sprite = InventoryController.Instance.getSpriteIndex(item.Id);
         levelItem.text = $"Quantity: {item.Slot}";
         contentText.text = item.Contents;
     }

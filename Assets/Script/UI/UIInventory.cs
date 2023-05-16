@@ -39,9 +39,7 @@ public class UIInventory : Singleton<UIInventory>
 
     public void initData(int curHeroId)
     {
-
-        HeroesData data = HeroesDatabase.Instance.fetchHeroesData(curHeroId);
-
+        MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(curHeroId);
         foreach (Transform child in imgAvatar.transform)
         {
             GameObject.Destroy(child.gameObject);
@@ -52,7 +50,7 @@ public class UIInventory : Singleton<UIInventory>
         monster.transform.localScale = new Vector3(monster.transform.localScale.x * 100, monster.transform.localScale.y * 100, monster.transform.localScale.z * 100);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
 
-        HeroesData dataHero = HeroesDatabase.Instance.fetchHeroesData(curHeroId);
+        MyHeroes dataHero = HeroesDatabase.Instance.fetchMyHeroes(curHeroId);
 
     }
 

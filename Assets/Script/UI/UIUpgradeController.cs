@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using UnityEditor;
 
 public class UIUpgradeController : MonoBehaviour
 {
@@ -13,17 +14,17 @@ public class UIUpgradeController : MonoBehaviour
     public Button btnUpgrade;
     public TextMeshProUGUI upgradePrize;
     public Button[] btnToolTip;
-    public GameObject[] toolTip;
+    public GameObject toolTip;
     public Button btnBlank;
-    public TextMeshProUGUI[] txtAlibityDetail;
+    public TextMeshProUGUI txtAlibityDetail;
 
     private bool IsUpdated;
-    private int maxLevel = 10;
+    private int maxLevel = 20;
+    private int requireGold = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        InitUI();
         ActiveVFX(0);
         btnUpgrade.onClick.AddListener(() => ButtonUpgradeClicked());
 
@@ -38,10 +39,23 @@ public class UIUpgradeController : MonoBehaviour
         btnToolTip[8].onClick.AddListener(() => openToolTip(8));
 
         btnBlank.onClick.AddListener(() => closeAllToolTip());
-        setupTxtAlibityDetail();
         IsUpdated = false;
-        
-
+        InitUI();
+        updateRequireGold();
+    }
+    private void updateRequireGold()
+    {
+        requireGold = UserDatabase.Instance.getTotalLevel()*300 + 300;
+        upgradePrize.text = requireGold.ToString();
+        if (UserDatabase.Instance.getTotalLevel() < 180 && requireGold <= UserDatabase.Instance.getUserData().Gold)
+        {
+            btnUpgrade.interactable = true;
+        }
+        else
+        {
+            btnUpgrade.interactable = false;
+        }
+        UIController.Instance.InitUI();
     }
     private void InitUI()
     {
@@ -56,78 +70,44 @@ public class UIUpgradeController : MonoBehaviour
         AbilitiesLevel[7].text = database.Equipment < 10 ? database.Equipment.ToString() : "MAX";
         AbilitiesLevel[8].text = database.ExtraGold < 10 ? database.ExtraGold.ToString() : "MAX";
         AbilitiesLevel[9].text = database.ExtraExp < 10 ? database.ExtraExp.ToString(): "MAX";
-
-
-
-        if (canUpgrade())
-        {
-            upgradePrize.text = "x" + (UserDatabase.Instance.getTotalLevel() * 1000).ToString();
-
-        }
-        else
-        {
-            btnUpgrade.gameObject.SetActive(false);
-        }
-       
-        UIController.Instance.InitUI();
         ItemStatus(database);
     }
 
     private void ItemStatus(UserData database)
     {
-        Abilities[1].GetComponent<Animator>().SetTrigger(database.Atk <= 1 ? "Lock" : "Unlock");
-        Abilities[2].GetComponent<Animator>().SetTrigger(database.Hp <= 1 ? "Lock" : "Unlock");
-        Abilities[3].GetComponent<Animator>().SetTrigger(database.Armour <= 1 ? "Lock" : "Unlock");
-        Abilities[4].GetComponent<Animator>().SetTrigger(database.Move <= 1 ? "Lock" : "Unlock");
-        Abilities[5].GetComponent<Animator>().SetTrigger(database.Crit <= 1 ? "Lock" : "Unlock");
-        Abilities[6].GetComponent<Animator>().SetTrigger(database.Speed <= 1 ? "Lock" : "Unlock");
-        Abilities[7].GetComponent<Animator>().SetTrigger(database.Equipment <= 1 ? "Lock" : "Unlock");
-        Abilities[8].GetComponent<Animator>().SetTrigger(database.ExtraGold <= 1 ? "Lock" : "Unlock");
-        Abilities[9].GetComponent<Animator>().SetTrigger(database.ExtraExp <= 1 ? "Lock" : "Unlock");
+        Abilities[1].GetComponent<Animator>().SetTrigger(database.Atk < 1 ? "Lock" : "Unlock");
+        Abilities[2].GetComponent<Animator>().SetTrigger(database.Hp < 1 ? "Lock" : "Unlock");
+        Abilities[3].GetComponent<Animator>().SetTrigger(database.Armour < 1 ? "Lock" : "Unlock");
+        Abilities[4].GetComponent<Animator>().SetTrigger(database.Move < 1 ? "Lock" : "Unlock");
+        Abilities[5].GetComponent<Animator>().SetTrigger(database.Crit < 1 ? "Lock" : "Unlock");
+        Abilities[6].GetComponent<Animator>().SetTrigger(database.Speed < 1 ? "Lock" : "Unlock");
+        Abilities[7].GetComponent<Animator>().SetTrigger(database.Equipment < 1 ? "Lock" : "Unlock");
+        Abilities[8].GetComponent<Animator>().SetTrigger(database.ExtraGold < 1 ? "Lock" : "Unlock");
+        Abilities[9].GetComponent<Animator>().SetTrigger(database.ExtraExp < 1 ? "Lock" : "Unlock");
     }
     private void openToolTip(int id)
     {
-        for (int i = 0; i < 9; i++)
-        {
-            if (i == id)
-            {
-                if(toolTip[i].activeSelf == true)
-                {
-                    toolTip[i].SetActive(false);
-
-                }
-                else
-                {
-                    toolTip[i].SetActive(true);
-
-                }
-            }
-            else
-            {
-                toolTip[i].SetActive(false);
-            }
-        }
+        id++;
+        toolTip.SetActive(true);
+        Vector3 pos = new Vector3(Abilities[id].transform.position.x, Abilities[id].transform.position.y - 300f, 0);
+        toolTip.transform.position = Abilities[id].transform.position;
+        setupTxtAlibityDetail(id);
     }
 
     private void closeAllToolTip()
     {
-
-        for (int i = 0; i < 9; i++)
-        {
-            toolTip[i].SetActive(false);
-
-        }
-
+        toolTip.SetActive(false);
     }
 
     private void ButtonUpgradeClicked()
     {
-        if (!IsUpdated && canUpgrade())
+        if (!IsUpdated && UserDatabase.Instance.getTotalLevel() < 180)
         {
-            if (UserDatabase.Instance.reduceMoney(UserDatabase.Instance.getTotalLevel() * 1000, 0))
+            btnUpgrade.interactable = false;
+            if (requireGold <= UserDatabase.Instance.getUserData().Gold)
             {
                 UserData database = UserDatabase.Instance.getUserData();
-
+                UserDatabase.Instance.reduceMoney(requireGold, 0);
                 int[] arr =
                 {
                     0,
@@ -143,7 +123,6 @@ public class UIUpgradeController : MonoBehaviour
                 };
 
                 int result;
-
                 do 
                 {
                     result = Random.Range(1, 10);
@@ -158,23 +137,10 @@ public class UIUpgradeController : MonoBehaviour
             {
                 Debug.Log("Out of money");
             }
-
             closeAllToolTip();
-            setupTxtAlibityDetail();
             IsUpdated = true;
-
+            updateRequireGold();
         }
-    }
-
-
-    private bool canUpgrade()
-    {
-        UserData database = UserDatabase.Instance.getUserData();
-        if (database.Atk < maxLevel || database.Armour < maxLevel | database.Hp < maxLevel | database.Move < maxLevel | database.Speed < maxLevel || database.Crit < maxLevel || database.ExtraExp < maxLevel || database.ExtraGold < maxLevel || database.Equipment < maxLevel)
-        {
-            return true;
-        }
-        return false;
     }
     IEnumerator replayAnimation(int result)
     {
@@ -202,8 +168,6 @@ public class UIUpgradeController : MonoBehaviour
         IsUpdated = false;
 
     }
-
-
     void ActiveVFX(int item)
     {
         for (int i = 1; i <= 9; i++)
@@ -215,19 +179,18 @@ public class UIUpgradeController : MonoBehaviour
             AbilitiesVFX[item].SetActive(true);
         }
     }
-
-    void setupTxtAlibityDetail()
+    void setupTxtAlibityDetail(int num)
     {
         UserData database = UserDatabase.Instance.getUserData();
-        txtAlibityDetail[0].text = "Power\nAtk + " + database.Atk * StaticInfo.userUpdateBase[0];
-        txtAlibityDetail[1].text = "Strength\nHp + " + database.Hp * StaticInfo.userUpdateBase[1];
-        txtAlibityDetail[2].text = "Block\nArmour + " + database.Armour * StaticInfo.userUpdateBase[2];
-        txtAlibityDetail[3].text = "Boost\nMovement + " + database.Move * StaticInfo.userUpdateBase[3];
-        txtAlibityDetail[4].text = "Dexterous\nCrit + " + database.Crit * StaticInfo.userUpdateBase[4];
-        txtAlibityDetail[5].text = "Agile\nAtk Speed + " + database.Speed * StaticInfo.userUpdateBase[5];
-        txtAlibityDetail[6].text = "Intelligence\nEquipment + " + database.Equipment * StaticInfo.userUpdateBase[6] +"%";
-        txtAlibityDetail[7].text = "Glory\nExtra Gold + " + database.ExtraGold * StaticInfo.userUpdateBase[7] + "%";
-        txtAlibityDetail[8].text = "Inspire\nExtra Exp + " + database.ExtraExp * StaticInfo.userUpdateBase[8] + "%";
+        if(num == 1) { txtAlibityDetail.text = "Power\nAtk + " + database.Atk * StaticInfo.userUpdateBase[0]; }
+        else if(num == 2) { txtAlibityDetail.text = "Strength\nHp + " + database.Hp * StaticInfo.userUpdateBase[1]; }
+        else if (num == 3) { txtAlibityDetail.text = "Block\nArmour + " + database.Armour * StaticInfo.userUpdateBase[2]; }
+        else if (num == 4) { txtAlibityDetail.text = "Boost\nMovement + " + database.Move * StaticInfo.userUpdateBase[3]; }
+        else if (num == 5) { txtAlibityDetail.text = "Dexterous\nCrit + " + database.Crit * StaticInfo.userUpdateBase[4]; }
+        else if (num == 6) { txtAlibityDetail.text = "Agile\nAtk Speed + " + database.Speed * StaticInfo.userUpdateBase[5]; }
+        else if (num == 7) { txtAlibityDetail.text = "Intelligence\nEquipment + " + database.Equipment * StaticInfo.userUpdateBase[6] + "%"; }
+        else if (num == 8) { txtAlibityDetail.text = "Glory\nExtra Gold + " + database.ExtraGold * StaticInfo.userUpdateBase[7] + "%"; }
+        else if (num == 9) { txtAlibityDetail.text = "Inspire\nExtra Exp + " + database.ExtraExp * StaticInfo.userUpdateBase[8] + "%"; }
     }
 
 }

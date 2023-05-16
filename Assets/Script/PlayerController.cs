@@ -80,7 +80,7 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         // pick con nao?
-        data = HeroesDatabase.Instance.fetchMyData(idPick);
+        data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
         realData = data;
         currentHp = data.Hp;
 
@@ -102,7 +102,7 @@ public class PlayerController : Singleton<PlayerController>
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
     private void updatePlayerData()
     {
-        MyHeroes currentHeroes = HeroesDatabase.Instance.fetchMyData(realData.Id);
+        MyHeroes currentHeroes = HeroesDatabase.Instance.fetchMyHeroes(realData.Id);
         realData.Atk = currentHeroes.Atk * (100 + bonusPoints[1]) / 100;
         realData.Hp = currentHeroes.Hp * (100 + bonusPoints[2]) / 100;
         realData.Armour = currentHeroes.Armour * (100 + bonusPoints[3]) / 100;

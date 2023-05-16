@@ -39,14 +39,14 @@ public class ItemInflate : MonoBehaviour
     void Start()
     {
 
-        button.onClick.AddListener(() => onClickItem());
+        button.onClick.AddListener(() => onClickItem(this.transform));
     }
-    private void onClickItem()
+    private void onClickItem(Transform pos)
     {
         gameObject.GetComponent<Animator>().Play("Click_Animation");
-        if (InventoryController.Instance.getCraftItem() == true)
+        if (InventoryController.Instance.getCraftItem() == true && itemData.Type % 10 > 0)
         {
-            CraftItemController.Instance.addItemOnList(itemData);
+            CraftItemController.Instance.addItemOnList(itemData, pos);
         }
         else
         {

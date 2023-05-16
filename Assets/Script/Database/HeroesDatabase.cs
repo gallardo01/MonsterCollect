@@ -9,10 +9,8 @@ using System;
 
 public class HeroesDatabase : Singleton<HeroesDatabase>
 {
-    private List<HeroesData> heroesData = new List<HeroesData>();
     private List<MyHeroes> myHeroes = new List<MyHeroes>();
-
-    private JsonData heroesDataJson;
+    private List<RealDataHeroes> dataHeroes = new List<RealDataHeroes>();
     private JsonData myHeroesJson;
 
     void Awake()
@@ -23,44 +21,38 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        string fileName = "Heroes.txt";
-        string myFileName = "MyHeroes.txt";
         firstTimeSetUp();
-
-        LoadResourceTextfileHeroesData(fileName);
-        if (!PlayerPrefs.HasKey("HeroesPick"))
-        {
-            unlockHero(10);
-            unlockHero(11);
-
-            PlayerPrefs.SetInt("HeroesPick", 10);
-        }
-
-        LoadResourceTextfileCurrentData(myFileName);
     }
 
     private void firstTimeSetUp()
     {
         string tempPath = Application.persistentDataPath + "/c/b/c/";
         string filePath = tempPath + "MyHeroes.txt";
+
+        string fileName = "Heroes.txt";
+        string myFileName = "MyHeroes.txt";
         if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
         }
         if (!File.Exists(filePath))
         {
+            LoadResourceTextfileMyHeroes(fileName);
             File.Create(filePath).Close();
+        } else
+        {
+            LoadResourceTextfileCurrentData(myFileName);
         }
-        //add hero dau tien
+        initRealDataHeroes();
     }
 
 
-    private void LoadResourceTextfileHeroesData(string path)
+    private void LoadResourceTextfileMyHeroes(string path)
     {
         string filePath = "StreamingAssets/" + path.Replace(".txt", "");
         TextAsset targetFile = Resources.Load<TextAsset>(filePath);
-        heroesDataJson = JsonMapper.ToObject(targetFile.text);
-        ConstructHeroesDb();
+        myHeroesJson = JsonMapper.ToObject(targetFile.text);
+        ConstructMyHeroes();
     }
     private void LoadResourceTextfileCurrentData(string path)
     {
@@ -84,25 +76,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         myHeroesJson = JsonMapper.ToObject(jsonData);
         ConstructMyHeroes();
     }
-    private void ConstructHeroesDb()
-    {
-        for (int i = 0; i < heroesDataJson.Count; i++)
-        {
-            HeroesData newItem = new HeroesData();
-            newItem.Name = heroesDataJson[i]["Name"].ToString();
-            newItem.Id = (int)heroesDataJson[i]["Id"];
-            newItem.Atk = (int)heroesDataJson[i]["Atk"];
-            newItem.Hp = (int)heroesDataJson[i]["Hp"];
-            newItem.Armour = (int)heroesDataJson[i]["Armour"];
-            newItem.Speed = (int)heroesDataJson[i]["Speed"];
-            newItem.Crit = (int)heroesDataJson[i]["Crit"];
-            newItem.Move = (int)heroesDataJson[i]["Move"];
-            newItem.Type = (int)heroesDataJson[i]["Type"];
-            newItem.Skill = heroesDataJson[i]["Skill"].ToString();
-            heroesData.Add(newItem);
-        }
-    }
-
     private void ConstructMyHeroes()
     {
         for (int i = 0; i < myHeroesJson.Count; i++)
@@ -122,60 +95,51 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             myHeroes.Add(newItem);
         }
     }
-
-    // Fetch trong DB goc'
-    public HeroesData fetchHeroesData(int id)
+    public void initRealDataHeroes()
     {
-        for(int i = 0; i < heroesData.Count; i++)
+        dataHeroes.Clear();
+        for(int i = 1; i <= 12; i++)
         {
-            if(heroesData[i].Id == id)
+            if(getCurrentHero(i) != null)
             {
-                return heroesData[i];
+                RealDataHeroes data = new RealDataHeroes();
+                MyHeroes raw = getCurrentHero(i);
+                data.Atk = raw.Atk * (100 + (raw.Level - 1) * 5) / 100;
+                data.Hp = raw.Hp * (100 + (raw.Level - 1) * 5) / 100;
+                data.Armour = raw.Armour * (100 + (raw.Level - 1) * 5) / 100;
+                data.Speed = raw.Speed * (100 + (raw.Level - 1) * 5) / 100;
+                data.Move = raw.Move * (100 + (raw.Level - 1) * 5) / 100;
+                data.Crit = raw.Crit * (100 + (raw.Level - 1) * 5) / 100;
+                data.Type = raw.Type;
+                data.Id = raw.Id;
+            }
+        }
+    }
+    public RealDataHeroes fetchRealData(int id)
+    {
+        for (int i = 0; i < dataHeroes.Count; i++)
+        {
+            if (dataHeroes[i].Id == id)
+            {
+                return dataHeroes[i];
             }
         }
         return null;
     }
 
-    // Fetch trong DB goc'
+    public MyHeroes fetchMyHeroes(int id)
+    {
+        for(int i = 0; i < myHeroes.Count; i++)
+        {
+            if(myHeroes[i].Id == id)
+            {
+                return myHeroes[i];
+            }
+        }
+        return null;
+    }
     public int fetchHeroesIndex(int id)
     {
-        for (int i = 0; i < heroesData.Count; i++)
-        {
-            if (heroesData[i].Id == id)
-            {
-                return i;
-            }
-        }
-        return 0;
-    }
-    // Fetch trong DB so huu
-    public MyHeroes fetchMyData(int id)
-    {
-        for (int i = 0; i < myHeroes.Count; i++)
-        {
-            if (myHeroes[i].Id == id)
-            {
-                return myHeroes[i];
-            }
-        }
-        return null;
-    }
-
-    public MyHeroes fetchMyDataLastest(int id)
-    {
-        for (int i = 0; i < myHeroes.Count; i++)
-        {
-            if (myHeroes[i].Id/10 == id/10)
-            {
-                return myHeroes[i];
-            }
-        }
-        return null;
-    }
-
-    // Fetch trong DB so huu
-    public int fetchMyIndex(int id)
-    {
         for (int i = 0; i < myHeroes.Count; i++)
         {
             if (myHeroes[i].Id == id)
@@ -185,74 +149,32 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         return 0;
     }
-
     // unlock heroes
     private void unlockHero(int id)
     {
-        if (fetchMyData(id) == null)
+        if (fetchMyHeroes(id) == null)
         {
-            HeroesData raw = fetchHeroesData(id);
-            MyHeroes addNew = new MyHeroes();
-
-
-            addNew.Name = raw.Name;
-            addNew.Id = raw.Id;
-            addNew.Hp = raw.Hp;
-            addNew.Armour = raw.Armour;
-            addNew.Speed = raw.Speed;
-            addNew.Move = raw.Move;
-            addNew.Type = raw.Type;
-            addNew.Skill = raw.Skill;
-            addNew.Crit = raw.Crit;
-            addNew.Atk = raw.Atk;
-            addNew.Level = 1;
-
-            myHeroes.Add(addNew);
-            Save();
+            int index = fetchHeroesIndex(id);
+            myHeroes[index].Level = 1;
         }
-
     }
-
     public void evolveHero(int id)
     {
-        if (fetchMyData(id) != null && canEvolve(id))
+        if (canEvolve(id))
         {
-            HeroesData raw = fetchHeroesData(id+1);
-            int pos = fetchMyIndex(id);
-            myHeroes[pos].Id += 1;
-            // update chi so
-            myHeroes[pos].Atk = raw.Atk * ((myHeroes[pos].Level-1)*5 + 100) / 100;
-            myHeroes[pos].Hp = raw.Hp * ((myHeroes[pos].Level-1) *5 + 100) / 100;
-            myHeroes[pos].Armour = raw.Armour * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
-            myHeroes[pos].Speed = raw.Speed * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
-            myHeroes[pos].Crit = raw.Crit * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
-            myHeroes[pos].Move = raw.Move * ((myHeroes[pos].Level-1) * 5 + 100) / 100;
-            myHeroes[pos].Name = raw.Name;
-
-            Save();
+            int pos = fetchHeroesIndex(id);
+            myHeroes[pos + 1].Level = myHeroes[pos].Level;
         }
+        initRealDataHeroes();
     }
-
     public void levelUpHero(int id)
     {
-        int pos = fetchMyIndex(id);
-
-        HeroesData raw = fetchHeroesData(id);
-        // update chi so
-        myHeroes[pos].Atk = raw.Atk * (myHeroes[pos].Level * 5 + 100) / 100;
-        myHeroes[pos].Hp = raw.Hp * (myHeroes[pos].Level * 5 + 100) / 100;
-        myHeroes[pos].Armour = raw.Armour * (myHeroes[pos].Level * 5 + 100) / 100;
-        myHeroes[pos].Speed = raw.Speed * (myHeroes[pos].Level * 5 + 100) / 100;
-        myHeroes[pos].Crit = raw.Crit * (myHeroes[pos].Level * 5 + 100) / 100;
-        myHeroes[pos].Move = raw.Move * (myHeroes[pos].Level * 5 + 100) / 100;
+        int pos = fetchHeroesIndex(id);
         myHeroes[pos].Level += 1;
-
-        Save();
-
+        initRealDataHeroes();
         //tru tien
         reduceItemForLevelUpAndEvolve(myHeroes[pos]);
     }
-
     private void reduceItemForLevelUpAndEvolve(MyHeroes raw)
     {
         ItemDatabase.Instance.reduceItemSlotById(1, raw.Level / 3 +3);
@@ -265,36 +187,21 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
     private bool canEvolve(int id)
     {
-        if(fetchHeroesData(id+1) != null)
+        if(fetchMyHeroes(id+1) != null)
         {
             return true;
         }
         return false;
     }
-
-    public bool isUnlock(int id)
-    {
-        for (int i = 0; i < myHeroes.Count ; i++)
-        {
-            if (id/10 == myHeroes[i].Id/10)
-            {
-                return true;
-            }
-        }
-       
-        return false;
-    }
-
     // tao ra list 
-    public List<HeroesData> fetchAllEvolveHero(int data)
+    public List<MyHeroes> fetchAllEvolveHero(int data)
     {
-        List<HeroesData> listHero = new List<HeroesData>();
-        //Debug.Log(database.Count);
-        for (int i = 0; i < heroesData.Count; i++)
+        List<MyHeroes> listHero = new List<MyHeroes>();
+        for (int i = 0; i < myHeroes.Count; i++)
         {
-            if (heroesData[i].Id /10 == data/10)
+            if (myHeroes[i].Id /10 == data/10)
             {
-                listHero.Add(heroesData[i]);
+                listHero.Add(myHeroes[i]);
             }
         }
         return listHero;
@@ -312,24 +219,21 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         return false;
     }
-
-    
-    public HeroesData getCurrentHero(int id)
+    public MyHeroes getCurrentHero(int id)
     {
-        //if (myHeroes.Count >= id)
-        //{
-        //    return fetchMyData(myHeroes[id - 1].Id);
-
-        //}
-        for (int i = 0; i < myHeroes.Count; i++)
+        Debug.Log(myHeroes.Count);
+        for (int i = myHeroes.Count-1; i >= 0; i--)
         {
-            if (myHeroes[i].Id/10 == id)
+            if (myHeroes[i].Id/10 == id && myHeroes[i].Level > 0)
             {
-                return fetchMyData(myHeroes[i].Id);
+                return myHeroes[i];
             }
         }
-        return fetchHeroesData(id * 10);
-
+        return fetchMyHeroes(id*10+1);
+    }
+    private void OnDestroy()
+    {
+        Save();
     }
 
     public void Save()
@@ -366,13 +270,19 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     }
 }
 
-
-public class MyHeroes : HeroesData
+public class RealDataHeroes
 {
-    public int Level { get; set; }
+    public int Id { get; set; }
+    public int Type { get; set; }
+    public int Atk { get; set; }
+    public int Hp { get; set; }
+    public int Armour { get; set; }
+    public int Speed { get; set; }
+    public int Crit { get; set; }
+    public int Move { get; set; }
 }
 
-public class HeroesData
+public class MyHeroes
 {
     public string Name { get; set; }
     public int Id { get; set; }
@@ -384,5 +294,6 @@ public class HeroesData
     public int Crit { get; set; }
     public int Move { get; set; }
     public string Skill { get; set; }
-
+    public int Level { get; set; }
 }
+

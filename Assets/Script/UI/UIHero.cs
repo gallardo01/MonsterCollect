@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using System;
+using Mono.Cecil;
 
 public class UIHero : Singleton<UIHero>
 {
@@ -35,9 +36,6 @@ public class UIHero : Singleton<UIHero>
     private int curHeroID;
     public int cacheId;
 
-    public List<GameObject> selected;
-    public List<GameObject> choosed;
-
     public Button panelBtnClose;
     public Button panelBtnEvolve;
     public GameObject scrollview_evol;
@@ -54,9 +52,6 @@ public class UIHero : Singleton<UIHero>
     public List<TextMeshProUGUI> txtLevelOnScrollVew;
 
     int currentEvol = 0;
-
-
-
     Animator evolAnimator;
 
 
@@ -74,9 +69,12 @@ public class UIHero : Singleton<UIHero>
     public List<TextMeshProUGUI> txtLevelProgessCard;
     public List<Slider> slLevelCard;
 
+    private Sprite[] heroesSprite;
+
     // Start is called before the first frame update
     void Start()
     {
+        heroesSprite = Resources.LoadAll<Sprite>("UI/Icons/Monster");
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
             PlayerPrefs.SetInt("HeroesPick", 10);
@@ -87,11 +85,8 @@ public class UIHero : Singleton<UIHero>
         {
             curHeroID = PlayerPrefs.GetInt("HeroesPick");
         }
-
-        choosed[curHeroID / 10].SetActive(true);
-
         initUIHero();
-        onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
+        onClickCard(HeroesDatabase.Instance.fetchMyHeroes(curHeroID));
 
 
         btnSelect.onClick.AddListener(() => selectHero());
@@ -106,7 +101,11 @@ public class UIHero : Singleton<UIHero>
         maskBtnBuyGold.SetActive(true);
         maskBtnBuyDiamond.SetActive(true);
     }
-
+    public Sprite getSpriteHeroes(int id)
+    {
+        int index = HeroesDatabase.Instance.fetchHeroesIndex(id);
+        return heroesSprite[index];
+    }
     public void updateCacheSelection(int id)
     {
         cacheId = id;
@@ -117,55 +116,19 @@ public class UIHero : Singleton<UIHero>
 
         for (int i = 1; i <= 12; i++)
         {
-            listHero[i].GetComponent<CharacterCard>().initData(HeroesDatabase.Instance.getCurrentHero(i));
-
-            HeroesData data = HeroesDatabase.Instance.fetchHeroesData(i * 10);
-
-
-            if (HeroesDatabase.Instance.isUnlock(data.Id) == true)
-            {
-                int lvlCard = HeroesDatabase.Instance.fetchMyDataLastest(i * 10).Level;
-
-                txtLevelCard[i].text = lvlCard.ToString();
-                txtLevelProgessCard[i].text = lvlCard.ToString() + "/25";
-                slLevelCard[i].value = lvlCard;
-
-
-            }
-            else
-            {
-                txtLevelCard[i].text = "0";
-                txtLevelProgessCard[i].text = "0/25";
-                slLevelCard[i].value = 0;
-            }
-
-
+            listHero[i-1].GetComponent<CharacterCard>().initData(HeroesDatabase.Instance.getCurrentHero(i));
         }
     }
 
-    public void onClickCard(HeroesData data)
+    public void onClickCard(MyHeroes data)
     {
-        //curHeroID = data.Id;
         cacheId = data.Id;
+        txtHeroName.text = data.Name;
 
-        for (int i = 1; i <= 12; i++)
-        {
-            selected[i].SetActive(false);
-        }
-        selected[cacheId / 10].SetActive(true);
-
-
-        if (HeroesDatabase.Instance.isUnlock(data.Id))
-        {
-            txtHeroName.text = data.Name;
-
-        }
-        else
-        {
-            txtHeroName.text = data.Name;
+        if (data.Level == 0)
+        { 
             txtPrice.text = "<sprite=5> " +  StaticInfo.costHeroes[cacheId / 10].ToString();
         }
-
         //txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
         txtHeroSkillDetail.text = data.Skill.ToString();
 
@@ -176,21 +139,16 @@ public class UIHero : Singleton<UIHero>
         txtAlibity_5.text = data.Crit.ToString();
         txtAlibity_6.text = data.Move.ToString();
 
-
         handleButton(data);
 
         foreach (Transform child in imgAvatar.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
-
         GameObject monster = Instantiate(Resources.Load("Prefabs/Heroes/no." + data.Id.ToString()) as GameObject, imgAvatar.transform);
-        //monster.transform.parent = imgAvatar.transform;
-        //monster.transform.parent = monster.transform;
         monster.transform.localPosition = new Vector3(0, 0, 0);
         monster.transform.localScale = new Vector3(monster.transform.localScale.x * 300, monster.transform.localScale.y * 300, monster.transform.localScale.z * 300);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-
     }
 
     public void selectHero()
@@ -199,12 +157,6 @@ public class UIHero : Singleton<UIHero>
         curHeroID = cacheId;
         //backToInventory();
         btnSelect.gameObject.SetActive(false);
-
-        for (int i = 1; i < 13; i++)
-        {
-            choosed[i].SetActive(false);
-        }
-        choosed[cacheId / 10].SetActive(true);
 
     }
 
@@ -215,7 +167,7 @@ public class UIHero : Singleton<UIHero>
         maskBtnBuyDiamond.SetActive(false);
 
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
-        onClickCard(HeroesDatabase.Instance.fetchHeroesData(curHeroID));
+        onClickCard(HeroesDatabase.Instance.fetchMyHeroes(curHeroID));
 
         UIController.Instance.enableSwipe = true;
         tabInventory.SetActive(true);
@@ -224,9 +176,9 @@ public class UIHero : Singleton<UIHero>
         gameObject.SetActive(false);
     }
 
-    void handleButton(HeroesData data)
+    void handleButton(MyHeroes data)
     {
-        if (HeroesDatabase.Instance.isUnlock(data.Id))
+        if (data.Level > 0)
         {
             if (PlayerPrefs.GetInt("HeroesPick") == cacheId)
             {
@@ -255,7 +207,7 @@ public class UIHero : Singleton<UIHero>
     {
         if (HeroesDatabase.Instance.buyHeroes(cacheId))
         {
-            HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
+            MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
             initUIHero();
             handleButton(data);
 
@@ -269,7 +221,7 @@ public class UIHero : Singleton<UIHero>
     void openEvolvePanel()
     {
         // check unlocked
-        HeroesData data = HeroesDatabase.Instance.fetchHeroesData(cacheId);
+        MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
 
         //if (data.Unlock == 0)
         //{
@@ -287,10 +239,10 @@ public class UIHero : Singleton<UIHero>
     {
         panelBtnEvolve.gameObject.SetActive(true);
 
-        List<HeroesData> listhero = HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
+        List<MyHeroes> listhero = HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID);
         currentEvol = curHeroID % 10 + 1;
 
-        int currentLevel = HeroesDatabase.Instance.fetchMyData(curHeroID).Level;
+        int currentLevel = HeroesDatabase.Instance.fetchMyHeroes(curHeroID).Level;
 
 
         for (int i = 0; i < 5; i++)
@@ -324,7 +276,7 @@ public class UIHero : Singleton<UIHero>
         ////////
         ///
 
-        int index_shard = HeroesDatabase.Instance.fetchMyData(curHeroID).Id / 10 + 100;
+        int index_shard = HeroesDatabase.Instance.fetchMyHeroes(curHeroID).Id / 10 + 100;
 
         heroShard.sprite = Resources.Load<Sprite>("Contents/Item/" + index_shard.ToString());
 
@@ -419,7 +371,7 @@ public class UIHero : Singleton<UIHero>
         txtCurLevel.text = "Level " + currentLevel;
 
 
-        MyHeroes data_before = HeroesDatabase.Instance.fetchMyData(curHeroID);
+        MyHeroes data_before = HeroesDatabase.Instance.fetchMyHeroes(curHeroID);
 
         txtAlibityBefore[0].text = data_before.Atk.ToString();
         txtAlibityBefore[1].text = data_before.Hp.ToString();
@@ -435,7 +387,7 @@ public class UIHero : Singleton<UIHero>
 
             if ((currentLevel == 4 || currentLevel == 9 || currentLevel == 14 || currentLevel == 19 || currentLevel == 24) && canEvolve())
             {
-                HeroesData data_before_evole = HeroesDatabase.Instance.fetchHeroesData(curHeroID + 1);
+                MyHeroes data_before_evole = HeroesDatabase.Instance.fetchMyHeroes(curHeroID + 1);
 
                 addAtk = (data_before_evole.Atk * ((data_before.Level) * 5 + 100) / 100 - data_before.Atk).ToString();
                 addHp = (data_before_evole.Hp * ((data_before.Level) * 5 + 100) / 100 - data_before.Hp).ToString();
@@ -453,7 +405,7 @@ public class UIHero : Singleton<UIHero>
             }
             else
             {
-                HeroesData data_before_evole_1 = HeroesDatabase.Instance.fetchHeroesData(curHeroID);
+                MyHeroes data_before_evole_1 = HeroesDatabase.Instance.fetchMyHeroes(curHeroID);
 
                 addAtk = (data_before_evole_1.Atk * ((data_before.Level) * 5 + 100) / 100 - data_before.Atk).ToString();
                 addHp = (data_before_evole_1.Hp * ((data_before.Level) * 5 + 100) / 100 - data_before.Hp).ToString();
@@ -502,7 +454,7 @@ public class UIHero : Singleton<UIHero>
     void evolutionAndLevelUpHero()
     {
         //check requiement
-        int currentLevel = HeroesDatabase.Instance.fetchMyData(curHeroID).Level;
+        int currentLevel = HeroesDatabase.Instance.fetchMyHeroes(curHeroID).Level;
         if (checkRequired(currentLevel))
         {
             StartCoroutine(AlibityChange());
@@ -537,7 +489,7 @@ public class UIHero : Singleton<UIHero>
         //{
         //    return false;
         //}
-        List<HeroesData> listhero = HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID / 10 * 10);
+        List<MyHeroes> listhero = HeroesDatabase.Instance.fetchAllEvolveHero(curHeroID / 10 * 10);
 
         if (currentEvol >= listhero.Count)
         {
@@ -549,7 +501,7 @@ public class UIHero : Singleton<UIHero>
 
     bool checkRequired(int level)
     {
-        int index_shard = HeroesDatabase.Instance.fetchMyData(curHeroID).Id / 10 + 100;
+        int index_shard = HeroesDatabase.Instance.fetchMyHeroes(curHeroID).Id / 10 + 100;
         //Heros shard
         if (!ItemDatabase.Instance.canReduceItemSlotEvol(index_shard, level + 1))
         {
@@ -590,7 +542,7 @@ public class UIHero : Singleton<UIHero>
 
         yield return new WaitForSeconds(0.15f);
         imgAvatar.SetActive(true);
-        onClickCard(HeroesDatabase.Instance.fetchMyData(curHeroID));
+        onClickCard(HeroesDatabase.Instance.fetchMyHeroes(curHeroID));
 
     }
 
@@ -630,7 +582,7 @@ public class UIHero : Singleton<UIHero>
 
     IEnumerator AlibityChange()
     {
-        HeroesData data_before_evole_1 = HeroesDatabase.Instance.fetchMyData(curHeroID);
+        MyHeroes data_before_evole_1 = HeroesDatabase.Instance.fetchMyHeroes(curHeroID);
 
         for (int i = 0; i < 19; i++)
         {

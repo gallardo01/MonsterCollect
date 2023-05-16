@@ -19,12 +19,8 @@ public class UserDatabase : Singleton<UserDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        firstTimeSetUp();
         LoadResourceTextfileCurrentData();
-
-        //gainMoney(10000000, 0);
-        //reduceMoney(6172000, 1000);
-    }
+   }
 
     private void firstTimeSetUp()
     {
@@ -40,30 +36,26 @@ public class UserDatabase : Singleton<UserDatabase>
             File.Create(filePath).Close();
             string fileName = "User.txt";
             LoadResourceTextfileItemData(fileName);
-            ConstructItemDatabase();
             Save();
         }
 
     }
     private void ConstructItemDatabase()
     {
-        UserData newItem = new UserData();
-        newItem.Name = userData["Name"].ToString();
-        newItem.Gold = (int)userData["Gold"];
-        newItem.Diamond = (int)userData["Diamond"];
-        newItem.Level = (int)userData["Level"];
-        newItem.HeroesPick = (int)userData["HeroesPick"];
-        newItem.Atk = (int)userData["Atk"];
-        newItem.Hp = (int)userData["Hp"];
-        newItem.Armour = (int)userData["Armour"];
-        newItem.Move = (int)userData["Move"];
-        newItem.Crit = (int)userData["Crit"];
-        newItem.Speed = (int)userData["Speed"];
-        newItem.Equipment = (int)userData["Equipment"];
-        newItem.ExtraGold = (int)userData["ExtraGold"];
-        newItem.ExtraExp = (int)userData["ExtraExp"];
-
-        database = newItem;
+        database.Name = userData["Name"].ToString();
+        database.Gold = (int)userData["Gold"];
+        database.Diamond = (int)userData["Diamond"];
+        database.Level = (int)userData["Level"];
+        database.HeroesPick = (int)userData["HeroesPick"];
+        database.Atk = (int)userData["Atk"];
+        database.Hp = (int)userData["Hp"];
+        database.Armour = (int)userData["Armour"];
+        database.Move = (int)userData["Move"];
+        database.Crit = (int)userData["Crit"];
+        database.Speed = (int)userData["Speed"];
+        database.Equipment = (int)userData["Equipment"];
+        database.ExtraGold = (int)userData["ExtraGold"];
+        database.ExtraExp = (int)userData["ExtraExp"];
     }
     private void LoadResourceTextfileCurrentData()
     {
@@ -72,6 +64,7 @@ public class UserDatabase : Singleton<UserDatabase>
         //Load saved Json
         if (!File.Exists(tempPath))
         {
+            firstTimeSetUp();
             return;
         }
         byte[] jsonByte = null;
@@ -93,7 +86,7 @@ public class UserDatabase : Singleton<UserDatabase>
         string filePath = "StreamingAssets/" + path.Replace(".txt", "");
         TextAsset targetFile = Resources.Load<TextAsset>(filePath);
         userData = JsonMapper.ToObject(targetFile.text);
-        //ConstructItemDatabase();
+        ConstructItemDatabase();
     }
     public void Save()
     {
@@ -144,7 +137,6 @@ public class UserDatabase : Singleton<UserDatabase>
     {
         database.Gold += gold;
         database.Diamond += diamond;
-        Save();
     }
 
     public bool reduceMoney(int gold, int diamond)
@@ -158,12 +150,11 @@ public class UserDatabase : Singleton<UserDatabase>
         database.Diamond -= diamond;
         //tru tren UI
         UIController.Instance.InitUI();
-        Save();
         return true;
     }
     public int getTotalLevel()
     {
-        return (database.Atk + database.Hp + database.Armour + database.Move + database.Crit + database.Speed + database.Equipment + database.ExtraGold + database.ExtraExp - 8);
+        return (database.Atk + database.Hp + database.Armour + database.Move + database.Crit + database.Speed + database.Equipment + database.ExtraGold + database.ExtraExp);
     }
     public void gainLevel(int type)
     {
@@ -197,6 +188,9 @@ public class UserDatabase : Singleton<UserDatabase>
                 database.ExtraExp++;
                 break;
         }
+    }
+    private void OnDestroy()
+    {
         Save();
     }
 }

@@ -22,6 +22,7 @@ public class UIMainMenuController : MonoBehaviour
     private int currentStage = 1;
 
     private bool isClick = true;
+    private Sprite[] itemsSprite;
 
 
     // Start is called before the first frame update
@@ -51,7 +52,7 @@ public class UIMainMenuController : MonoBehaviour
             currentMap--;
             if (currentMap == 0)
             {
-                currentMap = 10;
+                currentMap = 9;
             }
             selectMap(currentMap);
         }
@@ -64,7 +65,7 @@ public class UIMainMenuController : MonoBehaviour
             isClick = false;
 
             currentMap++;
-            if (currentMap == 11)
+            if (currentMap == 10)
             {
                 currentMap = 1;
             }
@@ -75,7 +76,9 @@ public class UIMainMenuController : MonoBehaviour
 
     private void selectMap(int index)
     {
-        Maps.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Maps/map_" + index);
+        itemsSprite = Resources.LoadAll<Sprite>("Contents/Icon/Island");
+
+        Maps.GetComponent<Image>().sprite = itemsSprite[index-1];
         locker.SetActive(false);
         Maps.GetComponent<Image>().color = Color.white;
 

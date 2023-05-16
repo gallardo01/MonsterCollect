@@ -12,9 +12,13 @@ public class CharacterCard : MonoBehaviour
     public Button button;
     public GameObject locker;
     public GameObject selected;
+    public GameObject choosed;
     public Image typeHero;
+    public Slider sliderObj;
+    public TextMeshProUGUI shardText;
+    public TextMeshProUGUI level;
 
-    private HeroesData heroesData;
+    private MyHeroes heroesData;
 
 
     void Start()
@@ -27,30 +31,45 @@ public class CharacterCard : MonoBehaviour
         //selected.SetActive(true);
     }
 
-    public void initData(HeroesData data)
+    public void chooseHeroes(bool active)
     {
-
+        choosed.SetActive(active);
+    }
+    public void selectHeroes(bool active)
+    {
+        selected.SetActive(active);
+    }
+    public void initData(MyHeroes data)
+    {
         heroesData = data;
-
-        string name = data.Name;
-        heroName.text = name;
-        imgHero.sprite = Resources.Load<Sprite>("UI/Icons/Monster/" + data.Id.ToString());
+        heroName.text = data.Name;
+        imgHero.sprite = UIHero.Instance.getSpriteHeroes(data.Id);
         typeHero.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type.ToString());
-
-
-
-        if (HeroesDatabase.Instance.isUnlock(data.Id) == false)
+        if (data.Level > 0)
         {
-            //lock
             locker.SetActive(true);
             imgHero.color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
         }
         else
         {
-            //da mua
             locker.SetActive(false);
             imgHero.color = Color.white;
+        }
 
+        if (data.Level > 0)
+        {
+            int shardRequire = 2 * data.Level;
+            int shardInv = ItemDatabase.Instance.fetchInventoryById(100 + data.Id / 10).Slot;
+
+            sliderObj.value = (float)shardInv / shardRequire;
+            level.text = data.Level.ToString();
+            shardText.text = shardInv.ToString() + " " + shardRequire;
+        }
+        else
+        {
+            sliderObj.value = 0f;
+            level.text = "0";
+            shardText.text = ItemDatabase.Instance.fetchInventoryById(100 + data.Id / 10).Slot.ToString() + "/0";
         }
     }
 

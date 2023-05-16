@@ -1,15 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
-using TMPro;
 public class UIController : Singleton<UIController>
 {
     public RectTransform shop;
     public RectTransform heroes;
     public RectTransform mainMenu;
     public RectTransform upgrade;
+    public RectTransform events;
 
     public RectTransform bar;
 
@@ -102,6 +102,7 @@ public class UIController : Singleton<UIController>
         heroes.DOAnchorPos(new Vector2(2000, 0), 0.25f);
         mainMenu.DOAnchorPos(new Vector2(4000, 0), 0.25f);
         upgrade.DOAnchorPos(new Vector2(6000, 0), 0.25f);
+        events.DOAnchorPos(new Vector2(8000, 0), 0.25f);
         setupHightLight();
     }
 
@@ -112,6 +113,7 @@ public class UIController : Singleton<UIController>
         heroes.DOAnchorPos(new Vector2(0, 0), 0.25f);
         mainMenu.DOAnchorPos(new Vector2(2000, 0), 0.25f);
         upgrade.DOAnchorPos(new Vector2(4000, 0), 0.25f);
+        events.DOAnchorPos(new Vector2(6000, 0), 0.25f);
         setupHightLight();
     }
 
@@ -122,6 +124,7 @@ public class UIController : Singleton<UIController>
         heroes.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
         mainMenu.DOAnchorPos(new Vector2(0, 0), 0.25f);
         upgrade.DOAnchorPos(new Vector2(2000, 0), 0.25f);
+        events.DOAnchorPos(new Vector2(4000, 0), 0.25f);
         setupHightLight();
     }
 
@@ -132,6 +135,7 @@ public class UIController : Singleton<UIController>
         heroes.DOAnchorPos(new Vector2(-4000, 0), 0.25f);
         mainMenu.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
         upgrade.DOAnchorPos(new Vector2(0, 0), 0.25f);
+        events.DOAnchorPos(new Vector2(2000, 0), 0.25f);
         setupHightLight();
     }
 
@@ -141,7 +145,8 @@ public class UIController : Singleton<UIController>
         shop.DOAnchorPos(new Vector2(-8000, 0), 0.25f);
         heroes.DOAnchorPos(new Vector2(-6000, 0), 0.25f);
         mainMenu.DOAnchorPos(new Vector2(-4000, 0), 0.25f);
-        upgrade.DOAnchorPos(new Vector2(0, 0), 0.25f);
+        upgrade.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
+        events.DOAnchorPos(new Vector2(0, 0), 0.25f);
         setupHightLight();
     }
 
@@ -153,7 +158,7 @@ public class UIController : Singleton<UIController>
             hightlight[i].SetActive(false);
         }
         menuText[currentSite - 1].SetActive(true);
-        hightlight[currentSite - 1].SetActive(true);     
+        hightlight[currentSite - 1].SetActive(true);
     }
 
     public void detectSwipe(int direction)
@@ -187,10 +192,11 @@ public class UIController : Singleton<UIController>
             {
                 mainMenuButton();
             }
-            else if(currentSite == 4)
+            else if (currentSite == 4)
             {
                 upgradeButton();
-            } else
+            }
+            else
             {
                 eventsButton();
             }

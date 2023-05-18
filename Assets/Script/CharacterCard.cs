@@ -8,6 +8,7 @@ public class CharacterCard : MonoBehaviour
 {
     public Image imgHero;
     public Image[] stars;
+    public Image backGlow;
     public TextMeshProUGUI heroName;
     public Button button;
     public GameObject locker;
@@ -16,7 +17,6 @@ public class CharacterCard : MonoBehaviour
     public Image typeHero;
     public Slider sliderObj;
     public TextMeshProUGUI shardText;
-    public TextMeshProUGUI level;
 
     private MyHeroes heroesData;
 
@@ -43,32 +43,47 @@ public class CharacterCard : MonoBehaviour
     {
         heroesData = data;
         heroName.text = data.Name;
+        if (data.Type == 1)
+        {
+            gameObject.GetComponent<Image>().color = Color.red;
+            backGlow.color = Color.white;
+        } else if(data.Type == 2)
+        {
+            gameObject.GetComponent<Image>().color = Color.yellow;
+            backGlow.color = Color.white;
+        }
+        else if(data.Type == 3)
+        {
+            gameObject.GetComponent<Image>().color = Color.blue;
+            backGlow.color = Color.white;
+        }
+        else
+        {
+            gameObject.GetComponent<Image>().color = Color.green;
+            backGlow.color = Color.white;
+        }
         imgHero.sprite = UIHero.Instance.getSpriteHeroes(data.Id);
         typeHero.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type.ToString());
         if (data.Level > 0)
         {
-            locker.SetActive(true);
-            imgHero.color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
+            locker.SetActive(false);
         }
         else
         {
-            locker.SetActive(false);
-            imgHero.color = Color.white;
+            locker.SetActive(true);
         }
 
         if (data.Level > 0)
         {
-            int shardRequire = 2 * data.Level;
+            int shardRequire = HeroesDatabase.Instance.getEvolveStone(data.Id);
             int shardInv = ItemDatabase.Instance.fetchInventoryById(100 + data.Id / 10).Slot;
 
             sliderObj.value = (float)shardInv / shardRequire;
-            level.text = data.Level.ToString();
-            shardText.text = shardInv.ToString() + " " + shardRequire;
+            shardText.text = shardInv.ToString() + "/" + shardRequire;
         }
         else
         {
             sliderObj.value = 0f;
-            level.text = "0";
             shardText.text = ItemDatabase.Instance.fetchInventoryById(100 + data.Id / 10).Slot.ToString() + "/0";
         }
     }

@@ -56,4 +56,16 @@ public class ItemInflate : MonoBehaviour
             }
         }
     }
+
+    public void setTextSlot(int inven, int require)
+    {
+        slot.text = inven + "/" + require;
+        if (inven >= require)
+        {
+            slot.color = Color.white;
+        } else
+        {
+            slot.color = Color.red;
+        }
+    }
 }

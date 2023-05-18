@@ -418,16 +418,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
-            int index = fetchInventoryByIndex(id);
-            if (index == -1)
-            {
-                item.Slot = slot;
-                inventoryData.Add(item);
-            }
-            else
-            {
-                inventoryData[index].Slot += slot;
-            }
+            item.Slot = slot;
             return item;
         }
         else
@@ -447,7 +438,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
-            Debug.Log(item.Rarity);
 
             if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
             else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 4000 + randomStatsRarity(item.Rarity); }
@@ -469,7 +459,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             {
                 item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            inventoryData.Add(item);
             return item;
         }
     }

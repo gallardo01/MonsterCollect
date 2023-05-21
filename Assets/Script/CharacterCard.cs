@@ -30,15 +30,6 @@ public class CharacterCard : MonoBehaviour
         UIHero.Instance.onClickCard(heroesData);
         //selected.SetActive(true);
     }
-
-    public void chooseHeroes(bool active)
-    {
-        choosed.SetActive(active);
-    }
-    public void selectHeroes(bool active)
-    {
-        selected.SetActive(active);
-    }
     public void initData(MyHeroes data)
     {
         heroesData = data;
@@ -85,6 +76,24 @@ public class CharacterCard : MonoBehaviour
         {
             sliderObj.value = 0f;
             shardText.text = ItemDatabase.Instance.fetchInventoryById(100 + data.Id / 10).Slot.ToString() + "/0";
+        }
+    }
+
+    public void choosedHero(bool select)
+    {
+        choosed.SetActive(false);
+        if(select)
+        {
+            choosed.SetActive(true);
+        }
+    }
+
+    public void selectedHeroes(bool select)
+    {
+        selected.SetActive(false);
+        if (select)
+        {
+            selected.SetActive(true);
         }
     }
 

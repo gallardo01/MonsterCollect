@@ -25,6 +25,7 @@ public class UIHero : Singleton<UIHero>
 
     public TextMeshProUGUI txtHeroName;
     public TextMeshProUGUI txtHeroSkillDetail;
+    public Image skillImage;
 
     public TextMeshProUGUI txtAlibity_1;
     public TextMeshProUGUI txtAlibity_2;
@@ -34,7 +35,7 @@ public class UIHero : Singleton<UIHero>
     public TextMeshProUGUI txtAlibity_6;
 
     private int curHeroID;
-    public int cacheId;
+    private int cacheId;
 
     public Button panelBtnClose;
     public Button panelBtnEvolve;
@@ -49,29 +50,18 @@ public class UIHero : Singleton<UIHero>
 
     public TextMeshProUGUI txtCurLevel;
 
-
     public List<TextMeshProUGUI> txtAlibityBefore;
     public List<TextMeshProUGUI> txtLevelOnScrollVew;
 
     int currentEvol = 0;
     Animator evolAnimator;
 
-
-    //public GameObject maskBtnBuyGold;
-    //public GameObject maskBtnBuyDiamond;
-
-    string addAtk;
-    string addHp;
-    string addArmor;
-    string addSpeed;
-    string addCrit;
-    string addSpell;
-
     public List<TextMeshProUGUI> txtLevelCard;
     public List<TextMeshProUGUI> txtLevelProgessCard;
     public List<Slider> slLevelCard;
 
     private Sprite[] heroesSprite;
+    private Sprite[] imageSprites;
     private MyHeroes myHeroes;
     private int requireStone = 0;
     private bool isEvolve = true;
@@ -79,6 +69,7 @@ public class UIHero : Singleton<UIHero>
     void Start()
     {
         heroesSprite = Resources.LoadAll<Sprite>("UI/Icons/Monster");
+        imageSprites = Resources.LoadAll<Sprite>("Contents/Skill");
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
             PlayerPrefs.SetInt("HeroesPick", 10);
@@ -121,11 +112,21 @@ public class UIHero : Singleton<UIHero>
         for (int i = 1; i <= 12; i++)
         {
             listHero[i - 1].GetComponent<CharacterCard>().initData(HeroesDatabase.Instance.getCurrentHero(i));
+            if (i == curHeroID / 10)
+            {
+                listHero[i - 1].GetComponent<CharacterCard>().choosedHero(true);
+            }
         }
     }
 
     public void onClickCard(MyHeroes data)
     {
+        for (int i = 1; i <= 12; i++)
+        {
+            listHero[i - 1].GetComponent<CharacterCard>().selectedHeroes(false);
+        }
+        listHero[data.Id/10 -1].GetComponent<CharacterCard>().selectedHeroes(true);
+
         cacheId = data.Id;
         txtHeroName.text = data.Name;
         myHeroes = data;
@@ -134,7 +135,6 @@ public class UIHero : Singleton<UIHero>
         {
             txtPrice.text = "<sprite=5> " + StaticInfo.costHeroes[cacheId / 10].ToString();
         }
-        //txtHeroSkillDetail.text = StaticInfo.skillDetail[(cacheId / 10) - 1];
         txtHeroSkillDetail.text = data.Skill.ToString();
 
         txtAlibity_1.text = data.Atk.ToString();
@@ -144,6 +144,7 @@ public class UIHero : Singleton<UIHero>
         txtAlibity_5.text = data.Crit.ToString();
         txtAlibity_6.text = data.Move.ToString();
 
+        skillImage.sprite = imageSprites[cacheId/10 - 1];
         handleButton(data);
 
         foreach (Transform child in imgAvatar.transform)
@@ -160,9 +161,18 @@ public class UIHero : Singleton<UIHero>
     {
         PlayerPrefs.SetInt("HeroesPick", cacheId);
         curHeroID = cacheId;
-        //backToInventory();
         btnSelect.gameObject.SetActive(false);
-
+        for (int i = 1; i <= 12; i++)
+        {
+            if (i == curHeroID/10)
+            {
+                listHero[i - 1].GetComponent<CharacterCard>().choosedHero(true);
+            }
+            else
+            {
+                listHero[i - 1].GetComponent<CharacterCard>().choosedHero(false);
+            }
+        }
     }
 
 
@@ -175,6 +185,8 @@ public class UIHero : Singleton<UIHero>
         tabInventory.SetActive(true);
         bar.SetActive(true);
         UIInventory.Instance.initData(curHeroID);
+        InventoryController.Instance.initItemData();
+
         gameObject.SetActive(false);
     }
 
@@ -365,23 +377,6 @@ public class UIHero : Singleton<UIHero>
 
         initDataEvolve();
         initUIHero();
-    }
-
-    IEnumerator AlibityChange()
-    {
-        MyHeroes data_before_evole_1 = HeroesDatabase.Instance.fetchMyHeroes(curHeroID);
-
-        for (int i = 0; i < 19; i++)
-        {
-            txtAlibityBefore[0].text = (data_before_evole_1.Atk - Int32.Parse(addAtk) + i * Int32.Parse(addAtk) / 19).ToString() + "<color=green>" + " +" + addAtk + "</color=green>";
-            txtAlibityBefore[1].text = (data_before_evole_1.Hp - Int32.Parse(addHp) + i * Int32.Parse(addHp) / 19).ToString() + "<color=green>" + " +" + addHp + "</color=green>";
-            txtAlibityBefore[2].text = (data_before_evole_1.Armour - Int32.Parse(addArmor) + i * Int32.Parse(addArmor) / 19).ToString() + "<color=green>" + " +" + addArmor + "</color=green>";
-            txtAlibityBefore[3].text = (data_before_evole_1.Speed - Int32.Parse(addSpeed) + i * Int32.Parse(addSpeed) / 19).ToString() + "<color=green>" + " +" + addSpeed + "</color=green>";
-            txtAlibityBefore[4].text = (data_before_evole_1.Crit - Int32.Parse(addCrit) + i * Int32.Parse(addCrit) / 19).ToString() + "<color=green>" + " +" + addCrit + "</color=green>";
-            txtAlibityBefore[5].text = (data_before_evole_1.Move - Int32.Parse(addSpell) + i * Int32.Parse(addSpell) / 19).ToString() + "<color=green>" + " +" + addSpell + "</color=green>";
-            yield return new WaitForSeconds(0.04f);
-        }
-
     }
 }
 

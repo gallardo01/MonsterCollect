@@ -141,6 +141,7 @@ public class UIUpgradeController : MonoBehaviour
             IsUpdated = true;
             updateRequireGold();
         }
+        InventoryController.Instance.initStats();
     }
     IEnumerator replayAnimation(int result)
     {

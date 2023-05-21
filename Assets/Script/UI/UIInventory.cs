@@ -12,13 +12,6 @@ public class UIInventory : Singleton<UIInventory>
     public GameObject tabInventory;
     public GameObject imgAvatar;
 
-    //public TextMeshProUGUI txtAlibity_1;
-    //public TextMeshProUGUI txtAlibity_2;
-    //public TextMeshProUGUI txtAlibity_3;
-    //public TextMeshProUGUI txtAlibity_4;
-    //public TextMeshProUGUI txtAlibity_5;
-    //public TextMeshProUGUI txtAlibity_6;
-
     private int curHeroId = 0;
 
 
@@ -49,9 +42,6 @@ public class UIInventory : Singleton<UIInventory>
         monster.transform.localPosition = new Vector3(0, 0, 0);
         monster.transform.localScale = new Vector3(monster.transform.localScale.x * 100, monster.transform.localScale.y * 100, monster.transform.localScale.z * 100);
         monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-
-        MyHeroes dataHero = HeroesDatabase.Instance.fetchMyHeroes(curHeroId);
-
     }
 
     void swapToHero()

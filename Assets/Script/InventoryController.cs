@@ -19,7 +19,7 @@ public class InventoryController : Singleton<InventoryController>
     public GameObject[] Equipment;
     public GameObject PopupPrefab;
     public GameObject ParentPanel;
-    public GameObject[] albilitiesText;
+    public TextMeshProUGUI[] abilitiesText;
 
     public GameObject itemDetailPanel;
     public GameObject consumeDetailPanel;
@@ -106,6 +106,7 @@ public class InventoryController : Singleton<InventoryController>
         initEquipment();
         initMaterial();
         initShard();
+        initStats();
     }
     public void initUsedItem()
     {
@@ -205,6 +206,16 @@ public class InventoryController : Singleton<InventoryController>
                 _slotitem.GetComponent<ItemInflate>().InitData(itemArr[i]);
             }
         }
+    }
+    public void initStats()
+    {
+        UserInformation user = RealTimeDatabase.Instance.getUserInformation();
+        abilitiesText[0].text = user.Atk.ToString();
+        abilitiesText[1].text = user.Hp.ToString();
+        abilitiesText[2].text = user.Armour.ToString();
+        abilitiesText[3].text = user.Move.ToString();
+        abilitiesText[4].text = user.Crit.ToString();
+        abilitiesText[5].text = user.AttackSpeed.ToString();
     }
     public void onClickItem(ItemInventory item)
     {

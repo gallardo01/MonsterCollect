@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using System;
 using Random = UnityEngine.Random;
+using UnityEditor.SceneTemplate;
 
 public class ItemDatabase : Singleton<ItemDatabase>
 {
@@ -38,7 +39,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
             for (int i = 101; i <= 112; i++)
             {
-                addNewItem(i, 1);
+                addNewItem(i, 300);
             }
         }
     }
@@ -92,7 +93,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             newItem.Stats_3 = (int)myCurrentJsonData[i]["Stats_3"];
             newItem.Stats_4 = (int)myCurrentJsonData[i]["Stats_4"];
             newItem.Stats_5 = (int)myCurrentJsonData[i]["Stats_5"];
-
 
             inventoryData.Add(newItem);
         }
@@ -210,6 +210,30 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
         }
         return usedItem;
+    }
+    public UserInformation totalEquipmentStats()
+    {
+        UserInformation itemInformation = new UserInformation();
+        List<ItemInventory> usedItem = fetchUsedItem();
+        int bonusEquipmentStats = 100 + UserDatabase.Instance.getUserData().Equipment;
+        int[] stats = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        for(int i = 0; i < usedItem.Count; i++)
+        {
+            stats[usedItem[i].Stats_1 / 1000] += usedItem[i].Stats_1 % 1000;
+            stats[usedItem[i].Stats_2 / 1000] += usedItem[i].Stats_2 % 1000;
+            stats[usedItem[i].Stats_3 / 1000] += usedItem[i].Stats_3 % 1000;
+            stats[usedItem[i].Stats_4 / 1000] += usedItem[i].Stats_4 % 1000;
+            stats[usedItem[i].Stats_5 / 1000] += usedItem[i].Stats_5 % 1000;
+        }
+        itemInformation.Atk = stats[1] * bonusEquipmentStats / 100;
+        itemInformation.Hp = stats[2] * bonusEquipmentStats / 100;
+        itemInformation.Armour = stats[3] * bonusEquipmentStats / 100;
+        itemInformation.Move = stats[4] * bonusEquipmentStats / 100;
+        itemInformation.Crit = stats[5] * bonusEquipmentStats / 100;
+        itemInformation.AttackSpeed = stats[6] * bonusEquipmentStats / 100;
+        itemInformation.ExGold = stats[7] * bonusEquipmentStats / 100;
+        itemInformation.ExExp = stats[8] * bonusEquipmentStats / 100;
+        return itemInformation;
     }
     public List<ItemInventory> fetchAllData()
     {
@@ -505,25 +529,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             return 4;
         }
     }
-    private int returnRandomStats(int stat)
-    {
-        switch (stat)
-        {
-            case 1:
-                return Random.Range(10, 21);
-            case 2: 
-                return Random.Range(20, 41);
-            case 3:
-                return Random.Range(5, 16);
-            case 4:
-                return Random.Range(20, 41);
-            case 5:
-                return Random.Range(20, 41);
-            case 6:
-                return Random.Range(20, 41);
-        }
-        return 0;
-    }
     public void removeItemEquipment(int shopId)
     {
         int index = fetchInventoryByShopIdIndex(shopId);
@@ -531,12 +536,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData.RemoveAt(index);
         }
-    }
-    public void addItemSlotbyShopId(int shopId, int slot)
-    {
-        int index = fetchInventoryByShopIdIndex(shopId);
-        inventoryData[index].Slot += slot;
-        
     }
     public void addItemSlotById(int id, int slot)
     {
@@ -749,5 +748,16 @@ public class ItemData
     public string Contents { get; set; }
     public int Rarity { get; set; }
     public int Type { get; set; }
+}
+public class UserInformation
+{
+    public int Atk { get; set; }
+    public int Hp { get; set; }
+    public int Armour { get; set; }
+    public int Move { get; set; }
+    public int Crit { get; set; }
+    public int AttackSpeed { get; set; }
+    public int ExGold { get; set; }
+    public int ExExp { get; set; }
 }
 

@@ -259,6 +259,8 @@ public class UIHero : Singleton<UIHero>
             monster.transform.localPosition = new Vector3(0, 0, 0);
             monster.transform.localScale = new Vector3(monster.transform.localScale.x * 300, monster.transform.localScale.y * 300, monster.transform.localScale.z * 300);
             monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
+
+            txtLevelOnScrollVew[i].text = HeroesDatabase.Instance.fetchMyHeroes(((int)curHeroID/10)*10+i).Name.ToString();
         }
 
         listHeroBackGlow[currentEvol - 1].SetActive(true);

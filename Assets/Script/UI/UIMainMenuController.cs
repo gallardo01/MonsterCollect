@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class UIMainMenuController : MonoBehaviour
 {
 
-    public RectTransform Maps;
+    public Transform Maps;
     public TextMeshProUGUI mapName;
     public TextMeshProUGUI mapDescription;
     public GameObject locker;
@@ -52,7 +52,7 @@ public class UIMainMenuController : MonoBehaviour
             currentMap--;
             if (currentMap == 0)
             {
-                currentMap = 9;
+                currentMap = 10;
             }
             selectMap(currentMap);
         }
@@ -65,7 +65,7 @@ public class UIMainMenuController : MonoBehaviour
             isClick = false;
 
             currentMap++;
-            if (currentMap == 10)
+            if (currentMap == 11)
             {
                 currentMap = 1;
             }
@@ -78,14 +78,20 @@ public class UIMainMenuController : MonoBehaviour
     {
         itemsSprite = Resources.LoadAll<Sprite>("Contents/Icon/Island");
 
-        Maps.GetComponent<Image>().sprite = itemsSprite[index-1];
+        Maps.GetComponent<SpriteRenderer>().sprite = itemsSprite[index-1];
         locker.SetActive(false);
-        Maps.GetComponent<Image>().color = Color.white;
+        foreach (Transform child in Maps.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        GameObject monster = Instantiate(Resources.Load("Prefabs/Monster/Stage" + index.ToString()) as GameObject, Maps.transform);
+        monster.transform.localPosition = new Vector3(4, -1.2f, 0);
+        monster.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
 
 
         if (index > currentStage)
         {
-            Maps.GetComponent<Image>().color = new Color(152f / 255f, 152f / 255f, 152f / 255f);
             locker.SetActive(true);
         } else
         {
@@ -96,7 +102,7 @@ public class UIMainMenuController : MonoBehaviour
         //mapDescription.text = "/10";
 
 
-        StartCoroutine(animationMap());
+        //StartCoroutine(animationMap());
         StartCoroutine(animationText());
 
 

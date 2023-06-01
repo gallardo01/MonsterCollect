@@ -18,16 +18,21 @@ public class EnemyControllerKien : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         StartCoroutine(castSkill());
     }
-    public void Update()
-    {
-        Vector3 tempVect = new Vector3(direction, 0, 0);
-        tempVect = tempVect.normalized * speed * Time.deltaTime;
-        rb.MovePosition(rb.transform.position + tempVect);
 
+
+    void FixedUpdate()
+    {
         Vector3 tempScale = new Vector3(-direction, 1, 1);
         transform.localScale = tempScale;
 
+
+        Vector3 tempVect = new Vector3(direction, 0, 0);
+        tempVect = tempVect * speed * Time.deltaTime;
+        //rb.MovePosition(rb.transform.position + tempVect);
+
+        rb.AddForce(tempVect, ForceMode2D.Impulse);
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -47,6 +52,7 @@ public class EnemyControllerKien : MonoBehaviour
         if (collision.gameObject.tag == "Bullet")
         {
             Debug.Log("bi ban");
+            Destroy(this.gameObject);
         }
     }
 

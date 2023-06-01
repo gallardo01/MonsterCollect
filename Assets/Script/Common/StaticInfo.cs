@@ -7,16 +7,31 @@ public class StaticInfo : MonoBehaviour
     public static string[] mapName =
     {
         "",
-        "1.Map Kien 1",
-        "2.Map Kien 2",
-        "3.Map Kien 3",
-        "4.Map Kien 4",
-        "5.Map Kien 5",
-        "6.Map Kien 6",
-        "7.Map Kien 7",
-        "8.Map Kien 8",
-        "9.Map Kien 9",
-        "10.Map Kien 10",
+        "1. Gym Leader Blue",
+        "2. Gym Leader Roxie",
+        "3. Gym Leader Iris",
+        "4. Gym Leader Drake",
+        "5. Gym Leader Jack",
+        "6. Gym Leader Blaine",
+        "7. Gym Leader Clair",
+        "8. Gym Leader Monty",
+        "9. Gym Leader Cindy",
+        "10. Gym Leader Surge",
+    };
+
+    public static string[] mapType =
+    {
+        "",
+        "<sprite=13> Water Gym",
+        "<sprite=11> Fire Gym",
+        "<sprite=12> Electric Gym",
+        "<sprite=13> Water Gym",
+        "<sprite=11> Fire Gym",
+        "<sprite=14> Grass Gym",
+        "<sprite=13> Water Gym",
+        "<sprite=11> Fire Gym",
+        "<sprite=14> Grass Gym",
+        "<sprite=12> Electric Gym",
     };
 
     public static int[] costHeroes = { 0, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000 };

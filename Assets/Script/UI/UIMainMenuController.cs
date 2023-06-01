@@ -99,13 +99,8 @@ public class UIMainMenuController : MonoBehaviour
         }
 
         mapName.text = StaticInfo.mapName[index];
-        //mapDescription.text = "/10";
-
-
-        //StartCoroutine(animationMap());
+        mapDescription.text = StaticInfo.mapType[index];
         StartCoroutine(animationText());
-
-
     }
 
     IEnumerator animationMap()

@@ -25,7 +25,7 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
 
     //public GameObject[,] itemSkill;
 
-    public List<ItemSkill> itemSkillList = new List<ItemSkill>();
+    public List<BingoSkillItem> itemSkillList = new List<BingoSkillItem>();
 
     private int[,] partPosX =
     {
@@ -71,19 +71,22 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
             for(int j = 0; j< BingoBroad.GetLength(1); j++)
             {
                 GameObject item;
+
                 item = Instantiate(itemSkillPrefab, this.transform);
 
                 item.GetComponent<BingoSkillItem>().posX = i;
                 item.GetComponent<BingoSkillItem>().posY = j;
+                item.GetComponent<BingoSkillItem>().value = BingoBroad[i, j];
                 item.GetComponent<BingoSkillItem>().type = Random.Range(0, 4);
 
                 //itemSkill[i* BingoBroad.GetLength(0) + j] = item;
-                ItemSkill itemSkill = new ItemSkill();
-                itemSkill.x = i;
-                itemSkill.y = j;
-                itemSkill.item = item;
-                itemSkill.value = BingoBroad[i,j];
-                itemSkillList.Add(itemSkill);
+                //ItemSkill itemSkill = new ItemSkill();
+                //itemSkill.x = i;
+                //itemSkill.y = j;
+                //itemSkill.item = item;
+                //itemSkill.value = BingoBroad[i,j];
+
+                itemSkillList.Add(item.GetComponent<BingoSkillItem>());
             }
         }
     }
@@ -105,7 +108,7 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
             BingoBroad[x, y] = 2;
             for (int i = 0; i < itemSkillList.Count; i++)
             {
-                if (itemSkillList[i].x == x && itemSkillList[i].y == y){
+                if (itemSkillList[i].posX == x && itemSkillList[i].posY == y){
                     itemSkillList[i].value = 2;
                 }
             }
@@ -120,7 +123,7 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
                 BingoBroad[x, y] = 2;
                 for (int i = 0; i < itemSkillList.Count; i++)
                 {
-                    if (itemSkillList[i].x == x && itemSkillList[i].y == y)
+                    if (itemSkillList[i].posX == x && itemSkillList[i].posY == y)
                     {
                         itemSkillList[i].value = 2;
                     }
@@ -221,14 +224,14 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
         {
             if (itemSkillList[i].value == 2)
             {
-                itemSkillList[i].item.GetComponent<Image>().color = Color.blue;
+                itemSkillList[i].gameObject.GetComponent<Image>().color = Color.blue;
             }else if (itemSkillList[i].value == 0)
             {
-                itemSkillList[i].item.GetComponent<Image>().color = Color.gray;
+                itemSkillList[i].gameObject.GetComponent<Image>().color = Color.gray;
             }
             else if(itemSkillList[i].value == 1)
             {
-                itemSkillList[i].item.GetComponent<Image>().color = Color.white;
+                itemSkillList[i].gameObject.GetComponent<Image>().color = Color.white;
             }
         }
     }
@@ -289,17 +292,6 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
 
     private void claimHorizontalAward() {
         Debug.Log("an bonus chay nhanh");
-
-    }
-
-    public class ItemSkill
-    {
-        public int x { get; set; }
-        public int y { get; set; }
-
-        public GameObject item { get; set; }
-
-        public int value { get; set; }
     }
 
 }

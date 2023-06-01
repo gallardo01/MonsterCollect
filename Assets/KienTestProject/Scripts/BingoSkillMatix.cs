@@ -21,10 +21,6 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
         { 1, 1, 1, 1 }
     }; // 0 = lock; 1 = claimable; 2 = claimed
 
-    //public GameObject[] itemSkill;
-
-    //public GameObject[,] itemSkill;
-
     public List<BingoSkillItem> itemSkillList = new List<BingoSkillItem>();
 
     private int[,] partPosX =
@@ -49,12 +45,6 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
     void Start()
     {
         initItemSkill();
-        //Debug.Log(partPosY[1, 0]);
-        //Debug.Log(partPosY[1, 1]);
-        //Debug.Log(partPosY[2, 2]);
-        //Debug.Log(partPosY[2, 3]);
-
-
     }
 
     // Update is called once per frame
@@ -78,13 +68,6 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
                 item.GetComponent<BingoSkillItem>().posY = j;
                 item.GetComponent<BingoSkillItem>().value = BingoBroad[i, j];
                 item.GetComponent<BingoSkillItem>().type = Random.Range(0, 4);
-
-                //itemSkill[i* BingoBroad.GetLength(0) + j] = item;
-                //ItemSkill itemSkill = new ItemSkill();
-                //itemSkill.x = i;
-                //itemSkill.y = j;
-                //itemSkill.item = item;
-                //itemSkill.value = BingoBroad[i,j];
 
                 itemSkillList.Add(item.GetComponent<BingoSkillItem>());
             }
@@ -162,7 +145,7 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
             }
 
         }
-        else if (y==3)
+        else if (y== BingoBroad.GetLength(0))
         {
             if (BingoBroad[x, y - 1] == 0)
             {
@@ -196,7 +179,7 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
             }
 
         }
-        else if (x == 3)
+        else if (x == BingoBroad.GetLength(1))
         {
             if (BingoBroad[x - 1, y] == 0)
             {

@@ -27,7 +27,6 @@ public class BingoSkillItem : MonoBehaviour
 
     private void onClickItem()
     {
-        //this.GetComponent<Image>().color = Color.blue;
         //Debug.Log(posX + " " + posY);
         BingoSkillMatix.Instance.clickOnItem(posX,posY);
 

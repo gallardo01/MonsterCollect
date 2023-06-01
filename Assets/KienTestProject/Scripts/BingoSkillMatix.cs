@@ -132,7 +132,6 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
 
     private void checkCanUpgrade(int x, int y)
     {
-       
 
         //check cot
         
@@ -145,7 +144,7 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
             }
 
         }
-        else if (y== BingoBroad.GetLength(0))
+        else if (y== BingoBroad.GetLength(0)-1)
         {
             if (BingoBroad[x, y - 1] == 0)
             {
@@ -179,7 +178,7 @@ public class BingoSkillMatix : Singleton<BingoSkillMatix>
             }
 
         }
-        else if (x == BingoBroad.GetLength(1))
+        else if (x == BingoBroad.GetLength(1)-1)
         {
             if (BingoBroad[x - 1, y] == 0)
             {

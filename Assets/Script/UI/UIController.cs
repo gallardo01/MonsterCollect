@@ -104,6 +104,7 @@ public class UIController : Singleton<UIController>
         upgrade.DOAnchorPos(new Vector2(6000, 0), 0.25f);
         events.DOAnchorPos(new Vector2(8000, 0), 0.25f);
         setupHightLight();
+        activeLayer();
     }
 
     private void heoresButton()
@@ -115,6 +116,7 @@ public class UIController : Singleton<UIController>
         upgrade.DOAnchorPos(new Vector2(4000, 0), 0.25f);
         events.DOAnchorPos(new Vector2(6000, 0), 0.25f);
         setupHightLight();
+        activeLayer();
     }
 
     private void mainMenuButton()
@@ -126,6 +128,7 @@ public class UIController : Singleton<UIController>
         upgrade.DOAnchorPos(new Vector2(2000, 0), 0.25f);
         events.DOAnchorPos(new Vector2(4000, 0), 0.25f);
         setupHightLight();
+        activeLayer();
     }
 
     private void upgradeButton()
@@ -137,6 +140,7 @@ public class UIController : Singleton<UIController>
         upgrade.DOAnchorPos(new Vector2(0, 0), 0.25f);
         events.DOAnchorPos(new Vector2(2000, 0), 0.25f);
         setupHightLight();
+        activeLayer();
     }
 
     private void eventsButton()
@@ -148,6 +152,15 @@ public class UIController : Singleton<UIController>
         upgrade.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
         events.DOAnchorPos(new Vector2(0, 0), 0.25f);
         setupHightLight();
+        activeLayer();
+    }
+    private void activeLayer()
+    {
+        shop.gameObject.SetActive(currentSite == 1);
+        heroes.gameObject.SetActive(currentSite == 2);
+        mainMenu.gameObject.SetActive(currentSite == 3);
+        upgrade.gameObject.SetActive(currentSite == 4);
+        events.gameObject.SetActive(currentSite == 5);
     }
 
     private void setupHightLight()

@@ -7,7 +7,6 @@ using System.Text;
 using System.IO;
 using System;
 using Random = UnityEngine.Random;
-using UnityEditor.SceneTemplate;
 
 public class ItemDatabase : Singleton<ItemDatabase>
 {

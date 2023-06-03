@@ -43,7 +43,7 @@ public class UIController : Singleton<UIController>
         upgradeBtn.onClick.AddListener(() => upgradeButton());
         eventBtn.onClick.AddListener(() => eventsButton());
 
-        mainMenuButton();
+        startGame();
     }
 
     public void InitUI()
@@ -119,6 +119,19 @@ public class UIController : Singleton<UIController>
         activeLayer();
     }
 
+    private void startGame()
+    {
+        currentSite = 3;
+        shop.DOAnchorPos(new Vector2(-4000, 0), 0.25f);
+        heroes.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
+        mainMenu.DOAnchorPos(new Vector2(0, 0), 0.25f);
+        upgrade.DOAnchorPos(new Vector2(2000, 0), 0.25f);
+        events.DOAnchorPos(new Vector2(4000, 0), 0.25f);
+        setupHightLight();
+        shop.gameObject.SetActive(false);
+        upgrade.gameObject.SetActive(false);
+        events.gameObject.SetActive(false);
+    }
     private void mainMenuButton()
     {
         currentSite = 3;

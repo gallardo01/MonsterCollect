@@ -43,6 +43,11 @@ public class UIUpgradeController : MonoBehaviour
         InitUI();
         updateRequireGold();
     }
+
+    private void OnEnable()
+    {
+        InitUI();
+    }
     private void updateRequireGold()
     {
         requireGold = UserDatabase.Instance.getTotalLevel()*300 + 300;

@@ -11,6 +11,7 @@ public class UserDatabase : Singleton<UserDatabase>
 {
     private UserData database = new UserData();
     private JsonData userData;
+
     void Awake()
     {
         DontDestroyOnLoad(transform.gameObject);
@@ -119,6 +120,8 @@ public class UserDatabase : Singleton<UserDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
+
+        SyncService.Instance.PushUser(database);
     }
     public UserData getUserData()
     {

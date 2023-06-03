@@ -142,6 +142,9 @@ public class ItemDatabase : Singleton<ItemDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
+
+        Debug.Log("Saving inventory...");
+        SyncService.Instance.PushInventory(inventoryData);
     }
     public ItemData fetchItemById(int id)
     {

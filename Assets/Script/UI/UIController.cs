@@ -170,7 +170,7 @@ public class UIController : Singleton<UIController>
     private void activeLayer()
     {
         shop.gameObject.SetActive(currentSite == 1);
-        heroes.gameObject.SetActive(currentSite == 2);
+        //heroes.gameObject.SetActive(currentSite == 2);
         mainMenu.gameObject.SetActive(currentSite == 3);
         upgrade.gameObject.SetActive(currentSite == 4);
         events.gameObject.SetActive(currentSite == 5);

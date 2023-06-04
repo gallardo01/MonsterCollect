@@ -441,7 +441,16 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
-            item.Slot = slot;
+            int index = fetchInventoryByIndex(id);
+            if (index == -1)
+            {
+                item.Slot = slot;
+                inventoryData.Add(item);
+            }
+            else
+            {
+                inventoryData[index].Slot += slot;
+            }
             return item;
         }
         else

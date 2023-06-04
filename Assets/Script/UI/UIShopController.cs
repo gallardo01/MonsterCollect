@@ -10,37 +10,7 @@ public class UIShopController : MonoBehaviour
     public GameObject ParentTransform;
     public GameObject TargetedOfferPanel;
 
-    public GameObject _go_claim_popup;
-
-    public GameObject Chests_Golden_Label;
-    public GameObject Chests_Golden_Description;
-    public GameObject Chests_Golden_OpenKeyButton_Text;
-    public GameObject Chests_Golden_OpenKeyButton;
-
-    public GameObject Chests_Diamon_Label;
-    public GameObject Chests_Diamon_Description;
-    public GameObject Chests_Diamon_Draw_Text;
-    public GameObject Chests_Diamon_Draw;
-
-    public GameObject Chests_Diamonx10_Label;
-    public GameObject Chests_Diamonx10_Description_1;
-    public GameObject Chests_Diamonx10_Description_2;
-    public GameObject Chests_Diamonx10_BaseValue;
-    public GameObject Chests_Diamonx10_Value;
-    public GameObject Chests_Diamonx10_Draw;
-
-    public GameObject Heroes_Item1_Label;
-    public GameObject Heroes_Item1_SubLabel;
-    public GameObject Heroes_Item1_Price;
-
-    public GameObject Heroes_Item2_Label;
-    public GameObject Heroes_Item2_SubLabel;
-    public GameObject Heroes_Item2_Price;
-
-    public GameObject Heroes_Item3_Label;
-    public GameObject Heroes_Item3_SubLabel;
-    public GameObject Heroes_Item3_Price;
-
+ 
 
     public GameObject[] Gems_Label;
     public GameObject[] Gems_Description_Text;
@@ -56,8 +26,6 @@ public class UIShopController : MonoBehaviour
     void Start()
     {
         InitTargetedOffer();
-        InitChests();
-        InitHeroes();
         InitGems();
         InitCoins();
     }
@@ -67,80 +35,15 @@ public class UIShopController : MonoBehaviour
         //init data
 
         GameObject TO = new GameObject();
-        int to = UnityEngine.Random.Range(4, 5);
-
+        int to = UnityEngine.Random.Range(1, 6);
         SetUpTO(TO, to);
-
-        //setup data
-        TargetedOfferPanel.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() => { SetupCelebration(); });
     }
-    void SetupCelebration()
-    {
-        var _claim_popup = Instantiate(_go_claim_popup, ParentTransform.transform);
-        StartCoroutine(FadeCelebration(_claim_popup));
-    }
-    IEnumerator FadeCelebration(GameObject _claim_popup)
-    {
-        yield return new WaitForSeconds(0.5f);
-        _claim_popup.GetComponent<Animator>().SetTrigger("Fade");
-    }
-
 
     void SetUpTO(GameObject TO, int index)
     {
-        //TargetedOfferPanel.transform.Find("Top/Badge/Text").GetComponent<TextMeshProUGUI>().text = "-" + (100 - (Mathf.Round((float)((StaticInfo.TOValue[index] / StaticInfo.TOBaseValue[index]))) * 100)) + "%";
         TO = Instantiate(Resources.Load($"Prefabs/UI/TargetOffer/TO_{index}") as GameObject, TargetedOfferPanel.transform.GetChild(0).transform);
-        TO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TODescription[index-1]}";
-        TO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TOBaseValue[index-1]} $";
-        TO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{StaticInfo.TOValue[index-1]} $";
-
         TO.GetComponent<Button>().onClick.AddListener(() => OnTargetOfferPurchased(index, StaticInfo.TOBaseValue[index - 1]));
-        //var item1_image = TO.transform.GetChild(0).GetComponent<Image>().sprite;
-        //var item2_image = TO.transform.GetChild(1).GetChild(1).GetComponent<Image>().sprite;
-        //var item3_image = TO.transform.Find("Content/Item1 (2)/Image").GetComponent<Image>().sprite;
-        //var item4_image = TO.transform.Find("Content/Item1 (3)/Image").GetComponent<Image>().sprite;
     }
-
-    void InitChests()
-    {
-        //Golden Chest
-        Chests_Golden_Label.GetComponent<TextMeshProUGUI>().text = "Golden Chest";
-        Chests_Golden_Description.GetComponent<TextMeshProUGUI>().text = "Contains One <color=#7e7e7e> Common </color> or <color=#00ff00>Great</color> equipmet";
-        Chests_Golden_OpenKeyButton_Text.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=5></size> 1000";
-        Chests_Golden_OpenKeyButton.GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("coin", 1, 1000));
-
-        //Diamon Chest
-        Chests_Diamon_Label.GetComponent<TextMeshProUGUI>().text = "Diamon Chest";
-        Chests_Diamon_Description.GetComponent<TextMeshProUGUI>().text = "Contains One <color=#00ff00> Great </color>,<color=#00aaff>Rare</color> or <color=#ff00ff>Epic</color> equipmet";
-        Chests_Diamon_Draw_Text.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 200";
-        Chests_Diamon_Draw.GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("diamond", 1, 200));
-
-        //X10 Diamon Chest
-        Chests_Diamonx10_Label.GetComponent<TextMeshProUGUI>().text = "Diamon Chest X10";
-        Chests_Diamonx10_Description_1.GetComponent<TextMeshProUGUI>().text = "Contains 10 <color=#00ff00> Great </color>,<color=#00aaff>Rare</color> or <color=#ff00ff>Epic</color> equipmet";
-        Chests_Diamonx10_Description_2.GetComponent<TextMeshProUGUI>().text = "Get an <color=#ff00ff>Epic</color> equipmet";
-        Chests_Diamonx10_Value.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 1800";
-        Chests_Diamonx10_BaseValue.GetComponent<TextMeshProUGUI>().text = "<size=120%><sprite=0></size> 2000";
-        Chests_Diamonx10_Draw.GetComponent<Button>().onClick.AddListener(() => OnChestPurchased("diamond", 10, 1800));
-    }
-
-
-    void InitHeroes()
-    {
-        //Item 1
-        Heroes_Item1_Label.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Ice Dragon";
-        Heroes_Item1_SubLabel.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
-        Heroes_Item1_Price.GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
-        //Item 2
-        Heroes_Item2_Label.GetComponent<TextMeshProUGUI>().text = "<color=#00FFFF>Earth Mamoth";
-        Heroes_Item2_SubLabel.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
-        Heroes_Item2_Price.GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
-        //Item 3
-        Heroes_Item3_Label.GetComponent<TextMeshProUGUI>().text = "<color=#FF0000>Fire Bird";
-        Heroes_Item3_SubLabel.GetComponent<TextMeshProUGUI>().text = "<color=#FFFFFF>Discount 30%";
-        Heroes_Item3_Price.GetComponent<TextMeshProUGUI>().text = "<sprite=0>345";
-    }
-
 
     void InitGems()
     {
@@ -228,34 +131,67 @@ public class UIShopController : MonoBehaviour
     }
     void OnTargetOfferPurchased(int type, double price)
     {
+        List<ItemInventory> items = new List<ItemInventory>();
+        int gold = 0;
+        int diamond = 0;
         switch (type)
         {
             case 1 :
-                Debug.Log("mua hom 1");
-                ItemDatabase.Instance.addNewItem(1, 20);
-                ItemDatabase.Instance.addNewItem(2, 20);
-                ItemDatabase.Instance.addNewItem(3, 10);
-                // tru tien that
-
+                items.Add(ItemDatabase.Instance.getItemObject(1, 10, 1));
+                items.Add(ItemDatabase.Instance.getItemObject(2, 10, 1));
+                items.Add(ItemDatabase.Instance.getItemObject(3, 10, 1));
+                items.Add(ItemDatabase.Instance.getItemObject(4, 10, 1));
+                items.Add(ItemDatabase.Instance.getItemObject(5, 10, 1));
+                items.Add(ItemDatabase.Instance.getItemObject(6, 10, 1));
+                items.Add(ItemDatabase.Instance.getItemObject(7, 10, 1));
+                items.Add(ItemDatabase.Instance.getItemObject(8, 10, 1));
+                InventoryController.Instance.initEquipment();
                 break;
             case 2 :
-                Debug.Log("mua hom 2");
                 UserDatabase.Instance.gainMoney(0, 1000);
-                // tru tien that
-
+                diamond = 1000;
                 break;
             case 3:
-                Debug.Log("mua hom 3");
                 UserDatabase.Instance.gainMoney(10000, 0);
-                // tru tien that
-
+                gold = 10000;
                 break;
             case 4:
-                Debug.Log("mua hom 4");
-                ItemDatabase.Instance.addNewItem(Random.Range(10, 34), 1,4);
-                // tru tien that
-
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
+                ItemDatabase.Instance.addNewItemByObject(items[0]);
+                ItemDatabase.Instance.addNewItemByObject(items[1]);
+                ItemDatabase.Instance.addNewItemByObject(items[2]);
+                UserDatabase.Instance.gainMoney(0, 500);
+                UserDatabase.Instance.gainMoney(5000, 0);
+                diamond = 500;
+                gold = 5000;
                 break;
+            case 5:
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 14), 1, returnRarityTO()));
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(14, 18), 1, returnRarityTO()));
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(18, 22), 1, returnRarityTO()));
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(22, 26), 1, returnRarityTO()));
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(26, 30), 1, returnRarityTO()));
+                items.Add(ItemDatabase.Instance.getItemObject(Random.Range(30, 34), 1, returnRarityTO()));
+                break;
+        }
+
+        // celebration
+    }
+
+    private int returnRarityTO()
+    {
+        int rate = Random.Range(0, 100);
+        if (rate < 80)
+        {
+            return 3;
+        } else if (rate < 97)
+        {
+            return 4;
+        } else
+        {
+            return 5;
         }
     }
     void OnChestPurchased(string type, int quantity, int price)

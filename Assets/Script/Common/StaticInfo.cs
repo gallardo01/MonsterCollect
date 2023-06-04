@@ -42,7 +42,7 @@ public class StaticInfo : MonoBehaviour
     public static int[] userUpdateBase = { 10, 10, 10, 10, 10, 10, 1, 1, 1};
 
 
-    public static double[] TOBaseValue = { 6.99, 9.99, 9.99, 9.99};
+    public static double[] TOBaseValue = { 4, 5, 4, 2, 5};
     public static double[] TOValue = { 3.99, 4.99, 4.99, 4.99};
     public static string[] TODescription = { "Evolve monster pack", "Pack of gem - Discount 50%", "Pack of gold - Mastery", "Powerful Item" };
     public static string[] TOPriceType = { "dollar", "dollar", "dollar", "dollar" };

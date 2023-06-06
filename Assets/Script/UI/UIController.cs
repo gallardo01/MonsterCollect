@@ -36,7 +36,7 @@ public class UIController : Singleton<UIController>
         Application.targetFrameRate = 100;
         enableSwipe = true;
 
-        InitUI();
+        initCurrency();
         shopBtn.onClick.AddListener(() => shopButton());
         heroesBtn.onClick.AddListener(() => heoresButton());
         mainMenuBtn.onClick.AddListener(() => mainMenuButton());
@@ -45,47 +45,45 @@ public class UIController : Singleton<UIController>
 
         startGame();
     }
-
+    private void initCurrency()
+    {
+        UserData database = UserDatabase.Instance.getUserData();
+        txtDiamond.text = database.Diamond.ToString();
+        txtGold.text = database.Gold.ToString();
+    }
     public void InitUI()
     {
         UserData database = UserDatabase.Instance.getUserData();
-        if (isInit)
-        {
-            txtGold.text = database.Gold.ToString();
-            txtDiamond.text = database.Diamond.ToString();
-            isInit = false;
-        }
-        else
-        {
-            if (int.Parse(txtGold.text) != database.Gold)
-                StartCoroutine(MoneyChange(database.Gold));
-            if (int.Parse(txtDiamond.text) != database.Diamond)
-                StartCoroutine(DiamonChange(database.Diamond));
-        }
+        StartCoroutine(MoneyChange(database.Gold));
+        StartCoroutine(DiamonChange(database.Diamond));
     }
-    IEnumerator DiamonChange(int diamon)
+    IEnumerator DiamonChange(int diamond)
     {
         int firstValue = int.Parse(txtDiamond.text);
-        int valChange = Mathf.Abs(firstValue - diamon);
-
-        for (int i = 0; i < 10; i++)
+        int valChange = diamond - firstValue;
+        if (valChange != 0)
         {
-            firstValue -= (int)(valChange * 0.05f);
-            txtDiamond.text = firstValue.ToString();
-            yield return new WaitForSeconds(0.05f);
+            for (int i = 0; i < 20; i++)
+            {
+                firstValue += (int)(valChange * 0.05f);
+                txtDiamond.text = firstValue.ToString();
+                yield return new WaitForSeconds(0.02f);
+            }
         }
-        txtDiamond.text = diamon.ToString();
+        txtDiamond.text = diamond.ToString();
     }
     IEnumerator MoneyChange(int gold)
     {
         int firstValue = int.Parse(txtGold.text);
-        int valChange = Mathf.Abs(firstValue - gold);
-
-        for (int i = 0; i < 10; i++)
+        int valChange = gold - firstValue;
+        if (valChange != 0)
         {
-            firstValue -= (int)(valChange * 0.05f);
-            txtGold.text = firstValue.ToString();
-            yield return new WaitForSeconds(0.05f);
+            for (int i = 0; i < 20; i++)
+            {
+                firstValue += (int)(valChange * 0.05f);
+                txtGold.text = firstValue.ToString();
+                yield return new WaitForSeconds(0.02f);
+            }
         }
         txtGold.text = gold.ToString();
     }

@@ -14,8 +14,7 @@ public class ItemInflate : MonoBehaviour
     public Image type;
     public TextMeshProUGUI slot;
     public TextMeshProUGUI level;
-
-
+    public ParticleSystem obj;
     private ItemInventory itemData;
     public void InitData(ItemInventory iteminfo)
     {
@@ -68,4 +67,33 @@ public class ItemInflate : MonoBehaviour
             slot.color = Color.red;
         }
     }
+    public void setupRarityObj(int rarity)
+    {
+        gameObject.GetComponent<Animator>().Play("Shake");
+        if (rarity == 1) { obj.startColor = Color.white; }
+        if (rarity == 2) { obj.startColor = Color.green; }
+        if (rarity == 3) { obj.startColor = Color.blue; };
+        if (rarity == 4) { obj.startColor = Color.yellow; }
+        if (rarity == 5) { obj.startColor = Color.red; }
+    }
+    public void setupCurrencyItem(int gold, int diamond)
+    {
+        if(gold > 0)
+        {
+            item.sprite = Resources.Load<Sprite>("UI/Sprites/Gold");
+            rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/1");
+            type.sprite = Resources.Load<Sprite>("UI/Inventory/PlaceHolder/0");
+            slot.text = gold.ToString();
+            level.text = "";
+        } else if(diamond > 0)
+        {
+            item.sprite = Resources.Load<Sprite>("UI/Sprites/Diamond");
+            rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/1");
+            type.sprite = Resources.Load<Sprite>("UI/Inventory/PlaceHolder/0");
+            slot.text = diamond.ToString();
+            level.text = "";
+        }
+    }
 }
+
+

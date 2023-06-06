@@ -23,6 +23,8 @@ public class UIShopController : MonoBehaviour
     public GameObject[] Coins_Price;
     public GameObject[] Coins_Btn;
 
+    public GameObject celebrationObj;
+
     void Start()
     {
         InitTargetedOffer();
@@ -145,7 +147,6 @@ public class UIShopController : MonoBehaviour
                 items.Add(ItemDatabase.Instance.getItemObject(6, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(7, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(8, 10, 1));
-                InventoryController.Instance.initEquipment();
                 break;
             case 2 :
                 UserDatabase.Instance.gainMoney(0, 1000);
@@ -159,11 +160,6 @@ public class UIShopController : MonoBehaviour
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
-                ItemDatabase.Instance.addNewItemByObject(items[0]);
-                ItemDatabase.Instance.addNewItemByObject(items[1]);
-                ItemDatabase.Instance.addNewItemByObject(items[2]);
-                UserDatabase.Instance.gainMoney(0, 500);
-                UserDatabase.Instance.gainMoney(5000, 0);
                 diamond = 500;
                 gold = 5000;
                 break;
@@ -178,8 +174,8 @@ public class UIShopController : MonoBehaviour
         }
 
         // celebration
+        openCelebration(items, gold, diamond);
     }
-
     private int returnRarityTO()
     {
         int rate = Random.Range(0, 100);
@@ -193,6 +189,19 @@ public class UIShopController : MonoBehaviour
         {
             return 5;
         }
+    }
+    private void openCelebration(List<ItemInventory> items, int gold, int diamond)
+    {
+        for(int i = 0; i < items.Count; i++)
+        {
+            ItemDatabase.Instance.addNewItemByObject(items[i]);
+        }
+        UserDatabase.Instance.gainMoneyInGame(0, gold);
+        UserDatabase.Instance.gainMoneyInGame(diamond, 0);
+        InventoryController.Instance.initEquipment();
+            
+        celebrationObj.SetActive(true);
+        celebrationObj.GetComponent<CelebrationShopController>().initCelebration(items, gold, diamond);
     }
     void OnChestPurchased(string type, int quantity, int price)
     {

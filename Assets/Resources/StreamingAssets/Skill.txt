@@ -1,7 +1,7 @@
 [
  {
    "Id": 1,
-   "Skill": "Thunder Wave",
+   "Skill": "Ember",
    "Content": "Deal dame to closet enemy",
    "Second": "Adds damage",
    "Power": 30,
@@ -10,8 +10,8 @@
  },
  {
    "Id": 2,
-   "Skill": "Electroweb",
-   "Content": "Throw a web on random target area",
+   "Skill": "Will-O-Wisp",
+   "Content": "Fire spirit bounce around enemy",
    "Second": "Fire faster \\n Adds damage",
    "Power": 30,
    "Timer": 4,
@@ -19,8 +19,8 @@
  },
  {
    "Id": 3,
-   "Skill": "Electro Ball",
-   "Content": "Electric Ball fly around player",
+   "Skill": "Flamethrower",
+   "Content": "Huge ember fire",
    "Second": "Fire faster \\n Adds damage",
    "Power": 25,
    "Timer": 8,
@@ -28,8 +28,8 @@
  },
  {
    "Id": 4,
-   "Skill": "Thunder Bolt",
-   "Content": "Fires a thunder explosion",
+   "Skill": "Draco Meteor",
+   "Content": "A meteor will hit random position",
    "Second": "Adds damage \\n +1 explosion",
    "Power": 40,
    "Timer": 5,
@@ -37,8 +37,8 @@
  },
  {
    "Id": 5,
-   "Skill": "Thunder Shock",
-   "Content": "Bounce around all enemy",
+   "Skill": "Inferno",
+   "Content": "Create a burning field around",
    "Second": "Fire faster \\n Adds damage",
    "Power": 25,
    "Timer": 5,
@@ -46,8 +46,8 @@
  },
  {
    "Id": 6,
-   "Skill": "Discharge",
-   "Content": "Generates a dissolving thunder forcefield",
+   "Skill": "Overheat",
+   "Content": "Immune with all dame in 2 sec, burn all enemy around you",
    "Second": "Forcefiled larger \\n Adds damage",
    "Power": 15,
    "Timer": 0,
@@ -55,7 +55,7 @@
  },
  {
    "Id": 7,
-   "Skill": "Charge",
+   "Skill": "Burn Up",
    "Content": "Atk",
    "Second": "Atk",
    "Power": 10,
@@ -64,25 +64,25 @@
  },
  {
    "Id": 8,
-   "Skill": "Midas",
-   "Content": "Gold",
-   "Second": "Gold",
+   "Skill": "Blaze Kick\t",
+   "Content": "AttackSpeed",
+   "Second": "AttackSpeed",
    "Power": 10,
    "Timer": 8,
    "Upgrade": 0
  },
  {
    "Id": 9,
-   "Skill": "Spark",
-   "Content": "Speed",
-   "Second": "Speed",
+   "Skill": "Fiery Dance\t",
+   "Content": "Movement Speed",
+   "Second": "Movement speed",
    "Power": 10,
    "Timer": 6,
    "Upgrade": 0
  },
  {
    "Id": 10,
-   "Skill": "Magnet Rise",
+   "Skill": "Flame Burst",
    "Content": "Super Effective Dame",
    "Second": "Super Effective Dame",
    "Power": 20,
@@ -91,7 +91,7 @@
  },
  {
    "Id": 11,
-   "Skill": "Max Lightning",
+   "Skill": "Heat Wave\t",
    "Content": "Crit Chance",
    "Second": "Crit Chance",
    "Power": 10,
@@ -100,6 +100,114 @@
  },
  {
    "Id": 12,
+   "Skill": "Intelligent",
+   "Content": "Extra Exp",
+   "Second": "Extra exp",
+   "Power": 10,
+   "Timer": 3,
+   "Upgrade": 0
+ },
+ {
+   "Id": 13,
+   "Skill": "Thunder Wave",
+   "Content": "Deal dame to closet enemy",
+   "Second": "Adds damage",
+   "Power": 30,
+   "Timer": 1,
+   "Upgrade": 0
+ },
+ {
+   "Id": 14,
+   "Skill": "Electroweb",
+   "Content": "Throw a web on random target area",
+   "Second": "Fire faster \\n Adds damage",
+   "Power": 30,
+   "Timer": 4,
+   "Upgrade": 200
+ },
+ {
+   "Id": 15,
+   "Skill": "Electro Ball",
+   "Content": "Electric Ball fly around player",
+   "Second": "Fire faster \\n Adds damage",
+   "Power": 25,
+   "Timer": 8,
+   "Upgrade": 800
+ },
+ {
+   "Id": 16,
+   "Skill": "Thunder Bolt",
+   "Content": "Fires a thunder explosion",
+   "Second": "Adds damage \\n +1 explosion",
+   "Power": 40,
+   "Timer": 5,
+   "Upgrade": 100
+ },
+ {
+   "Id": 17,
+   "Skill": "Thunder Shock",
+   "Content": "Bounce around all enemy",
+   "Second": "Fire faster \\n Adds damage",
+   "Power": 25,
+   "Timer": 5,
+   "Upgrade": 200
+ },
+ {
+   "Id": 18,
+   "Skill": "Discharge",
+   "Content": "Generates a dissolving thunder forcefield",
+   "Second": "Forcefiled larger \\n Adds damage",
+   "Power": 15,
+   "Timer": 0,
+   "Upgrade": 0
+ },
+ {
+   "Id": 19,
+   "Skill": "Charge",
+   "Content": "Atk",
+   "Second": "Atk",
+   "Power": 10,
+   "Timer": 1,
+   "Upgrade": 0
+ },
+ {
+   "Id": 20,
+   "Skill": "Midas",
+   "Content": "Gold",
+   "Second": "Gold",
+   "Power": 10,
+   "Timer": 8,
+   "Upgrade": 0
+ },
+ {
+   "Id": 21,
+   "Skill": "Spark",
+   "Content": "Speed",
+   "Second": "Speed",
+   "Power": 10,
+   "Timer": 6,
+   "Upgrade": 0
+ },
+ {
+   "Id": 22,
+   "Skill": "Magnet Rise",
+   "Content": "Super Effective Dame",
+   "Second": "Super Effective Dame",
+   "Power": 20,
+   "Timer": 7,
+   "Upgrade": 0
+ },
+ {
+   "Id": 23,
+   "Skill": "Max Lightning",
+   "Content": "Crit Chance",
+   "Second": "Crit Chance",
+   "Power": 10,
+   "Timer": 5,
+   "Upgrade": 0
+ },
+ {
+   "Id": 24,
    "Skill": "Zap Cannon",
    "Content": "Armour",
    "Second": "Armour",

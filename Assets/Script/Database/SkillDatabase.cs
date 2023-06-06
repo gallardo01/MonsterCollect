@@ -22,7 +22,6 @@ public class SkillDatabase : Singleton<SkillDatabase>
     void Start()
     {
         string fileName = "Skill.txt";
-        //firstTimeSetUp();
         LoadResourceTextfileSkillData(fileName);
     }
 

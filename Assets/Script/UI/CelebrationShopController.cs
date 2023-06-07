@@ -26,7 +26,6 @@ public class CelebrationShopController : MonoBehaviour
     IEnumerator showAnimation(List<ItemInventory> items, int gold, int diamond)
     {
         closePanel.interactable = false;
-        yield return new WaitForSeconds(0.5f);
         int index = 0;
         if (gold > 0)
         {
@@ -39,9 +38,11 @@ public class CelebrationShopController : MonoBehaviour
         index += items.Count;
         for(int i = 0; i < 10; i++)
         {
-            itemsCelebration[i].SetActive(false);
+                itemsCelebration[i].SetActive(false);
         }
+        yield return new WaitForSeconds(0.5f);
         int start = 0;
+
         if (gold > 0)
         {
             itemsCelebration[start].SetActive(true);
@@ -63,6 +64,10 @@ public class CelebrationShopController : MonoBehaviour
 
         for(int i = 0; i < items.Count; i++)
         {
+            if(index == 1)
+            {
+                start = 2;
+            }
             itemsCelebration[start + i].SetActive(true);
             itemsCelebration[start + i].GetComponent<Animator>().Play("Shake");
             itemsCelebration[start + i].GetComponent<ItemInflate>().setupRarityObj(items[i].Rarity);

@@ -973,27 +973,9 @@ public class BossController : Singleton<BossController>
     
     private void rotateBullet(GameObject bullet, Vector3 dir, float angle, int shape)
     {
-        Debug.Log(angle);
-        //angle = angle *3.14f/180 + shape * 3.14f / 18;
-
-        float radiant = angle * 3.14f / 180 + shape * 3.14f / 18;
-        Vector3 direction;
-        if (angle < 0)
-        {
-            //direction = new Vector3(dir.x * Mathf.Cos(radiant) - dir.y * Mathf.Sin(radiant), dir.x * Mathf.Sin(radiant) + dir.y * Mathf.Cos(radiant), 0);
-            direction = new Vector3(dir.x * Mathf.Cos(radiant) + dir.y * Mathf.Sin(radiant), -dir.x * Mathf.Sin(radiant) + dir.y * Mathf.Cos(radiant), 0);
-
-        }
-        else
-        {
-            direction = new Vector3(dir.x * Mathf.Cos(radiant) + dir.y * Mathf.Sin(radiant), -dir.x * Mathf.Sin(radiant) + dir.y * Mathf.Cos(radiant), 0);
-
-        }
-
-        //direction = -direction;
+        Vector3 direction = Quaternion.AngleAxis(10*shape, Vector3.forward) * dir;
         direction = Vector3.Normalize(direction);
         bullet.GetComponent<BulletOfBossController>().initBulletNoTarget(direction, 1f, 0, monsterData);
-        //float angle1 = calAngle(playerCache, direction);
         bullet.transform.Rotate(0, 0, angle + shape * 10);
     }
 }

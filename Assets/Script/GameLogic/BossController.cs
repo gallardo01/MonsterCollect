@@ -267,49 +267,49 @@ public class BossController : Singleton<BossController>
             bossJumpIn.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0, 0, 0), 0, 8, monsterData);
             bossJumpIn.SetActive(false);
 
-            ////6s idle
-            //wayMove = 1;
-            //runAnimation(1);
-            //moveSpeed = 0;
-            //yield return new WaitForSeconds(3f);
-            //runAnimation(2);
-            //moveSpeed = 2;
-            //yield return new WaitForSeconds(3f);
+            //6s idle
+            wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(3f);
+            runAnimation(2);
+            moveSpeed = 2;
+            yield return new WaitForSeconds(3f);
 
-            ////8s nhay
-            //wayMove = 1;
-            //runAnimation(1);
-            //moveSpeed = 0;
-            //yield return new WaitForSeconds(2f);
-            //runAnimation(2);
-            //moveSpeed = 2;
-            //yield return new WaitForSeconds(2f);
+            //8s nhay
+            wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(2f);
+            runAnimation(2);
+            moveSpeed = 2;
+            yield return new WaitForSeconds(2f);
 
-            ////jump
-            //wayMove = 2;
-            //bossJumpOut.transform.position = transform.position;
-            //bossJumpOut.SetActive(true);
+            //jump
+            wayMove = 2;
+            bossJumpOut.transform.position = transform.position;
+            bossJumpOut.SetActive(true);
 
-            //yield return new WaitForSeconds(1f);
-            //playerLastPos = player.position;
-            //bossJumpOut.SetActive(false);
+            yield return new WaitForSeconds(1f);
+            playerLastPos = player.position;
+            bossJumpOut.SetActive(false);
 
-            //bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
-            //bossTarget.gameObject.SetActive(true);
-            //yield return new WaitForSeconds(1f);
+            bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
+            bossTarget.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1f);
 
-            //wayMove = 3;
-            //yield return new WaitForSeconds(0.3f);
-            //bossTarget.gameObject.SetActive(false);
-            //bossJumpIn.SetActive(true);
-            //bossJumpIn.transform.position = bossTarget.transform.position;
-            //yield return new WaitForSeconds(0.7f);
-            //bossJumpIn.SetActive(false);
+            wayMove = 3;
+            yield return new WaitForSeconds(0.3f);
+            bossTarget.gameObject.SetActive(false);
+            bossJumpIn.SetActive(true);
+            bossJumpIn.transform.position = bossTarget.transform.position;
+            yield return new WaitForSeconds(0.7f);
+            bossJumpIn.SetActive(false);
 
-            //wayMove = 1;
-            //runAnimation(1);
-            //moveSpeed = 0;
-            //yield return new WaitForSeconds(2f);
+            wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(2f);
 
             //ban dan
 
@@ -321,9 +321,9 @@ public class BossController : Singleton<BossController>
             moveSpeed = 2;
             yield return new WaitForSeconds(2f);
 
-            Vector3 temp = player.position - transform.position;
             moveSpeed = 0;
 
+            Vector3 temp = player.position - transform.position;
             temp = Vector3.Normalize(temp);
             float angle1 = calAngle(temp);
 
@@ -336,61 +336,22 @@ public class BossController : Singleton<BossController>
                 fileBullet.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 1.5f, 0, monsterData);
                 fileBullet.transform.Rotate(0, 0, angle1);
 
-                GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet1, temp, angle1, 1);
-
-                GameObject fileBullet2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet2, temp, angle1, 2);
-
-                GameObject fileBullet3 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet3, temp, angle1, 3);
-
-                GameObject fileBullet4 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet4, temp, angle1, 4);
-
-                GameObject fileBullet5 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet5, temp, angle1, -1);
-
-                GameObject fileBullet6 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet6, temp, angle1, -2);
-
-                GameObject fileBullet7 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet7, temp, angle1, -3);
-
-                GameObject fileBullet8 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet8, temp, angle1, -4);
+                for (int j = -3; j < 4; j++)
+                {
+                    GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                    rotateBullet(fileBullet1, temp, angle1, j, 15);
+                }
 
                 yield return new WaitForSeconds(1f);
 
                 faceToPlayer();
                 runAnimation(3);
 
-                GameObject fileBullet9 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet9, temp, angle1, 0.5f);
-
-                GameObject fileBullet10 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet10, temp, angle1, 1.5f);
-
-                GameObject fileBullet11 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet11, temp, angle1, 2.5f);
-
-                GameObject fileBullet12 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet12, temp, angle1, 3.5f);
-
-                GameObject fileBullet13 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet13, temp, angle1, 4.5f);
-
-                GameObject fileBullet14 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet14, temp, angle1, -0.5f);
-
-                GameObject fileBullet15 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet15, temp, angle1, -1.5f);
-
-                GameObject fileBullet16 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet16, temp, angle1, -2.5f);
-
-                GameObject fileBullet17 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                rotateBullet(fileBullet17, temp, angle1, -3.5f);
+                for (int j = -3; j < 4; j++)
+                {
+                    GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                    rotateBullet(fileBullet1, temp, angle1, (float)(j+0.5), 15);
+                }
 
                 yield return new WaitForSeconds(1f);
             }
@@ -996,11 +957,11 @@ public class BossController : Singleton<BossController>
         return Vector2.Angle(Vector2.right, diference);
     }
     
-    private void rotateBullet(GameObject bullet, Vector3 dir, float angle, float shape)
+    private void rotateBullet(GameObject bullet, Vector3 dir, float angle, float shape, float dif)
     {
-        Vector3 direction = Quaternion.AngleAxis(10*shape, Vector3.forward) * dir;
+        Vector3 direction = Quaternion.AngleAxis(dif*shape, Vector3.forward) * dir;
         direction = Vector3.Normalize(direction);
         bullet.GetComponent<BulletOfBossController>().initBulletNoTarget(direction, 1.5f, 0, monsterData);
-        bullet.transform.Rotate(0, 0, angle + shape * 10);
+        bullet.transform.Rotate(0, 0, angle + shape * dif);
     }
 }

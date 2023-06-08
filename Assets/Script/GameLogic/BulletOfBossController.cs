@@ -57,6 +57,8 @@ public class BulletOfBossController : MonoBehaviour
 
             }
         }
+
+
         
     }
 
@@ -84,6 +86,18 @@ public class BulletOfBossController : MonoBehaviour
             StartCoroutine(returnToPool(5f));
 
         }
+    }
+
+    public void initBulletNoTarget(Vector3 Direction, float Speed, int type, MonsterData monsterData)
+    {
+        //target = Target;
+        speed = Speed;
+        direction = Direction;
+        this.type = type;
+        this.monsterData = monsterData;
+        //direction = Vector3.Normalize(target.position -Source.position);
+
+        GetComponent<Rigidbody2D>().AddForce(Direction * Speed *100);
     }
 
     public void initBullet(Transform Target, Transform Boss, Vector3 Direction, float Speed, int type, MonsterData monsterData, float temp_circle)
@@ -223,12 +237,12 @@ public class BulletOfBossController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Wall")
-        {
-            //GameController.Instance.addParticle(collision.gameObject, 1);
-            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-            gameObject.SetActive(false);
-        }
+        //if (collision.gameObject.tag == "Wall")
+        //{
+        //    //GameController.Instance.addParticle(collision.gameObject, 1);
+        //    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        //    gameObject.SetActive(false);
+        //}
 
         if (collision.gameObject.tag == "Bullet")
         {

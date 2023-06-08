@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using System;
 using Random = UnityEngine.Random;
+using DragonBones;
 
 public class ItemDatabase : Singleton<ItemDatabase>
 {
@@ -34,7 +35,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             PlayerPrefs.SetInt("Init", 1);
             for (int i = 1; i <= 37; i++)
             {
-                addNewItem(i, 1, Random.Range(1,6));
+                addNewItem(i, 1, Random.Range(1, 6));
             }
             for (int i = 101; i <= 112; i++)
             {
@@ -200,7 +201,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     }
     public List<ItemInventory> fetchUsedItem()
     {
-        List<ItemInventory> usedItem = new List<ItemInventory>(); 
+        List<ItemInventory> usedItem = new List<ItemInventory>();
         for (int i = 0; i < inventoryData.Count; i++)
         {
             if (inventoryData[i].IsUse < 0)
@@ -216,7 +217,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         List<ItemInventory> usedItem = fetchUsedItem();
         int bonusEquipmentStats = 100 + UserDatabase.Instance.getUserData().Equipment;
         int[] stats = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        for(int i = 0; i < usedItem.Count; i++)
+        for (int i = 0; i < usedItem.Count; i++)
         {
             stats[usedItem[i].Stats_1 / 1000] += usedItem[i].Stats_1 % 1000;
             stats[usedItem[i].Stats_2 / 1000] += usedItem[i].Stats_2 % 1000;
@@ -243,7 +244,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         int count = 0;
         for (int i = 0; i < inventoryData.Count; i++)
         {
-            if (inventoryData[i].IsUse < 0 && (inventoryData[i].Id-10)%4 == (type-10)%4)
+            if (inventoryData[i].IsUse < 0 && (inventoryData[i].Id - 10) % 4 == (type - 10) % 4)
             {
                 count++;
             }
@@ -281,7 +282,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             {
                 inventoryData[index].Slot += slot;
             }
-        }   
+        }
         else
         {
             ItemInventory item = new ItemInventory();
@@ -299,18 +300,18 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
-            if((item.Id-10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
+            if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
             else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 4000 + randomStatsRarity(item.Rarity); }
             else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 3000 + randomStatsRarity(item.Rarity); }
             else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 2000 + randomStatsRarity(item.Rarity); }
             if (item.Rarity >= 1)
             {
                 item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
-            } if(item.Rarity >= 2)
+            } if (item.Rarity >= 2)
             {
                 item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
-            if(item.Rarity >= 3)
+            if (item.Rarity >= 3)
             {
                 item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
             }
@@ -324,11 +325,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
     private int randomStatsRarity(int rarity)
     {
-        if(rarity == 1)
+        if (rarity == 1)
         {
             return Random.Range(10, 21);
         }
-        else if(rarity == 2)
+        else if (rarity == 2)
         {
             return Random.Range(10, 21);
         }
@@ -419,7 +420,22 @@ public class ItemDatabase : Singleton<ItemDatabase>
     }
     public void addNewItemByObject(ItemInventory item)
     {
-        inventoryData.Add(item);
+        if (item.Type == 0 || item.Type == 10)
+        {
+            int index = fetchInventoryByIndex(item.Id);
+            if (index == -1)
+            {
+                inventoryData.Add(item);
+            }
+            else
+            {
+                inventoryData[index].Slot += item.Slot;
+            }
+        }
+        else
+        {
+            inventoryData.Add(item);
+        }
     }
     public ItemInventory getItemObject(int id, int slot, int rarity)
     {
@@ -442,15 +458,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_4 = 0;
             item.Stats_5 = 0;
             int index = fetchInventoryByIndex(id);
-            if (index == -1)
-            {
-                item.Slot = slot;
-                inventoryData.Add(item);
-            }
-            else
-            {
-                inventoryData[index].Slot += slot;
-            }
+            item.Slot = slot;
             return item;
         }
         else

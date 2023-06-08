@@ -10,7 +10,11 @@ public class UIShopController : MonoBehaviour
     public GameObject ParentTransform;
     public GameObject TargetedOfferPanel;
 
- 
+
+    public Button watchAds;
+    public Button buyGoldenChest;
+    public Button buyDiamondChest;
+    public Button buyMultipleDiamond;
 
     public GameObject[] Gems_Label;
     public GameObject[] Gems_Description_Text;
@@ -30,12 +34,32 @@ public class UIShopController : MonoBehaviour
         InitTargetedOffer();
         InitGems();
         InitCoins();
+
+        watchAds.onClick.AddListener(() => watchAdsAction());
+        buyGoldenChest.onClick.AddListener(() => goldenChest());
+        buyDiamondChest.onClick.AddListener(() => diamondChest());
+        buyMultipleDiamond.onClick.AddListener(() => mulipleDiamondChest());
+
+    }
+
+    private void watchAdsAction()
+    {
+        OnChestPurchased(1, 1, 0, 0);
+    }
+    private void goldenChest()
+    {
+        OnChestPurchased(1, 1, 1000, 0);
+    }
+    private void diamondChest()
+    {
+        OnChestPurchased(2, 1, 0, 200);
+    }
+    private void mulipleDiamondChest()
+    {
+        OnChestPurchased(2, 10, 0, 2000);
     }
     void InitTargetedOffer()
     {
-
-        //init data
-
         GameObject TO = new GameObject();
         int to = UnityEngine.Random.Range(1, 6);
         SetUpTO(TO, to);
@@ -138,7 +162,7 @@ public class UIShopController : MonoBehaviour
         int diamond = 0;
         switch (type)
         {
-            case 1 :
+            case 1:
                 items.Add(ItemDatabase.Instance.getItemObject(1, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(2, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(3, 10, 1));
@@ -148,7 +172,7 @@ public class UIShopController : MonoBehaviour
                 items.Add(ItemDatabase.Instance.getItemObject(7, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(8, 10, 1));
                 break;
-            case 2 :
+            case 2:
                 UserDatabase.Instance.gainMoney(0, 1000);
                 diamond = 1000;
                 break;
@@ -182,120 +206,109 @@ public class UIShopController : MonoBehaviour
         if (rate < 80)
         {
             return 3;
-        } else if (rate < 97)
+        }
+        else if (rate < 97)
         {
             return 4;
-        } else
+        }
+        else
         {
             return 5;
         }
     }
     private void openCelebration(List<ItemInventory> items, int gold, int diamond)
     {
-        for(int i = 0; i < items.Count; i++)
+        for (int i = 0; i < items.Count; i++)
         {
             ItemDatabase.Instance.addNewItemByObject(items[i]);
         }
         UserDatabase.Instance.gainMoneyInGame(0, gold);
         UserDatabase.Instance.gainMoneyInGame(diamond, 0);
         InventoryController.Instance.initEquipment();
-            
+        InventoryController.Instance.initMaterial();
+        InventoryController.Instance.initShard();
+
+
         celebrationObj.SetActive(true);
         celebrationObj.GetComponent<CelebrationShopController>().initCelebration(items, gold, diamond);
     }
-    void OnChestPurchased(string type, int quantity, int price)
+    void OnChestPurchased(int type, int quantity, int gold, int diamond)
     {
-        var itemDb = ItemDatabase.Instance;
-        var userdb = UserDatabase.Instance;
-        if (type.Equals("coin"))
+        if (UserDatabase.Instance.getUserData().Gold >= gold && UserDatabase.Instance.getUserData().Diamond >= diamond)
         {
-            //Open golden chest
-            userdb.reduceMoney(price, 0);
-            int rate = Random.Range(0, 101);
+            UserDatabase.Instance.reduceMoney(gold, diamond);
+            List<ItemInventory> items = new List<ItemInventory>();
+            for (int i = 0; i < quantity; i++)
+            {
+                if (type == 1)
+                {
+                    int rate = Random.Range(0, 100);
+                    if (rate < 30)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(1, 5), 1, 1));
+                    }
+                    else if (rate < 70)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(5, 10), Random.Range(1, 3), 1));
+                    }
+                    else if (rate < 90)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 1));
+                    }
+                    else if (rate < 98)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 2));
+                    }
+                    else
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
+                    }
+                }
+                else if (type == 2)
+                {
+                    int rate = Random.Range(0, 100);
+                    if (quantity == 10 && i == 0)
+                    {
+                        rate = 78;
+                    }
 
-            if (rate <= 30)
-            {
-                itemDb.addNewItem(Random.Range(1, 3), 1);
+                    if (rate < 15)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(1, 5), Random.Range(1, 3), 1));
+                    }
+                    else if (rate < 30)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(5, 10), Random.Range(1, 4), 1));
+                    }
+                    else if (rate < 55)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 1));
+                    }
+                    else if (rate < 70)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 2));
+                    }
+                    else if (rate < 77)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
+                    }
+                    else if (rate < 79)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 4));
+                    }
+                    else if (rate < 80)
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 5));
+                    }
+                    else
+                    {
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(101, 113), Random.Range(1, 3), 3));
+                    }
+                }
             }
-            else if (rate <= 35)
-            {
-                itemDb.addNewItem(3, 1);
-            }
-            else if (rate <= 65)
-            {
-                itemDb.addNewItem(Random.Range(4, 10), 1);
-
-            }
-            else if (rate <= 93)
-            {
-                itemDb.addNewItem(Random.Range(10, 34), 1, 1);
-
-            }
-            else if (rate <= 98)
-            {
-                itemDb.addNewItem(Random.Range(10, 34), 1, 2);
-
-            }
-            else
-            {
-                itemDb.addNewItem(Random.Range(101, 113), 1);
-
-            }
-            
+            celebrationObj.SetActive(true);
+            celebrationObj.GetComponent<CelebrationShopController>().initCelebration(items, 0, 0);
         }
-        else
-        {
-            //Open Diamon chest
-            userdb.reduceMoney(0, price);
-            int rate;
-            for (int i = 0; i < quantity; ++i)
-            {
-                rate = Random.Range(0, 101);
-                if (rate <= 20)
-                {
-                    itemDb.addNewItem(Random.Range(1, 3), 1);
-                }
-                else if (rate <= 30)
-                {
-                    itemDb.addNewItem(3, 1);
-                }
-                else if (rate <= 40)
-                {
-                    itemDb.addNewItem(Random.Range(4, 10), 1 );
-
-                }
-                else if (rate <= 60)
-                {
-                    itemDb.addNewItem(Random.Range(10, 34), 1, 1);
-
-                }
-                else if (rate <= 70)
-                {
-                    itemDb.addNewItem(Random.Range(10, 34), 1, 2);
-
-                }
-                else if (rate <= 77)
-                {
-                    itemDb.addNewItem(Random.Range(10, 34), 1, 3);
-
-                }
-                else if (rate <= 80)
-                {
-                    itemDb.addNewItem(Random.Range(10, 34), 1, 4);
-
-                }
-                else
-                {
-                    itemDb.addNewItem(Random.Range(101, 113), 1);
-
-                }
-            }
-            // tru tien that
-        }
-    }
-    void OnHeroesPurchased(int id, int price)
-    {
-
     }
     void OnDiamondPurchased(int value, double price)
     {
@@ -303,7 +316,7 @@ public class UIShopController : MonoBehaviour
 
         userdb.gainMoney(0, value);
         // tru tien that
-     
+
     }
     void OnCoinPurchased(int value, int price)
     {

@@ -207,55 +207,6 @@ public class BossController : Singleton<BossController>
     {
         if (monsterData.Id == 10)
         {
-            //GameObject bossTarget = EasyObjectPool.instance.GetObjectFromPool("Boss_1_Target", transform.position, transform.rotation);
-            //bossTargetGlobal = bossTarget;
-            //bossTarget.SetActive(false);
-
-            //GameObject bossJumpOut = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_out", transform.position, transform.rotation);
-            //bossJumpOut.SetActive(false);
-
-            //GameObject bossJumpIn = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_in", transform.position, transform.rotation);
-            //bossJumpIn.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0,0,0), 0, 8, monsterData);
-            //bossJumpIn.SetActive(false);
-
-
-            //if (isRage())
-            //{
-            //    rate = 4f;
-            //}
-            //yield return new WaitForSeconds(2f);
-            //int chance = Random.Range(0, 10);
-            //if (chance <= rate && !isCast)
-            //{
-            //    isCast = true;
-
-            //    wayMove = 2;
-            //    bossJumpOut.transform.position = transform.position;
-            //    bossJumpOut.SetActive(true);
-
-            //    yield return new WaitForSeconds(1f);
-            //    playerLastPos = player.position;
-            //    bossJumpOut.SetActive(false);
-
-            //    bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
-            //    bossTarget.gameObject.SetActive(true);
-            //    yield return new WaitForSeconds(1f);
-
-            //    wayMove = 3;
-
-            //    yield return new WaitForSeconds(0.3f);
-            //    bossTarget.gameObject.SetActive(false);
-
-            //    bossJumpIn.SetActive(true);
-            //    bossJumpIn.transform.position = bossTarget.transform.position;
-
-            //    yield return new WaitForSeconds(0.7f);
-            //    bossJumpIn.SetActive(false);
-
-            //    wayMove = 1;
-            //    isCast = false;
-            //}
-
             GameObject bossTarget = EasyObjectPool.instance.GetObjectFromPool("Boss_1_Target", transform.position, transform.rotation);
             bossTargetGlobal = bossTarget;
             bossTarget.SetActive(false);
@@ -361,60 +312,126 @@ public class BossController : Singleton<BossController>
         }
         else if (monsterData.Id == 20)
         {
-            runAnimation(2);
+            //runAnimation(2);
 
+            //wayMove = 1;
+            //moveSpeed = 2f;
+
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
+            //    fileGround.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0,0,0), 0f, 8, monsterData);
+            //    StartCoroutine(returnObjectToPool(fileGround, 5f));
+            //    yield return new WaitForSeconds(1f);
+            //}
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    moveSpeed -= 0.2f;
+            //    yield return new WaitForSeconds(0.1f);
+
+            //}
+
+            //runAnimation(1);
+
+            //isMove = false;
+
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    flip();
+            //    yield return new WaitForSeconds(0.75f);
+            //}
+
+            ////phut lua
+
+            //playerLastPos = player.position;
+
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    faceToPlayer();
+            //    runAnimation(3);
+            //    GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss", transform.position, transform.rotation);
+
+            //    Vector3 direction = Vector3.Normalize(player.position - transform.position);
+            //    fileBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 5f, 0, monsterData);
+
+
+            //    float angle = calAngle(player.transform, direction);
+            //    fileBullet.transform.Rotate(0, 0, angle);
+
+            //    yield return new WaitForSeconds(1f);
+
+            //}
+
+            //isMove = true;
+
+
+            //lao vao
             wayMove = 1;
-            moveSpeed = 2f;
 
-
-            for (int i = 0; i < 5; i++)
-            {
-                GameObject fileGround = EasyObjectPool.instance.GetObjectFromPool("Particle_Fire_2", transform.position, transform.rotation);
-                fileGround.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0,0,0), 0f, 8, monsterData);
-                StartCoroutine(returnObjectToPool(fileGround, 5f));
-                yield return new WaitForSeconds(1f);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                moveSpeed -= 0.2f;
-                yield return new WaitForSeconds(0.1f);
-
-            }
-
+            runAnimation(2);
+            moveSpeed = 2;
+            yield return new WaitForSeconds(3f);
             runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(2f);
+            moveSpeed = 5;
+            yield return new WaitForSeconds(1f);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(2f);
+            faceToPlayer();
+            runAnimation(3);
 
-            isMove = false;
+            //6s idle
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(3f);
+            runAnimation(2);
+            moveSpeed = 2;
+            yield return new WaitForSeconds(3f);
+
+            //ban 8 huong
+            runAnimation(2);
+            moveSpeed = 2;
+            yield return new WaitForSeconds(2f);
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(2f);
+
+            Vector3 temp = player.position - transform.position;
+            temp = Vector3.Normalize(temp);
+            float angle1 = calAngle(temp);
 
             for (int i = 0; i < 4; i++)
             {
-                flip();
-                yield return new WaitForSeconds(0.75f);
-            }
-
-            //phut lua
-
-            playerLastPos = player.position;
-
-            for (int i = 0; i < 5; i++)
-            {
-                faceToPlayer();
                 runAnimation(3);
-                GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_fire_boss", transform.position, transform.rotation);
 
-                Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                fileBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 5f, 0, monsterData);
+                GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_2", transform.position, transform.rotation);
+                fileBullet.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 1.5f, 0, monsterData);
+                fileBullet.transform.Rotate(0, 0, angle1);
 
+                for (int j = 1; j < 8; j++)
+                {
+                    GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_2", transform.position, transform.rotation);
+                    rotateBullet(fileBullet1, temp, angle1, j, 45);
+                }
 
-                float angle = calAngle(player.transform, direction);
-                fileBullet.transform.Rotate(0, 0, angle);
+                yield return new WaitForSeconds(0.5f);
 
-                yield return new WaitForSeconds(1f);
+                for (int j = 1; j < 9; j++)
+                {
+                    GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_2", transform.position, transform.rotation);
+                    rotateBullet(fileBullet1, temp, angle1, (float)(j + 0.5), 45);
+                }
 
+                yield return new WaitForSeconds(0.5f);
             }
 
+            moveSpeed = 0;
+            yield return new WaitForSeconds(3f);
+            Time.timeScale += 0.1f;
 
-            isMove = true;
+
 
         }
 

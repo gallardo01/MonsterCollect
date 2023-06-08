@@ -151,9 +151,9 @@ public class GameController : Singleton<GameController>
         GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", PlayerController.Instance.getPosition().position, transform.rotation);
         yield return new WaitForSeconds(2f);
 
-        string enemyType = "Enemy" + (10);
+        string enemyType = "Enemy" + (20);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, warning.transform.position, transform.rotation);
-        boss.GetComponent<BossController>().initInfo(10);
+        boss.GetComponent<BossController>().initInfo(20);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
 
         warning.SetActive(false);

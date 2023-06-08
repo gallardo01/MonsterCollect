@@ -81,11 +81,11 @@ public class UIShopController : MonoBehaviour
         Gems_Btn[0].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(100, 0.99));
 
         //Item 2
-        Gems_Label[1].GetComponent<TextMeshProUGUI>().text = "200";
+        Gems_Label[1].GetComponent<TextMeshProUGUI>().text = "220";
         Gems_Description_Text[1].GetComponent<TextMeshProUGUI>().text = "Discount 10%";
         Gems_SubLabel[1].GetComponent<TextMeshProUGUI>().text = "Heap of Gems";
-        Gems_Price[1].GetComponent<TextMeshProUGUI>().text = "1.79$";
-        Gems_Btn[1].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(200, 1.79));
+        Gems_Price[1].GetComponent<TextMeshProUGUI>().text = "1.99$";
+        Gems_Btn[1].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(220, 1.99));
 
         //Item 3
         Gems_Label[2].GetComponent<TextMeshProUGUI>().text = "500";

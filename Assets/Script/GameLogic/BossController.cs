@@ -322,21 +322,18 @@ public class BossController : Singleton<BossController>
             yield return new WaitForSeconds(2f);
 
             Vector3 temp = player.position - transform.position;
-            //Vector3 cachePlayer = new Vector3( player.transform.position.x, player.transform.position.y, 0);
             moveSpeed = 0;
-            for (int i = 0; i < 4; i++)
+
+            temp = Vector3.Normalize(temp);
+            float angle1 = calAngle(temp);
+
+            for (int i = 0; i < 2; i++)
             {
                 faceToPlayer();
                 runAnimation(3);
 
                 GameObject fileBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                //rotateBullet(fileBullet, temp, 0f);
-
-                //Vector3 direction = new Vector3(dir.x * Mathf.Cos(angle) + dir.y * Mathf.Sin(angle), -dir.x * Mathf.Sin(angle) + dir.y * Mathf.Cos(angle), 0);
-                //direction = Vector3.Normalize(direction);
-                temp = Vector3.Normalize(temp);
-                fileBullet.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 1f, 0, monsterData);
-                float angle1 = calAngle(temp);
+                fileBullet.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 1.5f, 0, monsterData);
                 fileBullet.transform.Rotate(0, 0, angle1);
 
                 GameObject fileBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
@@ -363,11 +360,39 @@ public class BossController : Singleton<BossController>
                 GameObject fileBullet8 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
                 rotateBullet(fileBullet8, temp, angle1, -4);
 
-
                 yield return new WaitForSeconds(1f);
 
+                faceToPlayer();
+                runAnimation(3);
 
+                GameObject fileBullet9 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet9, temp, angle1, 0.5f);
 
+                GameObject fileBullet10 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet10, temp, angle1, 1.5f);
+
+                GameObject fileBullet11 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet11, temp, angle1, 2.5f);
+
+                GameObject fileBullet12 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet12, temp, angle1, 3.5f);
+
+                GameObject fileBullet13 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet13, temp, angle1, 4.5f);
+
+                GameObject fileBullet14 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet14, temp, angle1, -0.5f);
+
+                GameObject fileBullet15 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet15, temp, angle1, -1.5f);
+
+                GameObject fileBullet16 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet16, temp, angle1, -2.5f);
+
+                GameObject fileBullet17 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
+                rotateBullet(fileBullet17, temp, angle1, -3.5f);
+
+                yield return new WaitForSeconds(1f);
             }
 
             Time.timeScale += 0.1f;
@@ -971,11 +996,11 @@ public class BossController : Singleton<BossController>
         return Vector2.Angle(Vector2.right, diference);
     }
     
-    private void rotateBullet(GameObject bullet, Vector3 dir, float angle, int shape)
+    private void rotateBullet(GameObject bullet, Vector3 dir, float angle, float shape)
     {
         Vector3 direction = Quaternion.AngleAxis(10*shape, Vector3.forward) * dir;
         direction = Vector3.Normalize(direction);
-        bullet.GetComponent<BulletOfBossController>().initBulletNoTarget(direction, 1f, 0, monsterData);
+        bullet.GetComponent<BulletOfBossController>().initBulletNoTarget(direction, 1.5f, 0, monsterData);
         bullet.transform.Rotate(0, 0, angle + shape * 10);
     }
 }

@@ -62,8 +62,6 @@ public class BulletOfBossController : MonoBehaviour
         
     }
 
-
-
     public void initBullet(Transform Target, Vector3 Direction, float Speed, int type, MonsterData monsterData)
     {
         target = Target;
@@ -98,6 +96,11 @@ public class BulletOfBossController : MonoBehaviour
         //direction = Vector3.Normalize(target.position -Source.position);
 
         GetComponent<Rigidbody2D>().AddForce(Direction * Speed *100);
+
+        if (type == 8)
+        {
+            StartCoroutine(returnToPool(5f));
+        }
     }
 
     public void initBullet(Transform Target, Transform Boss, Vector3 Direction, float Speed, int type, MonsterData monsterData, float temp_circle)

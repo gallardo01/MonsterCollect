@@ -387,7 +387,7 @@ public class BossController : Singleton<BossController>
             fireBulletF.transform.parent = transform.Find("FirePos");
             fireBulletF.transform.position = transform.Find("FirePos").position;
             fireBulletF.transform.localScale = new Vector3(-1,1,1);
-            fireBulletF.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 0f, 0, monsterData);
+            fireBulletF.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 0f, 8, monsterData);
             yield return new WaitForSeconds(2f);
 
             //6s idle
@@ -443,42 +443,117 @@ public class BossController : Singleton<BossController>
 
         else if (monsterData.Id == 30)
         {
-            runAnimation(2);
+            //runAnimation(2);
+            //wayMove = 1;
+
+            //moveSpeed = 1;
+
+            //yield return new WaitForSeconds(2f);
+            //int chance = Random.Range(0, 10);
+
+            //if (chance <= rate && !isCast)
+            //{
+            //    isCast = true;
+            //    runAnimation(3);
+            //    GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy14", transform.position, transform.rotation);
+            //    fellow.GetComponent<MonsterController>().initData(14, false);
+            //    fellow.GetComponent<MonsterController>().triggerWaypoints();
+
+            //    if (isRage())
+            //    {
+            //        moveSpeed = 0;
+            //        yield return new WaitForSeconds(1f);
+
+            //        runAnimation(3);
+            //        GameObject silkBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_silk_boss", transform.position, transform.rotation);
+
+            //        Vector3 direction = Vector3.Normalize(player.position - transform.position);
+            //        silkBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 15f, 1, monsterData);
+
+            //        yield return new WaitForSeconds(1f);
+
+            //        moveSpeed = 1;
+
+
+            //    }
+
+            //    isCast = false;
+            //}
+
+
+            GameObject bossTarget = EasyObjectPool.instance.GetObjectFromPool("Boss_1_Target", transform.position, transform.rotation);
+            bossTargetGlobal = bossTarget;
+            bossTarget.SetActive(false);
+
+            GameObject bossJumpOut = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_out", transform.position, transform.rotation);
+            bossJumpOut.SetActive(false);
+
+            GameObject bossJumpIn = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_in", transform.position, transform.rotation);
+            bossJumpIn.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0, 0, 0), 0, 8, monsterData);
+            bossJumpIn.SetActive(false);
+
+            //6s idle
             wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(3f);
+            runAnimation(2);
+            moveSpeed = 2;
+            yield return new WaitForSeconds(3f);
 
-            moveSpeed = 1;
-
+            //8s nhay
+            wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
             yield return new WaitForSeconds(2f);
-            int chance = Random.Range(0, 10);
+            runAnimation(2);
+            moveSpeed = 2;
+            yield return new WaitForSeconds(2f);
 
-            if (chance <= rate && !isCast)
-            {
-                isCast = true;
-                runAnimation(3);
-                GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy14", transform.position, transform.rotation);
-                fellow.GetComponent<MonsterController>().initData(14, false);
-                fellow.GetComponent<MonsterController>().triggerWaypoints();
+            //jump
+            wayMove = 2;
+            bossJumpOut.transform.position = transform.position;
+            bossJumpOut.SetActive(true);
 
-                if (isRage())
-                {
-                    moveSpeed = 0;
-                    yield return new WaitForSeconds(1f);
+            // de quai con
 
-                    runAnimation(3);
-                    GameObject silkBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_silk_boss", transform.position, transform.rotation);
+            GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy14", transform.position, transform.rotation);
+            fellow.GetComponent<MonsterController>().initData(14, false);
+            fellow.GetComponent<MonsterController>().triggerWaypoints();
 
-                    Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                    silkBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 15f, 1, monsterData);
+            yield return new WaitForSeconds(1f);
+            playerLastPos = player.position;
+            bossJumpOut.SetActive(false);
 
-                    yield return new WaitForSeconds(1f);
+            bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
+            bossTarget.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1f);
 
-                    moveSpeed = 1;
+            wayMove = 3;
+            yield return new WaitForSeconds(0.3f);
+            bossTarget.gameObject.SetActive(false);
+            bossJumpIn.SetActive(true);
+            bossJumpIn.transform.position = bossTarget.transform.position;
+            yield return new WaitForSeconds(0.7f);
+            bossJumpIn.SetActive(false);
+
+            wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(2f);
 
 
-                }
+            //lao vao tuong
+            wayMove = 5;
 
-                isCast = false;
-            }
+            bossDirection = Vector3.Normalize(player.position - transform.position);
+            moveSpeed = 7f;
+            yield return new WaitForSeconds(2f);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(1f);
+
+            Time.timeScale += 0.1f;
+
         }
         else if (monsterData.Id == 40)
         {

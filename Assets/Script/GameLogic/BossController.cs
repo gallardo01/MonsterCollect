@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using MarchingBytes;
 using UnityEngine.UIElements;
+using DG.Tweening;
 
 public class BossController : Singleton<BossController>
 {
@@ -188,6 +189,7 @@ public class BossController : Singleton<BossController>
                         playerLastPos,
                         (moveSpeed * 50) * Time.deltaTime);
             }
+            // move to game object
             else if (wayMove == 4)
             {
                 transform.position = Vector2.MoveTowards(transform.position,
@@ -197,7 +199,13 @@ public class BossController : Singleton<BossController>
             else if (wayMove == 5)
             {
                 transform.position += bossDirection * moveSpeed * Time.deltaTime;
-            } 
+            }
+            //move to vector
+            else if (wayMove == 6)
+            {
+                transform.position = Vector2.MoveTowards(transform.position,
+                bossDirection,moveSpeed  * Time.deltaTime);
+            }
 
         }
 
@@ -306,8 +314,8 @@ public class BossController : Singleton<BossController>
 
                 yield return new WaitForSeconds(1f);
             }
-
-            Time.timeScale += 0.1f;
+            
+            if(Time.timeScale < 1.5f) Time.timeScale += 0.1f;
 
         }
         else if (monsterData.Id == 20)
@@ -366,27 +374,48 @@ public class BossController : Singleton<BossController>
             //isMove = true;
 
 
-            //lao vao
+            //lao vao ben canh
             wayMove = 1;
-
             runAnimation(2);
             moveSpeed = 2;
             yield return new WaitForSeconds(3f);
             runAnimation(1);
             moveSpeed = 0;
             yield return new WaitForSeconds(2f);
+            wayMove = 6;
+            if (transform.localScale.x < 0)
+            {
+                bossDirection = new Vector3(player.position.x - 0.5f, player.position.y, player.position.z);
+            }
+            else
+            {
+                bossDirection = new Vector3(player.position.x + 0.5f, player.position.y, player.position.z);
+
+            }
+
             moveSpeed = 7;
             yield return new WaitForSeconds(1f);
             moveSpeed = 0;
+            wayMove = 1;
 
             //phun lua
             faceToPlayer();
-            runAnimation(3);
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("attack");
+            yield return new WaitForSeconds(0.2f);
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.Stop("attack");
+
             Vector3 temp = player.position - transform.position;
             GameObject fireBulletF = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_2_fire", transform.position, transform.rotation);
-            fireBulletF.transform.parent = transform.Find("FirePos");
+            //fireBulletF.transform.parent = transform.Find("FirePos");
             fireBulletF.transform.position = transform.Find("FirePos").position;
-            fireBulletF.transform.localScale = new Vector3(-1,1,1);
+            if (transform.localScale.x < 0)
+            {
+                fireBulletF.transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                fireBulletF.transform.localScale = new Vector3(-1, 1, 1);
+            }
             fireBulletF.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 0f, 8, monsterData);
             yield return new WaitForSeconds(2f);
 
@@ -412,7 +441,7 @@ public class BossController : Singleton<BossController>
 
             for (int i = 0; i < 4; i++)
             {
-                runAnimation(3);
+                runAnimation(5);
 
                 GameObject fireBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_2", transform.position, transform.rotation);
                 fireBullet.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 1.5f, 0, monsterData);
@@ -438,7 +467,7 @@ public class BossController : Singleton<BossController>
             moveSpeed = 0;
             yield return new WaitForSeconds(3f);
 
-            Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
         }
 
         else if (monsterData.Id == 30)
@@ -517,8 +546,8 @@ public class BossController : Singleton<BossController>
 
             // de quai con
 
-            GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy14", transform.position, transform.rotation);
-            fellow.GetComponent<MonsterController>().initData(14, false);
+            GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy28", transform.position, transform.rotation);
+            fellow.GetComponent<MonsterController>().initData(28, false);
             fellow.GetComponent<MonsterController>().triggerWaypoints();
 
             yield return new WaitForSeconds(1f);
@@ -552,7 +581,7 @@ public class BossController : Singleton<BossController>
             moveSpeed = 0;
             yield return new WaitForSeconds(1f);
 
-            Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
 
         }
         else if (monsterData.Id == 40)
@@ -948,6 +977,10 @@ public class BossController : Singleton<BossController>
         {
             GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 1f, 1);
             StartCoroutine(disableObject());
+        }else if (pos == 5)
+        {
+            GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("attack");
+
         }
     }
 

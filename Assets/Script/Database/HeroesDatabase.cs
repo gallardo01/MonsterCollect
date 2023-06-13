@@ -157,15 +157,43 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         return num;
     }
+    // unlock all heroes
+    public void unlockAllHeroes()
+    {
+        for(int i = 1; i <= 12; i++)
+        {
+            if (fetchHeroesIndex(i * 10) >= 0)
+            {
+                int index = fetchHeroesIndex(i * 10);
+                if (myHeroes[index].Level == 0)
+                {
+                    myHeroes[index].Level = 1;
+                }
+            }
+        }
+    }
     // unlock heroes
     public void unlockHero(int id)
     {
-        Debug.Log(id);
         if (fetchHeroesIndex(id) >= 0)
         {
             int index = fetchHeroesIndex(id);
             myHeroes[index].Level = 1;
         }
+    }
+    // run 1 2 3 4 5
+    public bool isUnlockHero(int id)
+    {
+        if (fetchHeroesIndex(id*10) >= 0)
+        {
+            int index = fetchHeroesIndex(id * 10);
+            if (myHeroes[index].Level > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
     public bool canEvolve(int id)
     {

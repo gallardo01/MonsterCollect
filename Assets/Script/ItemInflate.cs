@@ -16,6 +16,13 @@ public class ItemInflate : MonoBehaviour
     public TextMeshProUGUI level;
     public ParticleSystem obj;
     private ItemInventory itemData;
+
+    //// Start is called before the first frame update
+    void Start()
+    {
+
+        button.onClick.AddListener(() => onClickItem(this.transform));
+    }
     public void InitData(ItemInventory iteminfo)
     {
         itemData = iteminfo;
@@ -33,12 +40,14 @@ public class ItemInflate : MonoBehaviour
             level.text = "Lv." + iteminfo.Level.ToString();
         }
     }
-
-    //// Start is called before the first frame update
-    void Start()
+    public void initDataUnlock(ItemInventory iteminfo)
     {
-
-        button.onClick.AddListener(() => onClickItem(this.transform));
+        itemData = iteminfo;
+        item.sprite = InventoryController.Instance.getSpriteIndex(iteminfo.Id);
+        rarity.sprite = Resources.Load<Sprite>("UI/Inventory/SlotItem/" + iteminfo.Rarity.ToString());
+        type.sprite = Resources.Load<Sprite>("UI/Inventory/PlaceHolder/" + iteminfo.Type.ToString());
+        slot.text = "Unlock";
+        level.text = "";
     }
     private void onClickItem(Transform pos)
     {

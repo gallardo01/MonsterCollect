@@ -36,11 +36,11 @@ public class StaticInfo : MonoBehaviour
 
     public static int[] costHeroes = { 0, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000 };
 
-    //public static int[,] evolveLevel = {{ 5, 5, 0, 1000 }, { 5, 5, 2, 3000 }, { 10, 5, 3, 5000 }, { 10, 10, 10, 10000 } };
-
     public static int[] evolLocation = {0, -800, -1600,-2400,-3200 };
     public static int[] userUpdateBase = { 10, 10, 10, 10, 10, 10, 1, 1, 1};
 
+    public static int[] newPrice = { 0, 0, 0, 0, 0, 0, 3, 6, 7, 15, 20, 35, 80 };
+    public static int[] costPrice = { 0, 1000, 1000, 1000, 5000, 1, 4, 8, 10, 20, 30, 50, 100 };
 
     public static double[] TOBaseValue = { 4, 5, 4, 2, 5};
     public static double[] TOValue = { 3.99, 4.99, 4.99, 4.99};

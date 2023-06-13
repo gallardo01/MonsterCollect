@@ -15,6 +15,7 @@ public class CelebrationShopController : MonoBehaviour
     }
     private void closeCurrent()
     {
+        UIController.Instance.InitUI(); 
         gameObject.SetActive(false);
     }
 
@@ -22,7 +23,41 @@ public class CelebrationShopController : MonoBehaviour
     {
         StartCoroutine(showAnimation(items, gold, diamond));
     }
-
+    public void initCelebration(List<ItemInventory> items)
+    {
+        StartCoroutine(showAnimation(items));
+    }
+    IEnumerator showAnimation(List<ItemInventory> items)
+    {
+        closePanel.interactable = false;
+        int index = 0;
+        if (items != null)
+        {
+            index += items.Count;
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            itemsCelebration[i].SetActive(false);
+        }
+        yield return new WaitForSeconds(0.5f);
+        int start = 0;
+        if (index == 1)
+        {
+            start = 2;
+        }
+        if (items != null)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                itemsCelebration[start + i].SetActive(true);
+                itemsCelebration[start + i].GetComponent<Animator>().Play("Shake");
+                itemsCelebration[start + i].GetComponent<ItemInflate>().setupRarityObj(5);
+                itemsCelebration[start + i].GetComponent<ItemInflate>().initDataUnlock(items[i]);
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+        closePanel.interactable = true;
+    }
     IEnumerator showAnimation(List<ItemInventory> items, int gold, int diamond)
     {
         closePanel.interactable = false;
@@ -35,13 +70,20 @@ public class CelebrationShopController : MonoBehaviour
         {
             index++;
         }
-        index += items.Count;
+        if (items != null)
+        {
+            index += items.Count;
+        }
         for(int i = 0; i < 10; i++)
         {
                 itemsCelebration[i].SetActive(false);
         }
         yield return new WaitForSeconds(0.5f);
         int start = 0;
+        if (index == 1)
+        {
+            start = 2;
+        }
 
         if (gold > 0)
         {
@@ -62,17 +104,16 @@ public class CelebrationShopController : MonoBehaviour
             start++;
         }
 
-        for(int i = 0; i < items.Count; i++)
+        if (items != null)
         {
-            if(index == 1)
+            for (int i = 0; i < items.Count; i++)
             {
-                start = 2;
+                itemsCelebration[start + i].SetActive(true);
+                itemsCelebration[start + i].GetComponent<Animator>().Play("Shake");
+                itemsCelebration[start + i].GetComponent<ItemInflate>().setupRarityObj(items[i].Rarity);
+                itemsCelebration[start + i].GetComponent<ItemInflate>().InitData(items[i]);
+                yield return new WaitForSeconds(0.5f);
             }
-            itemsCelebration[start + i].SetActive(true);
-            itemsCelebration[start + i].GetComponent<Animator>().Play("Shake");
-            itemsCelebration[start + i].GetComponent<ItemInflate>().setupRarityObj(items[i].Rarity);
-            itemsCelebration[start + i].GetComponent<ItemInflate>().InitData(items[i]);
-            yield return new WaitForSeconds(0.5f);
         }
         closePanel.interactable = true;
     }

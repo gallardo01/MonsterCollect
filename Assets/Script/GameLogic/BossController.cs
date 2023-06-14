@@ -28,11 +28,12 @@ public class BossController : Singleton<BossController>
     private float rate;
     private GameObject bossTargetGlobal;
     private bool isDead = false;
-    //boss 2
-
+    //boss 3
+    float timeSmoke = 0;
+    public float timeSmokeWait = 0.01f;
     // boss 5
     private Vector3 bossDirection;
-
+    private GameObject SmokePos;
     void Awake()
     {
         player = GameObject.FindWithTag("Player").transform;
@@ -153,6 +154,24 @@ public class BossController : Singleton<BossController>
     private void Update()
     {
         Move();
+    }
+
+    private void FixedUpdate()
+    {
+        if (wayMove == 6 || wayMove ==5)
+        {
+            if (timeSmoke > timeSmokeWait) // only check for space bar if we last fired longer than the cooldown time
+            {
+                GameObject smoke = EasyObjectPool.instance.GetObjectFromPool("Smoke", new Vector3(SmokePos.transform.position.x, SmokePos.transform.position.y, SmokePos.transform.position.z), SmokePos.transform.rotation);
+                smoke.GetComponent<SmokeDisable>().disableSelf();
+                timeSmoke = 0;
+
+            }
+            else
+            {
+                timeSmoke += Time.deltaTime;
+            }
+        }
     }
 
     private void Move()
@@ -382,6 +401,7 @@ public class BossController : Singleton<BossController>
             runAnimation(1);
             moveSpeed = 0;
             yield return new WaitForSeconds(2f);
+            SmokePos = this.transform.Find("SmokePos").transform.gameObject;
             wayMove = 6;
             if (transform.localScale.x < 0)
             {
@@ -510,17 +530,6 @@ public class BossController : Singleton<BossController>
             //}
 
 
-            GameObject bossTarget = EasyObjectPool.instance.GetObjectFromPool("Boss_1_Target", transform.position, transform.rotation);
-            bossTargetGlobal = bossTarget;
-            bossTarget.SetActive(false);
-
-            GameObject bossJumpOut = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_out", transform.position, transform.rotation);
-            bossJumpOut.SetActive(false);
-
-            GameObject bossJumpIn = EasyObjectPool.instance.GetObjectFromPool("boss_1_jump_in", transform.position, transform.rotation);
-            bossJumpIn.GetComponent<BulletOfBossController>().initBullet(player, new Vector3(0, 0, 0), 0, 8, monsterData);
-            bossJumpIn.SetActive(false);
-
             //6s idle
             wayMove = 1;
             runAnimation(1);
@@ -530,52 +539,68 @@ public class BossController : Singleton<BossController>
             moveSpeed = 2;
             yield return new WaitForSeconds(3f);
 
-            //8s nhay
-            wayMove = 1;
+            //dung lai ban dan
+
             runAnimation(1);
             moveSpeed = 0;
             yield return new WaitForSeconds(2f);
-            runAnimation(2);
-            moveSpeed = 2;
-            yield return new WaitForSeconds(2f);
 
-            //jump
-            wayMove = 2;
-            bossJumpOut.transform.position = transform.position;
-            bossJumpOut.SetActive(true);
+            Vector3 temp = player.position - transform.position;
+            temp = Vector3.Normalize(temp);
+            float angle1 = calAngle(temp);
+
+            for (int i = 0; i < 1; i++)
+            {
+                runAnimation(5);
+
+                GameObject fireBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                fireBullet.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 1.5f, 0, monsterData);
+                fireBullet.transform.Rotate(0, 0, angle1);
+
+                GameObject fireBullet05 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                rotateBullet(fireBullet05, temp, angle1, (float)(0.3), 24);
+
+
+                for (int j = 1; j < 15; j++)
+                {
+                    GameObject fireBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                    rotateBullet(fireBullet1, temp, angle1, j, 24);
+
+                    GameObject fireBullet2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                    rotateBullet(fireBullet2, temp, angle1, (float)(j + 0.3), 24);
+
+                    yield return new WaitForSeconds(0.01f);
+                }
+
+                //for (int j = 1; j < 16; j++)
+                //{
+                //    GameObject fireBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                //    rotateBullet(fireBullet1, temp, angle1, (float)(j + 0.3), 24);
+                //}
+
+                yield return new WaitForSeconds(0.5f);
+            }
+
 
             // de quai con
-
-            GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy28", transform.position, transform.rotation);
-            fellow.GetComponent<MonsterController>().initData(28, false);
-            fellow.GetComponent<MonsterController>().triggerWaypoints();
-
-            yield return new WaitForSeconds(1f);
-            playerLastPos = player.position;
-            bossJumpOut.SetActive(false);
-
-            bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y - 1f, playerLastPos.z);
-            bossTarget.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1f);
-
-            wayMove = 3;
-            yield return new WaitForSeconds(0.3f);
-            bossTarget.gameObject.SetActive(false);
-            bossJumpIn.SetActive(true);
-            bossJumpIn.transform.position = bossTarget.transform.position;
-            yield return new WaitForSeconds(0.7f);
-            bossJumpIn.SetActive(false);
-
-            wayMove = 1;
-            runAnimation(1);
             moveSpeed = 0;
-            yield return new WaitForSeconds(2f);
+            for (int i = 0; i < 4; i++)
+            {
+                runAnimation(3);
+                GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy28", transform.position, transform.rotation);
+                fellow.GetComponent<MonsterController>().initData(28, false);
+                fellow.GetComponent<MonsterController>().triggerWaypoints();
+                yield return new WaitForSeconds(0.5f);
+
+            }
 
 
             //lao vao tuong
+            moveSpeed = 2;
+            yield return new WaitForSeconds(3f);
             wayMove = 5;
-
             bossDirection = Vector3.Normalize(player.position - transform.position);
+            SmokePos = this.transform.Find("SmokePos").transform.gameObject;
             moveSpeed = 7f;
             yield return new WaitForSeconds(2f);
             moveSpeed = 0;

@@ -20,8 +20,23 @@ public class UserDatabase : Singleton<UserDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        LoadResourceTextfileCurrentData();
-   }
+        
+    }
+
+    public void LoadData()
+    {
+        var user = SyncService.Instance.GetUser();
+
+        if (user == null)
+        {
+            LoadResourceTextfileCurrentData();
+            SyncService.Instance.PushUser(database);
+        }
+        else
+        {
+            database = user;
+        }
+    }
 
     private void firstTimeSetUp()
     {
@@ -43,7 +58,7 @@ public class UserDatabase : Singleton<UserDatabase>
     }
     private void ConstructItemDatabase()
     {
-        database.Name = userData["Name"].ToString();
+        database.Name = userData["Name"]?.ToString() ?? "Player";
         database.Gold = (int)userData["Gold"];
         database.Diamond = (int)userData["Diamond"];
         database.Level = (int)userData["Level"];

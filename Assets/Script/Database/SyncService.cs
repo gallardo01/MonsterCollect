@@ -25,7 +25,9 @@ public class SyncService : Singleton<SyncService>
         }
     }
 
-    public bool HasRetrievedCloudData() => cloudData != null;
+    // Returns whether cloud data has been retrieved, or if cloud service is
+    // not available (due to no internet connection)
+    public bool HasRetrievedCloudData() => cloudData != null || !CloudServices.IsAvailable();
 
     private void OnEnable()
     {
@@ -96,8 +98,10 @@ public class SyncService : Singleton<SyncService>
 
     public void PushInventory(List<ItemInventory> data)
     {
+        if (data == null || data.Count == 0) return;
+
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving inventory {jsonData}...");
+        Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
 
         cloudData.inventory = data;
         CloudServices.SetString(cloudInventoryKey, jsonData);
@@ -105,14 +109,22 @@ public class SyncService : Singleton<SyncService>
 
     public void PushUser(UserData data)
     {
+        if (data == null || data.Name == null) return;
+
         string jsonData = JsonConvert.SerializeObject(data);
+        Debug.Log($"Saving user {jsonData}");
+
         cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);
     }
 
     public void PushHeroes(List<MyHeroes> data)
     {
+        if (data == null || data.Count == 0) return;
+
         string jsonData = JsonConvert.SerializeObject(data);
+        Debug.Log($"Saving heroes {data.Count}, {jsonData}");
+
         cloudData.heroes = data;
         CloudServices.SetString(cloudHeroesKey, jsonData);
     }

@@ -24,25 +24,44 @@ public class ItemDatabase : Singleton<ItemDatabase>
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+
+    public void LoadData()
+    {
         string fileName = "Item.txt";
-        string myFileName = "MyItem.txt";
-
         LoadResourceTextfileItemData(fileName);
-        LoadResourceTextfileCurrentData(myFileName);
 
-        if (PlayerPrefs.HasKey("Init") == false)
+        var items = SyncService.Instance.GetInventory();
+
+        if (items == null || items.Count == 0)
         {
-            PlayerPrefs.SetInt("Init", 1);
-            for (int i = 1; i <= 37; i++)
+            Debug.Log("Loading inventory from file...");
+            string myFileName = "MyItem.txt";
+            LoadResourceTextfileCurrentData(myFileName);
+
+            if (PlayerPrefs.HasKey("Init") == false)
             {
-                addNewItem(i, 1, Random.Range(1, 6));
+                PlayerPrefs.SetInt("Init", 1);
+                for (int i = 1; i <= 37; i++)
+                {
+                    addNewItem(i, 1, Random.Range(1, 6));
+                }
+                for (int i = 101; i <= 112; i++)
+                {
+                    addNewItem(i, 300);
+                }
             }
-            for (int i = 101; i <= 112; i++)
-            {
-                addNewItem(i, 300);
-            }
+
+            SyncService.Instance.PushInventory(inventoryData);
+        } else
+        {
+            Debug.Log("Using inventory from cloud...");
+            inventoryData = items;
         }
     }
+
     private void LoadResourceTextfileItemData(string path)
     {
         string filePath = "StreamingAssets/" + path.Replace(".txt", "");
@@ -111,6 +130,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             database.Add(newItem);
         }
     }
+
     public void Save()
     {
         string jsonData = JsonConvert.SerializeObject(inventoryData.ToArray(), Formatting.Indented);
@@ -142,7 +162,10 @@ public class ItemDatabase : Singleton<ItemDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
+
+        SyncService.Instance.PushInventory(inventoryData);
     }
+
     public ItemData fetchItemById(int id)
     {
         for (int i = 0; i < database.Count; i++)
@@ -776,4 +799,3 @@ public class UserInformation
     public int ExGold { get; set; }
     public int ExExp { get; set; }
 }
-

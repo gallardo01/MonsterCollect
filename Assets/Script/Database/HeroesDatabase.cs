@@ -20,7 +20,24 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        firstTimeSetUp();
+     
+    }
+
+    public void LoadData()
+    {
+        var heroes = SyncService.Instance.GetHeroes();
+
+        if (heroes == null || heroes.Count == 0)
+        {
+            Debug.Log("Loading heroes from file...");
+            firstTimeSetUp();
+            SyncService.Instance.PushHeroes(myHeroes);
+        }
+        else
+        {
+            Debug.Log("Using heroes from cloud...");
+            myHeroes = heroes;
+        }
     }
 
     private void firstTimeSetUp()
@@ -50,6 +67,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         string filePath = "StreamingAssets/" + path.Replace(".txt", "");
         TextAsset targetFile = Resources.Load<TextAsset>(filePath);
         myHeroesJson = JsonMapper.ToObject(targetFile.text);
+        Debug.Log($"Loaded heroes: {myHeroesJson}");
         ConstructMyHeroes();
     }
     private void LoadResourceTextfileCurrentData(string path)
@@ -287,6 +305,9 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
+
+        Debug.Log($"Preparing to push heroes: {jsonData}");
+        SyncService.Instance.PushHeroes(myHeroes);
     }
 }
 

@@ -45,7 +45,7 @@ public class InventoryController : Singleton<InventoryController>
 
     void Start()
     {
-        Init();
+        //Init();
         filterItem.onClick.AddListener(() => filterItems());
         craftButton.onClick.AddListener(() => craftButtonAction());
     }
@@ -94,7 +94,7 @@ public class InventoryController : Singleton<InventoryController>
         }
         initEquipment();
     }
-    void Init()
+    public void Init()
     {
         InfoPanel.SetActive(false);
         //fix inventory to center

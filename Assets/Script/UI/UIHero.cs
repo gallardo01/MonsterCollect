@@ -96,6 +96,22 @@ public class UIHero : Singleton<UIHero>
         //maskBtnBuyGold.SetActive(true);
         //maskBtnBuyDiamond.SetActive(true);
     }
+    private void OnEnable()
+    {
+        heroesSprite = Resources.LoadAll<Sprite>("UI/Icons/Monster");
+        imageSprites = Resources.LoadAll<Sprite>("Contents/Skill");
+        if (!PlayerPrefs.HasKey("HeroesPick"))
+        {
+            PlayerPrefs.SetInt("HeroesPick", 10);
+            curHeroID = PlayerPrefs.GetInt("HeroesPick");
+            curHeroID = HeroesDatabase.Instance.getCurrentHero(curHeroID).Id;
+        }
+        else
+        {
+            curHeroID = PlayerPrefs.GetInt("HeroesPick");
+        }
+        initUIHero();
+    }
     public Sprite getSpriteHeroes(int id)
     {
         int index = HeroesDatabase.Instance.fetchHeroesIndex(id);

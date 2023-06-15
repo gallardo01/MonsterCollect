@@ -90,6 +90,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         string jsonData = Encoding.ASCII.GetString(jsonByte);
         myCurrentJsonData = JsonMapper.ToObject(jsonData);
         ConstructItemCurrentDataDatabase();
+        unCraftAllItem();
     }
     private void ConstructItemCurrentDataDatabase()
     {
@@ -344,6 +345,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
             inventoryData.Add(item);
         }
+        Save();
     }
 
     private int randomStatsRarity(int rarity)
@@ -440,6 +442,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             }
             inventoryData.Add(item);
         }
+        Save();
     }
     public void addNewItemByObject(ItemInventory item)
     {
@@ -459,6 +462,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData.Add(item);
         }
+        Save();
     }
     public ItemInventory getItemObject(int id, int slot, int rarity)
     {
@@ -575,11 +579,13 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData.RemoveAt(index);
         }
+        Save();
     }
     public void addItemSlotById(int id, int slot)
     {
         int index = fetchInventoryByIndex(id);
         inventoryData[index].Slot += slot;
+        Save();
         
     }
     public void reduceItemSlotById(int id, int slot)
@@ -589,6 +595,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             inventoryData[index].Slot -= slot;
         }
+        Save();
     }
     public bool canReduceItemSlotEvol(int id, int slot)
     {
@@ -610,6 +617,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         }
         int index = fetchInventoryByShopIdIndex(shopId);
         inventoryData.RemoveAt(index);
+        Save();
         
     }
     public void upgradeItem(int shopId)
@@ -630,6 +638,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             inventoryData[item].Stats_4 += upgradeValue;
             inventoryData[item].Stats_5 += upgradeValue;
         }
+        Save();
     }
     private int getUpgradeValue(int rarity)
     {
@@ -752,6 +761,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         // Mặc đồ 
         int index = fetchInventoryByShopIdIndex(item.ShopId);
         inventoryData[index].IsUse = -item.Type;
+        Save();
     }
     public void unequipItem(int shopId)
     {
@@ -759,11 +769,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         if (index >= 0)
         {
             inventoryData[index].IsUse = 0;
-        }   
-    }
-    private void OnApplicationQuit()
-    {
-        unCraftAllItem();
+        }
         Save();
     }
 }

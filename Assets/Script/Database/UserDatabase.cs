@@ -40,7 +40,6 @@ public class UserDatabase : Singleton<UserDatabase>
 
     private void firstTimeSetUp()
     {
-
         string tempPath = Application.persistentDataPath + "/c/b/c/";
         string filePath = tempPath + "UserData.txt";
         if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
@@ -54,7 +53,6 @@ public class UserDatabase : Singleton<UserDatabase>
             LoadResourceTextfileItemData(fileName);
             Save();
         }
-
     }
     private void ConstructItemDatabase()
     {
@@ -168,6 +166,7 @@ public class UserDatabase : Singleton<UserDatabase>
         database.Diamond -= diamond;
         //tru tren UI
         UIController.Instance.InitUI();
+        Save();
         return true;
     }
     public int getTotalLevel()
@@ -206,10 +205,6 @@ public class UserDatabase : Singleton<UserDatabase>
                 database.ExtraExp++;
                 break;
         }
-    }
-    private void OnDestroy()
-    {
-        Save();
     }
 }
 public class UserData

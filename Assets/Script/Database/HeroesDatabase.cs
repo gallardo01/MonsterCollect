@@ -200,6 +200,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
                 }
             }
         }
+        Save();
     }
     // unlock heroes
     public void unlockHero(int id)
@@ -208,6 +209,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         {
             int index = fetchHeroesIndex(id);
             myHeroes[index].Level = 1;
+            Save();
         }
     }
     // run 1 2 3 4 5
@@ -269,11 +271,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         return fetchMyHeroes(id*10);
     }
-    private void OnDestroy()
-    {
-        Save();
-    }
-
     public void Save()
     {
         string jsonData = JsonConvert.SerializeObject(myHeroes, Formatting.Indented);

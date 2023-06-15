@@ -40,7 +40,7 @@ public class UIMainMenuController : MonoBehaviour
     private void playGameAction()
     {
         PlayerPrefs.SetInt("Map", currentStage);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     private void leftButton()

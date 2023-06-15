@@ -19,8 +19,8 @@ public class LoadingScene : MonoBehaviour
         ItemDatabase.Instance.LoadData();
         HeroesDatabase.Instance.LoadData();
         UserDatabase.Instance.LoadData();
-        UIInventory.Instance.LoadData();
-        InventoryController.Instance.Init();
+        //UIInventory.Instance.LoadData();
+        //InventoryController.Instance.Init();
 
         Debug.Log("Waiting for scene loader...");
         AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("UI");

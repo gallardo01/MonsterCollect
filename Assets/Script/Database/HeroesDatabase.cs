@@ -69,6 +69,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         myHeroesJson = JsonMapper.ToObject(targetFile.text);
         Debug.Log($"Loaded heroes: {myHeroesJson}");
         ConstructMyHeroes();
+        Save();
     }
     private void LoadResourceTextfileCurrentData(string path)
     {

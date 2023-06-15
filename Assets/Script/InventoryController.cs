@@ -45,7 +45,7 @@ public class InventoryController : Singleton<InventoryController>
 
     void Start()
     {
-        //Init();
+        Init();
         filterItem.onClick.AddListener(() => filterItems());
         craftButton.onClick.AddListener(() => craftButtonAction());
     }

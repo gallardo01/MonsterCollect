@@ -37,8 +37,11 @@ public class UIShopController : MonoBehaviour
     public Image heroesImage;
     public GameObject unlockAll;
     private string[] type = { "", "Fire", "Thunder", "Water", "Grass" };
+    private bool isLoadAds = true;
+    public GameObject loadAdsDiamond;
     void Start()
     {
+        initAds();
         InitTargetedOffer();
         InitGems();
         InitCoins();
@@ -50,6 +53,20 @@ public class UIShopController : MonoBehaviour
         initSellingMonster();
         buyAllHeroes.onClick.AddListener(() => initBuyAlLHeroes());
         buySingleHeroes.onClick.AddListener(() => initBuySingleHeroes());
+    }
+    private void initAds()
+    {
+        if (isLoadAds)
+        {
+            loadAdsDiamond.SetActive(true);
+            watchAds.gameObject.SetActive(true);
+            Gems_Price[0].SetActive(false);
+        } else
+        {
+            loadAdsDiamond.SetActive(false);
+            watchAds.gameObject.SetActive(false);
+            Gems_Price[0].SetActive(true);
+        }
     }
     private void initBuyAlLHeroes()
     {
@@ -96,13 +113,14 @@ public class UIShopController : MonoBehaviour
             int randomValue = Random.Range(0, availableMonster.Count);
             int idSale_1 = availableMonster[randomValue];
             singleId = idSale_1;
-            MyHeroes heroes = HeroesDatabase.Instance.fetchMyHeroes(idSale_1 * 10);
+            MyHeroes heroes = HeroesDatabase.Instance.fetchLastestEvolve(idSale_1);
             singleName.text = heroes.Name + " - " + type[heroes.Type] + $"<sprite={10+heroes.Type}>";
-            singleSaleOff.text = "<color=yellow>" + (100 - 100 * StaticInfo.newPrice[idSale_1] / StaticInfo.costPrice[idSale_1]) + "% OFF </color> \n Unlock your favourite!";
+            singleSaleOff.text = "<size=65><color=yellow>" + (100 - 100 * StaticInfo.newPrice[idSale_1] / StaticInfo.costPrice[idSale_1]) + "% OFF </color></size> \n Unlock your favourite!";
             singlePrice.text = StaticInfo.newPrice[idSale_1] + "$";
             singleOriginalPrice.text = StaticInfo.costPrice[idSale_1] + "$";
             Sprite[] sprite = Resources.LoadAll<Sprite>("UI/Icons/Monster");
-            heroesImage.sprite = sprite[idSale_1 - 1];
+            int index = HeroesDatabase.Instance.fetchHeroesIndex(heroes.Id);
+            heroesImage.sprite = sprite[index];
             heroesImage.SetNativeSize();
 
         } else
@@ -143,6 +161,10 @@ public class UIShopController : MonoBehaviour
 
     void InitGems()
     {
+        if (isLoadAds)
+        {
+
+        }
         //Item 1
         Gems_Label[0].GetComponent<TextMeshProUGUI>().text = "100";
         Gems_Description_Text[0].GetComponent<TextMeshProUGUI>().text = "";
@@ -204,25 +226,25 @@ public class UIShopController : MonoBehaviour
         Coins_Label[2].GetComponent<TextMeshProUGUI>().text = "2000";
         Coins_SubLabel[2].GetComponent<TextMeshProUGUI>().text = "Bucket of Coins";
         Coins_Price[2].GetComponent<TextMeshProUGUI>().text = "400";
-        Coins_Btn[2].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(1000, 400));
+        Coins_Btn[2].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(2000, 400));
 
         //Item 4
         Coins_Label[3].GetComponent<TextMeshProUGUI>().text = "5000";
         Coins_SubLabel[3].GetComponent<TextMeshProUGUI>().text = "Barrel of Coins";
         Coins_Price[3].GetComponent<TextMeshProUGUI>().text = "1000";
-        Coins_Btn[3].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(2000, 1000));
+        Coins_Btn[3].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(5000, 1000));
 
         //Item 5
         Coins_Label[4].GetComponent<TextMeshProUGUI>().text = "10000";
         Coins_SubLabel[4].GetComponent<TextMeshProUGUI>().text = "Chest of Coins";
         Coins_Price[4].GetComponent<TextMeshProUGUI>().text = "2000";
-        Coins_Btn[4].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(5000, 2000));
+        Coins_Btn[4].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(10000, 2000));
 
         //Item 6
         Coins_Label[5].GetComponent<TextMeshProUGUI>().text = "20000";
         Coins_SubLabel[5].GetComponent<TextMeshProUGUI>().text = "Cart of Coins";
         Coins_Price[5].GetComponent<TextMeshProUGUI>().text = "4000";
-        Coins_Btn[5].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(10000, 4000));
+        Coins_Btn[5].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(20000, 4000));
 
     }
     void OnTargetOfferPurchased(int type, double price)
@@ -381,6 +403,12 @@ public class UIShopController : MonoBehaviour
     }
     void OnDiamondPurchased(int value, double price)
     {
+        if (value == 100 && isLoadAds == true)
+        {
+            // verify watch ads
+        }
+        // verify purchases
+
         celebrationObj.SetActive(true);
         UserDatabase.Instance.gainMoneyInGame(0, value);
         celebrationObj.GetComponent<CelebrationShopController>().initCelebration(null, 0, value);

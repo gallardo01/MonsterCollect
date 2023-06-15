@@ -104,6 +104,17 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         return null;
     }
+    public MyHeroes fetchLastestEvolve(int id)
+    {
+        for(int i = myHeroes.Count - 1; i >= 0; i--)
+        {
+            if (myHeroes[i].Id/10 == id)
+            {
+                return myHeroes[i];
+            }
+        }
+        return null;
+    }
     public int fetchHeroesIndex(int id)
     {
         for (int i = 0; i < myHeroes.Count; i++)

@@ -158,7 +158,7 @@ public class BossController : Singleton<BossController>
 
     private void FixedUpdate()
     {
-        if (wayMove == 6 || wayMove ==5)
+        if (wayMove == 6 || wayMove == 5)
         {
             if (timeSmoke > timeSmokeWait) // only check for space bar if we last fired longer than the cooldown time
             {
@@ -179,7 +179,7 @@ public class BossController : Singleton<BossController>
         if (isMove)
         {
             // lao vao nguoi choi
-            if(wayMove == 1)
+            if (wayMove == 1)
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                 player.position,
@@ -202,7 +202,7 @@ public class BossController : Singleton<BossController>
             }
             //roi tu ngoai man hinh vao
             else if (wayMove == 3)
-            {   
+            {
                 boxCollider2D.enabled = true;
                 transform.position = Vector2.MoveTowards(transform.position,
                         playerLastPos,
@@ -223,7 +223,7 @@ public class BossController : Singleton<BossController>
             else if (wayMove == 6)
             {
                 transform.position = Vector2.MoveTowards(transform.position,
-                bossDirection,moveSpeed  * Time.deltaTime);
+                bossDirection, moveSpeed * Time.deltaTime);
             }
 
         }
@@ -328,13 +328,13 @@ public class BossController : Singleton<BossController>
                 for (int j = -3; j < 4; j++)
                 {
                     GameObject fireBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_1", transform.position, transform.rotation);
-                    rotateBullet(fireBullet1, temp, angle1, (float)(j+0.5), 15);
+                    rotateBullet(fireBullet1, temp, angle1, (float)(j + 0.5), 15);
                 }
 
                 yield return new WaitForSeconds(1f);
             }
-            
-            if(Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+
+            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
 
         }
         else if (monsterData.Id == 20)
@@ -582,21 +582,10 @@ public class BossController : Singleton<BossController>
             }
 
 
-            // de quai con
-            moveSpeed = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                runAnimation(3);
-                GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy28", transform.position, transform.rotation);
-                fellow.GetComponent<MonsterController>().initData(28, false);
-                fellow.GetComponent<MonsterController>().triggerWaypoints();
-                yield return new WaitForSeconds(0.5f);
-
-            }
-
-
             //lao vao tuong
             moveSpeed = 2;
+            yield return new WaitForSeconds(3f);
+            moveSpeed = 0;
             yield return new WaitForSeconds(3f);
             wayMove = 5;
             bossDirection = Vector3.Normalize(player.position - transform.position);
@@ -605,6 +594,32 @@ public class BossController : Singleton<BossController>
             yield return new WaitForSeconds(2f);
             moveSpeed = 0;
             yield return new WaitForSeconds(1f);
+
+            moveSpeed = 2;
+            yield return new WaitForSeconds(2f);
+            // de quai con
+            moveSpeed = 0;
+
+            float tempFellow = 1f;
+                runAnimation(3);
+                GameObject fellow = EasyObjectPool.instance.GetObjectFromPool("Enemy28", new Vector3(transform.position.x + tempFellow, transform.position.y + tempFellow, transform.position.z), transform.rotation);
+                fellow.GetComponent<MonsterController>().initData(28, false);
+                fellow.GetComponent<MonsterController>().triggerWaypoints();
+
+                GameObject fellow1 = EasyObjectPool.instance.GetObjectFromPool("Enemy28", new Vector3(transform.position.x - tempFellow, transform.position.y - tempFellow, transform.position.z), transform.rotation);
+                fellow1.GetComponent<MonsterController>().initData(28, false);
+                fellow1.GetComponent<MonsterController>().triggerWaypoints();
+
+                GameObject fellow2 = EasyObjectPool.instance.GetObjectFromPool("Enemy28", new Vector3(transform.position.x + tempFellow, transform.position.y - tempFellow, transform.position.z), transform.rotation);
+                fellow2.GetComponent<MonsterController>().initData(28, false);
+                fellow2.GetComponent<MonsterController>().triggerWaypoints();
+
+                GameObject fellow3 = EasyObjectPool.instance.GetObjectFromPool("Enemy28", new Vector3(transform.position.x - tempFellow, transform.position.y + tempFellow, transform.position.z), transform.rotation);
+                fellow3.GetComponent<MonsterController>().initData(28, false);
+                fellow3.GetComponent<MonsterController>().triggerWaypoints();
+
+
+
 
             if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
 
@@ -636,7 +651,7 @@ public class BossController : Singleton<BossController>
             {
                 isCast = true;
 
-                if (isRage())
+                if (true)
                 {
                     moveSpeed = 0;
                     runAnimation(1);
@@ -714,6 +729,8 @@ public class BossController : Singleton<BossController>
 
                 isCast = false;
             }
+
+            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
         }
         else if (monsterData.Id == 50)
         {
@@ -798,7 +815,7 @@ public class BossController : Singleton<BossController>
 
                 // ban dan
                 moveSpeed = 0;
-         
+
                 faceToPlayer();
                 runAnimation(3);
 
@@ -807,7 +824,7 @@ public class BossController : Singleton<BossController>
                 waterBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 6f, 4, monsterData);
 
                 GameObject waterBullet_1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
-                Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.4f,Random.Range(0, 0.3f),0);
+                Vector3 direction_1 = Vector3.Normalize(player.position - transform.position) + new Vector3(0.4f, Random.Range(0, 0.3f), 0);
                 waterBullet_1.GetComponent<BulletOfBossController>().initBullet(player, direction_1, 6f, 4, monsterData);
 
                 GameObject waterBullet_2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_water_boss", transform.position, transform.rotation);
@@ -846,7 +863,7 @@ public class BossController : Singleton<BossController>
 
                 fireRoundBullet1.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
                 yield return new WaitForSeconds(.5f);
-                
+
                 fireRoundBullet2.GetComponent<BulletOfBossController>().initBullet(player, transform, Vector3.Normalize(player.position - transform.position), 6f, 0, monsterData, 0f);
                 yield return new WaitForSeconds(.5f);
 
@@ -956,7 +973,7 @@ public class BossController : Singleton<BossController>
 
     void init()
     {
-        if(Random.Range(0,4) % 2 == 0)
+        if (Random.Range(0, 4) % 2 == 0)
         {
             flip();
         }
@@ -1002,7 +1019,8 @@ public class BossController : Singleton<BossController>
         {
             GetComponent<DragonBones.UnityArmatureComponent>().animation.GotoAndPlayByTime("die", 1f, 1);
             StartCoroutine(disableObject());
-        }else if (pos == 5)
+        }
+        else if (pos == 5)
         {
             GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("attack");
 
@@ -1061,7 +1079,7 @@ public class BossController : Singleton<BossController>
         GameObject itemObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
         itemObj.GetComponent<ItemDropController>().setItem();
 
-        if(Random.Range(0, 100) < 50)
+        if (Random.Range(0, 100) < 50)
         {
             GameObject itemObj2 = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
             itemObj2.GetComponent<ItemDropController>().setItem();
@@ -1088,8 +1106,9 @@ public class BossController : Singleton<BossController>
         return angle;
     }
 
-    private float calAngle(Vector2 vector) { 
-    
+    private float calAngle(Vector2 vector)
+    {
+
         Vector2 cur = new Vector2(1, 0);
         float y = vector.y;
         float n = 0;
@@ -1112,12 +1131,23 @@ public class BossController : Singleton<BossController>
             diference = pos - target;
         return Vector2.Angle(Vector2.right, diference);
     }
-    
+
     private void rotateBullet(GameObject bullet, Vector3 dir, float angle, float shape, float dif)
     {
-        Vector3 direction = Quaternion.AngleAxis(dif*shape, Vector3.forward) * dir;
+        Vector3 direction = Quaternion.AngleAxis(dif * shape, Vector3.forward) * dir;
         direction = Vector3.Normalize(direction);
         bullet.GetComponent<BulletOfBossController>().initBulletNoTarget(direction, 1.5f, 0, monsterData);
         bullet.transform.Rotate(0, 0, angle + shape * dif);
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Wall")
+        {
+            runAnimation(2);
+            wayMove = 1;
+            moveSpeed = 0;
+        }
     }
 }

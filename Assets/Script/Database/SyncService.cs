@@ -79,9 +79,9 @@ public class SyncService : Singleton<SyncService>
 
         cloudData = data;
         Debug.Log("Cloud synchronization completed:");
-        Debug.Log($" - inventory: {inventoryJson}");
-        Debug.Log($" - user: {userJson}");
-        Debug.Log($" - heroes: {heroesJson}");
+        //Debug.Log($" - inventory: {inventoryJson}");
+        //Debug.Log($" - user: {userJson}");
+        //Debug.Log($" - heroes: {heroesJson}");
     }
 
     private void OnSavedDataChange(CloudServicesSavedDataChangeResult result)
@@ -101,7 +101,7 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Count == 0) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
+        //Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
 
         cloudData.inventory = data;
         CloudServices.SetString(cloudInventoryKey, jsonData);
@@ -112,7 +112,7 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Name == null) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving user {jsonData}");
+        //Debug.Log($"Saving user {jsonData}");
 
         cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);
@@ -123,7 +123,7 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Count == 0) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving heroes {data.Count}, {jsonData}");
+        //Debug.Log($"Saving heroes {data.Count}, {jsonData}");
 
         cloudData.heroes = data;
         CloudServices.SetString(cloudHeroesKey, jsonData);

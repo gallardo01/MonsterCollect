@@ -37,33 +37,30 @@ public class GameController : Singleton<GameController>
     private bool isBossSpawn = true;
     [SerializeField] GameObject camera;
     private bool bossDead = false;
-    //private Sprite[] sheetTextures;
-    //private string[] sheetNames;
     [SerializeField] GameObject fillImage;
     [SerializeField] GameObject bossIcon;
     [SerializeField] TextMeshProUGUI bossHp;
     [SerializeField] GameObject warningBoss;
+    [SerializeField] GameObject fadeScreen;
 
     private int[] numberCreep = { 0, 40, 60, 70, 90, 105, 130, 150, 170, 200};
 
     private void Awake()
     {
-        Application.targetFrameRate = 60;
-        GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No.11") as GameObject);
-        pl.transform.position = new Vector3(0f, 0f, 0f);
-        camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
     }
     // Start is called before the first frame update
     void Start()
     {
-        //sheetTextures = Resources.LoadAll<Sprite>("UI/Sprites/Stat");
-        //sheetNames = new string[sheetTextures.Length];
-        //for (int i = 0; i < sheetNames.Length; i++)
-        //{
-        //    sheetNames[i] = sheetTextures[i].name;
-        //}
-        //int textureIndex = TextureIndexLookUp(sheetNames, "Stat_3");
-        //iconImage.sprite = Resources.LoadAll<Sprite>("UI/Sprites/Stat")[textureIndex];
+        Application.targetFrameRate = 60;
+        StartCoroutine(testScreen());
+    }
+    
+    IEnumerator testScreen()
+    {
+        yield return new WaitForSeconds(2f);
+        GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No.11") as GameObject);
+        pl.transform.position = new Vector3(0f, 0f, 0f);
+        camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
 
         // get stage
         string route = "Route1";
@@ -77,17 +74,9 @@ public class GameController : Singleton<GameController>
         //StartCoroutine(addEnemyFirstScene());
         StartCoroutine(spawnBoss());
 
+
     }
-    //private int TextureIndexLookUp(string[] nameArray, string spriteName)
-    //{
-    //    // Return sprite's texture index based on given spriteName
-    //    for (int i = 0; i < nameArray.Length; i++)
-    //    {
-    //        if (nameArray[i] == spriteName)
-    //            return i;
-    //    }
-    //    return 0;
-    //}
+
     public void updateGold(int gold)
     {
         goldAward += gold * (100 + PlayerController.Instance.getBonusPoints(8))/100;

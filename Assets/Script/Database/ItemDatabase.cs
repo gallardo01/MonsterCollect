@@ -8,6 +8,7 @@ using System.IO;
 using System;
 using Random = UnityEngine.Random;
 using DragonBones;
+using static UnityEditor.Progress;
 
 public class ItemDatabase : Singleton<ItemDatabase>
 {
@@ -24,7 +25,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(testManualLoad());
+    }
+    IEnumerator testManualLoad()
+    {
+        yield return new WaitForSeconds(1f);
+        if (inventoryData == null || inventoryData.Count == 0)
+        {
+            LoadData();
+        }
     }
 
 
@@ -37,7 +46,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
         if (items == null || items.Count == 0)
         {
-            Debug.Log("Loading inventory from file...");
             string myFileName = "MyItem.txt";
             LoadResourceTextfileCurrentData(myFileName);
 

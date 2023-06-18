@@ -20,7 +20,16 @@ public class UserDatabase : Singleton<UserDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(testManualLoad());
+    }
+
+    IEnumerator testManualLoad()
+    {
+        yield return new WaitForSeconds(1f);
+        if (database == null)
+        {
+            LoadData();
+        }
     }
 
     public void LoadData()

@@ -20,17 +20,26 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     // Start is called before the first frame update
     void Start()
     {
-     
+        StartCoroutine(testManualLoad());
+    }
+
+    IEnumerator testManualLoad()
+    {
+        yield return new WaitForSeconds(1f);
+        if (myHeroes == null || myHeroes.Count == 0)
+        {
+            LoadData();
+        }
     }
 
     public void LoadData()
     {
+        firstTimeSetUp();
         var heroes = SyncService.Instance.GetHeroes();
 
         if (heroes == null || heroes.Count == 0)
         {
             Debug.Log("Loading heroes from file...");
-            firstTimeSetUp();
             SyncService.Instance.PushHeroes(myHeroes);
         }
         else
@@ -54,8 +63,9 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         if (!File.Exists(filePath))
         {
             LoadResourceTextfileMyHeroes(fileName);
-            File.Create(filePath).Close();
-        } else
+            Save();
+        }
+        else
         {
             LoadResourceTextfileCurrentData(myFileName);
         }
@@ -67,9 +77,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         string filePath = "StreamingAssets/" + path.Replace(".txt", "");
         TextAsset targetFile = Resources.Load<TextAsset>(filePath);
         myHeroesJson = JsonMapper.ToObject(targetFile.text);
-        Debug.Log($"Loaded heroes: {myHeroesJson}");
         ConstructMyHeroes();
-        Save();
     }
     private void LoadResourceTextfileCurrentData(string path)
     {
@@ -294,6 +302,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             File.Create(filePath).Close();
         }
 
+        Debug.Log(jsonByte);
         try
         {
             File.WriteAllBytes(filePath, jsonByte);

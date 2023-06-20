@@ -47,6 +47,7 @@ public class UIUpgradeController : MonoBehaviour
     private void OnEnable()
     {
         InitUI();
+        updateRequireGold();
     }
     private void updateRequireGold()
     {

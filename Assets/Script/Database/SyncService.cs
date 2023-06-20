@@ -79,9 +79,9 @@ public class SyncService : Singleton<SyncService>
 
         cloudData = data;
         Debug.Log("Cloud synchronization completed:");
-        //Debug.Log($" - inventory: {inventoryJson}");
-        //Debug.Log($" - user: {userJson}");
-        //Debug.Log($" - heroes: {heroesJson}");
+        Debug.Log($" - inventory: {inventoryJson}");
+        Debug.Log($" - user: {userJson}");
+        Debug.Log($" - heroes: {heroesJson}");
     }
 
     private void OnSavedDataChange(CloudServicesSavedDataChangeResult result)
@@ -112,7 +112,7 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Name == null) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        //Debug.Log($"Saving user {jsonData}");
+        Debug.Log($"Saving user {jsonData}");
 
         cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);

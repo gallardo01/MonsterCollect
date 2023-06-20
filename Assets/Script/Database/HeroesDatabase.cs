@@ -20,7 +20,9 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(testManualLoad());
+        //StartCoroutine(testManualLoad());
+        firstTimeSetUp();
+
     }
 
     IEnumerator testManualLoad()
@@ -314,7 +316,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
 
         Debug.Log($"Preparing to push heroes: {jsonData}");
-        SyncService.Instance.PushHeroes(myHeroes);
+        //SyncService.Instance.PushHeroes(myHeroes);
     }
 }
 

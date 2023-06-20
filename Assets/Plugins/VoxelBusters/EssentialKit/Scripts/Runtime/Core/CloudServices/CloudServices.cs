@@ -363,10 +363,13 @@ namespace VoxelBusters.EssentialKit
             try
             {
                 // make request
+                Debug.Log("thanh dep trai request");
+
                 s_nativeInterface.SetString(key, value);
             }
             catch (Exception exception)
             {
+                Debug.Log("thanh dep trai");
                 DebugLogger.LogException(exception);
             }
         }

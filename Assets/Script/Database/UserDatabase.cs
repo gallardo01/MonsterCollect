@@ -20,7 +20,9 @@ public class UserDatabase : Singleton<UserDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(testManualLoad());
+        //StartCoroutine(testManualLoad());
+        LoadResourceTextfileCurrentData();
+
     }
 
     IEnumerator testManualLoad()
@@ -35,7 +37,7 @@ public class UserDatabase : Singleton<UserDatabase>
     public void LoadData()
     {
         var user = SyncService.Instance.GetUser();
-
+        
         if (user == null)
         {
             LoadResourceTextfileCurrentData();
@@ -43,6 +45,7 @@ public class UserDatabase : Singleton<UserDatabase>
         }
         else
         {
+            Debug.Log("Using user data from cloud...");
             database = user;
         }
     }
@@ -127,7 +130,6 @@ public class UserDatabase : Singleton<UserDatabase>
         {
             Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
         }
-        //Debug.Log(path);
         if (!File.Exists(filePath))
         {
             File.Create(filePath).Close();
@@ -143,7 +145,7 @@ public class UserDatabase : Singleton<UserDatabase>
             Debug.LogWarning("Error: " + e.Message);
         }
 
-        SyncService.Instance.PushUser(database);
+        //SyncService.Instance.PushUser(database);
     }
     public UserData getUserData()
     {

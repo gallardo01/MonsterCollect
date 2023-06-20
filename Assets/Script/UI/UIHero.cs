@@ -299,7 +299,7 @@ public class UIHero : Singleton<UIHero>
 
         int goldRequireEvolve = 5000;
         goldRequire.text = goldRequireEvolve.ToString();
-        if (goldRequireEvolve > UserDatabase.Instance.getUserData().Gold) { goldRequire.color = Color.red; };
+        if (goldRequireEvolve > UserDatabase.Instance.getUserData().Gold) { goldRequire.color = Color.red; } else goldRequire.color = Color.white;
 
         panelBtnEvolve.interactable = checkRequired();
 

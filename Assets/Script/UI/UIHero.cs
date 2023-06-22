@@ -343,7 +343,7 @@ public class UIHero : Singleton<UIHero>
 
     IEnumerator enableButton()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(1f);
         isEvolve = true;
     }
     bool checkRequired()

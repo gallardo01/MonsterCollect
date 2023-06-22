@@ -158,7 +158,7 @@ public class BossController : Singleton<BossController>
 
     private void FixedUpdate()
     {
-        if (wayMove == 6 || wayMove == 5)
+        if (wayMove == 6 || wayMove == 5 || wayMove ==4)
         {
             if (timeSmoke > timeSmokeWait) // only check for space bar if we last fired longer than the cooldown time
             {
@@ -619,8 +619,6 @@ public class BossController : Singleton<BossController>
                 fellow3.GetComponent<MonsterController>().triggerWaypoints();
 
 
-
-
             if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
 
         }
@@ -629,6 +627,8 @@ public class BossController : Singleton<BossController>
             GameObject bossTarget = EasyObjectPool.instance.GetObjectFromPool("Boss_4_Target", transform.position, transform.rotation);
             bossTargetGlobal = bossTarget;
             bossTarget.SetActive(false);
+
+            SmokePos = this.transform.Find("SmokePos").transform.gameObject;
 
             List<GameObject> bossTargetSub = new List<GameObject>();
 
@@ -644,91 +644,79 @@ public class BossController : Singleton<BossController>
 
             runAnimation(2);
             wayMove = 1;
+            yield return new WaitForSeconds(2f);
+
+            moveSpeed = 0;
+            runAnimation(1);
+
+            yield return new WaitForSeconds(1f);
+            playerLastPos = player.position;
+
+            bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y, playerLastPos.z);
+            bossTarget.gameObject.SetActive(true);
+            yield return new WaitForSeconds(2f);
+
+            runAnimation(3);
+            GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
+
+            iceSpiked.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+            bossTarget.gameObject.SetActive(false);
 
             yield return new WaitForSeconds(2f);
-            int chance = Random.Range(0, 5);
-            if (chance <= rate && !isCast)
+            moveSpeed = 1;
+
+            wayMove = 4;
+            faceToỌbject(bossTarget.transform);
+
+            yield return new WaitForSeconds(2f);
+
+            runAnimation(2);
+            wayMove = 1;
+            yield return new WaitForSeconds(3f);
+
+            moveSpeed = 0;
+            runAnimation(1);
+
+            yield return new WaitForSeconds(1f);
+            playerLastPos = player.position;
+
+            bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y, playerLastPos.z);
+            bossTarget.gameObject.SetActive(true);
+
+            float mulNum = 3f;
+
+            bossTargetSub[1].transform.position = new Vector3(playerLastPos.x, playerLastPos.y + mulNum, playerLastPos.z);
+            bossTargetSub[2].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y + mulNum * 0.6f, playerLastPos.z);
+            bossTargetSub[3].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y - mulNum * 0.6f, playerLastPos.z);
+            bossTargetSub[4].transform.position = new Vector3(playerLastPos.x, playerLastPos.y - mulNum, playerLastPos.z);
+            bossTargetSub[5].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y - mulNum * 0.6f, playerLastPos.z);
+            bossTargetSub[0].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y + mulNum * 0.6f, playerLastPos.z);
+
+            for (int i = 0; i < 6; i++)
             {
-                isCast = true;
-
-                if (true)
-                {
-                    moveSpeed = 0;
-                    runAnimation(1);
-
-                    yield return new WaitForSeconds(1f);
-                    playerLastPos = player.position;
-
-                    bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y, playerLastPos.z);
-                    bossTarget.gameObject.SetActive(true);
-
-                    float mulNum = 3f;
-
-                    bossTargetSub[1].transform.position = new Vector3(playerLastPos.x, playerLastPos.y + mulNum, playerLastPos.z);
-                    bossTargetSub[2].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y + mulNum * 0.6f, playerLastPos.z);
-                    bossTargetSub[3].transform.position = new Vector3(playerLastPos.x + mulNum, playerLastPos.y - mulNum * 0.6f, playerLastPos.z);
-                    bossTargetSub[4].transform.position = new Vector3(playerLastPos.x, playerLastPos.y - mulNum, playerLastPos.z);
-                    bossTargetSub[5].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y - mulNum * 0.6f, playerLastPos.z);
-                    bossTargetSub[0].transform.position = new Vector3(playerLastPos.x - mulNum, playerLastPos.y + mulNum * 0.6f, playerLastPos.z);
-
-                    for (int i = 0; i < 6; i++)
-                    {
-                        bossTargetSub[i].SetActive(true);
-                    }
-                    yield return new WaitForSeconds(2f);
-
-                    runAnimation(3);
-                    GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
-                    iceSpiked.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
-                    bossTarget.gameObject.SetActive(false);
-
-                    for (int i = 0; i < 6; i++)
-                    {
-                        GameObject iceSpikedSub = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTargetSub[i].transform.position, transform.rotation);
-                        iceSpikedSub.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
-                        bossTargetSub[i].gameObject.SetActive(false);
-                    }
-
-                    yield return new WaitForSeconds(2f);
-                    moveSpeed = 1;
-
-                    wayMove = 4;
-                    faceToỌbject(bossTarget.transform);
-
-                    yield return new WaitForSeconds(2f);
-
-
-                }
-                else
-                {
-                    moveSpeed = 0;
-                    runAnimation(1);
-
-                    yield return new WaitForSeconds(1f);
-                    playerLastPos = player.position;
-
-                    bossTarget.transform.position = new Vector3(playerLastPos.x, playerLastPos.y, playerLastPos.z);
-                    bossTarget.gameObject.SetActive(true);
-                    yield return new WaitForSeconds(2f);
-
-                    runAnimation(3);
-                    GameObject iceSpiked = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
-
-                    iceSpiked.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
-                    bossTarget.gameObject.SetActive(false);
-
-                    yield return new WaitForSeconds(2f);
-                    moveSpeed = 1;
-
-                    wayMove = 4;
-                    faceToỌbject(bossTarget.transform);
-
-                    yield return new WaitForSeconds(2f);
-                }
-
-
-                isCast = false;
+                bossTargetSub[i].SetActive(true);
             }
+            yield return new WaitForSeconds(2f);
+
+            runAnimation(3);
+            GameObject iceSpiked1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTarget.transform.position, transform.rotation);
+            iceSpiked1.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+            bossTarget.gameObject.SetActive(false);
+
+            for (int i = 0; i < 6; i++)
+            {
+                GameObject iceSpikedSub = EasyObjectPool.instance.GetObjectFromPool("Bullet_ice_boss", bossTargetSub[i].transform.position, transform.rotation);
+                iceSpikedSub.GetComponent<BulletOfBossController>().initBullet(player, Vector3.zero, 0f, 2, monsterData);
+                bossTargetSub[i].gameObject.SetActive(false);
+            }
+
+            yield return new WaitForSeconds(2f);
+            moveSpeed = 1;
+
+            wayMove = 4;
+            faceToỌbject(bossTarget.transform);
+
+            yield return new WaitForSeconds(2f);
 
             if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
         }

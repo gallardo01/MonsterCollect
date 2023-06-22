@@ -119,6 +119,7 @@ public class SyncService : Singleton<SyncService>
 
         //cloudData.inventory = data;
         CloudServices.SetString(cloudInventoryKey, jsonData);
+        //CloudServices.Synchronize();
     }
 
     public void PushUser(UserData data)
@@ -130,6 +131,7 @@ public class SyncService : Singleton<SyncService>
 
         //cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);
+        //CloudServices.Synchronize();
     }
 
     public void PushHeroes(List<MyHeroes> data)
@@ -141,8 +143,13 @@ public class SyncService : Singleton<SyncService>
 
         //cloudData.heroes = data;
         CloudServices.SetString(cloudHeroesKey, jsonData);
+        //CloudServices.Synchronize();
     }
 
+    private void OnDestroy()
+    {
+        CloudServices.Synchronize();
+    }
 }
 
 public class CloudData

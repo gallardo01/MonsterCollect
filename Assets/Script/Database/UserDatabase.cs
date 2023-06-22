@@ -20,25 +20,17 @@ public class UserDatabase : Singleton<UserDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(testManualLoad());
-        LoadResourceTextfileCurrentData();
-
-    }
-
-    IEnumerator testManualLoad()
-    {
-        yield return new WaitForSeconds(1f);
-        if (database == null)
-        {
-            LoadData();
-        }
+        LoadData();
     }
 
     public void LoadData()
     {
+        bool isSyncCloud = false;
+        isSyncCloud = SyncService.Instance.getCloudStatus();
+
         var user = SyncService.Instance.GetUser();
         
-        if (user == null)
+        if (isSyncCloud == false)
         {
             LoadResourceTextfileCurrentData();
             SyncService.Instance.PushUser(database);
@@ -144,8 +136,7 @@ public class UserDatabase : Singleton<UserDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
-
-        //SyncService.Instance.PushUser(database);
+        SyncService.Instance.PushUser(database);
     }
     public UserData getUserData()
     {
@@ -164,6 +155,7 @@ public class UserDatabase : Singleton<UserDatabase>
     {
         database.Gold += gold;
         database.Diamond += diamond;
+        Save();
     }
 
     public bool reduceMoney(int gold, int diamond)

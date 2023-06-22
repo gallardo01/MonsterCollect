@@ -8,11 +8,17 @@ using Newtonsoft.Json;
 
 public class SyncService : Singleton<SyncService>
 {
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
+
     private const string cloudInventoryKey = "inventory";
     private const string cloudUserKey = "user";
     private const string cloudHeroesKey = "heroes";
 
     private CloudData cloudData = null;
+    private bool isActiveCloudData = false;
 
     // Start is called before the first frame update
     void Start()
@@ -55,12 +61,20 @@ public class SyncService : Singleton<SyncService>
     {
         RetrieveCloudData();
     }
-
+    public bool getCloudStatus()
+    {
+        return isActiveCloudData;
+    }
     private void RetrieveCloudData()
     {
         string inventoryJson = CloudServices.GetString(cloudInventoryKey);
         string userJson = CloudServices.GetString(cloudUserKey);
         string heroesJson = CloudServices.GetString(cloudHeroesKey);
+
+        if ( inventoryJson != null && userJson != null && heroesJson != null)
+        {
+            isActiveCloudData = true;
+        }
 
         CloudData data = new()
         {
@@ -103,7 +117,7 @@ public class SyncService : Singleton<SyncService>
         string jsonData = JsonConvert.SerializeObject(data);
         //Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
 
-        cloudData.inventory = data;
+        //cloudData.inventory = data;
         CloudServices.SetString(cloudInventoryKey, jsonData);
     }
 
@@ -114,7 +128,7 @@ public class SyncService : Singleton<SyncService>
         string jsonData = JsonConvert.SerializeObject(data);
         Debug.Log($"Saving user {jsonData}");
 
-        cloudData.user = data;
+        //cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);
     }
 
@@ -125,7 +139,7 @@ public class SyncService : Singleton<SyncService>
         string jsonData = JsonConvert.SerializeObject(data);
         //Debug.Log($"Saving heroes {data.Count}, {jsonData}");
 
-        cloudData.heroes = data;
+        //cloudData.heroes = data;
         CloudServices.SetString(cloudHeroesKey, jsonData);
     }
 

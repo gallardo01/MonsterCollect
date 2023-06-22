@@ -21,27 +21,20 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     void Start()
     {
         //StartCoroutine(testManualLoad());
-        firstTimeSetUp();
+        LoadData();
 
-    }
-
-    IEnumerator testManualLoad()
-    {
-        yield return new WaitForSeconds(1f);
-        if (myHeroes == null || myHeroes.Count == 0)
-        {
-            LoadData();
-        }
     }
 
     public void LoadData()
     {
-        firstTimeSetUp();
         var heroes = SyncService.Instance.GetHeroes();
+        bool isSyncCloud = false;
+        isSyncCloud = SyncService.Instance.getCloudStatus();
 
-        if (heroes == null || heroes.Count == 0)
+        if (isSyncCloud == false)
         {
             Debug.Log("Loading heroes from file...");
+            firstTimeSetUp();
             SyncService.Instance.PushHeroes(myHeroes);
         }
         else
@@ -316,7 +309,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
 
         Debug.Log($"Preparing to push heroes: {jsonData}");
-        //SyncService.Instance.PushHeroes(myHeroes);
+        SyncService.Instance.PushHeroes(myHeroes);
     }
 }
 

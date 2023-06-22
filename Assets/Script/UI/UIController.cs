@@ -54,7 +54,6 @@ public class UIController : Singleton<UIController>
     public void InitUI()
     {
         UserData database = UserDatabase.Instance.getUserData();
-        Debug.Log(database.Diamond);
 
         StartCoroutine(MoneyChange(database.Gold));
         StartCoroutine(DiamonChange(database.Diamond));

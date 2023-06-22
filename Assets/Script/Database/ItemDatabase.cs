@@ -25,46 +25,18 @@ public class ItemDatabase : Singleton<ItemDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(testManualLoad());
-
-        string fileName = "Item.txt";
-        string myFileName = "MyItem.txt";
-
-        LoadResourceTextfileItemData(fileName);
-        LoadResourceTextfileCurrentData(myFileName);
-
-        if (PlayerPrefs.HasKey("Init") == false)
-        {
-            PlayerPrefs.SetInt("Init", 1);
-            for (int i = 1; i <= 9; i++)
-            {
-                addNewItem(i, 100, Random.Range(1, 6));
-            }
-            for (int i = 101; i <= 112; i++)
-            {
-                addNewItem(i, 300);
-            }
-        }
-
+        LoadData();
     }
-    IEnumerator testManualLoad()
-    {
-        yield return new WaitForSeconds(1f);
-        if (inventoryData == null || inventoryData.Count == 0)
-        {
-            LoadData();
-        }
-    }
-
-
     public void LoadData()
     {
+        bool isSyncCloud = false;
+        isSyncCloud = SyncService.Instance.getCloudStatus();
         string fileName = "Item.txt";
         LoadResourceTextfileItemData(fileName);
 
         var items = SyncService.Instance.GetInventory();
 
-        if (items == null || items.Count == 0)
+        if (isSyncCloud == false)
         {
             string myFileName = "MyItem.txt";
             LoadResourceTextfileCurrentData(myFileName);
@@ -192,7 +164,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             Debug.LogWarning("Error: " + e.Message);
         }
 
-        //SyncService.Instance.PushInventory(inventoryData);
+        SyncService.Instance.PushInventory(inventoryData);
     }
 
     public ItemData fetchItemById(int id)

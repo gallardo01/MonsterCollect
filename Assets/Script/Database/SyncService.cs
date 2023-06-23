@@ -127,8 +127,6 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Name == null) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving user {jsonData}");
-
         //cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);
         //CloudServices.Synchronize();

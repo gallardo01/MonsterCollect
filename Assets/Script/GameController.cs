@@ -42,8 +42,12 @@ public class GameController : Singleton<GameController>
     [SerializeField] TextMeshProUGUI bossHp;
     [SerializeField] GameObject warningBoss;
     [SerializeField] GameObject fadeScreen;
+    [SerializeField] GameObject bossTileMaps;
+    [SerializeField] GameObject gameTileMaps;
+    [SerializeField] GameObject bossPosition;
 
     private int[] numberCreep = { 0, 40, 60, 70, 90, 105, 130, 150, 170, 200};
+
 
     private void Awake()
     {
@@ -71,10 +75,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        StartCoroutine(spawnBoss());
-
-
+        StartCoroutine(addEnemyFirstScene());
+        //StartCoroutine(spawnBoss());
     }
 
     public void updateGold(int gold)
@@ -137,14 +139,22 @@ public class GameController : Singleton<GameController>
     {
         warningBoss.SetActive(true);
         yield return new WaitForSeconds(3f);
-        GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", PlayerController.Instance.getPosition().position, transform.rotation);
+        fadeScreen.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        //set up thong tin truoc khi danh boss
+        PlayerController.Instance.setPosition();
+        bossTileMaps.SetActive(true);
+        camera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 9;
+        yield return new WaitForSeconds(1.5f);
+        // bat dau danh boss
+        fadeScreen.SetActive(false);
+        GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", bossPosition.transform.position, transform.rotation);
         yield return new WaitForSeconds(2f);
-
-        string enemyType = "Enemy" + (40);
+        warningBoss.SetActive(false);
+        string enemyType = "Enemy" + (10);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, warning.transform.position, transform.rotation);
         boss.GetComponent<BossController>().initInfo(40);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
-
         warning.SetActive(false);
         fillImage.SetActive(true);
         bossIcon.SetActive(true);

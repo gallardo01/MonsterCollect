@@ -51,7 +51,7 @@ public class UIUpgradeController : MonoBehaviour
     }
     private void updateRequireGold()
     {
-        requireGold = UserDatabase.Instance.getTotalLevel()*300 + 300;
+        requireGold = UserDatabase.Instance.getTotalLevel()*100 + 100;
         upgradePrize.text = requireGold.ToString();
         if (UserDatabase.Instance.getTotalLevel() < 180 && requireGold <= UserDatabase.Instance.getUserData().Gold)
         {

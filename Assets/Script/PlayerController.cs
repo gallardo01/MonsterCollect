@@ -78,6 +78,10 @@ public class PlayerController : Singleton<PlayerController>
     {
         return gameObject.transform;
     }
+    public void setPosition()
+    {
+        gameObject.transform.position = new Vector3(0f, 0f, 0f);
+    }
     public void initStart()
     {
         // pick con nao?

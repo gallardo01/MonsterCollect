@@ -73,7 +73,7 @@ public class SixMatchController : Singleton<BingoSkillMatix>
             }
         }
 
-        player = tilesList[2*5+0];
+        player = tilesList[2*5+2];
         player.life.text = life.ToString();
 
     }

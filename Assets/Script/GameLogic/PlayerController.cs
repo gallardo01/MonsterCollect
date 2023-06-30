@@ -48,8 +48,8 @@ public class PlayerController : Singleton<PlayerController>
     private int[] skillLevel = { 1, 0, 0, 0, 0, 0 };
     private float[] timer = { 0, 0, 0, 0, 0, 0 };
 
-    // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
-    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 10. Healing
+    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     // Start is called before the first frame update
 

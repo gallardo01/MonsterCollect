@@ -34,6 +34,8 @@ public class StaticInfo : MonoBehaviour
         "<sprite=12> Electric Gym",
     };
 
+    public static string[] typeText = { "", "Fire", "Electric", "Water", "Grass" };
+
     public static int[] costHeroes = { 0, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000 };
 
     public static int[] evolLocation = {0, -800, -1600,-2400,-3200 };

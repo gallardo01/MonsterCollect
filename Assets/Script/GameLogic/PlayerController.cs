@@ -57,7 +57,6 @@ public class PlayerController : Singleton<PlayerController>
     void Start()
     {
         //Vector3 pos = new Vector3(Screen.width, Screen.height, 0);
-        idPick = 11;
         if (!PlayerPrefs.HasKey("Map"))
         {
             PlayerPrefs.SetInt("Map", 1);

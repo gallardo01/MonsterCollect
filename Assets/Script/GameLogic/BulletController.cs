@@ -18,7 +18,8 @@ public class BulletController : MonoBehaviour
     {
         speed = Application.targetFrameRate * 0.25f / 60f;
     }
-
+    // id = 5 - Fire 3
+    // id = 6 - Fire 4
     void Update()
     {
         if (target != null && (target.tag == "Enemy"))

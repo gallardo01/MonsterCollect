@@ -61,8 +61,9 @@ public class GameController : Singleton<GameController>
     
     IEnumerator testScreen()
     {
-        yield return new WaitForSeconds(2f);
-        GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No.11") as GameObject);
+        yield return new WaitForSeconds(0f);
+        int heroesPick = PlayerPrefs.GetInt("HeroesPick");
+        GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
 

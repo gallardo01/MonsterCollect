@@ -10,16 +10,16 @@ public class BulletController : MonoBehaviour
     public Transform target;
     // Start is called before the first frame update
     private int bounce = 4;
-    private float speed = 0.25f;
+    private float speed = 0.2f;
     private int damePercent;
     private bool switchTarget = true;
 
     private void Start()
     {
-        speed = Application.targetFrameRate * 0.25f / 60f;
+        speed = Application.targetFrameRate * 0.2f / 60f;
     }
-    // id = 5 - Fire 3
-    // id = 6 - Fire 4
+    // id = 5 - Fire 4
+    // id = 6 - Fire 5
     void Update()
     {
         if (target != null && (target.tag == "Enemy"))
@@ -137,7 +137,7 @@ public class BulletController : MonoBehaviour
                 {
                     collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
                 }
-                GameController.Instance.addParticle(collision.gameObject, 4);
+                GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
                 //if (switchTarget)
                 //{
                 //    switchTarget = false;
@@ -167,7 +167,7 @@ public class BulletController : MonoBehaviour
             {
                 collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
             }
-            GameController.Instance.addParticle(collision.gameObject, 1);
+            GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }

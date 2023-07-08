@@ -86,6 +86,7 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         // pick con nao?
+        idPick = 60;
         data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
         realData = data;
         currentHp = data.Hp;
@@ -98,7 +99,9 @@ public class PlayerController : Singleton<PlayerController>
             totalSkill.Add(skill);
         }
         calculateSkillDame();
+        attackMonster(totalSkill[5]);
         attackMonster(totalSkill[0]);
+
         for (int i = 0; i < currentHp / 400; i++){
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
             line_obj.GetComponent<Image>().color = new Color(255f, 255f, 255f, 255f);
@@ -258,21 +261,28 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartCoroutine(throwAWeb(bulletText, id));
         }
-        else if(skillId == 15)
+        else if(skillId == 15 || skillId == 3)
         {
             StartCoroutine(thunder_2(bulletText, id));
         }
-        else if(skillId == 16)
+        else if(skillId == 16 || skillId == 6)
         {
             StartCoroutine(bombFly(bulletText, id));
         }
-        else if(skillId == 17)
+        else if(skillId == 17 || skillId == 2)
         {
             StartCoroutine(bounceAroundEnemy(bulletText, id));
         }
         else if(skillId == 18)
         {
             StartCoroutine(forceField(bulletText, id));
+        } else if(skillId == 4) // meteo
+        {
+            StartCoroutine(meteorFalling(bulletText, id));
+        }
+        else if(skillId == 5) // bomb
+        {
+            StartCoroutine(bombTrigger(bulletText, id));
         }
     }
     IEnumerator disableObject(float timer, GameObject obj)
@@ -292,7 +302,7 @@ public class PlayerController : Singleton<PlayerController>
             if (shootTarget != null)
             {
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, shootTarget.rotation);
-                projectileNormal.GetComponent<BulletController>().initBullet(realData, 1, totalSkill[id].powerGame, shootTarget);
+                projectileNormal.GetComponent<BulletController>().initBullet(realData, 5, totalSkill[id].powerGame, shootTarget);
                 Vector2 vector = shootFollower(shootTarget);
                 float angle = calAngle(shootTarget, vector);
                 projectileNormal.transform.Rotate(0, 0, angle + 90);
@@ -300,12 +310,60 @@ public class PlayerController : Singleton<PlayerController>
                 {
                     yield return new WaitForSeconds(0.1f);
                     GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, shootTarget.rotation);
-                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 1, totalSkill[id].powerGame, shootTarget);
+                    projectileNormal1.GetComponent<BulletController>().initBullet(realData, 5, totalSkill[id].powerGame, shootTarget);
                     projectileNormal1.transform.Rotate(0, 0, angle + 90);
                 }
             }
         }
         StartCoroutine(normalAttack(bulletText, id));
+    }
+    private IEnumerator bombTrigger(string bulletText, int id)
+    {
+        yield return new WaitForSeconds(totalSkill[id].timerGame);
+        createBombFalling(bulletText, id);
+        if (totalSkill[id].data.Level >= 3)
+        {
+            yield return new WaitForSeconds(0.2f);
+            createBombFalling(bulletText, id);
+        }
+        if (totalSkill[id].data.Level >= 6)
+        {
+            yield return new WaitForSeconds(0.2f);
+            createBombFalling(bulletText, id);
+        }
+        StartCoroutine(bombTrigger(bulletText, id));
+    }
+    private void createBombFalling(string bulletText, int id)
+    {
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, gameObject.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0),
+gameObject.transform.rotation);
+        projectileNormal.GetComponent<BulletBombController>().initBullet(realData, totalSkill[id].powerGame);
+    }
+    private IEnumerator meteorFalling(string bulletText, int id)
+    {
+        yield return new WaitForSeconds(totalSkill[id].timerGame);
+        createMeteorFalling(bulletText, id);
+        if (totalSkill[id].data.Level >= 3)
+        {
+            yield return new WaitForSeconds(0.2f);
+            createMeteorFalling(bulletText, id);
+        }
+        if (totalSkill[id].data.Level >= 6)
+        {
+            yield return new WaitForSeconds(0.2f);
+            createMeteorFalling(bulletText, id);
+        }
+        StartCoroutine(meteorFalling(bulletText, id));
+    }
+    private void createMeteorFalling(string bulletText, int id)
+    {
+        GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Shadow", locate.transform.position,
+locate.transform.rotation);
+        shootTarget.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+shootTarget.transform.rotation);
+        projectileNormal.transform.position = shootTarget.transform.position + new Vector3(Random.Range(-3f, 3f), 10f, 0);
+        projectileNormal.GetComponent<BulletOnGroundController>().initBullet(realData, 1, totalSkill[id].powerGame, shootTarget.transform);
     }
     private IEnumerator throwAWeb(string bulletText, int id)
     {
@@ -376,7 +434,7 @@ locate.transform.rotation);
     }
     private IEnumerator thunder_2_clone(string bulletText, int circle, int id)
     {
-        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, new Vector3(20f, 20f, 0f),
 gameObject.transform.rotation);
         projectileNormal.GetComponent<BulletFlyAround>().initBullet(realData, circle, totalSkill[id].powerGame, gameObject.transform);
         yield return new WaitForSeconds(3.5f);
@@ -394,36 +452,40 @@ gameObject.transform.rotation);
             Vector2 vector5 = new Vector2(0f, 2f);
             Vector2 vector6 = new Vector2(0f, -2f);
 
-
+            int speedBomb = 100;
+            if (totalSkill[id].data.Id == 6)
+            {
+                speedBomb = 60;
+            }
             GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
             projectileNormal.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
-            projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * 100);
+            projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * speedBomb);
             if (totalSkill[id].data.Level > 1)
             {
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
-                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector2 * 100);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector2 * speedBomb);
             } 
             if(totalSkill[id].data.Level > 2)
             {
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
-                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector3 * 100);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector3 * speedBomb);
             }
             if (totalSkill[id].data.Level > 3)
             {
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
-                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector4 * 100);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector4 * speedBomb);
             }
             if(totalSkill[id].data.Level == 6)
             {
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
-                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector5 * 100);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector5 * speedBomb);
                 GameObject projectileNormal2 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal2.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
-                projectileNormal2.GetComponent<Rigidbody2D>().AddForce(vector6 * 100);
+                projectileNormal2.GetComponent<Rigidbody2D>().AddForce(vector6 * speedBomb);
             }
         }
         yield return new WaitForSeconds(totalSkill[id].timerGame);

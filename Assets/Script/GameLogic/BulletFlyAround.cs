@@ -32,6 +32,7 @@ public class BulletFlyAround : MonoBehaviour
         heroes = myHeroes;
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss")
@@ -45,7 +46,7 @@ public class BulletFlyAround : MonoBehaviour
                 collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, skillDame);
             }
 
-            GameController.Instance.addParticle(collision.gameObject, 4);
+            GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
         }
     }
 

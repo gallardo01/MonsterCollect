@@ -62,7 +62,8 @@ public class GameController : Singleton<GameController>
     IEnumerator testScreen()
     {
         yield return new WaitForSeconds(0f);
-        int heroesPick = PlayerPrefs.GetInt("HeroesPick");
+        //int heroesPick = PlayerPrefs.GetInt("HeroesPick");
+        int heroesPick = 11;
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
@@ -458,6 +459,14 @@ public class GameController : Singleton<GameController>
         StartCoroutine(disableParticle(particle));
     }
 
+    public void addParticleDefault(GameObject obj, int type)
+    {
+        string par = "Particle_" + StaticInfo.typeText[type] + "_1";
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(par, obj.transform.position, obj.transform.rotation);
+        particle.transform.position = obj.transform.position;
+        StartCoroutine(disableParticle(particle));
+    }
+
     public void addExplosion(MyHeroes heroes, GameObject obj, int skillDame, int index)
     {
         string par = "Particle" + index;
@@ -465,7 +474,13 @@ public class GameController : Singleton<GameController>
         particle.GetComponent<ExplosionController>().initData(heroes, skillDame);
         StartCoroutine(disableParticle(particle));
     }
-
+    public void addExplosionText(MyHeroes heroes, GameObject obj, int skillDame, string objExplosion)
+    {
+        string par = objExplosion;
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool(par, obj.transform.position, obj.transform.rotation);
+        particle.GetComponent<ExplosionController>().initData(heroes, skillDame);
+        StartCoroutine(disableParticle(particle));
+    }
     IEnumerator disableParticle(GameObject obj)
     {
         yield return new WaitForSeconds(1f);

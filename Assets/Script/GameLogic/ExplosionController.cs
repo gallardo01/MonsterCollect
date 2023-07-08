@@ -35,21 +35,20 @@ public class ExplosionController : MonoBehaviour
             if (collision.gameObject.tag == "Enemy")
             {
                 collision.gameObject.GetComponent<MonsterController>().enemyHurt(data, skillDame);
+                GameController.Instance.addParticleDefault(collision.gameObject, data.Type);
             }
             else
             {
                 collision.gameObject.GetComponent<BossController>().enemyHurt(data, skillDame);
+                GameController.Instance.addParticleDefault(collision.gameObject, data.Type);
             }
-            if (id != 3)
-            {
-                GameController.Instance.addParticle(collision.gameObject, 4);
-            }
+            returnToPool(0.3f);
         }
     }
 
     void OnEnable()
     {
-        //StartCoroutine(returnToPool(0.3f));
+        //StartCoroutine(returnToPool(1f));
     }
 
 

@@ -7,8 +7,7 @@ public class MonsterController : MonoBehaviour
 {
     // Start is called before the first frame update
     public TextMeshPro level;
-    private GameObject waypoints;
-    private int waypointIndex = 0;
+    private Vector2 waypoints;
     private bool isMove = true;
     private int wayMove = 1;
     private int facingRight = 1;
@@ -31,13 +30,12 @@ public class MonsterController : MonoBehaviour
 
     private void Awake()
     {
-        waypoints = EasyObjectPool.instance.GetObjectFromPool("Empty_NoCollider", transform.position, transform.rotation);
-        waypoints.transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
+        //waypoints.transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
     }
 
     void OnEnable()
     {
-        waypoints.transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
+        waypoints = new Vector2(Random.Range(-8f, 8f), Random.Range(-6f, 8f));
         isMove = true;
         StartCoroutine(stopIdle());
     }
@@ -197,9 +195,9 @@ public class MonsterController : MonoBehaviour
             if (wayMove == 1)
             {
                 transform.position = Vector2.MoveTowards(transform.position,
-                    waypoints.transform.position,
+                    waypoints,
                     (monsterData.Speed * slowRate / 800f) * Time.deltaTime);
-                if (transform.position.x == waypoints.transform.position.x && transform.position.y == waypoints.transform.position.y)
+                if (transform.position.x == waypoints.x && transform.position.y == waypoints.y)
                 {
                     isMove = false;
                     StartCoroutine(idleBehavior());
@@ -251,7 +249,7 @@ public class MonsterController : MonoBehaviour
         int chance = Random.Range(0, 2);
         if (chance % 2 == 0)
         {
-            waypoints.transform.position = new Vector3(Random.Range(-8f, 8f), Random.Range(-6f, 8f), 0f);
+            waypoints = new Vector2(Random.Range(-8f, 8f), Random.Range(-6f, 8f));
             isMove = true;
             runAnimation(2);
             checkFlip();
@@ -264,11 +262,11 @@ public class MonsterController : MonoBehaviour
 
     private void checkFlip()
     {
-        if (transform.position.x < waypoints.transform.position.x && facingRight == 0)
+        if (transform.position.x < waypoints.x && facingRight == 0)
         {
             flip();
         }
-        else if (transform.position.x > waypoints.transform.position.x && facingRight == 1)
+        else if (transform.position.x > waypoints.x && facingRight == 1)
         {
             flip();
         }

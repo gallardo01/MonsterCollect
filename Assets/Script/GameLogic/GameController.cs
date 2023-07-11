@@ -48,6 +48,8 @@ public class GameController : Singleton<GameController>
 
     private int[] numberCreep = { 0, 40, 60, 70, 90, 105, 130, 150, 170, 200};
 
+    private int idCurrentBoss = 50;
+
 
     private void Awake()
     {
@@ -77,8 +79,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        StartCoroutine(addEnemyFirstScene());
-        //StartCoroutine(spawnBoss());
+        //StartCoroutine(addEnemyFirstScene());
+        StartCoroutine(spawnBoss());
     }
 
     public void updateGold(int gold)
@@ -153,9 +155,9 @@ public class GameController : Singleton<GameController>
         GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", bossPosition.transform.position, transform.rotation);
         yield return new WaitForSeconds(2f);
         warningBoss.SetActive(false);
-        string enemyType = "Enemy" + (10);
+        string enemyType = "Enemy" + (idCurrentBoss);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, warning.transform.position, transform.rotation);
-        boss.GetComponent<BossController>().initInfo(40);
+        boss.GetComponent<BossController>().initInfo(idCurrentBoss);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
         warning.SetActive(false);
         fillImage.SetActive(true);

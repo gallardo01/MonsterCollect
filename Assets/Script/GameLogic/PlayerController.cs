@@ -257,7 +257,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartCoroutine(normalAttack(bulletText, id));
         }
-        else if(skillId == 14)
+        else if(skillId == 14 || skillId == 26)
         {
             StartCoroutine(throwAWeb(bulletText, id));
         }
@@ -273,10 +273,10 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartCoroutine(bounceAroundEnemy(bulletText, id));
         }
-        else if(skillId == 18)
+        else if(skillId == 18 || skillId == 27)
         {
             StartCoroutine(forceField(bulletText, id));
-        } else if(skillId == 4) // meteo
+        } else if(skillId == 4 || skillId == 28) // meteo
         {
             StartCoroutine(meteorFalling(bulletText, id));
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
+using VoxelBusters.EssentialKit.Editor.Android;
 
 public class BulletOnStayController : MonoBehaviour
 {
@@ -82,12 +83,12 @@ public class BulletOnStayController : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, skillDame);
-            GameController.Instance.addParticle(collision.gameObject, 4);
+            GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
         }
         if (collision.gameObject.tag == "Boss")
         {
             collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, skillDame);
-            GameController.Instance.addParticle(collision.gameObject, 4);
+            GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
         }
 
     }

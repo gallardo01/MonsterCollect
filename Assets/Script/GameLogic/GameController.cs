@@ -79,8 +79,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        StartCoroutine(spawnBoss());
+        StartCoroutine(addEnemyFirstScene());
+        //StartCoroutine(spawnBoss());
     }
 
     public void updateGold(int gold)

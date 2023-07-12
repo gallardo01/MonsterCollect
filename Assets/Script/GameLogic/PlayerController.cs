@@ -86,7 +86,7 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         // pick con nao?
-        idPick = 60;
+        idPick = 30;
         data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
         realData = data;
         currentHp = data.Hp;
@@ -99,8 +99,8 @@ public class PlayerController : Singleton<PlayerController>
             totalSkill.Add(skill);
         }
         calculateSkillDame();
-        attackMonster(totalSkill[5]);
         attackMonster(totalSkill[0]);
+        attackMonster(totalSkill[4]);
 
         for (int i = 0; i < currentHp / 400; i++){
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
@@ -276,13 +276,17 @@ public class PlayerController : Singleton<PlayerController>
         else if(skillId == 18 || skillId == 27)
         {
             StartCoroutine(forceField(bulletText, id));
-        } else if(skillId == 4 || skillId == 28) // meteo
+        } 
+        else if(skillId == 4 || skillId == 28) // meteor
         {
             StartCoroutine(meteorFalling(bulletText, id));
         }
         else if(skillId == 5) // bomb
         {
             StartCoroutine(bombTrigger(bulletText, id));
+        } else if(skillId == 29)
+        {
+            StartCoroutine(snowmanTrigger(bulletText, id));
         }
     }
     IEnumerator disableObject(float timer, GameObject obj)
@@ -317,6 +321,29 @@ public class PlayerController : Singleton<PlayerController>
         }
         StartCoroutine(normalAttack(bulletText, id));
     }
+    private IEnumerator snowmanTrigger(string bulletText, int id)
+    {
+        yield return new WaitForSeconds(totalSkill[id].timerGame);
+        createSnowman(bulletText, id);
+        if (totalSkill[id].data.Level >= 3)
+        {
+            yield return new WaitForSeconds(0.2f);
+            createSnowman(bulletText, id);
+        }
+        if (totalSkill[id].data.Level >= 6)
+        {
+            yield return new WaitForSeconds(0.2f);
+            createSnowman(bulletText, id);
+        }
+        StartCoroutine(snowmanTrigger(bulletText, id));
+    }
+    private void createSnowman(string bulletText, int id)
+    {
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, gameObject.transform.position + new Vector3(Random.Range(-3.5f, 3.5f), Random.Range(-5f, 5f), 0),
+gameObject.transform.rotation);
+        projectileNormal.GetComponent<BulletSnowmanController>().initBullet(realData, totalSkill[id].powerGame, gameObject);
+    }
+
     private IEnumerator bombTrigger(string bulletText, int id)
     {
         yield return new WaitForSeconds(totalSkill[id].timerGame);
@@ -359,7 +386,15 @@ gameObject.transform.rotation);
     {
         GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Shadow", locate.transform.position,
 locate.transform.rotation);
-        shootTarget.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+        Transform pos = EasyObjectPool.instance.getRandomTargetPosition();
+        if (pos != null)
+        {
+            shootTarget.transform.position = pos.transform.position;
+        }
+        else
+        {
+            shootTarget.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+        }
         GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
 shootTarget.transform.rotation);
         projectileNormal.transform.position = shootTarget.transform.position + new Vector3(Random.Range(-3f, 3f), 10f, 0);
@@ -532,13 +567,13 @@ gameObject.transform.rotation);
                 projectileNormal.transform.position = gameObject.transform.position;
 
                 gameObjectNonRepeat = projectileNormal;
-                float scaleNumber = 0.5f + (size - 1) * 0.1f;
+                float scaleNumber = 0.7f + (size - 1) * 0.15f;
                 projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 projectileNormal.GetComponent<BulletOnStayController>().initBullet(realData, size, totalSkill[id].powerGame, gameObject);
             }
             else
             {
-                float scaleNumber = 0.5f + (size - 1) * 0.1f;
+                float scaleNumber = 0.7f + (size - 1) * 0.15f;
                 gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(realData, size, totalSkill[id].powerGame, gameObject);
             }

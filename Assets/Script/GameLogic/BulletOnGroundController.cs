@@ -20,7 +20,15 @@ public class BulletOnGroundController : MonoBehaviour
         }
         if (transform.position == target.position)
         {
-            explosion(heroes, "Particle_Fire_2");
+            string particle = "Particle_Fire_2";
+            if (heroes.Type == 1)
+            {
+                particle = "Particle_Fire_2";
+            } else if(heroes.Type == 3)
+            {
+                particle = "Particle_Water_2";
+            }
+            explosion(heroes, particle);
             EasyObjectPool.instance.ReturnObjectToPool(target.gameObject);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             target.gameObject.SetActive(false);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
+using VoxelBusters.EssentialKit.Editor.Android;
 
 public class BulletNoTargetController : MonoBehaviour
 {
@@ -21,20 +22,17 @@ public class BulletNoTargetController : MonoBehaviour
     {
     }
 
-    IEnumerator disableCollider()
-    {
-        gameObject.GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(1f);
-        gameObject.GetComponent<Collider2D>().enabled = true;
-    }
-
     public void initBullet(MyHeroes myHeroes, int skill, int dame, Transform enemy)
     {
         timer = Time.fixedTime;
         skillDame = dame;
         target = enemy;
         heroes = myHeroes;
-
+    }
+    public void initBullet(MyHeroes myHeroes, int dame)
+    {
+        heroes = myHeroes;
+        skillDame = dame;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -59,6 +57,18 @@ public class BulletNoTargetController : MonoBehaviour
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
-
+        else if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 7)
+        {
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, skillDame);
+                GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
+            }
+            else
+            {
+                collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, skillDame);
+                GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
+            }
+        }
     }
 }

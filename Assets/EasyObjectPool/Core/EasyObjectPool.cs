@@ -262,7 +262,25 @@ namespace MarchingBytes {
 			return listObj[obj].transform;
         }
 
-		public Transform getNearestExcludeGameObjectPosition(GameObject en)
+        public Transform getRandomTargetPosition()
+        {
+            int obj = -1;
+			List<GameObject> availableObj = new List<GameObject>();
+            for (int i = 0; i < listObj.Count; i++)
+            {
+                if (listObj[i].tag == "Enemy" || listObj[i].tag == "Boss")
+                {
+					availableObj.Add(listObj[i]);
+                }
+            }
+            if (obj < 0)
+            {
+                return null;
+            }
+            return availableObj[Random.Range(0, availableObj.Count)].transform;
+        }
+
+        public Transform getNearestExcludeGameObjectPosition(GameObject en)
 		{
 			if(en.tag == "Boss")
             {
@@ -301,7 +319,7 @@ namespace MarchingBytes {
 
 		public void getAllObjectInPosition(GameObject playerObject, int size, MyHeroes heroes, int dame)
 		{
-			float distance = 1.35f * (0.7f + (size - 1) * 0.2f) / 0.7f;
+			float distance = 1.1f * (0.7f + (size - 1) * 0.2f) / 0.7f;
 
 			for (int i = 0; i < listObj.Count; i++)
 			{
@@ -312,17 +330,18 @@ namespace MarchingBytes {
 	&& delta.magnitude <= distance)
 					{
 						listObj[i].gameObject.GetComponent<MonsterController>().enemyHurt(heroes, dame);
-						GameController.Instance.addParticle(listObj[i].gameObject, 4);
-					}
-				} else if (listObj[i].tag == "Boss")
+                        GameController.Instance.addParticleDefault(listObj[i].gameObject, heroes.Type);
+
+                    }
+                } else if (listObj[i].tag == "Boss")
                 {
 					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<BossController>().getIsDead() == false
 	&& delta.magnitude <= distance)
 					{
 						listObj[i].gameObject.GetComponent<BossController>().enemyHurt(heroes, dame);
-						GameController.Instance.addParticle(listObj[i].gameObject, 4);
-					}
-				}
+                        GameController.Instance.addParticleDefault(listObj[i].gameObject, heroes.Type);
+                    }
+                }
 			}
 		}
 

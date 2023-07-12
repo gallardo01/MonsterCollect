@@ -87,14 +87,14 @@ public class BulletController : MonoBehaviour
     IEnumerator disableCollider()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         gameObject.GetComponent<Collider2D>().enabled = true;
     }
     IEnumerator thunder_2()
     {
+        StartCoroutine(returnToPool(1.2f));
         yield return new WaitForSeconds(1f);
         StartCoroutine(explosion(heroes));
-        StartCoroutine(returnToPool(1.3f));
     }
 
     public void initBullet(MyHeroes myHeroes, int skill, int dame, Transform enemy)
@@ -180,7 +180,13 @@ public class BulletController : MonoBehaviour
     IEnumerator explosion(MyHeroes data)
     {
         yield return new WaitForSeconds(0);
-        GameController.Instance.addExplosion(data, gameObject, damePercent, 3);
+        if (heroes.Type == 2)
+        {
+            GameController.Instance.addExplosionText(data, gameObject, damePercent, "Particle_3");
+        } else if (heroes.Type == 3)
+        {
+            GameController.Instance.addExplosionText(data, gameObject, damePercent, "Particle_Water_3");
+        }
     }
 
     IEnumerator returnToPool(float time)

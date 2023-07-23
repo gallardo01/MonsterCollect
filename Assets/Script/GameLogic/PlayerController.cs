@@ -100,7 +100,7 @@ public class PlayerController : Singleton<PlayerController>
         }
         calculateSkillDame();
         attackMonster(totalSkill[0]);
-        attackMonster(totalSkill[4]);
+        attackMonster(totalSkill[5]);
 
         for (int i = 0; i < currentHp / 400; i++){
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
@@ -287,6 +287,9 @@ public class PlayerController : Singleton<PlayerController>
         } else if(skillId == 29)
         {
             StartCoroutine(snowmanTrigger(bulletText, id));
+        } else if(skillId == 30)
+        {
+            StartCoroutine(reflectBullet(bulletText, id));
         }
     }
     IEnumerator disableObject(float timer, GameObject obj)
@@ -476,6 +479,39 @@ gameObject.transform.rotation);
         EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
         projectileNormal.SetActive(false);
     }
+    private IEnumerator reflectBullet(string bulletText, int id) 
+    { 
+        if (isPause == false)
+        {
+            Vector2 vector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+            Vector2 vector2 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+            Vector2 vector3 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+
+            vector = vector.normalized;
+            vector2 = vector2.normalized;
+            vector3 = vector3.normalized;
+            int speedBomb = 500;
+
+            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+            projectileNormal.GetComponent<BulletBouncingController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
+            projectileNormal.GetComponent<Rigidbody2D>().AddForce(vector * speedBomb);
+            if (totalSkill[id].data.Level >= 3)
+            {
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+                projectileNormal1.GetComponent<BulletBouncingController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector2 * speedBomb);
+            }
+            if (totalSkill[id].data.Level >= 6)
+            {
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
+                projectileNormal1.GetComponent<BulletBouncingController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
+                projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector3 * speedBomb);
+            }
+        }
+        yield return new WaitForSeconds(totalSkill[id].timerGame);
+        StartCoroutine(reflectBullet(bulletText, id));
+    }
+
     private IEnumerator bombFly(string bulletText, int id)
     {
         if (isPause == false)

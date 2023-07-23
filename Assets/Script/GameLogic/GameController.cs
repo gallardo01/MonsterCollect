@@ -69,8 +69,7 @@ public class GameController : Singleton<GameController>
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
-
-        // get stage
+        // get stage    
         string route = "Route1";
         waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
@@ -138,6 +137,10 @@ public class GameController : Singleton<GameController>
         {
             StartCoroutine(spawnBoss());
         }
+    }
+    public bool getBossSpawn()
+    {
+        return isBossSpawn;
     }
     IEnumerator bossAnimationShowUp()
     {

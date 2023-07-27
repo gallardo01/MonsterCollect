@@ -37,7 +37,6 @@ public class BossController : Singleton<BossController>
     void Awake()
     {
         player = GameObject.FindWithTag("Player").transform;
-
         //if (monsterData.Id == 10)
         //{
         //    bossTarget = GameObject.FindWithTag("Target_boss_1").transform;
@@ -51,7 +50,6 @@ public class BossController : Singleton<BossController>
         //bossTarget.gameObject.SetActive(false);
 
         boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
-
         //boss 1
         rate = 2f;
 
@@ -426,7 +424,7 @@ public class BossController : Singleton<BossController>
 
             Vector3 temp = player.position - transform.position;
             GameObject fireBulletF = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_2_fire", transform.position, transform.rotation);
-            //fireBulletF.transform.parent = transform.Find("FirePos");
+            //fireBulletF.gameObject.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
             fireBulletF.transform.position = transform.Find("FirePos").position;
             if (transform.localScale.x < 0)
             {
@@ -437,6 +435,7 @@ public class BossController : Singleton<BossController>
                 fireBulletF.transform.localScale = new Vector3(-1, 1, 1);
             }
             fireBulletF.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 0f, 8, monsterData);
+
             yield return new WaitForSeconds(2f);
 
             //6s idle
@@ -480,7 +479,7 @@ public class BossController : Singleton<BossController>
                     GameObject fireBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_2", transform.position, transform.rotation);
                     rotateBullet(fireBullet1, temp, angle1, (float)(j + 0.5), 45);
                 }
-
+                GetComponent<DragonBones.UnityArmatureComponent>().animation.Stop("attack");
                 yield return new WaitForSeconds(0.5f);
             }
 
@@ -722,6 +721,7 @@ public class BossController : Singleton<BossController>
         }
         else if (monsterData.Id == 50)
         {
+            SmokePos = this.transform.Find("SmokePos").transform.gameObject;
 
             yield return new WaitForSeconds(2f);
             int chance = Random.Range(0, 5);

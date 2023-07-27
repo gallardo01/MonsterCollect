@@ -407,6 +407,13 @@ public class MonsterController : MonoBehaviour
         gameObject.transform.localScale = newScale;
     }
 
+    public void stopRunningBySecond(float timer, Transform pos)
+    {
+        transform.position = pos.position;
+        StartCoroutine(stopRunningSecond(timer));
+    }
+
+
     public void stopRunning()
     {
         StartCoroutine(stopRunningSecond(0.5f));

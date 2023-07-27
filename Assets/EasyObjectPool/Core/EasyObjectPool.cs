@@ -271,6 +271,7 @@ namespace MarchingBytes {
                 if (listObj[i].tag == "Enemy" || listObj[i].tag == "Boss")
                 {
 					availableObj.Add(listObj[i]);
+					obj++;
                 }
             }
             if (obj < 0)
@@ -317,7 +318,7 @@ namespace MarchingBytes {
 			return listObj[obj].transform;
 		}
 
-		public void getAllObjectInPosition(GameObject playerObject, int size, MyHeroes heroes, int dame)
+		public void getAllObjectInPosition(GameObject playerObject, float size, MyHeroes heroes, int dame)
 		{
 			float distance = 1.1f * (0.7f + (size - 1) * 0.2f) / 0.7f;
 

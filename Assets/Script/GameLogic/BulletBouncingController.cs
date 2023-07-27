@@ -137,7 +137,14 @@ public class BulletBouncingController : MonoBehaviour
     {
         if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss"))
         {
-            collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, damePercent);
+            }
+            else
+            {
+                collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
+            }
             GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
         }
     }

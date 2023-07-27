@@ -47,7 +47,7 @@ public class BulletOnStayController : MonoBehaviour
     IEnumerator hurtEnemyAround()
     {
         yield return new WaitForSeconds(1.5f);
-        EasyObjectPool.instance.getAllObjectInPosition(playerObj, size, heroes, skillDame);
+        EasyObjectPool.instance.getAllObjectInPosition(playerObj, (float)size, heroes, skillDame);
         StartCoroutine(hurtEnemyAround());
     }
 

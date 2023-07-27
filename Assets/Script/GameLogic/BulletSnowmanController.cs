@@ -20,20 +20,19 @@ public class BulletSnowmanController : MonoBehaviour
     {
         if (empty.transform != null)
         {
-            head.transform.position = Vector3.MoveTowards(head.transform.position, empty.transform.position, .1f);
+            head.transform.position = Vector3.MoveTowards(head.transform.position, empty.transform.position, .07f);
             if (head.transform.position == empty.transform.position)
             {
                 countBounce++;
-                if (countBounce >= 6)
+                if (countBounce >= 7)
                 {
                     EasyObjectPool.instance.ReturnObjectToPool(gameObject);
                     gameObject.SetActive(false);
                 }
-                if (countBounce % 2 == 0)
+                if (countBounce % 2 == 1)
                 {
-                    empty.transform.position = new Vector3(playerTarget.position.x * 2 - gameObject.transform.position.x, playerTarget.position.y * 2 - gameObject.transform.position.y, 0f);
-                }
-                else
+                    empty.transform.position = getVector();
+                } else
                 {
                     empty.transform.position = firstPosition;
                 }
@@ -41,6 +40,7 @@ public class BulletSnowmanController : MonoBehaviour
         } else if(countBounce > 0)
         {
             GameObject particle = EasyObjectPool.instance.GetObjectFromPool("Particle_Water_4", transform.position, transform.rotation);
+            particle.GetComponent<ParticleSystem>().Play();
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             EasyObjectPool.instance.ReturnObjectToPool(empty);
             empty.SetActive(false);
@@ -53,11 +53,25 @@ public class BulletSnowmanController : MonoBehaviour
         countBounce = 0;
         firstPosition = new Vector3(head.transform.position.x, head.transform.position.y, 0f);
         GameObject particle = EasyObjectPool.instance.GetObjectFromPool("Particle_Water_4", transform.position, transform.rotation);
+        particle.GetComponent<ParticleSystem>().Play();
         empty = EasyObjectPool.instance.GetObjectFromPool("Empty", transform.position, transform.rotation);
         this.playerTarget = player.transform;
         head.GetComponent<BulletNoTargetController>().initBullet(myHeroes, dame);
-        empty.transform.position = new Vector3(playerTarget.position.x * 2f - gameObject.transform.position.x, playerTarget.position.y * 2f - gameObject.transform.position.y, 0f);
+        empty.transform.position = new Vector3(transform.position.x + 0.03f, transform.position.y + -0.22f, 0f);
     }
 
-
+    private Vector2 getVector()
+    {
+        int chance = Random.Range(1, 7);
+        switch (chance)
+        {
+            case 1: return new Vector2(transform.position.x + 4f, transform.position.y + 0f);
+            case 2: return new Vector2(transform.position.x + -4f, transform.position.y + 0f);
+            case 3: return new Vector2(transform.position.x + 3f, transform.position.y + 3f);
+            case 4: return new Vector2(transform.position.x + 3f, transform.position.y + -3f);
+            case 5: return new Vector2(transform.position.x + -3f, transform.position.y + 3f);
+            case 6: return new Vector2(transform.position.x + -3f, transform.position.y + -3f);
+        }
+        return Vector2.right;
+    }
 }

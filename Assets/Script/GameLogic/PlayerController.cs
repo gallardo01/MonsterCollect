@@ -86,7 +86,7 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         // pick con nao?
-        idPick = 30;
+        idPick = 20;
         data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
         realData = data;
         currentHp = data.Hp;
@@ -100,7 +100,8 @@ public class PlayerController : Singleton<PlayerController>
         }
         calculateSkillDame();
         attackMonster(totalSkill[0]);
-        attackMonster(totalSkill[5]);
+        attackMonster(totalSkill[1]);
+        //attackMonster(totalSkill[5]);
 
         for (int i = 0; i < currentHp / 400; i++){
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
@@ -290,6 +291,9 @@ public class PlayerController : Singleton<PlayerController>
         } else if(skillId == 30)
         {
             StartCoroutine(reflectBullet(bulletText, id));
+        } else if(skillId == 38)
+        {
+            StartCoroutine(rootGrassTree(bulletText, id));
         }
     }
     IEnumerator disableObject(float timer, GameObject obj)
@@ -342,7 +346,14 @@ public class PlayerController : Singleton<PlayerController>
     }
     private void createSnowman(string bulletText, int id)
     {
-        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, gameObject.transform.position + new Vector3(Random.Range(-3.5f, 3.5f), Random.Range(-5f, 5f), 0),
+        Vector2 position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
+        Transform pos = EasyObjectPool.instance.getRandomTargetPosition();
+        if(pos != null)
+        {
+            position.x = pos.position.x;
+            position.y = pos.position.y;
+        }
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, position,
 gameObject.transform.rotation);
         projectileNormal.GetComponent<BulletSnowmanController>().initBullet(realData, totalSkill[id].powerGame, gameObject);
     }
@@ -446,6 +457,46 @@ locate.transform.rotation);
             }
         }
         StartCoroutine(throwAWeb(bulletText, id));
+    }
+    private IEnumerator rootGrassTree(string bulletText, int id)
+    {
+        yield return new WaitForSeconds(totalSkill[id].timerGame);
+        if (isPause == false)
+        {
+            Transform shootTargetObj = EasyObjectPool.instance.getRandomTargetPosition();
+            Debug.Log(shootTargetObj);
+            if (shootTargetObj != null)
+            {
+                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool("Grass_2", locate.transform.position,
+locate.transform.rotation);
+                projectileNormal.transform.position = shootTargetObj.position;
+                projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
+            }
+            if (totalSkill[id].data.Level >= 3)
+            {
+                Transform shootTargetObj1 = EasyObjectPool.instance.getRandomTargetPosition();
+                if (shootTargetObj1 != null)
+                {
+                    GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool("Grass_2", locate.transform.position,
+    locate.transform.rotation);
+                    projectileNormal.transform.position = shootTargetObj.position;
+                    projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
+                }
+            }
+            if (totalSkill[id].data.Level >= 6)
+            {
+                Transform shootTargetObj1 = EasyObjectPool.instance.getRandomTargetPosition();
+                if (shootTargetObj1 != null)
+                {
+                    GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool("Grass_2", locate.transform.position,
+    locate.transform.rotation);
+                    projectileNormal.transform.position = shootTargetObj.position;
+                    projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
+                }
+            }
+
+        }
+        StartCoroutine(rootGrassTree(bulletText, id));
     }
     private IEnumerator thunder_2(string bulletText, int id)
     {

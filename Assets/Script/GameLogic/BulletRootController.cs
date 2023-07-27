@@ -11,6 +11,7 @@ public class BulletRootController : MonoBehaviour
     bool isRoot = true;
     GameObject enemy;
     GameObject grass_2;
+    int count = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,9 @@ public class BulletRootController : MonoBehaviour
     // Update is called once per frame
     public void initBullet(MyHeroes myHeroes, int dame)
     {
+        GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
+        par.GetComponent<ParticleSystem>().Play();
+        count = 0;
         isRoot = true;
         heroes = myHeroes;
         this.dame = dame;
@@ -31,8 +35,8 @@ public class BulletRootController : MonoBehaviour
         yield return new WaitForSeconds(5f);
         if (isRoot)
         {
-            GameObject grass_2 = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_2", transform.position, transform.rotation);
-            grass_2.GetComponent<ParticleSystem>().Play();
+            GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
+            par.GetComponent<ParticleSystem>().Play();
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
@@ -43,9 +47,8 @@ public class BulletRootController : MonoBehaviour
         if (collision.gameObject.tag == "Enemy" && isRoot)
         {
             isRoot = false;
-            Debug.Log("ROOT");
             collision.gameObject.GetComponent<MonsterController>().stopRunningBySecond(4f, gameObject.transform);
-            grass_2 = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
+            grass_2 = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_2", transform.position, transform.rotation);
             grass_2.GetComponent<ParticleSystem>().Play();
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, dame);
             GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
@@ -63,15 +66,18 @@ public class BulletRootController : MonoBehaviour
 
     IEnumerator enemyHurtByStay()
     {
+        count++;
         yield return new WaitForSeconds(1f);
-        if(enemy.tag == "Enemy" && enemy.GetComponent<MonsterController>().getIsDead() == false) 
+        if(enemy.tag == "Enemy" && enemy.GetComponent<MonsterController>().getIsDead() == false && count < 4) 
         {
             enemy.GetComponent<MonsterController>().enemyHurt(heroes, dame);
             GameController.Instance.addParticleDefault(enemy, heroes.Type);
-        } else
+            StartCoroutine(enemyHurtByStay());
+        }
+        else
         {
-            GameObject grass_2 = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_2", transform.position, transform.rotation);
-            grass_2.GetComponent<ParticleSystem>().Play();
+            GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
+            par.GetComponent<ParticleSystem>().Play();
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             EasyObjectPool.instance.ReturnObjectToPool(grass_2);
             gameObject.SetActive(false);
@@ -80,9 +86,18 @@ public class BulletRootController : MonoBehaviour
 
     IEnumerator hurtEnemyAround()
     {
+        count++;
         yield return new WaitForSeconds(1f);
         EasyObjectPool.instance.getAllObjectInPosition(gameObject, 0.5f, heroes, dame);
         StartCoroutine(hurtEnemyAround());
+        if (count > 4)
+        {
+            GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
+            par.GetComponent<ParticleSystem>().Play();
+            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+            EasyObjectPool.instance.ReturnObjectToPool(grass_2);
+            gameObject.SetActive(false);
+        }
     }
 
 }

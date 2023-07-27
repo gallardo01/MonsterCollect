@@ -68,7 +68,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         for (int i = 0; i < totalSkill.Count; i++)
         {
-            if(id == totalSkill[i].data.Id)
+            if (id == totalSkill[i].data.Id)
             {
                 return i;
             }
@@ -93,7 +93,7 @@ public class PlayerController : Singleton<PlayerController>
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
         int typeHeroes = (data.Type - 1) * 12 + 1;
-        for(int i = typeHeroes; i < typeHeroes + 6; i++)
+        for (int i = typeHeroes; i < typeHeroes + 6; i++)
         {
             SkillInGame skill = SkillDatabase.Instance.fetchSkillIngame(i);
             totalSkill.Add(skill);
@@ -103,11 +103,12 @@ public class PlayerController : Singleton<PlayerController>
         attackMonster(totalSkill[1]);
         //attackMonster(totalSkill[5]);
 
-        for (int i = 0; i < currentHp / 400; i++){
+        for (int i = 0; i < currentHp / 400; i++)
+        {
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
             line_obj.GetComponent<Image>().color = new Color(255f, 255f, 255f, 255f);
             line_obj.transform.SetParent(line_hp.transform);
-            line_obj.transform.localPosition = new Vector3 (0f, 0f, 0f);
+            line_obj.transform.localPosition = new Vector3(0f, 0f, 0f);
             line_obj.transform.localScale = new Vector3(1f, 1f, 1f);
         }
 
@@ -152,7 +153,7 @@ public class PlayerController : Singleton<PlayerController>
         if (canMove)
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
-            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized *(float)(realData.Move / 700f) * Time.deltaTime;
+            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (float)(realData.Move / 700f) * Time.deltaTime;
         }
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
@@ -202,7 +203,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public void setDataSkill(int[] currentSkill, int[] skillLv)
     {
-        for(int i = 1; i <= 4; i++)
+        for (int i = 1; i <= 4; i++)
         {
             if (currentSkill[i] > 0)
             {
@@ -218,7 +219,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     private void calculateSkillDame()
     {
-        for(int i = 0; i < totalSkill.Count; i++)
+        for (int i = 0; i < totalSkill.Count; i++)
         {
             totalSkill[i].powerGame = totalSkill[i].data.Power * (90 + 10 * totalSkill[i].data.Level) / 100;
             totalSkill[i].timerGame = totalSkill[i].data.Timer - (float)(totalSkill[i].data.Level - 1) * totalSkill[i].data.Upgrade / 1000;
@@ -258,40 +259,43 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartCoroutine(normalAttack(bulletText, id));
         }
-        else if(skillId == 14 || skillId == 26)
+        else if (skillId == 14 || skillId == 26)
         {
             StartCoroutine(throwAWeb(bulletText, id));
         }
-        else if(skillId == 15 || skillId == 3)
+        else if (skillId == 15 || skillId == 3)
         {
             StartCoroutine(thunder_2(bulletText, id));
         }
-        else if(skillId == 16 || skillId == 6)
+        else if (skillId == 16 || skillId == 6)
         {
             StartCoroutine(bombFly(bulletText, id));
         }
-        else if(skillId == 17 || skillId == 2)
+        else if (skillId == 17 || skillId == 2)
         {
             StartCoroutine(bounceAroundEnemy(bulletText, id));
         }
-        else if(skillId == 18 || skillId == 27)
+        else if (skillId == 18 || skillId == 27)
         {
             StartCoroutine(forceField(bulletText, id));
-        } 
-        else if(skillId == 4 || skillId == 28) // meteor
+        }
+        else if (skillId == 4 || skillId == 28) // meteor
         {
             StartCoroutine(meteorFalling(bulletText, id));
         }
-        else if(skillId == 5) // bomb
+        else if (skillId == 5) // bomb
         {
             StartCoroutine(bombTrigger(bulletText, id));
-        } else if(skillId == 29)
+        }
+        else if (skillId == 29)
         {
             StartCoroutine(snowmanTrigger(bulletText, id));
-        } else if(skillId == 30)
+        }
+        else if (skillId == 30)
         {
             StartCoroutine(reflectBullet(bulletText, id));
-        } else if(skillId == 38)
+        }
+        else if (skillId == 38)
         {
             StartCoroutine(rootGrassTree(bulletText, id));
         }
@@ -306,7 +310,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         int bonusTimer = realData.Speed / 100;
         if (bonusTimer > 100) bonusTimer = 100;
-        yield return new WaitForSeconds(totalSkill[id].timerGame * (100 - bonusTimer)/100 + 0.5f);
+        yield return new WaitForSeconds(totalSkill[id].timerGame * (100 - bonusTimer) / 100 + 0.5f);
         if (isPause == false)
         {
             Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
@@ -348,7 +352,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         Vector2 position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
         Transform pos = EasyObjectPool.instance.getRandomTargetPosition();
-        if(pos != null)
+        if (pos != null)
         {
             position.x = pos.position.x;
             position.y = pos.position.y;
@@ -463,36 +467,25 @@ locate.transform.rotation);
         yield return new WaitForSeconds(totalSkill[id].timerGame);
         if (isPause == false)
         {
-            Transform shootTargetObj = EasyObjectPool.instance.getRandomTargetPosition();
-            Debug.Log(shootTargetObj);
-            if (shootTargetObj != null)
-            {
-                GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool("Grass_2", locate.transform.position,
+            GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
 locate.transform.rotation);
-                projectileNormal.transform.position = shootTargetObj.position;
-                projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
-            }
+            shootTarget.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool("Grass_2", shootTarget.transform.position,
+shootTarget.transform.rotation);
+            projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
             if (totalSkill[id].data.Level >= 3)
             {
-                Transform shootTargetObj1 = EasyObjectPool.instance.getRandomTargetPosition();
-                if (shootTargetObj1 != null)
-                {
-                    GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool("Grass_2", locate.transform.position,
-    locate.transform.rotation);
-                    projectileNormal.transform.position = shootTargetObj.position;
-                    projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
-                }
+                GameObject shootTarget1 = EasyObjectPool.instance.GetObjectFromPool("Shadow", locate.transform.position, locate.transform.rotation);
+                shootTarget1.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool("Grass_2", shootTarget1.transform.position, shootTarget1.transform.rotation);
+                projectileNormal1.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
             }
             if (totalSkill[id].data.Level >= 6)
             {
-                Transform shootTargetObj1 = EasyObjectPool.instance.getRandomTargetPosition();
-                if (shootTargetObj1 != null)
-                {
-                    GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool("Grass_2", locate.transform.position,
-    locate.transform.rotation);
-                    projectileNormal.transform.position = shootTargetObj.position;
-                    projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
-                }
+                GameObject shootTarget2 = EasyObjectPool.instance.GetObjectFromPool("Shadow", locate.transform.position, locate.transform.rotation);
+                shootTarget2.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+                GameObject projectileNormal2 = EasyObjectPool.instance.GetObjectFromPool("Grass_2", shootTarget2.transform.position, shootTarget2.transform.rotation);
+                projectileNormal2.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
             }
 
         }
@@ -502,16 +495,16 @@ locate.transform.rotation);
     {
         if (isPause == false)
         {
-            if(totalSkill[id].data.Level < 3)
+            if (totalSkill[id].data.Level < 3)
             {
                 StartCoroutine(thunder_2_clone(bulletText, 0, id));
-            }           
+            }
             else if (totalSkill[id].data.Level >= 3 && totalSkill[id].data.Level < 6)
             {
-                StartCoroutine(thunder_2_clone(bulletText, 0, id)); 
+                StartCoroutine(thunder_2_clone(bulletText, 0, id));
                 StartCoroutine(thunder_2_clone(bulletText, 3, id));
             }
-            else 
+            else
             {
                 StartCoroutine(thunder_2_clone(bulletText, 0, id));
                 StartCoroutine(thunder_2_clone(bulletText, 2, id));
@@ -530,8 +523,8 @@ gameObject.transform.rotation);
         EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
         projectileNormal.SetActive(false);
     }
-    private IEnumerator reflectBullet(string bulletText, int id) 
-    { 
+    private IEnumerator reflectBullet(string bulletText, int id)
+    {
         if (isPause == false)
         {
             Vector2 vector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
@@ -587,8 +580,8 @@ gameObject.transform.rotation);
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
                 projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector2 * speedBomb);
-            } 
-            if(totalSkill[id].data.Level > 2)
+            }
+            if (totalSkill[id].data.Level > 2)
             {
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
@@ -600,7 +593,7 @@ gameObject.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
                 projectileNormal1.GetComponent<Rigidbody2D>().AddForce(vector4 * speedBomb);
             }
-            if(totalSkill[id].data.Level == 6)
+            if (totalSkill[id].data.Level == 6)
             {
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, locate.transform.rotation);
                 projectileNormal1.GetComponent<BulletNoTargetController>().initBullet(realData, 3, totalSkill[id].powerGame, gameObject.transform);
@@ -623,7 +616,7 @@ gameObject.transform.rotation);
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
     shootTarget.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 4, totalSkill[id].powerGame, shootTarget);
-            }   
+            }
             if (totalSkill[id].data.Level >= 6)
             {
                 yield return new WaitForSeconds(0.5f);
@@ -811,7 +804,7 @@ gameObject.transform.rotation);
         else if (status == 4) //slow Speed
         {
             rootPlayer();
-        } 
+        }
         else if (status > 10) // chi gay x % dame
         {
             if (canHurt)
@@ -868,10 +861,17 @@ gameObject.transform.rotation);
         gameObject.tag = "Player";
         currentHp = realData.Hp;
         hpBar.GetComponent<Slider>().value = 1f;
+        StartCoroutine(cannotHurtDuringRevive());
         hpText.text = currentHp.ToString();
         GameController.Instance.setSpawn(true);
         UltimateJoystick.ResetJoystick("Movement");
         runAnimation(1);
+    }
+    IEnumerator cannotHurtDuringRevive()
+    {
+        canHurt = false;
+        yield return new WaitForSeconds(3f);
+        canHurt = true;
     }
     public void healPlayer(int amount)
     {
@@ -884,7 +884,7 @@ gameObject.transform.rotation);
         floatText.GetComponent<FloatingText>().healPlayer(actualHeal);
         float per = (float)currentHp / data.Hp;
         hpText.text = currentHp.ToString();
-        hpBar.GetComponent<Slider>().value = per;    
+        hpBar.GetComponent<Slider>().value = per;
     }
     private Vector2 shootFollower(Transform en)
     {
@@ -917,7 +917,8 @@ gameObject.transform.rotation);
     }
     public void rootPlayer()
     {
-        if (isPlayerRooted == false) {
+        if (isPlayerRooted == false)
+        {
             isPlayerRooted = true;
             StartCoroutine(slowSpeed(100));
         }
@@ -930,7 +931,7 @@ gameObject.transform.rotation);
     private IEnumerator slowSpeed(int percent)
     {
         int cacheSpeed = realData.Speed;
-        realData.Speed = (100 - percent) * realData.Speed /100;
+        realData.Speed = (100 - percent) * realData.Speed / 100;
         yield return new WaitForSeconds(1f);
         realData.Speed = cacheSpeed;
         isPlayerRooted = false;

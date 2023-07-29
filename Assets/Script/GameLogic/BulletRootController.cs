@@ -9,7 +9,6 @@ public class BulletRootController : MonoBehaviour
     MyHeroes heroes;
     int dame;
     bool isRoot = true;
-    GameObject enemy;
     GameObject grass_2;
     int count = 0;
     // Start is called before the first frame update
@@ -37,6 +36,7 @@ public class BulletRootController : MonoBehaviour
         {
             GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
             par.GetComponent<ParticleSystem>().Play();
+            StopAllCoroutines();
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }
@@ -44,16 +44,19 @@ public class BulletRootController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy" && isRoot)
+        if (collision.gameObject.tag == "Enemy")
         {
+            if (isRoot)
+            {
+                StartCoroutine(deactiveAfterRoot());
+                grass_2 = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_2", transform.position, transform.rotation);
+                grass_2.GetComponent<ParticleSystem>().Play();
+            }
             isRoot = false;
             collision.gameObject.GetComponent<MonsterController>().stopRunningBySecond(4f, gameObject.transform);
-            grass_2 = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_2", transform.position, transform.rotation);
-            grass_2.GetComponent<ParticleSystem>().Play();
             collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, dame);
             GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
-            enemy = collision.gameObject;
-            StartCoroutine(enemyHurtByStay());
+            StartCoroutine(enemyHurtByStay(collision.gameObject));
         }
         else if (collision.gameObject.tag == "Boss" && isRoot)
         {
@@ -64,7 +67,18 @@ public class BulletRootController : MonoBehaviour
         }
     }
 
-    IEnumerator enemyHurtByStay()
+    IEnumerator deactiveAfterRoot()
+    {
+        yield return new WaitForSeconds(4.1f);
+        GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
+        par.GetComponent<ParticleSystem>().Play();
+        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        EasyObjectPool.instance.ReturnObjectToPool(grass_2);
+        grass_2.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+    IEnumerator enemyHurtByStay(GameObject enemy)
     {
         count++;
         yield return new WaitForSeconds(1f);
@@ -72,15 +86,7 @@ public class BulletRootController : MonoBehaviour
         {
             enemy.GetComponent<MonsterController>().enemyHurt(heroes, dame);
             GameController.Instance.addParticleDefault(enemy, heroes.Type);
-            StartCoroutine(enemyHurtByStay());
-        }
-        else
-        {
-            GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
-            par.GetComponent<ParticleSystem>().Play();
-            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-            EasyObjectPool.instance.ReturnObjectToPool(grass_2);
-            gameObject.SetActive(false);
+            StartCoroutine(enemyHurtByStay(enemy));
         }
     }
 
@@ -94,8 +100,10 @@ public class BulletRootController : MonoBehaviour
         {
             GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
             par.GetComponent<ParticleSystem>().Play();
+            StopAllCoroutines();
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             EasyObjectPool.instance.ReturnObjectToPool(grass_2);
+            grass_2.SetActive(false);
             gameObject.SetActive(false);
         }
     }

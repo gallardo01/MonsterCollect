@@ -99,6 +99,10 @@ public class MonsterController : MonoBehaviour
     {
         if (!isDead)
         {
+            if(heroes == null)
+            {
+                heroes = PlayerController.Instance.getRealData();
+            }
             int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
             int type = MathController.Instance.getTypeValue(heroes, monsterData);
             if (raiseArmour)

@@ -100,9 +100,6 @@ public class PlayerController : Singleton<PlayerController>
         }
         calculateSkillDame();
         attackMonster(totalSkill[0]);
-        attackMonster(totalSkill[1]);
-        //attackMonster(totalSkill[5]);
-
         for (int i = 0; i < currentHp / 400; i++)
         {
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);
@@ -123,6 +120,10 @@ public class PlayerController : Singleton<PlayerController>
         realData.Move = currentHeroes.Move * (100 + bonusPoints[4]) / 100;
         realData.Crit = currentHeroes.Crit * (100 + bonusPoints[5]) / 100;
         realData.Speed = currentHeroes.Speed * (100 + bonusPoints[6]) / 100;
+    }
+    public MyHeroes getRealData()
+    {
+        return realData;
     }
     public int getBonusPoints(int i)
     {
@@ -267,7 +268,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartCoroutine(thunder_2(bulletText, id));
         }
-        else if (skillId == 16 || skillId == 6)
+        else if (skillId == 16 || skillId == 6 || skillId == 40)
         {
             StartCoroutine(bombFly(bulletText, id));
         }
@@ -291,13 +292,21 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartCoroutine(snowmanTrigger(bulletText, id));
         }
-        else if (skillId == 30)
+        else if (skillId == 30 || skillId == 42)
         {
             StartCoroutine(reflectBullet(bulletText, id));
         }
         else if (skillId == 38)
         {
             StartCoroutine(rootGrassTree(bulletText, id));
+        } 
+        else if(skillId == 39)
+        {
+            StartCoroutine(grassFlyAround(bulletText, id));
+        } 
+        else if(skillId == 41)
+        {
+            StartCoroutine(spawnSpikeTree(bulletText, id));
         }
     }
     IEnumerator disableObject(float timer, GameObject obj)
@@ -462,6 +471,35 @@ locate.transform.rotation);
         }
         StartCoroutine(throwAWeb(bulletText, id));
     }
+    private IEnumerator spawnSpikeTree(string bulletText, int id)
+    {
+        yield return new WaitForSeconds(totalSkill[id].timerGame);
+        if (isPause == false)
+        {
+            GameObject shootTarget = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
+locate.transform.rotation);
+            shootTarget.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+            GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, shootTarget.transform.position,
+shootTarget.transform.rotation);
+            projectileNormal.GetComponent<BulletHitBulletController>().initBullet(realData, totalSkill[id].powerGame);
+            if (totalSkill[id].data.Level >= 3)
+            {
+                GameObject shootTarget1 = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position, locate.transform.rotation);
+                shootTarget1.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+                GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, shootTarget1.transform.position, shootTarget1.transform.rotation);
+                projectileNormal1.GetComponent<BulletHitBulletController>().initBullet(realData, totalSkill[id].powerGame);
+            }
+            if (totalSkill[id].data.Level >= 6)
+            {
+                GameObject shootTarget2 = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position, locate.transform.rotation);
+                shootTarget2.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+                GameObject projectileNormal2 = EasyObjectPool.instance.GetObjectFromPool(bulletText, shootTarget2.transform.position, shootTarget2.transform.rotation);
+                projectileNormal2.GetComponent<BulletHitBulletController>().initBullet(realData, totalSkill[id].powerGame);
+            }
+
+        }
+        StartCoroutine(spawnSpikeTree(bulletText, id));
+    }
     private IEnumerator rootGrassTree(string bulletText, int id)
     {
         yield return new WaitForSeconds(totalSkill[id].timerGame);
@@ -475,14 +513,14 @@ shootTarget.transform.rotation);
             projectileNormal.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
             if (totalSkill[id].data.Level >= 3)
             {
-                GameObject shootTarget1 = EasyObjectPool.instance.GetObjectFromPool("Shadow", locate.transform.position, locate.transform.rotation);
+                GameObject shootTarget1 = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position, locate.transform.rotation);
                 shootTarget1.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
                 GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool("Grass_2", shootTarget1.transform.position, shootTarget1.transform.rotation);
                 projectileNormal1.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
             }
             if (totalSkill[id].data.Level >= 6)
             {
-                GameObject shootTarget2 = EasyObjectPool.instance.GetObjectFromPool("Shadow", locate.transform.position, locate.transform.rotation);
+                GameObject shootTarget2 = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position, locate.transform.rotation);
                 shootTarget2.transform.position = this.transform.position + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
                 GameObject projectileNormal2 = EasyObjectPool.instance.GetObjectFromPool("Grass_2", shootTarget2.transform.position, shootTarget2.transform.rotation);
                 projectileNormal2.GetComponent<BulletRootController>().initBullet(realData, totalSkill[id].powerGame);
@@ -523,6 +561,26 @@ gameObject.transform.rotation);
         EasyObjectPool.instance.ReturnObjectToPool(projectileNormal);
         projectileNormal.SetActive(false);
     }
+    private IEnumerator grassFlyAround(string bulletText, int id)
+    {
+        if (isPause == false)
+        {
+            for(int i = 0; i < totalSkill[id].data.Level + 3; i++)
+            {
+                StartCoroutine(grassFlyAroundAction(bulletText, i, id));
+            }
+        }
+        yield return new WaitForSeconds(totalSkill[id].timerGame);
+        StartCoroutine(grassFlyAround(bulletText, id));
+    }
+    private IEnumerator grassFlyAroundAction(string bulletText, int circle, int id)
+    {
+        GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, new Vector3(20f, 20f, 0f),
+gameObject.transform.rotation);
+        projectileNormal.GetComponent<BulletFlyAround>().initBullet(realData, circle, totalSkill[id].powerGame, gameObject.transform);
+        yield return new WaitForSeconds(0f);
+    }
+
     private IEnumerator reflectBullet(string bulletText, int id)
     {
         if (isPause == false)

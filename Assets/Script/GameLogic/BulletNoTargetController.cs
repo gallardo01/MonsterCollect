@@ -70,5 +70,20 @@ public class BulletNoTargetController : MonoBehaviour
                 GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
             }
         }
+        else if ((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Boss") && id == 8)
+        {
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.gameObject.GetComponent<MonsterController>().enemyHurt(heroes, skillDame);
+                GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
+            }
+            else
+            {
+                collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, skillDame);
+                GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
+            }
+            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+            gameObject.SetActive(false);
+        }
     }
 }

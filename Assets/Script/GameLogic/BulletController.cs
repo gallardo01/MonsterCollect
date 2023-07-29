@@ -7,7 +7,7 @@ public class BulletController : MonoBehaviour
 {
     private MyHeroes heroes;
     [SerializeField] int id;
-    public Transform target;
+    private Transform target;
     // Start is called before the first frame update
     private int bounce = 4;
     private float speed = 0.2f;

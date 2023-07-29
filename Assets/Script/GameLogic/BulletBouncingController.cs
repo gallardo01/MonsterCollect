@@ -7,9 +7,10 @@ using UnityEngine;
 
 public class BulletBouncingController : MonoBehaviour
 {
-    public float width = 6f;
-    public float height = 6f;
+    private float width = 6f;
+    private float height = 6f;
 
+    public int type;
     Transform target;
     MyHeroes heroes;
     int damePercent;
@@ -25,86 +26,89 @@ public class BulletBouncingController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //transform.Translate(direction * Time.deltaTime);
-        if (transform.position.x > (width + target.position.x) && bounce > 0 && isReflect)
+        if (target != null)
         {
-            isReflect = false;
-            StartCoroutine(resumeReflect());
-            bounce--;
-            if(bounce <= 0)
+            if (transform.position.x > (width + target.position.x) && bounce > 0 && isReflect)
             {
-                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                gameObject.SetActive(false);
+                isReflect = false;
+                StartCoroutine(resumeReflect());
+                bounce--;
+                if (bounce <= 0)
+                {
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
+                }
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                Vector2 vector = new Vector2(-1f, Random.Range(-2f, 2f));
+                direction = EasyObjectPool.instance.getRandomTargetPosition();
+                if (direction != null)
+                {
+                    vector = calculateVector(this.transform, direction);
+                }
+                vector = vector.normalized;
+                GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            Vector2 vector = new Vector2(-1f, Random.Range(-2f, 2f));
-            direction = EasyObjectPool.instance.getRandomTargetPosition();
-            if (direction != null)
+            else if (transform.position.x < (-width + target.position.x) && bounce > 0 && isReflect)
             {
-                vector = calculateVector(this.transform, direction);
-            } 
-            vector = vector.normalized;
-            GetComponent<Rigidbody2D>().AddForce(vector * 500);
-        }
-        else if(transform.position.x < (-width + target.position.x) && bounce > 0 && isReflect)
-        {
-            isReflect = false;
-            StartCoroutine(resumeReflect());
-            bounce--;
-            if (bounce <= 0)
-            {
-                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                gameObject.SetActive(false);
-            }
+                isReflect = false;
+                StartCoroutine(resumeReflect());
+                bounce--;
+                if (bounce <= 0)
+                {
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
+                }
 
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            Vector2 vector = new Vector2(1f, Random.Range(-2f, 2f));
-            direction = EasyObjectPool.instance.getRandomTargetPosition();
-            if (direction != null)
-            {
-                vector = calculateVector(this.transform, direction);
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                Vector2 vector = new Vector2(1f, Random.Range(-2f, 2f));
+                direction = EasyObjectPool.instance.getRandomTargetPosition();
+                if (direction != null)
+                {
+                    vector = calculateVector(this.transform, direction);
+                }
+                vector = vector.normalized;
+                GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
-            vector = vector.normalized;
-            GetComponent<Rigidbody2D>().AddForce(vector * 500);
-        } else if (transform.position.y > (height + target.position.y) && bounce > 0 && isReflect)
-        {
-            isReflect = false;
-            StartCoroutine(resumeReflect());
-            bounce--;
-            if (bounce <= 0)
+            else if (transform.position.y > (height + target.position.y) && bounce > 0 && isReflect)
             {
-                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                gameObject.SetActive(false);
+                isReflect = false;
+                StartCoroutine(resumeReflect());
+                bounce--;
+                if (bounce <= 0)
+                {
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
+                }
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                Vector2 vector = new Vector2(Random.Range(-2f, 2f), -1f);
+                direction = EasyObjectPool.instance.getRandomTargetPosition();
+                if (direction != null)
+                {
+                    vector = calculateVector(this.transform, direction);
+                }
+                vector = vector.normalized;
+                GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            Vector2 vector = new Vector2(Random.Range(-2f, 2f), -1f);
-            direction = EasyObjectPool.instance.getRandomTargetPosition();
-            if (direction != null)
+            else if (transform.position.y < (-height + target.position.y) && bounce > 0 && isReflect)
             {
-                vector = calculateVector(this.transform, direction);
+                isReflect = false;
+                StartCoroutine(resumeReflect());
+                bounce--;
+                if (bounce <= 0)
+                {
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
+                }
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                Vector2 vector = new Vector2(Random.Range(-2f, 2f), 1f);
+                direction = EasyObjectPool.instance.getRandomTargetPosition();
+                if (direction != null)
+                {
+                    vector = calculateVector(this.transform, direction);
+                }
+                vector = vector.normalized;
+                GetComponent<Rigidbody2D>().AddForce(vector * 500);
             }
-            vector = vector.normalized;
-            GetComponent<Rigidbody2D>().AddForce(vector * 500);
-        }
-        else if (transform.position.y < (-height + target.position.y) && bounce > 0 && isReflect)
-        {
-            isReflect = false;
-            StartCoroutine(resumeReflect());
-            bounce--;
-            if (bounce <= 0)
-            {
-                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                gameObject.SetActive(false);
-            }
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            Vector2 vector = new Vector2(Random.Range(-2f, 2f), 1f);
-            direction = EasyObjectPool.instance.getRandomTargetPosition();
-            if (direction != null)
-            {
-                vector = calculateVector(this.transform, direction);
-            }
-            vector = vector.normalized;
-            GetComponent<Rigidbody2D>().AddForce(vector * 500);
         }
     }
 
@@ -116,6 +120,10 @@ public class BulletBouncingController : MonoBehaviour
 
     public void initBullet(MyHeroes myHeroes, int skill, int dame, Transform enemy)
     {
+        target = enemy;
+        heroes = myHeroes;
+        type = heroes.Type;
+        damePercent = dame;
         isReflect = true;
         bounce = 4;
         if (GameController.Instance.getBossSpawn())
@@ -127,9 +135,6 @@ public class BulletBouncingController : MonoBehaviour
             height = 9f;
             width = height * Screen.width / Screen.height;
         }
-        target = enemy;
-        heroes = myHeroes;
-        damePercent = dame;
     }
 
 
@@ -145,7 +150,7 @@ public class BulletBouncingController : MonoBehaviour
             {
                 collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
             }
-            GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
+            GameController.Instance.addParticleDefault(collision.gameObject, type);
         }
     }
 

@@ -100,6 +100,10 @@ public class BossController : Singleton<BossController>
     {
         if (!isDead)
         {
+            if (heroes == null)
+            {
+                heroes = PlayerController.Instance.getRealData();
+            }
             int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
             int typeValue = MathController.Instance.getTypeValue(heroes, monsterData);
             int actualDame = Mathf.Abs(dame);

@@ -10,7 +10,7 @@ public class PickAbilityController : MonoBehaviour
     [SerializeField] GameObject[] cardChosen;
     [SerializeField] Button[] pickerSkill;
     private int[] typeSkill;
-
+    private Sprite[] sprite;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,20 +19,26 @@ public class PickAbilityController : MonoBehaviour
         pickerSkill[2].onClick.AddListener(() => onClickSkill(2));
     }
 
+    private void Awake()
+    {
+        sprite = Resources.LoadAll<Sprite>("Contents/Move");
+    }
     private void onClickSkill(int id)
     {
         GameController.Instance.pickSkill(typeSkill[id]);
         gameObject.SetActive(false);
     }
 
-    public void initSkillData(int[] currentSkill, int[] levelSkill, int[] currentBuff, int[] levelBuff, int[] type, int playerType)
+    public void initSkillData(int[] currentSkill, int[] levelSkill, int[] currentBuff, int[] levelBuff, int[] type)
     {
+        int playerType = PlayerController.Instance.getType();
         typeSkill = type;
         for(int i = 0; i < 4; i++)
         {
             if (currentSkill[i + 1] > 0) {
                 currentSkillImage[i].gameObject.SetActive(true);
-                currentSkillImage[i].sprite = Resources.Load<Sprite>("Contents/Move/" + (currentSkill[i + 1] + (playerType - 1) * 12));
+                int id = currentSkill[i + 1] + (playerType - 1) * 12;
+                currentSkillImage[i].sprite = sprite[id + 1];
             } else
             {
                 currentSkillImage[i].gameObject.SetActive(false);
@@ -40,7 +46,8 @@ public class PickAbilityController : MonoBehaviour
             if (currentBuff[i + 1] > 0)
             {
                 currentBuffImage[i].gameObject.SetActive(true);
-                currentBuffImage[i].sprite = Resources.Load<Sprite>("Contents/Move/" + (currentBuff[i + 1] + (playerType - 1) * 12));
+                int id = currentBuff[i + 1] + (playerType - 1) * 12;
+                currentBuffImage[i].sprite = sprite[id + 1];
             }
             else
             {

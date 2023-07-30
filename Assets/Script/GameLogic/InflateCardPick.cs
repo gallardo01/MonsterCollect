@@ -14,7 +14,12 @@ public class InflateCardPick : MonoBehaviour
     [SerializeField] TextMeshProUGUI textSkill;
     [SerializeField] GameObject[] stars;
     [SerializeField] GameObject[] starsAnimation;
-    
+
+    private Sprite[] sprite;
+    private void Awake()
+    {
+        sprite = Resources.LoadAll<Sprite>("Contents/Move");
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +40,6 @@ public class InflateCardPick : MonoBehaviour
             headerImage.sprite = Resources.Load<Sprite>("UI/Background/Header_Buff");
             glowImage.color = Color.cyan;
         }
-        iconSkill.sprite = Resources.Load<Sprite>("Contents/Move/" + card.ToString());
         if ((card - 1) % 12 < 6 && card > 0)
         {
             SkillData data = SkillDatabase.Instance.fetchSkillIndex(card);
@@ -48,19 +52,24 @@ public class InflateCardPick : MonoBehaviour
             {
                 textSkill.text = data.Second;
             }
-        } else if ((card - 1) % 12 >= 6 && card > 0)
+            iconSkill.sprite = sprite[card + 1];
+        }
+        else if ((card - 1) % 12 >= 6 && card > 0)
         {
             SkillData data = SkillDatabase.Instance.fetchSkillIndex(card);
             nameSkill.text = data.Skill;
             int percent = data.Power * (100 + (level) * 50) / 100;
             textSkill.text = data.Content + " +" + percent + "%";
+            iconSkill.sprite = sprite[card + 1];
         }
         else if(card == -1)
         {
+            iconSkill.sprite = sprite[0];
             nameSkill.text = "Max Potion";
             textSkill.text = "Restore full HP immediately";
         } else if(card == -2)
         {
+            iconSkill.sprite = sprite[1];
             nameSkill.text = "Gold";
             textSkill.text = "Gain random 1-1000 gold";
         }

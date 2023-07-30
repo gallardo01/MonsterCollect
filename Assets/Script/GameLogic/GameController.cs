@@ -26,7 +26,7 @@ public class GameController : Singleton<GameController>
 
     private int goldAward = 0;
     private List<ItemInventory> itemAward = new List<ItemInventory>();
-    private int playerType = 1;
+    private int playerType;
     private int[] currentSkill = { 0, 1, 0, 0, 0 };
     private int[] skillLevel = { 0, 1, 0, 0, 0 };
     private int[] currentBuff = { 0, 0, 0, 0, 0 };
@@ -354,7 +354,7 @@ public class GameController : Singleton<GameController>
             }
         }
         pickAbilityPanel.SetActive(true);
-        pickAbilityPanel.GetComponent<PickAbilityController>().initSkillData(currentSkill, skillLevel, currentBuff, buffLevel, type, playerType);
+        pickAbilityPanel.GetComponent<PickAbilityController>().initSkillData(currentSkill, skillLevel, currentBuff, buffLevel, type);
     }
     public void pickSkill(int id)
     {

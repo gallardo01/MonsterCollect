@@ -148,6 +148,11 @@ public class PlayerController : Singleton<PlayerController>
     {
         return playerLevel;
     }
+    public int getType()
+    {
+        return data.Type;
+    }
+
     // Update is called once per frame;
     void Update()
     {

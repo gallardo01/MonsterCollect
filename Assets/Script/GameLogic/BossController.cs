@@ -219,6 +219,7 @@ public class BossController : Singleton<BossController>
                 bossTargetGlobal.transform.position,
                 (moveSpeed / 4 * 30) * Time.deltaTime);
             }
+            // move to 
             else if (wayMove == 5)
             {
                 transform.position += bossDirection * moveSpeed * Time.deltaTime;
@@ -727,34 +728,103 @@ public class BossController : Singleton<BossController>
         else if (monsterData.Id == 50)
         {
 
+            //yield return new WaitForSeconds(2f);
+            //int chance = Random.Range(0, 5);
+            //if (chance <= rate && !isCast)
+            //{
+            //    isCast = true;
+            //    wayMove = 5;
+            //    moveSpeed = 0;
+            //    runAnimation(3);
+            //    yield return new WaitForSeconds(1f);
+            //    runAnimation(2);
+
+
+            //    for (int i = 0; i < 4; i++)
+            //    {
+            //        bossDirection = Vector3.Normalize(player.position - transform.position);
+            //        moveSpeed = 4f;
+            //        yield return new WaitForSeconds(1f);
+            //        moveSpeed = 0;
+            //        yield return new WaitForSeconds(1f);
+            //    }
+
+
+
+            //    moveSpeed = 1;
+            //    wayMove = 1;
+
+            //    isCast = false;
+            //}
+
+            SmokePos = this.transform.Find("SmokePos").transform.gameObject;
+
+            // 2s idle
+            wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
             yield return new WaitForSeconds(2f);
-            int chance = Random.Range(0, 5);
-            if (chance <= rate && !isCast)
+
+            // 6s duoi theo nguoi choi
+            wayMove = 1;
+            runAnimation(2);
+            moveSpeed = 1.7f;
+            yield return new WaitForSeconds(6f);
+
+            //dung lai ban dan
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(2f);
+
+            Vector3 temp = player.position - transform.position;
+            temp = Vector3.Normalize(temp);
+            float angle1 = calAngle(temp);
+
+            for (int i = 0; i < 1; i++)
             {
-                isCast = true;
-                wayMove = 5;
-                moveSpeed = 0;
-                runAnimation(3);
-                yield return new WaitForSeconds(1f);
-                runAnimation(2);
+                runAnimation(5);
+
+                GameObject fireBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                fireBullet.GetComponent<BulletOfBossController>().initBulletNoTarget(temp, 1.5f, 0, monsterData);
+                fireBullet.transform.Rotate(0, 0, angle1);
+
+                GameObject fireBullet05 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                rotateBullet(fireBullet05, temp, angle1, (float)(0.3), 24);
 
 
-                for (int i = 0; i < 4; i++)
+                for (int j = 1; j < 15; j++)
                 {
-                    bossDirection = Vector3.Normalize(player.position - transform.position);
-                    moveSpeed = 5f;
-                    yield return new WaitForSeconds(1f);
-                    moveSpeed = 0;
-                    yield return new WaitForSeconds(1f);
+                    GameObject fireBullet1 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                    rotateBullet(fireBullet1, temp, angle1, j, 24);
+
+                    GameObject fireBullet2 = EasyObjectPool.instance.GetObjectFromPool("Bullet_boss_3", transform.position, transform.rotation);
+                    rotateBullet(fireBullet2, temp, angle1, (float)(j + 0.3), 24);
+
+                    yield return new WaitForSeconds(0.01f);
                 }
 
-
-
-                moveSpeed = 1;
-                wayMove = 1;
-
-                isCast = false;
+                yield return new WaitForSeconds(0.5f);
             }
+
+            //3s idle
+            wayMove = 1;
+            runAnimation(1);
+            moveSpeed = 0;
+            yield return new WaitForSeconds(3f);
+
+            //lao ve huong nguoi choi
+            wayMove = 5;
+            runAnimation(2);
+            for (int i = 0; i < 4; i++)
+            {
+                bossDirection = Vector3.Normalize(player.position - transform.position);
+                moveSpeed = 4f;
+                yield return new WaitForSeconds(1f);
+                moveSpeed = 0;
+                yield return new WaitForSeconds(1f);
+            }
+
+            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
         }
 
         else if (monsterData.Id == 60)

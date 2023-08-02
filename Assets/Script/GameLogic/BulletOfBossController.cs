@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
+using System;
+using UnityEngine.UIElements;
+
 //using System.Diagnostics.Eventing.Reader;
 
 public class BulletOfBossController : MonoBehaviour
@@ -35,6 +38,7 @@ public class BulletOfBossController : MonoBehaviour
     private void Start()
     {
         speed = 6f * Application.targetFrameRate / 60f;
+
     }
 
     // Update is called once per frame
@@ -61,6 +65,19 @@ public class BulletOfBossController : MonoBehaviour
 
         
     }
+    IEnumerator zicZacBullet()
+    {
+        yield return new WaitForSeconds(0.25f);
+        direction = Quaternion.AngleAxis(-30, Vector3.forward) * direction;
+        transform.Rotate(0, 0, 30);
+
+        yield return new WaitForSeconds(0.255f);
+        direction = Quaternion.AngleAxis(30, Vector3.forward) * direction;
+        transform.Rotate(0, 0, -30);
+
+        StartCoroutine(zicZacBullet());
+
+    }
 
     public void initBullet(Transform Target, Vector3 Direction, float Speed, int type, MonsterData monsterData)
     {
@@ -83,6 +100,12 @@ public class BulletOfBossController : MonoBehaviour
             StartCoroutine(runAnimExplosion(1f));
             StartCoroutine(returnToPool(5f));
 
+        }
+        else if (type == 10)
+        {
+            direction = Quaternion.AngleAxis(15, Vector3.forward) * direction;
+            transform.Rotate(0, 0, -15);
+            StartCoroutine(zicZacBullet());
         }
     }
 
@@ -200,7 +223,7 @@ public class BulletOfBossController : MonoBehaviour
         {
             if (type == 2) // ice spike
             {
-                int ran = Random.Range(-30, 0);
+                int ran = UnityEngine.Random.Range(-30, 0);
 
                 for (int i = 0; i < 6; i++)
                 {
@@ -259,7 +282,7 @@ public class BulletOfBossController : MonoBehaviour
         {
             if (type == 2) // ice spike
             {
-                int ran = Random.Range(-30, 0);
+                int ran = UnityEngine.Random.Range(-30, 0);
 
                 for (int i = 0; i < 6; i++)
                 {

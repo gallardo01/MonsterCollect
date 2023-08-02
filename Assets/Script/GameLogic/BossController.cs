@@ -817,6 +817,7 @@ public class BossController : Singleton<BossController>
             runAnimation(2);
             for (int i = 0; i < 4; i++)
             {
+                faceToPlayer();
                 bossDirection = Vector3.Normalize(player.position - transform.position);
                 moveSpeed = 4f;
                 yield return new WaitForSeconds(1f);
@@ -830,39 +831,68 @@ public class BossController : Singleton<BossController>
         else if (monsterData.Id == 60)
         {
 
-            wayMove = 1;
+            //wayMove = 1;
 
+            //yield return new WaitForSeconds(2f);
+            //int chance = Random.Range(0, 5);
+            //if (chance <= rate && !isCast)
+            //{
+            //    isCast = true;
+            //    moveSpeed = 0;
+            //    runAnimation(3);
+
+            //    GameObject windFog = EasyObjectPool.instance.GetObjectFromPool("Boss_6_Target", transform.position, transform.rotation);
+            //    Vector3 directionFog = Vector3.Normalize(player.position - transform.position);
+            //    windFog.GetComponent<BulletOfBossController>().initBullet(player, directionFog, 6f, 3, monsterData);
+
+
+            //    // ban dan
+            //    for (int i = 0; i < 5; i++)
+            //    {
+            //        faceToPlayer();
+            //        runAnimation(3);
+            //        GameObject windBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_wind_boss", transform.position, transform.rotation);
+            //        Vector3 direction = Vector3.Normalize(player.position - transform.position);
+            //        windBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 5f, 0, monsterData);
+
+            //        float angle = calAngle(player.transform, direction);
+            //        windBullet.transform.Rotate(0, 0, angle);
+
+            //        yield return new WaitForSeconds(1f);
+            //    }
+
+            //    moveSpeed = 1;
+            //    isCast = false;
+            //}
+
+            ////3s idle
+            //wayMove = 1;
+            //runAnimation(1);
+            //moveSpeed = 0;
+            //yield return new WaitForSeconds(3f);
+
+            //dung lai ban dan
+            runAnimation(1);
+            moveSpeed = 0;
             yield return new WaitForSeconds(2f);
-            int chance = Random.Range(0, 5);
-            if (chance <= rate && !isCast)
+
+            // ban dan
+            for (int i = 0; i < 5; i++)
             {
-                isCast = true;
-                moveSpeed = 0;
+                faceToPlayer();
                 runAnimation(3);
+                GameObject windBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_wind_boss", transform.position, transform.rotation);
+                Vector3 direction = Vector3.Normalize(player.position - transform.position);
+                windBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 5f, 10, monsterData);
 
-                GameObject windFog = EasyObjectPool.instance.GetObjectFromPool("Boss_6_Target", transform.position, transform.rotation);
-                Vector3 directionFog = Vector3.Normalize(player.position - transform.position);
-                windFog.GetComponent<BulletOfBossController>().initBullet(player, directionFog, 6f, 3, monsterData);
+                float angle = calAngle(player.transform, direction);
+                windBullet.transform.Rotate(0, 0, angle);
 
-
-                // ban dan
-                for (int i = 0; i < 5; i++)
-                {
-                    faceToPlayer();
-                    runAnimation(3);
-                    GameObject windBullet = EasyObjectPool.instance.GetObjectFromPool("Bullet_wind_boss", transform.position, transform.rotation);
-                    Vector3 direction = Vector3.Normalize(player.position - transform.position);
-                    windBullet.GetComponent<BulletOfBossController>().initBullet(player, direction, 5f, 0, monsterData);
-
-                    float angle = calAngle(player.transform, direction);
-                    windBullet.transform.Rotate(0, 0, angle);
-
-                    yield return new WaitForSeconds(1f);
-                }
-
-                moveSpeed = 1;
-                isCast = false;
+                yield return new WaitForSeconds(1f);
             }
+
+
+
         }
 
         else if (monsterData.Id == 70)

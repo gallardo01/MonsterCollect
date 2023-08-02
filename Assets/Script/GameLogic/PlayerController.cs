@@ -43,12 +43,11 @@ public class PlayerController : Singleton<PlayerController>
 
 
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 10. Healing
-    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
+    public int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     private int cacheSpeed;
     private bool isPlayerRooted = false;
     private List<SkillInGame> totalSkill = new List<SkillInGame>();
-    private List<SkillInGame> totalBuff;
 
     private void Awake()
     {
@@ -88,7 +87,7 @@ public class PlayerController : Singleton<PlayerController>
         // pick con nao?
         idPick = 20;
         data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
-        realData = data;
+        realData = HeroesDatabase.Instance.fetchMyHeroes(idPick);
         currentHp = data.Hp;
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
@@ -113,13 +112,14 @@ public class PlayerController : Singleton<PlayerController>
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
     private void updatePlayerData()
     {
-        MyHeroes currentHeroes = HeroesDatabase.Instance.fetchMyHeroes(realData.Id);
-        realData.Atk = currentHeroes.Atk * (100 + bonusPoints[1]) / 100;
-        realData.Hp = currentHeroes.Hp * (100 + bonusPoints[2]) / 100;
-        realData.Armour = currentHeroes.Armour * (100 + bonusPoints[3]) / 100;
-        realData.Move = currentHeroes.Move * (100 + bonusPoints[4]) / 100;
-        realData.Crit = currentHeroes.Crit * (100 + bonusPoints[5]) / 100;
-        realData.Speed = currentHeroes.Speed * (100 + bonusPoints[6]) / 100;
+        data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
+        realData.Atk = data.Atk * (100 + bonusPoints[1]) / 100;
+        realData.Hp = data.Hp * (100 + bonusPoints[2]) / 100;
+        realData.Armour = data.Armour * (100 + bonusPoints[3]) / 100;
+        realData.Move = data.Move * (100 + bonusPoints[4]) / 100;
+        realData.Crit = data.Crit * (100 + bonusPoints[5]) / 100;
+        realData.Speed = data.Speed * (100 + bonusPoints[6]) / 100;
+        Debug.Log(data.Move + "  " + realData.Move);
     }
     public MyHeroes getRealData()
     {
@@ -163,6 +163,7 @@ public class PlayerController : Singleton<PlayerController>
         }
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
+            Debug.Log((float)(realData.Move / 700f));
             flip();
         }
         else if (UltimateJoystick.GetHorizontalAxis("Movement") < 0 && facingRight == 1)
@@ -247,7 +248,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             if (buffLevel[i] > 0)
             {
-                int skillId = i + 6;
+                int skillId = (data.Type - 1) * 12 + 6 + i;
                 SkillData skillData = SkillDatabase.Instance.fetchSkillIndex(skillId);
                 bonusPoints[skillData.Timer] = skillData.Power * (100 + (buffLevel[i] - 1) * 50) / 100;
             }
@@ -913,7 +914,7 @@ gameObject.transform.rotation);
     }
     public void setPlayerNormal()
     {
-        realData.Speed = cacheSpeed;
+        realData.Move = cacheSpeed;
 
     }
     public void revivePlayer()
@@ -988,15 +989,15 @@ gameObject.transform.rotation);
     }
     public void slowPlayer(int percent)
     {
-        cacheSpeed = realData.Speed;
-        realData.Speed = (100 - percent) * realData.Speed / 100;
+        cacheSpeed = realData.Move;
+        realData.Move = (100 - percent) * realData.Move / 100;
     }
     private IEnumerator slowSpeed(int percent)
     {
-        int cacheSpeed = realData.Speed;
-        realData.Speed = (100 - percent) * realData.Speed / 100;
+        int cacheSpeed = realData.Move;
+        realData.Move = (100 - percent) * realData.Move / 100;
         yield return new WaitForSeconds(1f);
-        realData.Speed = cacheSpeed;
+        realData.Move = cacheSpeed;
         isPlayerRooted = false;
     }
 }

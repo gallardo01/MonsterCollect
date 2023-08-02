@@ -16535,6 +16535,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 764149963}
     m_Modifications:
+    - target: {fileID: 6261194781091560898, guid: fc95f80c9a4bd284a805b1f870b94a10,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6261194781091560901, guid: fc95f80c9a4bd284a805b1f870b94a10,
         type: 3}
       propertyPath: m_Pivot.x
@@ -30386,6 +30391,10 @@ MonoBehaviour:
   pickAbilityPanel: {fileID: 1694840119}
   goldText: {fileID: 988472590}
   iconImage: {fileID: 1373013645}
+  currentSkill: 0000000001000000000000000000000000000000
+  skillLevel: 0000000001000000000000000000000000000000
+  currentBuff: 0000000000000000000000000000000000000000
+  buffLevel: 0000000000000000000000000000000000000000
   camera: {fileID: 1685722665}
   fillImage: {fileID: 1809122912}
   bossIcon: {fileID: 1588209592}

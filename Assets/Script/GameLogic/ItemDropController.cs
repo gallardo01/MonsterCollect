@@ -5,8 +5,8 @@ using MarchingBytes;
 
 public class ItemDropController : MonoBehaviour
 {
-    [SerializeField] GameObject goldBar;
-    private GameObject target;
+    private GameObject goldBar;
+    private Transform target;
     bool isActive = true;
     bool isFlyBack = false;
     private int type = 0;
@@ -31,7 +31,7 @@ public class ItemDropController : MonoBehaviour
     {
         type = 2;
         gold = g;
-        target = GameObject.FindWithTag("GoldBar");
+        target = GameController.Instance.getGoldTextObj();
         speed = 3f;
         speed = speed * Application.targetFrameRate / 60f;
     }
@@ -71,7 +71,7 @@ public class ItemDropController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player" && isActive && type != 5 && type != 2)
         {
-            target = collision.gameObject;
+            target = collision.gameObject.transform;
             StartCoroutine(pushOut(shootFollower(collision.transform)));
 
             if (type == 1)
@@ -99,7 +99,7 @@ public class ItemDropController : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Player" && isActive && type == 2)
         {
-            target = GameObject.FindWithTag("GoldBar");
+            target = GameController.Instance.getGoldTextObj();
             isFlyBack = true;
         }
         else if (collision.gameObject.tag == "Player" && (isFlyBack) && type != 2)
@@ -121,12 +121,12 @@ public class ItemDropController : MonoBehaviour
         {
             if (type == 2)
             {
-                target = GameObject.FindWithTag("GoldBar");
+                target = GameController.Instance.getGoldTextObj();
                 isFlyBack = true;
             }
             else
             {
-                target = GameObject.FindWithTag("Player"); ;
+                target = PlayerController.Instance.transform;
                 StartCoroutine(pushOut(shootFollower(target.transform)));
             }
             if (type == 1)

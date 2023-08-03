@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using System;
+using TreeEditor;
 
 public class HeroesDatabase : Singleton<HeroesDatabase>
 {
@@ -122,6 +123,17 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             if(myHeroes[i].Id == id)
             {
                 return myHeroes[i];
+            }
+        }
+        return null;
+    }
+    public MyHeroes fetchMyHeroesData(int id)
+    {
+        for (int i = 0; i < myHeroes.Count; i++)
+        {
+            if (myHeroes[i].Id == id)
+            {
+                return (MyHeroes)myHeroes[i].Clone();
             }
         }
         return null;
@@ -313,7 +325,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     }
 }
 
-public class MyHeroes
+public class MyHeroes : ICloneable
 {
     public string Name { get; set; }
     public int Id { get; set; }
@@ -326,5 +338,9 @@ public class MyHeroes
     public int Move { get; set; }
     public string Skill { get; set; }
     public int Level { get; set; }
+    public object Clone()
+    {
+        return this.MemberwiseClone();
+    }
 }
 

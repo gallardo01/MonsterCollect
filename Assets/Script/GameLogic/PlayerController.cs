@@ -8,30 +8,26 @@ public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] GameObject body;
     //[SerializeField] TextMeshPro levelText;
-    [SerializeField] GameObject particle;
     [SerializeField] Image typeImage;
     [SerializeField] TextMeshProUGUI hpText;
     [SerializeField] GameObject hpBar;
 
     [SerializeField] GameObject locate;
-    [SerializeField] GameObject joystick;
     [SerializeField] int idPick;
 
     [SerializeField] GameObject line_hp;
     [SerializeField] GameObject line;
 
-    public GameObject runSmoke;
     public GameObject SmokePos;
     private int currentHp;
-
+    private GameObject joystick;
     private int facingRight = 1;
     private bool walk = true;
     private int playerLevel = 1;
     private bool canMove = true;
     private bool isAtk = false;
     private bool canHurt = true;
-    private int exp = 0;
-    private MyHeroes data;
+    private static MyHeroes data;
     private MyHeroes realData;
 
     float timeSmoke = 0;
@@ -40,11 +36,9 @@ public class PlayerController : Singleton<PlayerController>
     private bool isActiveNonRepeat = true;
     private GameObject gameObjectNonRepeat;
 
-
-
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 10. Healing
-    public int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    public int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
+    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     private int cacheSpeed;
     private bool isPlayerRooted = false;
     private List<SkillInGame> totalSkill = new List<SkillInGame>();
@@ -86,11 +80,12 @@ public class PlayerController : Singleton<PlayerController>
     {
         // pick con nao?
         idPick = 20;
-        data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
-        realData = HeroesDatabase.Instance.fetchMyHeroes(idPick);
+        data = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
+        realData = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
         currentHp = data.Hp;
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
+        typeImage.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type);
         int typeHeroes = (data.Type - 1) * 12 + 1;
         for (int i = typeHeroes; i < typeHeroes + 6; i++)
         {
@@ -107,19 +102,18 @@ public class PlayerController : Singleton<PlayerController>
             line_obj.transform.localPosition = new Vector3(0f, 0f, 0f);
             line_obj.transform.localScale = new Vector3(1f, 1f, 1f);
         }
-
     }
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
     private void updatePlayerData()
     {
-        data = HeroesDatabase.Instance.fetchMyHeroes(idPick);
         realData.Atk = data.Atk * (100 + bonusPoints[1]) / 100;
+        int cacheHp = realData.Hp;
         realData.Hp = data.Hp * (100 + bonusPoints[2]) / 100;
         realData.Armour = data.Armour * (100 + bonusPoints[3]) / 100;
         realData.Move = data.Move * (100 + bonusPoints[4]) / 100;
         realData.Crit = data.Crit * (100 + bonusPoints[5]) / 100;
         realData.Speed = data.Speed * (100 + bonusPoints[6]) / 100;
-        Debug.Log(data.Move + "  " + realData.Move);
+        healPlayer(realData.Hp - cacheHp);
     }
     public MyHeroes getRealData()
     {
@@ -132,17 +126,12 @@ public class PlayerController : Singleton<PlayerController>
     public void gainLv(int lv)
     {
         playerLevel = lv;
-        StartCoroutine(runVFX());
+        //StartCoroutine(runVFX());
+        // Need turn on VFX
     }
     public Transform returnObj()
     {
         return this.gameObject.transform;
-    }
-    IEnumerator runVFX()
-    {
-        particle.SetActive(true);
-        yield return new WaitForSeconds(1f);
-        particle.SetActive(false);
     }
     public int getLevel()
     {
@@ -325,7 +314,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         int bonusTimer = realData.Speed / 100;
         if (bonusTimer > 100) bonusTimer = 100;
-        yield return new WaitForSeconds(totalSkill[id].timerGame * (100 - bonusTimer) / 100 + 0.5f);
+        yield return new WaitForSeconds(totalSkill[id].timerGame * (100 - bonusTimer) / 100 + 0.4f);
         if (isPause == false)
         {
             Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
@@ -939,14 +928,17 @@ gameObject.transform.rotation);
     }
     public void healPlayer(int amount)
     {
-        int healHp = amount * currentHp / 100;
+        int healHp = amount * currentHp * (100 + bonusPoints[10]) / 100;
         int previousHp = currentHp;
         currentHp += healHp;
         if (currentHp >= realData.Hp) currentHp = realData.Hp;
         int actualHeal = currentHp - previousHp;
-        GameObject floatText = EasyObjectPool.instance.GetObjectFromPool("FloatingText", transform.position, transform.rotation);
-        floatText.GetComponent<FloatingText>().healPlayer(actualHeal);
-        float per = (float)currentHp / data.Hp;
+        if (actualHeal > 0)
+        {
+            GameObject floatText = EasyObjectPool.instance.GetObjectFromPool("FloatingText", transform.position, transform.rotation);
+            floatText.GetComponent<FloatingText>().healPlayer(actualHeal);
+        }
+        float per = (float)currentHp / realData.Hp;
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = per;
     }

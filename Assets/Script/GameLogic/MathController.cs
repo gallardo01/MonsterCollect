@@ -9,10 +9,10 @@ public class MathController : Singleton<MathController>
     private int[] armourPercent = {20, 40, 60, 85, 120, 175, 200};
 
     private float[,] type = {{0, 0, 0, 0, 0 },
-                             { 0, 0.7f, 1f, 0.7f, 1.3f },
-                             { 0, 1f, 0.7f, 1.3f, 0.7f },
-                             { 0, 1.3f, 0.7f, 0.7f, 1f },
-                             { 0, 0.7f, 1.3f, 1f, 0.7f },
+                             { 0, 1f, 1f, 0.7f, 1.3f },
+                             { 0, 1f, 1f, 1.3f, 0.7f },
+                             { 0, 1.3f, 0.7f, 1f, 1f },
+                             { 0, 0.7f, 1.3f, 1f, 1f },
     };
 
     private void Start()
@@ -65,10 +65,9 @@ public class MathController : Singleton<MathController>
         return (int)hp;
     }
 
-
     private int percentageCrit(int crit)
     {
-        return 5 + (crit/100);
+        return 5 + (crit/85);
     }
 
     private int percentageArmour(int armour)

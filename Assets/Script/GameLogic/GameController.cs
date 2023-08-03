@@ -14,6 +14,7 @@ public class GameController : Singleton<GameController>
 
     [SerializeField] GameObject pickAbilityPanel;
     [SerializeField] TextMeshProUGUI goldText;
+    [SerializeField] TextMeshProUGUI itemText;
 
     [SerializeField] Image iconImage;
     private int exp = 0;
@@ -240,6 +241,7 @@ public class GameController : Singleton<GameController>
     public void addItemToDb(ItemInventory item)
     {
         itemAward.Add(item);
+        itemText.text = itemAward.Count.ToString();
     }
     private void updateColorText()
     {
@@ -252,7 +254,7 @@ public class GameController : Singleton<GameController>
     }
     public void gainExpChar(int num)
     {
-        exp += num;
+        exp += num * (100 + PlayerController.Instance.getBonusPoints(9)) / 100; ;
         updateProgressBar(exp >= playerLevel * 800);
     }
     private void updateProgressBar(bool levelUp)
@@ -505,6 +507,11 @@ public class GameController : Singleton<GameController>
     private int CompareObNames(GameObject x, GameObject y)
     {
         return x.name.CompareTo(y.name);
+    }
+
+    public Transform getGoldTextObj()
+    {
+        return goldText.transform;
     }
 
 }

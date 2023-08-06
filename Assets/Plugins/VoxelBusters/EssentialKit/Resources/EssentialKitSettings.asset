@@ -97,8 +97,17 @@ MonoBehaviour:
       m_showErrorDialogs: 1
       m_displayPopupsAtTop: 1
   m_billingServicesSettings:
-    m_isEnabled: 0
-    m_products: []
+    m_isEnabled: 1
+    m_products:
+    - m_id: newbie_pack
+      m_platformId: com.brandon.monstercollect.newbie_pack
+      m_platformIdOverrides:
+        m_ios: 
+        m_tvos: 
+        m_android: 
+      m_productType: 0
+      m_title: Newbie Pack
+      m_description: Resource pack for new players
     m_maintainPurchaseHistory: 1
     m_autoFinishTransactions: 1
     m_verifyTransactionReceipts: 1

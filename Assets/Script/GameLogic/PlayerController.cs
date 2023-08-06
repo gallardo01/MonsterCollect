@@ -152,7 +152,6 @@ public class PlayerController : Singleton<PlayerController>
         }
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
-            Debug.Log((float)(realData.Move / 700f));
             flip();
         }
         else if (UltimateJoystick.GetHorizontalAxis("Movement") < 0 && facingRight == 1)

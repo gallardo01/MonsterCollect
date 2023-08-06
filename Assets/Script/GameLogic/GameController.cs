@@ -70,6 +70,7 @@ public class GameController : Singleton<GameController>
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
         // get stage    
+        stage = PlayerPrefs.GetInt("Map");
         string route = "Route1";
         waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
@@ -151,7 +152,7 @@ public class GameController : Singleton<GameController>
         //set up thong tin truoc khi danh boss
         PlayerController.Instance.setPosition();
         bossTileMaps.SetActive(true);
-        camera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 9;
+        camera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 10;
         yield return new WaitForSeconds(1.5f);
         // bat dau danh boss
         fadeScreen.SetActive(false);

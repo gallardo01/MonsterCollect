@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
 
 public class SumaryController : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class SumaryController : MonoBehaviour
     public GameObject[] item;
     public Button closePanel;
     public GameObject hide;
+    private Sprite[] heroesSprite;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +29,7 @@ public class SumaryController : MonoBehaviour
 
     public void initEndingData(int progress, int stage, int gold, List<ItemInventory> rewards)
     {
+        heroesSprite = Resources.LoadAll<Sprite>("Contents/Icon/Island");
         hide.SetActive(false);
         //Time.timeScale = 0;
         stars[0].SetActive(true);
@@ -37,7 +41,8 @@ public class SumaryController : MonoBehaviour
         {
             stars[2].SetActive(true);
         }
-        bossIcon.sprite = Resources.Load<Sprite>("UI/Icons/Creep/" + (stage * 10).ToString());
+        bossIcon.sprite = heroesSprite[stage - 1];
+        bossIcon.GetComponent<Image>().SetNativeSize();
         textProgress.text = "You reach <size=70><color=yellow>" + progress.ToString() + "%<size=50><color=white>Stage " + stage.ToString();
 
         UserDatabase.Instance.gainMoneyInGame(gold, 0);

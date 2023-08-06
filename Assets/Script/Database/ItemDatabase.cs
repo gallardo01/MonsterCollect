@@ -29,7 +29,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     }
     public void LoadData()
     {
-        bool isSyncCloud = false;
+        bool isSyncCloud;
         isSyncCloud = SyncService.Instance.getCloudStatus();
         string fileName = "Item.txt";
         LoadResourceTextfileItemData(fileName);
@@ -467,6 +467,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public ItemInventory getItemObject(int id, int slot, int rarity)
     {
         ItemData rawItem = fetchItemById(id);
+
         // Add consume item
         if (rawItem.Type == 0 || rawItem.Type == 10)
         {
@@ -484,7 +485,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
             item.Stats_3 = 0;
             item.Stats_4 = 0;
             item.Stats_5 = 0;
-            int index = fetchInventoryByIndex(id);
             item.Slot = slot;
             return item;
         }
@@ -533,19 +533,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public ItemInventory dropItem()
     {
         int chance = Random.Range(0, 100);
-        if(chance < 30)
+        if(chance < 40)
         {
             int id = Random.Range(4, 10);
             return getItemObject(id, 1, 1);
-        } else if(chance < 40)
+        } else if(chance < 60)
         {
             int id = Random.Range(1, 4);
             return getItemObject(id, 1, 1);
-        } else if(chance < 60)
-        {
-            int id = Random.Range(34, 38);
-            return getItemObject(id, 1, 1);
-        } else if (chance < 90)
+        }  else if (chance < 80)
         {
             int id = Random.Range(101, 113);
             return getItemObject(id, 1, 1);

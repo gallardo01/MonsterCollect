@@ -32,7 +32,7 @@ public class BulletFlyAround : MonoBehaviour
         {
             temp = 4;
             grass = 1;
-            speed = 4f;
+            speed = 3f;
             StartCoroutine(deactiveSelf());
         }
         temp_circle = skill;
@@ -43,7 +43,7 @@ public class BulletFlyAround : MonoBehaviour
 
     IEnumerator deactiveSelf()
     {
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(5f);
         EasyObjectPool.instance.ReturnObjectToPool(gameObject);
         gameObject.SetActive(false);
     }

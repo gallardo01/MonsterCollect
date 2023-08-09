@@ -55,6 +55,7 @@ public class GameFlowController : Singleton<GameFlowController>
     }
     private void reviveButton()
     {
+        StopAllCoroutines();
         dead.SetActive(false);
         isAction = false;
         PlayerController.Instance.revivePlayer();
@@ -65,6 +66,7 @@ public class GameFlowController : Singleton<GameFlowController>
     }
     private void closeButton()
     {
+        StopAllCoroutines();
         isAction = false;
         endGame(variable_progress, variable_stage, variable_gold, rewards);
         dead.SetActive(false);

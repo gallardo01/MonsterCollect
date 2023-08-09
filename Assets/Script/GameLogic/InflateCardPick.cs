@@ -30,7 +30,10 @@ public class InflateCardPick : MonoBehaviour
     public void initCard(int card, int level)
     {
         int playerType = PlayerController.Instance.getType();
-        card = card + (playerType - 1) * 12;
+        if(card > 0)
+        {
+            card = card + (playerType - 1) * 12;
+        }
         if ((card - 1) % 12 < 6 && card > 0)
         {
             cardImage.sprite = Resources.Load<Sprite>("UI/Background/Skill");

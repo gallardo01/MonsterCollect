@@ -27,10 +27,10 @@ public class GameController : Singleton<GameController>
 
     private int goldAward = 0;
     private List<ItemInventory> itemAward = new List<ItemInventory>();
-    public int[] currentSkill = { 0, 1, 0, 0, 0 };
-    public int[] skillLevel = { 0, 1, 0, 0, 0 };
-    public int[] currentBuff = { 0, 0, 0, 0, 0 };
-    public int[] buffLevel = { 0, 0, 0, 0, 0 };
+    private int[] currentSkill = { 0, 1, 0, 0, 0 };
+    private int[] skillLevel = { 0, 1, 0, 0, 0 };
+    private int[] currentBuff = { 0, 0, 0, 0, 0 };
+    private int[] buffLevel = { 0, 0, 0, 0, 0 };
     private int[] type = { 0, 0, 0 };
     private int[] availableOption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private GameObject[] waypoints1;

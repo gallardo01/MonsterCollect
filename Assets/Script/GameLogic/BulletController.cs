@@ -182,7 +182,7 @@ public class BulletController : MonoBehaviour
         yield return new WaitForSeconds(0);
         if (heroes.Type == 2)
         {
-            GameController.Instance.addExplosionText(data, gameObject, damePercent, "Particle_3");
+            GameController.Instance.addExplosionText(data, gameObject, damePercent, "Particle3");
         } else if (heroes.Type == 3)
         {
             GameController.Instance.addExplosionText(data, gameObject, damePercent, "Particle_Water_3");

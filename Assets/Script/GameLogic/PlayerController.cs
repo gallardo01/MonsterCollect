@@ -31,7 +31,7 @@ public class PlayerController : Singleton<PlayerController>
     private MyHeroes realData;
 
     float timeSmoke = 0;
-    public float timeSmokeWait = 1f;
+    private float timeSmokeWait = 1f;
     private bool isPause = false;
     private bool isActiveNonRepeat = true;
     private GameObject gameObjectNonRepeat;
@@ -79,7 +79,6 @@ public class PlayerController : Singleton<PlayerController>
     public void initStart()
     {
         // pick con nao?
-        idPick = 20;
         data = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
         realData = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
         currentHp = data.Hp;

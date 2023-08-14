@@ -65,7 +65,7 @@ public class GameController : Singleton<GameController>
     {
         yield return new WaitForSeconds(0f);
         //int heroesPick = PlayerPrefs.GetInt("HeroesPick");
-        int heroesPick = 11;
+        int heroesPick = 120;
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;

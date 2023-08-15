@@ -55,6 +55,7 @@ public class GameFlowController : Singleton<GameFlowController>
     }
     private void reviveButton()
     {
+        // watch ads
         StopAllCoroutines();
         dead.SetActive(false);
         isAction = false;

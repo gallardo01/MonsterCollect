@@ -160,7 +160,15 @@ public class MonsterController : MonoBehaviour
     private int returnExpGet(int lv)
     {
         // 10 12 14 16 18 20 22 24 25
-        return ((lv % 10) + 2) * 350 * (PlayerController.Instance.getBonusPoints(9) + 100) / 100;
+        int exp = 125;
+        if(lv > 1 && lv < 9)
+        {
+            exp = 200 + (lv - 2) * 40;
+        } else if(lv == 9)
+        {
+            exp = 500;
+        }
+        return (exp * (PlayerController.Instance.getBonusPoints(9) + 100) / 100);
     }
 
 

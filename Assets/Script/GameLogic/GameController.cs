@@ -46,7 +46,7 @@ public class GameController : Singleton<GameController>
     [SerializeField] GameObject gameTileMaps;
     [SerializeField] GameObject bossPosition;
 
-    private int[] numberCreep = { 0, 40, 60, 70, 90, 105, 130, 150, 170, 200};
+    private int[] numberCreep = { 0, 40, 60, 80, 100, 120, 140, 160, 180, 200};
 
     private int idCurrentBoss = 50;
 
@@ -107,7 +107,25 @@ public class GameController : Singleton<GameController>
     }
     private IEnumerator respawnEnemyDuringTime()
     {
-        yield return new WaitForSeconds(1.5f);
+        float timer;
+        int totalMonster = EasyObjectPool.instance.getTotalMonsterAlive();
+        if (totalMonster < 4)
+        {
+            timer = 0.5f;
+        }
+        else if (totalMonster < 6)
+        {
+            timer = 1f;
+        }
+        else if (totalMonster < 10)
+        {
+            timer = 1.5f;
+        }
+        else
+        {
+            timer = 2.5f;
+        }
+        yield return new WaitForSeconds(timer);
         if (isSpawn && isBossSpawn)
         {
             addEnemy();
@@ -255,21 +273,22 @@ public class GameController : Singleton<GameController>
     }
     public void gainExpChar(int num)
     {
-        exp += num * (100 + PlayerController.Instance.getBonusPoints(9)) / 100; ;
-        updateProgressBar(exp >= playerLevel * 800);
+        exp += num * (100 + PlayerController.Instance.getBonusPoints(9)) / 100;
+        int currentExpLevel = 400 + playerLevel * 100;
+        updateProgressBar(exp >= currentExpLevel, currentExpLevel);
     }
-    private void updateProgressBar(bool levelUp)
+    private void updateProgressBar(bool levelUp, int currentExp)
     {
         //expBar.GetComponent<Slider>().value = progres;
         if (levelUp)
         {
-            exp -= playerLevel * 800;
+            exp -= currentExp;
             playerLevel++;
             levelText.text = playerLevel.ToString();
             PlayerController.Instance.gainLv(playerLevel);
             updateColorText();
         }
-        float progres = (float)exp / (float)(playerLevel * 800);
+        float progres = (float)exp / (float)(400 + playerLevel * 100);
         StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
     }
     private void pickSkillLevelUp()

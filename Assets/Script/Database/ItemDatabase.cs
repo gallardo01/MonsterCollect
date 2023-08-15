@@ -352,23 +352,23 @@ public class ItemDatabase : Singleton<ItemDatabase>
     {
         if (rarity == 1)
         {
-            return Random.Range(10, 21);
+            return Random.Range(40, 61);
         }
         else if (rarity == 2)
         {
-            return Random.Range(10, 21);
+            return Random.Range(40, 71);
         }
         else if (rarity == 3)
         {
-            return Random.Range(15, 26);
+            return Random.Range(50, 71);
         }
         else if (rarity == 4)
         {
-            return Random.Range(20, 31);
+            return Random.Range(50, 81);
         }
         else
         {
-            return Random.Range(30, 41);
+            return Random.Range(50, 101);
         }
     }
 

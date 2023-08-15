@@ -261,7 +261,19 @@ namespace MarchingBytes {
             }
 			return listObj[obj].transform;
         }
+        public int getTotalMonsterAlive()
+        {
+			int obj = 0;
 
+            for (int i = 0; i < listObj.Count; i++)
+            {
+                if (listObj[i].tag == "Enemy" && listObj[i].activeInHierarchy == true && listObj[i].GetComponent<MonsterController>().getIsDead() == false)
+                {
+					obj++;
+                }
+            }
+			return obj;
+        }
         public Transform getRandomTargetPosition()
         {
             int obj = -1;

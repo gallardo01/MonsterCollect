@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using DigitalRuby.SoundManagerNamespace;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class UIController : Singleton<UIController>
     {
         Application.targetFrameRate = 100;
         enableSwipe = true;
-
+        SoundManagerDemo.Instance.playMusic(8);
         initCurrency();
         shopBtn.onClick.AddListener(() => shopButton());
         heroesBtn.onClick.AddListener(() => heoresButton());
@@ -92,10 +93,7 @@ public class UIController : Singleton<UIController>
     {
         // active bar & swipe
         enableSwipe = true;
-        //bar.gameObject.SetActive(true);
-        //UIHero.Instance.closeEvolvePanel();
-        //UIHero.Instance.backToInventory();
-
+        SoundManagerDemo.Instance.playOneShot(9);
         currentSite = 1;
         shop.DOAnchorPos(new Vector2(0, 0), 0.25f);
         heroes.DOAnchorPos(new Vector2(2000, 0), 0.25f);
@@ -109,6 +107,7 @@ public class UIController : Singleton<UIController>
     private void heoresButton()
     {
         currentSite = 2;
+        SoundManagerDemo.Instance.playOneShot(9);
         shop.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
         heroes.DOAnchorPos(new Vector2(0, 0), 0.25f);
         mainMenu.DOAnchorPos(new Vector2(2000, 0), 0.25f);
@@ -120,6 +119,7 @@ public class UIController : Singleton<UIController>
 
     private void startGame()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         currentSite = 3;
         shop.DOAnchorPos(new Vector2(-4000, 0), 0.25f);
         heroes.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
@@ -133,6 +133,7 @@ public class UIController : Singleton<UIController>
     }
     private void mainMenuButton()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         currentSite = 3;
         shop.DOAnchorPos(new Vector2(-4000, 0), 0.25f);
         heroes.DOAnchorPos(new Vector2(-2000, 0), 0.25f);
@@ -145,6 +146,7 @@ public class UIController : Singleton<UIController>
 
     private void upgradeButton()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         currentSite = 4;
         shop.DOAnchorPos(new Vector2(-6000, 0), 0.25f);
         heroes.DOAnchorPos(new Vector2(-4000, 0), 0.25f);
@@ -157,6 +159,7 @@ public class UIController : Singleton<UIController>
 
     private void eventsButton()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         currentSite = 5;
         shop.DOAnchorPos(new Vector2(-8000, 0), 0.25f);
         heroes.DOAnchorPos(new Vector2(-6000, 0), 0.25f);

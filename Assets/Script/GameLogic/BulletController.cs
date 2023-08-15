@@ -33,11 +33,6 @@ public class BulletController : MonoBehaviour
                     {
                         if(transform.position.x == target.position.x && transform.position.y == target.position.y)
                         {
-                            if(target.tag == "Boss")
-                            {
-                                EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-                                gameObject.SetActive(false);
-                            }
                             target = EasyObjectPool.instance.getNearestExcludeGameObjectPosition(target.gameObject);
                         }
                     }
@@ -136,6 +131,8 @@ public class BulletController : MonoBehaviour
                 } else
                 {
                     collision.gameObject.GetComponent<BossController>().enemyHurt(heroes, damePercent);
+                    EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                    gameObject.SetActive(false);
                 }
                 GameController.Instance.addParticleDefault(collision.gameObject, heroes.Type);
                 //if (switchTarget)

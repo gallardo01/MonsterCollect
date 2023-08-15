@@ -454,7 +454,7 @@ locate.transform.rotation);
                     GameObject shootTarget2 = EasyObjectPool.instance.GetObjectFromPool("Empty", locate.transform.position,
 locate.transform.rotation);
                     StartCoroutine(disableObject(3f, shootTarget2));
-                    shootTarget2.transform.position = shootTargetObj.position + new Vector3(-1f, 0f, 0f);
+                    shootTarget2.transform.position = shootTargetObj.position + new Vector3(1f, 0f, 0f);
                     GameObject projectileNormal1 = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position,
         shootTarget2.transform.rotation);
                     StartCoroutine(disableObject(3f, projectileNormal1));
@@ -796,7 +796,7 @@ gameObject.transform.rotation);
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            if (canHurt)
+            if (canHurt && currentHp > 0)
             {
                 MonsterData enemyLv = collision.gameObject.GetComponent<MonsterController>().getLevel();
                 canHurt = false;
@@ -806,7 +806,7 @@ gameObject.transform.rotation);
         }
         if (collision.gameObject.tag == "Boss")
         {
-            if (canHurt)
+            if (canHurt && currentHp > 0)
             {
                 MonsterData enemyLv = collision.gameObject.GetComponent<BossController>().getLevel();
                 canHurt = false;

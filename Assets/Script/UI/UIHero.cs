@@ -6,6 +6,7 @@ using TMPro;
 using DG.Tweening;
 using System;
 using Mono.Cecil;
+using DigitalRuby.SoundManagerNamespace;
 
 public class UIHero : Singleton<UIHero>
 {
@@ -137,6 +138,7 @@ public class UIHero : Singleton<UIHero>
 
     public void onClickCard(MyHeroes data)
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         for (int i = 1; i <= 12; i++)
         {
             listHero[i - 1].GetComponent<CharacterCard>().selectedHeroes(false);
@@ -175,6 +177,7 @@ public class UIHero : Singleton<UIHero>
 
     public void selectHero()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         PlayerPrefs.SetInt("HeroesPick", cacheId);
         curHeroID = cacheId;
         btnSelect.gameObject.SetActive(false);
@@ -194,6 +197,7 @@ public class UIHero : Singleton<UIHero>
 
     public void backToInventory()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         PlayerPrefs.SetInt("HeroesPick", curHeroID);
         onClickCard(HeroesDatabase.Instance.fetchMyHeroes(curHeroID));
 
@@ -233,8 +237,10 @@ public class UIHero : Singleton<UIHero>
 
     void buyHero()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         if (HeroesDatabase.Instance.buyHeroes(cacheId))
         {
+            SoundManagerDemo.Instance.playOneShot(4);
             MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
             initUIHero();
             handleButton(data);
@@ -247,6 +253,7 @@ public class UIHero : Singleton<UIHero>
 
     void openEvolvePanel()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         curHeroID = cacheId;
         imgAvatar.SetActive(false);
         pnEvolve.DOAnchorPos(new Vector2(0, 0), 0.25f);
@@ -367,6 +374,7 @@ public class UIHero : Singleton<UIHero>
 
     public void closeEvolvePanel()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         pnEvolve.DOAnchorPos(new Vector2(0, 3000), 0.25f);
         StartCoroutine(waitToActiveAvatar());
     }

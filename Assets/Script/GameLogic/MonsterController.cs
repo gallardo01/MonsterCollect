@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using MarchingBytes;
+using DigitalRuby.SoundManagerNamespace;
+
 public class MonsterController : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -113,6 +115,7 @@ public class MonsterController : MonoBehaviour
             currentHp -= actualDame;
             if (currentHp <= 0)
             {
+                SoundManagerDemo.Instance.playOneShot(3);
                 //GameController.Instance.initEatMonster(heroes.Level);
                 // drop item
                 dropItemController(monsterData.Id);

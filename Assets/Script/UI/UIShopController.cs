@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Random = UnityEngine.Random;
+using DigitalRuby.SoundManagerNamespace;
 
 public class UIShopController : MonoBehaviour
 {
@@ -125,6 +126,7 @@ public class UIShopController : MonoBehaviour
 
         } else
         {
+            buySingleHeroes.interactable = false;
             buyAllHeroes.gameObject.SetActive(false);
             unlockAll.gameObject.SetActive(true);
             heroesImage.gameObject.SetActive(false);
@@ -132,6 +134,7 @@ public class UIShopController : MonoBehaviour
     }
     private void watchAdsAction()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         OnChestPurchased(1, 1, 0, 0);
     }
     private void goldenChest()
@@ -249,6 +252,7 @@ public class UIShopController : MonoBehaviour
     }
     void OnTargetOfferPurchased(int type, double price)
     {
+        SoundManagerDemo.Instance.playOneShot(10);
         List<ItemInventory> items = new List<ItemInventory>();
         int gold = 0;
         int diamond = 0;
@@ -327,6 +331,7 @@ public class UIShopController : MonoBehaviour
     {
         if (UserDatabase.Instance.getUserData().Gold >= gold && UserDatabase.Instance.getUserData().Diamond >= diamond)
         {
+            SoundManagerDemo.Instance.playOneShot(4);
             UserDatabase.Instance.reduceMoney(gold, diamond);
             List<ItemInventory> items = new List<ItemInventory>();
             for (int i = 0; i < quantity; i++)
@@ -399,6 +404,9 @@ public class UIShopController : MonoBehaviour
             }
             celebrationObj.SetActive(true);
             celebrationObj.GetComponent<CelebrationShopController>().initCelebration(items, 0, 0);
+        } else
+        {
+            SoundManagerDemo.Instance.playOneShot(12);
         }
     }
     void OnDiamondPurchased(int value, double price)
@@ -408,7 +416,7 @@ public class UIShopController : MonoBehaviour
             // verify watch ads
         }
         // verify purchases
-
+        SoundManagerDemo.Instance.playOneShot(4);
         celebrationObj.SetActive(true);
         UserDatabase.Instance.gainMoneyInGame(0, value);
         celebrationObj.GetComponent<CelebrationShopController>().initCelebration(null, 0, value);
@@ -418,6 +426,7 @@ public class UIShopController : MonoBehaviour
     {
         if (UserDatabase.Instance.getUserData().Diamond >= price)
         {
+            SoundManagerDemo.Instance.playOneShot(4);
             UserDatabase.Instance.reduceMoney(0, price);
             UserDatabase.Instance.gainMoneyInGame(value, 0);
             celebrationObj.SetActive(true);

@@ -6,6 +6,8 @@ using MarchingBytes;
 using TMPro;
 using DG.Tweening;
 using Cinemachine;
+using DigitalRuby.SoundManagerNamespace;
+
 public class GameController : Singleton<GameController>
 {
     [SerializeField] GameObject expBar;
@@ -57,6 +59,8 @@ public class GameController : Singleton<GameController>
     // Start is called before the first frame update
     void Start()
     {
+        SoundManagerDemo.Instance.StopAudio();
+        SoundManagerDemo.Instance.playMusic(1);
         Application.targetFrameRate = 60;
         StartCoroutine(testScreen());
     }
@@ -65,7 +69,7 @@ public class GameController : Singleton<GameController>
     {
         yield return new WaitForSeconds(0f);
         //int heroesPick = PlayerPrefs.GetInt("HeroesPick");
-        int heroesPick = 120;
+        int heroesPick = 10;
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;

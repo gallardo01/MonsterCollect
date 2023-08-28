@@ -239,7 +239,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     {
         UserInformation itemInformation = new UserInformation();
         List<ItemInventory> usedItem = fetchUsedItem();
-        int bonusEquipmentStats = 100 + UserDatabase.Instance.getUserData().Equipment;
+        int bonusEquipmentStats = 100 + UserDatabase.Instance.getUserData().Equipment + UserDatabase.Instance.getUserData().Equipment;
         int[] stats = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         for (int i = 0; i < usedItem.Count; i++)
         {

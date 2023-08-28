@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using MarchingBytes;
 using UnityEngine.UI;
+using DigitalRuby.SoundManagerNamespace;
+
 public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] GameObject body;
@@ -81,7 +83,17 @@ public class PlayerController : Singleton<PlayerController>
         // pick con nao?
         data = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
         realData = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
-        currentHp = data.Hp;
+        // get real data
+        UserInformation realDataUser = RealTimeDatabase.Instance.getUserInformation();
+        realData.Atk = realDataUser.Atk;
+        realData.Crit = realDataUser.Crit;
+        realData.Hp = realDataUser.Hp;
+        realData.Armour = realDataUser.Armour;
+        realData.Speed = realDataUser.AttackSpeed;
+        realData.Move = realDataUser.Move;
+        currentHp = realData.Hp;
+
+        Debug.Log(currentHp.ToString());
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
         typeImage.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type);
@@ -124,6 +136,7 @@ public class PlayerController : Singleton<PlayerController>
     }
     public void gainLv(int lv)
     {
+        SoundManagerDemo.Instance.playOneShot(6);
         playerLevel = lv;
         //StartCoroutine(runVFX());
         // Need turn on VFX
@@ -315,6 +328,7 @@ public class PlayerController : Singleton<PlayerController>
         yield return new WaitForSeconds(totalSkill[id].timerGame * (100 - bonusTimer) / 100 + 0.4f);
         if (isPause == false)
         {
+            SoundManagerDemo.Instance.playOneShot(2);
             Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
             if (shootTarget != null)
             {

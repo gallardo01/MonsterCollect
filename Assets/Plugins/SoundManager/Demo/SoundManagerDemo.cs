@@ -44,5 +44,10 @@ namespace DigitalRuby.SoundManagerNamespace
         {
             SoundManager.StopSoundsOnLevelLoad = true;
         }
+
+        public void StopAudio()
+        {
+            SoundAudioSources[8].Stop();
+        }
     }
 }

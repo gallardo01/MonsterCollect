@@ -22,12 +22,12 @@ public class RealTimeDatabase : Singleton<RealTimeDatabase>
         MyHeroes heroesInformation = HeroesDatabase.Instance.fetchMyHeroes(PlayerPrefs.GetInt("HeroesPick"));
         UserData userData = UserDatabase.Instance.getUserData();
 
-        userInfor.Atk = heroesInformation.Atk + itemInformation.Atk + userData.Atk * 10;
-        userInfor.Hp = heroesInformation.Hp + itemInformation.Hp + userData.Hp * 10;
-        userInfor.Armour = heroesInformation.Armour + itemInformation.Armour + userData.Armour * 10;
-        userInfor.Move = heroesInformation.Move + itemInformation.Move + userData.Move * 10;
-        userInfor.Crit = heroesInformation.Crit + itemInformation.Crit + userData.Crit * 10;
-        userInfor.AttackSpeed = heroesInformation.Speed + itemInformation.AttackSpeed + userData.Speed * 10;
+        userInfor.Atk = heroesInformation.Atk + itemInformation.Atk + userData.Atk * 20;
+        userInfor.Hp = heroesInformation.Hp + itemInformation.Hp + userData.Hp * 20;
+        userInfor.Armour = heroesInformation.Armour + itemInformation.Armour + userData.Armour * 20;
+        userInfor.Move = heroesInformation.Move + itemInformation.Move + userData.Move * 20;
+        userInfor.Crit = heroesInformation.Crit + itemInformation.Crit + userData.Crit * 20;
+        userInfor.AttackSpeed = heroesInformation.Speed + itemInformation.AttackSpeed + userData.Speed * 20;
         userInfor.ExGold = itemInformation.ExGold;
         userInfor.ExExp = itemInformation.ExExp;
         return userInfor;

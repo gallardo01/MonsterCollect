@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DigitalRuby.SoundManagerNamespace;
 
 public class UIInventory : Singleton<UIInventory>
 {
@@ -51,6 +52,7 @@ public class UIInventory : Singleton<UIInventory>
 
     void swapToHero()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         UIController.Instance.enableSwipe = false;
         tabHero.SetActive(true);
         tabInventory.SetActive(false);

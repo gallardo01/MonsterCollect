@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using System.Linq;
 using Random = UnityEngine.Random;
+using DigitalRuby.SoundManagerNamespace;
 
 public class InventoryController : Singleton<InventoryController>
 {
@@ -63,6 +64,7 @@ public class InventoryController : Singleton<InventoryController>
     }
     private void craftButtonAction()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         if (isCraftItem == false)
         {
             craftItemObj.SetActive(true);
@@ -84,6 +86,7 @@ public class InventoryController : Singleton<InventoryController>
     }
     private void filterItems()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         filterBool = !filterBool;
         if(filterBool == true)
         {
@@ -219,6 +222,7 @@ public class InventoryController : Singleton<InventoryController>
     }
     public void onClickItem(ItemInventory item)
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         StartCoroutine(clickItem(item));
     }
     IEnumerator clickItem(ItemInventory item)

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEditor;
+using DigitalRuby.SoundManagerNamespace;
 
 public class UIUpgradeController : MonoBehaviour
 {
@@ -109,6 +110,7 @@ public class UIUpgradeController : MonoBehaviour
     {
         if (!IsUpdated && UserDatabase.Instance.getTotalLevel() < 180)
         {
+            SoundManagerDemo.Instance.playOneShot(9);
             btnUpgrade.interactable = false;
             if (requireGold <= UserDatabase.Instance.getUserData().Gold)
             {

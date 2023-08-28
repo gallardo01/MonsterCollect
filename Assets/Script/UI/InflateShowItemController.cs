@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using DigitalRuby.SoundManagerNamespace;
 
 public class InflateShowItemController : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class InflateShowItemController : MonoBehaviour
 
     private void equipItem()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         if (itemData.IsUse < 0)
         {
             ItemDatabase.Instance.unequipItem(itemData.ShopId);
@@ -55,7 +57,8 @@ public class InflateShowItemController : MonoBehaviour
     {
         if (canClose)
         {
-            if(itemData.Type % 10 > 0)
+            SoundManagerDemo.Instance.playOneShot(9);
+            if (itemData.Type % 10 > 0)
             {
                 particle.SetActive(false);
             }
@@ -67,6 +70,7 @@ public class InflateShowItemController : MonoBehaviour
     {
         if (canClose)
         {
+            SoundManagerDemo.Instance.playOneShot(9);
             canClose = false;
             upgradeButton.interactable = false;
             StartCoroutine(upgradeItemAnimation());
@@ -81,6 +85,7 @@ public class InflateShowItemController : MonoBehaviour
         upgradeSlider2.DOValue(1f, 1f, false);
         ItemDatabase.Instance.upgradeItem(itemData.ShopId);
         yield return new WaitForSeconds(1f);
+        SoundManagerDemo.Instance.playOneShot(10);
         particle.SetActive(true);
         upgradeSlider.GetComponent<Slider>().value = 0f;
         upgradeSlider2.GetComponent<Slider>().value = 0f;

@@ -1,3 +1,4 @@
+using DigitalRuby.SoundManagerNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class CelebrationShopController : MonoBehaviour
     }
     private void closeCurrent()
     {
+        SoundManagerDemo.Instance.playOneShot(9);
         UIController.Instance.InitUI(); 
         gameObject.SetActive(false);
     }
@@ -40,6 +42,7 @@ public class CelebrationShopController : MonoBehaviour
             itemsCelebration[i].SetActive(false);
         }
         yield return new WaitForSeconds(0.5f);
+        SoundManagerDemo.Instance.playOneShot(11);
         int start = 0;
         if (index == 1)
         {

@@ -109,6 +109,7 @@ public class CraftItemController : Singleton<CraftItemController>
         yield return new WaitForSeconds(0.3f);
         itemShow[3].SetActive(false);
         InventoryController.Instance.initEquipment();
+        InventoryController.Instance.initLayout();
         overlayAllObj.SetActive(false);
         initFunction();
     }
@@ -156,6 +157,7 @@ public class CraftItemController : Singleton<CraftItemController>
     {
         ItemDatabase.Instance.craftItem(item.ShopId);
         InventoryController.Instance.initEquipment();
+        InventoryController.Instance.initLayout();
         yield return new WaitForSeconds(0.5f);
         itemAnimation[index].SetActive(false);
         itemShow[index].SetActive(true);
@@ -177,6 +179,7 @@ public class CraftItemController : Singleton<CraftItemController>
             }
             itemShow[index].SetActive(false);
             InventoryController.Instance.initEquipment();
+            InventoryController.Instance.initLayout();
             activeButton();
             updateTextRate();
         }

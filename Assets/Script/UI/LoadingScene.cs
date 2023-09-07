@@ -19,8 +19,8 @@ public class LoadingScene : MonoBehaviour
         //ItemDatabase.Instance.LoadData();
         //HeroesDatabase.Instance.LoadData();
         //UserDatabase.Instance.LoadData();
+        yield return new WaitForSeconds(2f);
 
-        Debug.Log("Waiting for scene loader...");
         AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("UI");
         while (!loadLevelOp.isDone)
         {

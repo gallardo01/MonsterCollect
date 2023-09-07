@@ -322,8 +322,7 @@ public class UIShopController : MonoBehaviour
         InventoryController.Instance.initEquipment();
         InventoryController.Instance.initMaterial();
         InventoryController.Instance.initShard();
-
-
+        InventoryController.Instance.initLayout();
         celebrationObj.SetActive(true);
         celebrationObj.GetComponent<CelebrationShopController>().initCelebration(items, gold, diamond);
     }

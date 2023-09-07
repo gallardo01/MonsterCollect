@@ -29,7 +29,6 @@ public class UserDatabase : Singleton<UserDatabase>
         isSyncCloud = SyncService.Instance.getCloudStatus();
 
         var user = SyncService.Instance.GetUser();
-        
         if (isSyncCloud == false)
         {
             LoadResourceTextfileCurrentData();

@@ -79,6 +79,7 @@ public class InventoryController : Singleton<InventoryController>
             initEquipment();
         }
         isCraftItem = !isCraftItem;
+        initLayout();
     }
     public bool getCraftItem()
     {
@@ -110,6 +111,14 @@ public class InventoryController : Singleton<InventoryController>
         initMaterial();
         initShard();
         initStats();
+        initLayout();
+    }
+    public void initLayout()
+    {
+        ItemPanel.GetComponent<GridLayoutGroup>().CalculateLayoutInputHorizontal();
+        ItemPanel.GetComponent<GridLayoutGroup>().CalculateLayoutInputVertical();
+        ItemPanel.GetComponent<GridLayoutGroup>().SetLayoutHorizontal();
+        ItemPanel.GetComponent<GridLayoutGroup>().SetLayoutVertical();
     }
     public void initUsedItem()
     {

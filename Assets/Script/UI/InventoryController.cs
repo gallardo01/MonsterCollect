@@ -111,6 +111,9 @@ public class InventoryController : Singleton<InventoryController>
         initMaterial();
         initShard();
         initStats();
+        ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2(250f, 250f);
+        MaterialPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2(250f, 250f);
+        ShardPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2(250f, 250f);
         initLayout();
     }
     public void initLayout()

@@ -5,6 +5,8 @@ using TMPro;
 using MarchingBytes;
 using UnityEngine.UI;
 using DigitalRuby.SoundManagerNamespace;
+using MiniJSON;
+using Newtonsoft.Json;
 
 public class PlayerController : Singleton<PlayerController>
 {
@@ -40,6 +42,7 @@ public class PlayerController : Singleton<PlayerController>
 
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 10. Healing
     private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] bonusPointsExtra = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     private int cacheSpeed;
     private bool isPlayerRooted = false;
@@ -57,7 +60,6 @@ public class PlayerController : Singleton<PlayerController>
             PlayerPrefs.SetInt("Map", 1);
         }
         initStart();
-        updatePlayerData();
     }
     private int getSkillData(int id)
     {
@@ -84,16 +86,18 @@ public class PlayerController : Singleton<PlayerController>
         data = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
         realData = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
         // get real data
-        UserInformation realDataUser = RealTimeDatabase.Instance.getUserInformation();
+        UserInformation realDataUser = RealTimeDatabase.Instance.getData();
         realData.Atk = realDataUser.Atk;
         realData.Crit = realDataUser.Crit;
         realData.Hp = realDataUser.Hp;
         realData.Armour = realDataUser.Armour;
         realData.Speed = realDataUser.AttackSpeed;
         realData.Move = realDataUser.Move;
+        bonusPointsExtra[8] = realDataUser.ExGold;
+        bonusPointsExtra[9] = realDataUser.ExExp;
+        bonusPoints[8] = bonusPointsExtra[8];
+        bonusPoints[9] = bonusPointsExtra[9];
         currentHp = realData.Hp;
-
-        Debug.Log(currentHp.ToString());
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
         typeImage.sprite = Resources.Load<Sprite>("UI/Icons/Type/" + data.Type);
@@ -124,7 +128,10 @@ public class PlayerController : Singleton<PlayerController>
         realData.Move = data.Move * (100 + bonusPoints[4]) / 100;
         realData.Crit = data.Crit * (100 + bonusPoints[5]) / 100;
         realData.Speed = data.Speed * (100 + bonusPoints[6]) / 100;
-        healPlayer(realData.Hp - cacheHp);
+        if (realData.Hp - cacheHp > 0)
+        {
+            healPlayer(realData.Hp - cacheHp);
+        }
     }
     public MyHeroes getRealData()
     {
@@ -250,7 +257,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 int skillId = (data.Type - 1) * 12 + 6 + i;
                 SkillData skillData = SkillDatabase.Instance.fetchSkillIndex(skillId);
-                bonusPoints[skillData.Timer] = skillData.Power * (100 + (buffLevel[i] - 1) * 50) / 100;
+                bonusPoints[skillData.Timer] = skillData.Power * (100 + (buffLevel[i] - 1) * 50) / 100 + bonusPointsExtra[skillData.Timer];
             }
         }
         updatePlayerData();

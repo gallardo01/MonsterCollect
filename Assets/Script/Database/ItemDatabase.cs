@@ -800,4 +800,8 @@ public class UserInformation
     public int AttackSpeed { get; set; }
     public int ExGold { get; set; }
     public int ExExp { get; set; }
+    public object Clone()
+    {
+        return this.MemberwiseClone();
+    }
 }

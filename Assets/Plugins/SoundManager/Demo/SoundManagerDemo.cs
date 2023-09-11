@@ -18,6 +18,12 @@ namespace DigitalRuby.SoundManagerNamespace
 {
     public class SoundManagerDemo : SingletonBehaviour<SoundManagerDemo>
     {
+        void Awake()
+        {
+            //SoundManager.StopAll();
+            DontDestroyOnLoad(transform.gameObject);
+        }
+
         public AudioSource[] SoundAudioSources;
 
         private void PlaySound(int index)
@@ -27,9 +33,12 @@ namespace DigitalRuby.SoundManagerNamespace
 
         private void PlayMusic(int index)
         {
-            SoundAudioSources[index].PlayLoopingMusicManaged(1.0f, 1.0f, true);
+            SoundAudioSources[index].PlayLoopingMusicManaged(1.0f, 1.0f, false);
         }
-
+        public void setVolume(int index)
+        {
+            SoundAudioSources[index].volume = 1f;
+        }
         public void playOneShot(int index)
         {
             PlaySound(index);
@@ -42,12 +51,12 @@ namespace DigitalRuby.SoundManagerNamespace
 
         private void Start()
         {
-            SoundManager.StopSoundsOnLevelLoad = true;
+            //SoundManager.StopSoundsOnLevelLoad = true;
         }
 
-        public void StopAudio()
+        public void StopAudio(int num)
         {
-            SoundAudioSources[8].Stop();
+            SoundAudioSources[num].Stop();
         }
     }
 }

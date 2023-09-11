@@ -47,6 +47,8 @@ public class GameController : Singleton<GameController>
     [SerializeField] GameObject bossTileMaps;
     [SerializeField] GameObject gameTileMaps;
     [SerializeField] GameObject bossPosition;
+    [SerializeField] Button pauseGame;
+    [SerializeField] GameObject pauseGameObj;
 
     private int[] numberCreep = { 0, 40, 60, 80, 100, 120, 140, 160, 180, 200};
 
@@ -59,17 +61,23 @@ public class GameController : Singleton<GameController>
     // Start is called before the first frame update
     void Start()
     {
-        SoundManagerDemo.Instance.StopAudio();
-        SoundManagerDemo.Instance.playMusic(1);
         Application.targetFrameRate = 60;
-        StartCoroutine(testScreen());
+        testScreen();
+        pauseGame.onClick.AddListener(() => pauseGameController());
     }
-    
-    IEnumerator testScreen()
+    private void pauseGameController()
     {
-        yield return new WaitForSeconds(0f);
-        //int heroesPick = PlayerPrefs.GetInt("HeroesPick");
-        int heroesPick = 10;
+        pauseGameObj.SetActive(true);
+        pauseGameObj.GetComponent<PauseGameController>().initSkillData(currentSkill, currentBuff);
+    }
+    private void testScreen()
+    {
+        //SoundManagerDemo.Instance.StopAudio(8);
+        //SoundManagerDemo.Instance.playMusic(1);
+        //SoundManagerDemo.Instance.setVolume(1);
+
+        int heroesPick = PlayerPrefs.GetInt("HeroesPick");
+        //int heroesPick = 10;
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;

@@ -29,7 +29,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     public void LoadData()
     {
         var heroes = SyncService.Instance.GetHeroes();
-        bool isSyncCloud = false;
+        bool isSyncCloud;
         isSyncCloud = SyncService.Instance.getCloudStatus();
 
         if (isSyncCloud == false)
@@ -309,7 +309,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             File.Create(filePath).Close();
         }
 
-        Debug.Log(jsonByte);
         try
         {
             File.WriteAllBytes(filePath, jsonByte);

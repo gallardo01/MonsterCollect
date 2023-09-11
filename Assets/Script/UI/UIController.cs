@@ -32,17 +32,22 @@ public class UIController : Singleton<UIController>
 
     private bool isInit = true;
 
+    private void Awake()
+    {
+    }
     void Start()
     {
         Application.targetFrameRate = 100;
         enableSwipe = true;
-        SoundManagerDemo.Instance.playMusic(8);
         initCurrency();
         shopBtn.onClick.AddListener(() => shopButton());
         heroesBtn.onClick.AddListener(() => heoresButton());
         mainMenuBtn.onClick.AddListener(() => mainMenuButton());
         upgradeBtn.onClick.AddListener(() => upgradeButton());
         eventBtn.onClick.AddListener(() => eventsButton());
+        //SoundManagerDemo.Instance.StopAudio(1);
+        //SoundManagerDemo.Instance.playMusic(8);
+        //SoundManagerDemo.Instance.setVolume(8);
 
         startGame();
     }

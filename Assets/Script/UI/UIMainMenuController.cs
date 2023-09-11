@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.SceneManagement;
+using DigitalRuby.SoundManagerNamespace;
 
 public class UIMainMenuController : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class UIMainMenuController : MonoBehaviour
     private bool isClick = true;
     private Sprite[] itemsSprite;
 
+    private void Awake()
+    {
+        
+    }
 
     // Start is called before the first frame update
     void Start()

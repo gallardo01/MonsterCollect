@@ -42,6 +42,7 @@ public class PauseGameController : MonoBehaviour
 
     IEnumerator Load()
     {
+        Time.timeScale = time;
         //SoundManagerDemo.Instance.StopAudio(1);
         AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("UI");
         while (!loadLevelOp.isDone)

@@ -72,9 +72,9 @@ public class GameController : Singleton<GameController>
     }
     private void testScreen()
     {
-        //SoundManagerDemo.Instance.StopAudio(8);
-        //SoundManagerDemo.Instance.playMusic(1);
-        //SoundManagerDemo.Instance.setVolume(1);
+        SoundManagerDemo.Instance.StopAudio(8);
+        SoundManagerDemo.Instance.playMusic(1);
+        SoundManagerDemo.Instance.setVolume(1);
 
         int heroesPick = PlayerPrefs.GetInt("HeroesPick");
         //int heroesPick = 10;

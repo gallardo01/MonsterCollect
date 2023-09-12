@@ -64,11 +64,12 @@ public class BulletOfBossController : MonoBehaviour
             }
             else if (type == 11 && isReflect) // bounce bulle
             {
-                Debug.Log("trans "+transform.position.x);
-                Debug.Log("width "+ (width + target.position.x).ToString());
-                if (transform.position.x >(width + target.position.x) && bounce > 0)
+
+                Debug.Log("width " + (width).ToString());
+                Debug.Log("height " + (height).ToString());
+
+                if (transform.position.x >(width + 0) && bounce > 0)
                 {
-                    Debug.LogError("1");
                     isReflect = false;
                     StartCoroutine(resumeReflect());
                     bounce--;
@@ -80,11 +81,10 @@ public class BulletOfBossController : MonoBehaviour
                     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     Vector2 vector = new Vector2(-1f, UnityEngine.Random.Range(-2f, 2f));
                     vector = vector.normalized;
-                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                    GetComponent<Rigidbody2D>().AddForce(vector * 700);
                 }
-                else if (transform.position.x <(-width + target.position.x) && bounce > 0)
+                else if (transform.position.x <(-width + 0) && bounce > 0)
                 {
-                    Debug.LogError("2");
                     isReflect = false;
                     StartCoroutine(resumeReflect());
                     bounce--;
@@ -97,11 +97,10 @@ public class BulletOfBossController : MonoBehaviour
                     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     Vector2 vector = new Vector2(1f, UnityEngine.Random.Range(-2f, 2f));
                     vector = vector.normalized;
-                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                    GetComponent<Rigidbody2D>().AddForce(vector * 700);
                 }
-                else if (transform.position.y > (height + target.position.y) && bounce > 0)
+                else if (transform.position.y > (height + 0) && bounce > 0)
                 {
-                    Debug.LogError("3");
 
                     isReflect = false;
                     StartCoroutine(resumeReflect());
@@ -114,12 +113,10 @@ public class BulletOfBossController : MonoBehaviour
                     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     Vector2 vector = new Vector2(UnityEngine.Random.Range(-2f, 2f), -1f);
                     vector = vector.normalized;
-                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                    GetComponent<Rigidbody2D>().AddForce(vector * 700);
                 }
-                else if (transform.position.y < (-height + target.position.y) && bounce > 0)
+                else if (transform.position.y < (-height + 0) && bounce > 0)
                 {
-                    Debug.LogError("4");
-
                     isReflect = false;
                     StartCoroutine(resumeReflect());
                     bounce--;
@@ -131,7 +128,7 @@ public class BulletOfBossController : MonoBehaviour
                     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     Vector2 vector = new Vector2(UnityEngine.Random.Range(-2f, 2f), 1f);
                     vector = vector.normalized;
-                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                    GetComponent<Rigidbody2D>().AddForce(vector * 700);
                 }
             }    
             else
@@ -197,6 +194,12 @@ public class BulletOfBossController : MonoBehaviour
             bounce = 6;
             height = 10f;
             width = height * Screen.width / Screen.height;
+            height = 6;
+
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            Vector2 vector = new Vector2(-1f, UnityEngine.Random.Range(-2f, 2f));
+            vector = vector.normalized;
+            GetComponent<Rigidbody2D>().AddForce(vector * 700);
         }
     }
 
@@ -247,7 +250,7 @@ public class BulletOfBossController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Wall" && type != 8)
+        if (collision.gameObject.tag == "Wall" && type != 8 && type != 11)
         {
             //GameController.Instance.addParticle(collision.gameObject, 1);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);

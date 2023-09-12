@@ -30,7 +30,7 @@ public class BossController : Singleton<BossController>
     private bool isDead = false;
     //boss 3
     float timeSmoke = 0;
-    public float timeSmokeWait = 0.01f;
+    public float timeSmokeWait = 0.5f;
     // boss 5
     private Vector3 bossDirection;
     private GameObject SmokePos;
@@ -972,9 +972,12 @@ public class BossController : Singleton<BossController>
                 }
 
                 yield return new WaitForSeconds(0.5f);
+                runAnimation(1);
+
             }
 
             //lao vao tuong
+            runAnimation(2);
             moveSpeed = 2;
             yield return new WaitForSeconds(3f);
             moveSpeed = 0;

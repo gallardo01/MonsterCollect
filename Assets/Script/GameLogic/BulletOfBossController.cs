@@ -4,6 +4,8 @@ using UnityEngine;
 using MarchingBytes;
 using System;
 using UnityEngine.UIElements;
+using DG.Tweening.Core.Easing;
+using System.Reflection;
 
 //using System.Diagnostics.Eventing.Reader;
 
@@ -35,6 +37,11 @@ public class BulletOfBossController : MonoBehaviour
     private float temp_circle = 0;
     private bool is_round = true;
 
+    private bool isReflect = true;
+    private float width = 6f;
+    private float height = 7f;
+    int bounce = 0;
+
     private void Start()
     {
         speed = 6f * Application.targetFrameRate / 60f;
@@ -55,6 +62,78 @@ public class BulletOfBossController : MonoBehaviour
             {
                 transform.position += direction * speed * Time.deltaTime + new Vector3(2.5f * Mathf.Cos(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle / 3), 2.5f * Mathf.Sin(Mathf.PI * ((Time.fixedTime) % 3) / 1.5f + Mathf.PI * temp_circle / 3), 0);
             }
+            else if (type == 11 && isReflect) // bounce bulle
+            {
+                Debug.Log("trans "+transform.position.x);
+                Debug.Log("width "+ (width + target.position.x).ToString());
+                if (transform.position.x >(width + target.position.x) && bounce > 0)
+                {
+                    Debug.LogError("1");
+                    isReflect = false;
+                    StartCoroutine(resumeReflect());
+                    bounce--;
+                    if (bounce <= 0)
+                    {
+                        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                        gameObject.SetActive(false);
+                    }
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    Vector2 vector = new Vector2(-1f, UnityEngine.Random.Range(-2f, 2f));
+                    vector = vector.normalized;
+                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                }
+                else if (transform.position.x <(-width + target.position.x) && bounce > 0)
+                {
+                    Debug.LogError("2");
+                    isReflect = false;
+                    StartCoroutine(resumeReflect());
+                    bounce--;
+                    if (bounce <= 0)
+                    {
+                        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                        gameObject.SetActive(false);
+                    }
+
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    Vector2 vector = new Vector2(1f, UnityEngine.Random.Range(-2f, 2f));
+                    vector = vector.normalized;
+                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                }
+                else if (transform.position.y > (height + target.position.y) && bounce > 0)
+                {
+                    Debug.LogError("3");
+
+                    isReflect = false;
+                    StartCoroutine(resumeReflect());
+                    bounce--;
+                    if (bounce <= 0)
+                    {
+                        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                        gameObject.SetActive(false);
+                    }
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    Vector2 vector = new Vector2(UnityEngine.Random.Range(-2f, 2f), -1f);
+                    vector = vector.normalized;
+                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                }
+                else if (transform.position.y < (-height + target.position.y) && bounce > 0)
+                {
+                    Debug.LogError("4");
+
+                    isReflect = false;
+                    StartCoroutine(resumeReflect());
+                    bounce--;
+                    if (bounce <= 0)
+                    {
+                        EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+                        gameObject.SetActive(false);
+                    }
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    Vector2 vector = new Vector2(UnityEngine.Random.Range(-2f, 2f), 1f);
+                    vector = vector.normalized;
+                    GetComponent<Rigidbody2D>().AddForce(vector * 70);
+                }
+            }    
             else
             {
                 transform.position += direction * speed * Time.deltaTime;
@@ -79,6 +158,12 @@ public class BulletOfBossController : MonoBehaviour
 
     }
 
+    IEnumerator resumeReflect()
+    {
+        yield return new WaitForSeconds(0.05f);
+        isReflect = true;
+    }
+
     public void initBullet(Transform Target, Vector3 Direction, float Speed, int type, MonsterData monsterData)
     {
         target = Target;
@@ -101,11 +186,17 @@ public class BulletOfBossController : MonoBehaviour
             StartCoroutine(returnToPool(5f));
 
         }
-        else if (type == 10)
+        else if (type == 10) // dan ziczac
         {
             direction = Quaternion.AngleAxis(15, Vector3.forward) * direction;
             transform.Rotate(0, 0, -15);
             StartCoroutine(zicZacBullet());
+        }else if (type == 11) // bounce bulle
+        {
+            isReflect = true;
+            bounce = 6;
+            height = 10f;
+            width = height * Screen.width / Screen.height;
         }
     }
 

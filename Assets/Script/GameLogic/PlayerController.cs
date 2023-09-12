@@ -39,6 +39,9 @@ public class PlayerController : Singleton<PlayerController>
     private bool isPause = false;
     private bool isActiveNonRepeat = true;
     private GameObject gameObjectNonRepeat;
+    private float bonusSpeed = 1f;
+    private int bonusAtk = 1;
+    private bool revivePenguin = true;
 
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 10. Healing
     private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -47,7 +50,6 @@ public class PlayerController : Singleton<PlayerController>
     private int cacheSpeed;
     private bool isPlayerRooted = false;
     private List<SkillInGame> totalSkill = new List<SkillInGame>();
-
     private void Awake()
     {
         joystick = GameObject.FindGameObjectWithTag("JoyStick");
@@ -87,16 +89,33 @@ public class PlayerController : Singleton<PlayerController>
         realData = HeroesDatabase.Instance.fetchMyHeroesData(idPick);
         // get real data
         UserInformation realDataUser = RealTimeDatabase.Instance.getData();
+
         realData.Atk = realDataUser.Atk;
         realData.Crit = realDataUser.Crit;
         realData.Hp = realDataUser.Hp;
         realData.Armour = realDataUser.Armour;
         realData.Speed = realDataUser.AttackSpeed;
         realData.Move = realDataUser.Move;
+
+        data.Atk = realDataUser.Atk;
+        data.Crit = realDataUser.Crit;
+        data.Hp = realDataUser.Hp;
+        data.Armour = realDataUser.Armour;
+        data.Speed = realDataUser.AttackSpeed;
+        data.Move = realDataUser.Move;
+
         bonusPointsExtra[8] = realDataUser.ExGold;
         bonusPointsExtra[9] = realDataUser.ExExp;
+        if (data.Id / 10 == 1)
+        {
+            bonusPointsExtra[8] += 20;
+        } else if (data.Id / 10 == 2)
+        {
+            bonusPointsExtra[9] += 20;
+        }
         bonusPoints[8] = bonusPointsExtra[8];
         bonusPoints[9] = bonusPointsExtra[9];
+
         currentHp = realData.Hp;
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = 1f;
@@ -132,6 +151,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             healPlayer(realData.Hp - cacheHp);
         }
+        //Debug.Log(JsonConvert.SerializeObject(realData, Formatting.Indented));
     }
     public MyHeroes getRealData()
     {
@@ -167,7 +187,7 @@ public class PlayerController : Singleton<PlayerController>
         if (canMove)
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
-            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (float)(realData.Move / 700f) * Time.deltaTime;
+            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (float)(realData.Move * bonusSpeed / 700f) * Time.deltaTime;
         }
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
@@ -223,7 +243,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 int idSkill = currentSkill[i] - 1;
                 totalSkill[idSkill].data.Level = skillLv[i];
-                if (totalSkill[idSkill].isTrigger == false)
+                if (totalSkill[idSkill].isTrigger == false || totalSkill[idSkill].data.Id == 18 || totalSkill[idSkill].data.Id == 27)
                 {
                     attackMonster(totalSkill[idSkill]);
                 }
@@ -291,7 +311,7 @@ public class PlayerController : Singleton<PlayerController>
         }
         else if (skillId == 18 || skillId == 27)
         {
-            StartCoroutine(forceField(bulletText, id));
+            forceField(bulletText, id);
         }
         else if (skillId == 4 || skillId == 28) // meteor
         {
@@ -331,6 +351,11 @@ public class PlayerController : Singleton<PlayerController>
     private IEnumerator normalAttack(string bulletText, int id)
     {
         int bonusTimer = realData.Speed / 100;
+        if (realData.Id/10 == 8)
+        {
+            int percent = currentHp * 100 / realData.Hp;
+            bonusTimer += 50 * (100 - percent) / 100;
+        }
         if (bonusTimer > 100) bonusTimer = 100;
         yield return new WaitForSeconds(totalSkill[id].timerGame * (100 - bonusTimer) / 100 + 0.4f);
         if (isPause == false)
@@ -704,7 +729,7 @@ gameObject.transform.rotation);
         yield return new WaitForSeconds(totalSkill[id].timerGame);
         StartCoroutine(bounceAroundEnemy(bulletText, id));
     }
-    private IEnumerator forceField(string bulletText, int id)
+    private void forceField(string bulletText, int id)
     {
         if (isPause == false)
         {
@@ -719,18 +744,19 @@ gameObject.transform.rotation);
                 projectileNormal.transform.position = gameObject.transform.position;
 
                 gameObjectNonRepeat = projectileNormal;
-                float scaleNumber = 0.7f + (size - 1) * 0.15f;
+                float scaleNumber = 0.7f + (size - 1) * 0.1f;
                 projectileNormal.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 projectileNormal.GetComponent<BulletOnStayController>().initBullet(realData, size, totalSkill[id].powerGame, gameObject);
             }
             else
             {
-                float scaleNumber = 0.7f + (size - 1) * 0.15f;
+                float scaleNumber = 0.7f + (size - 1) * 0.1f;
+                Debug.Log(scaleNumber);
+             
                 gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(realData, size, totalSkill[id].powerGame, gameObject);
             }
         }
-        yield return new WaitForSeconds(totalSkill[id].timerGame);
     }
 
     IEnumerator reActiveObject(GameObject obj)
@@ -789,7 +815,15 @@ gameObject.transform.rotation);
         yield return new WaitForSeconds(0.99f);
         GetComponent<DragonBones.UnityArmatureComponent>().animation.Stop();
         yield return new WaitForSeconds(2f);
-        GameFlowController.Instance.userDeath();
+        if (realData.Id / 10 == 3 && revivePenguin == true)
+        {
+            revivePenguin = false;
+            revivePlayer();
+        }
+        else
+        {
+            GameFlowController.Instance.userDeath();
+        }
     }
     IEnumerator replayAnimation()
     {
@@ -919,6 +953,15 @@ gameObject.transform.rotation);
         float per = (float)currentHp / realData.Hp;
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = per;
+        calculateBonusSpeed();
+    }
+    private void calculateBonusSpeed()
+    {
+        if (realData.Id / 10 == 10)
+        {
+            float percent = currentHp / realData.Hp;
+            bonusSpeed = 1f + 0.5f * (1f - percent);
+        }
     }
     public void setPlayerNormal()
     {
@@ -938,6 +981,7 @@ gameObject.transform.rotation);
         GameController.Instance.setSpawn(true);
         UltimateJoystick.ResetJoystick("Movement");
         runAnimation(1);
+        calculateBonusSpeed();
     }
     IEnumerator cannotHurtDuringRevive()
     {
@@ -947,19 +991,22 @@ gameObject.transform.rotation);
     }
     public void healPlayer(int amount)
     {
-        int healHp = amount * currentHp * (100 + bonusPoints[10]) / 100;
-        int previousHp = currentHp;
-        currentHp += healHp;
-        if (currentHp >= realData.Hp) currentHp = realData.Hp;
-        int actualHeal = currentHp - previousHp;
-        if (actualHeal > 0)
+        int healHp = amount * realData.Hp * (100 + bonusPoints[10]) / 10000;
+
+        if (currentHp + healHp >= realData.Hp)
+        {
+            currentHp = realData.Hp;
+            healHp = realData.Hp - currentHp;
+        }
+        if (healHp > 0)
         {
             GameObject floatText = EasyObjectPool.instance.GetObjectFromPool("FloatingText", transform.position, transform.rotation);
-            floatText.GetComponent<FloatingText>().healPlayer(actualHeal);
+            floatText.GetComponent<FloatingText>().healPlayer(healHp);
         }
         float per = (float)currentHp / realData.Hp;
         hpText.text = currentHp.ToString();
         hpBar.GetComponent<Slider>().value = per;
+        calculateBonusSpeed();
     }
     private Vector2 shootFollower(Transform en)
     {

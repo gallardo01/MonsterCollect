@@ -105,8 +105,18 @@ public class MonsterController : MonoBehaviour
             {
                 heroes = PlayerController.Instance.getRealData();
             }
-            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
-            int type = MathController.Instance.getTypeValue(heroes, monsterData);
+            int dame;
+            int type;
+            if (heroes.Id/ 10 == 6)
+            {
+                dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent, bonusLowHpPercent());
+                type = MathController.Instance.getTypeValue(heroes, monsterData);
+            }
+            else
+            {
+                dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
+                type = MathController.Instance.getTypeValue(heroes, monsterData);
+            }
             if (raiseArmour)
             {
                 dame = dame * 4 / 10;
@@ -116,6 +126,7 @@ public class MonsterController : MonoBehaviour
             if (currentHp <= 0)
             {
                 SoundManagerDemo.Instance.playOneShot(3);
+                PlayerController.Instance.healPlayer(1);
                 //GameController.Instance.initEatMonster(heroes.Level);
                 // drop item
                 dropItemController(monsterData.Id);
@@ -127,6 +138,31 @@ public class MonsterController : MonoBehaviour
             GameObject floatText = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
             floatText.GetComponent<FloatingText>().disableObject(dame, type);
         }
+    }
+
+    private int bonusLowHpPercent()
+    {
+        int percentHp = currentHp * 100 / monsterData.Hp;
+        if (percentHp >= 60 && percentHp <= 80)
+        {
+            return 10;
+        } else if(percentHp >= 50 && percentHp <= 60)
+        {
+            return 20;
+        }
+        else if (percentHp >= 35 && percentHp <= 50)
+        {
+            return 30;
+        }
+        else if (percentHp >= 20 && percentHp <= 35)
+        {
+            return 40;
+        }
+        else if (percentHp < 20)
+        {
+            return 20;
+        }
+        return 0;
     }
 
     private void dropItemController(int monsterLv)
@@ -144,7 +180,7 @@ public class MonsterController : MonoBehaviour
         if (Random.Range(0, 100) < 5)
         {
             GameObject hpObj = EasyObjectPool.instance.GetObjectFromPool("Hp", transform.position * 1.05f, transform.rotation);
-            hpObj.GetComponent<ItemDropController>().setHp(Random.Range(15, 31));
+            hpObj.GetComponent<ItemDropController>().setHp(Random.Range(10, 51));
         }
         // drop magnet
         if (Random.Range(0, 100) < 5)

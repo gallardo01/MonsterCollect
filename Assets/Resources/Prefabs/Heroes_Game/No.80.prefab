@@ -278,7 +278,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 458473672804577126}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3938846729983863789
 GameObject:
@@ -319,7 +319,6 @@ Transform:
   - {fileID: 3476063525617169460}
   - {fileID: 560430393422093866}
   - {fileID: 2045543378657423395}
-  - {fileID: 7393767593518827879}
   - {fileID: 8425606649616103394}
   - {fileID: 1353638901647103156}
   - {fileID: 7098084783176280208}
@@ -406,7 +405,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.04654938, y: -0.20836371}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -417,7 +416,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.72070396, y: 0.5832726}
   m_EdgeRadius: 0
 --- !u!114 &8726721589800475304
 MonoBehaviour:
@@ -440,6 +439,7 @@ MonoBehaviour:
   line_hp: {fileID: 7637480795112959128}
   line: {fileID: 8209242317745609662}
   SmokePos: {fileID: 5103390850142519326}
+  bonusPoints: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &5103390850142519326
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +469,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 458473672804577126}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5742348442817225960
 GameObject:
@@ -584,8 +584,8 @@ Transform:
   m_LocalScale: {x: 0.32977998, y: 0.34217998, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 458473672804577126}
-  m_RootOrder: 6
+  m_Father: {fileID: 1702083019837577481}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8526115375186959191
 SpriteRenderer:
@@ -775,7 +775,7 @@ RectTransform:
   m_Children:
   - {fileID: 3571832027018673997}
   m_Father: {fileID: 458473672804577126}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1225,7 +1225,8 @@ Transform:
   m_LocalPosition: {x: -0.10497387, y: -0.38996726, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7393767593518827879}
   m_Father: {fileID: 458473672804577126}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

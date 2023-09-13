@@ -33,7 +33,7 @@ RectTransform:
   m_Children:
   - {fileID: 1233175268403079808}
   m_Father: {fileID: 3294651358811283855}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -203,12 +203,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1033719311464015517}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.12518182, y: -0.5591815, z: 0}
+  m_LocalPosition: {x: 0.12518184, y: -0.5591815, z: 0}
   m_LocalScale: {x: 0.29979998, y: 0.3110727, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3294651358811283855}
-  m_RootOrder: 6
+  m_Father: {fileID: 4199787758295296217}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &993503007027960914
 SpriteRenderer:
@@ -534,7 +534,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3294651358811283855}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3972573278336502216
 GameObject:
@@ -658,7 +658,6 @@ Transform:
   - {fileID: 4121771727048926265}
   - {fileID: 3431571723542812815}
   - {fileID: 373437546392811361}
-  - {fileID: 5419612287617630751}
   - {fileID: 2173841890427840400}
   - {fileID: 5323845505460456396}
   - {fileID: 4938360692918939156}
@@ -745,7 +744,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0118338615, y: -0.07692033}
+  m_Offset: {x: 0.09653151, y: -0.17242876}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -756,7 +755,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8106574, y: 0.84615934}
+  m_Size: {x: 0.59392667, y: 0.6551425}
   m_EdgeRadius: 0
 --- !u!114 &3452677869739888874
 MonoBehaviour:
@@ -779,6 +778,7 @@ MonoBehaviour:
   line_hp: {fileID: 1559635316993954177}
   line: {fileID: 1783201450259453814}
   SmokePos: {fileID: 3677337563408154808}
+  bonusPoints: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &5663409438559331081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1193,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3294651358811283855}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9144581941057692529
 GameObject:
@@ -1225,7 +1225,8 @@ Transform:
   m_LocalPosition: {x: -0.010046498, y: -0.0049967384, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5419612287617630751}
   m_Father: {fileID: 3294651358811283855}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

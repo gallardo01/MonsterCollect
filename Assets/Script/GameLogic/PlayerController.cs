@@ -44,7 +44,7 @@ public class PlayerController : Singleton<PlayerController>
     private bool revivePenguin = true;
 
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 10. Healing
-    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] bonusPointsExtra = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     private int cacheSpeed;
@@ -104,8 +104,8 @@ public class PlayerController : Singleton<PlayerController>
         data.Speed = realDataUser.AttackSpeed;
         data.Move = realDataUser.Move;
 
-        bonusPointsExtra[8] = realDataUser.ExGold;
-        bonusPointsExtra[9] = realDataUser.ExExp;
+        bonusPointsExtra[8] = realDataUser.ExGold / 15;
+        bonusPointsExtra[9] = realDataUser.ExExp / 15;
         if (data.Id / 10 == 1)
         {
             bonusPointsExtra[8] += 20;
@@ -140,7 +140,7 @@ public class PlayerController : Singleton<PlayerController>
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 
     private void updatePlayerData()
     {
-        realData.Atk = data.Atk * (100 + bonusPoints[1]) / 100;
+        realData.Atk = data.Atk * (100 + bonusPoints[1] + bonusPointsExtra[1]) / 100;
         int cacheHp = realData.Hp;
         realData.Hp = data.Hp * (100 + bonusPoints[2]) / 100;
         realData.Armour = data.Armour * (100 + bonusPoints[3]) / 100;
@@ -282,7 +282,14 @@ public class PlayerController : Singleton<PlayerController>
         }
         updatePlayerData();
     }
-
+    public void increasePointExtra()
+    {
+        if (bonusPointsExtra[1] < 100)
+        {
+            bonusPointsExtra[1]++;
+            updatePlayerData();
+        }
+    }
     public void attackMonster(SkillInGame skill)
     {
         int id = getSkillData(skill.data.Id);
@@ -959,8 +966,10 @@ gameObject.transform.rotation);
     {
         if (realData.Id / 10 == 10)
         {
-            float percent = currentHp / realData.Hp;
+            float percent = (float) currentHp / realData.Hp;
+            Debug.Log(percent);
             bonusSpeed = 1f + 0.5f * (1f - percent);
+            Debug.Log(bonusSpeed);
         }
     }
     public void setPlayerNormal()
@@ -1002,6 +1011,7 @@ gameObject.transform.rotation);
         {
             GameObject floatText = EasyObjectPool.instance.GetObjectFromPool("FloatingText", transform.position, transform.rotation);
             floatText.GetComponent<FloatingText>().healPlayer(healHp);
+            currentHp += healHp;
         }
         float per = (float)currentHp / realData.Hp;
         hpText.text = currentHp.ToString();

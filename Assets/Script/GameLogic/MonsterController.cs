@@ -126,7 +126,13 @@ public class MonsterController : MonoBehaviour
             if (currentHp <= 0)
             {
                 SoundManagerDemo.Instance.playOneShot(3);
-                PlayerController.Instance.healPlayer(1);
+                if (heroes.Id / 10 == 4)
+                {
+                    PlayerController.Instance.healPlayer(1);
+                } else if(heroes.Id / 10 == 11)
+                {
+                    PlayerController.Instance.increasePointExtra();
+                } 
                 //GameController.Instance.initEatMonster(heroes.Level);
                 // drop item
                 dropItemController(monsterData.Id);

@@ -26,12 +26,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 267778701740496014}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.09, y: -0.91, z: 0}
-  m_LocalScale: {x: 0.84192425, y: 0.9554006, z: 1}
+  m_LocalPosition: {x: -0.090000026, y: -0.9099999, z: 0}
+  m_LocalScale: {x: 0.8419242, y: 0.9554006, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7023544523148396941}
-  m_RootOrder: 4
+  m_Father: {fileID: 4202020612637448778}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8729432757879446361
 SpriteRenderer:
@@ -134,7 +134,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7023544523148396941}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1398327582081950360
 GameObject:
@@ -173,7 +173,6 @@ Transform:
   - {fileID: 7126224276452405793}
   - {fileID: 6601310853912634224}
   - {fileID: 2174135817194026416}
-  - {fileID: 643759207972148917}
   - {fileID: 5143406995136758305}
   - {fileID: 2259088176850951866}
   - {fileID: 6039983467824957880}
@@ -292,6 +291,7 @@ MonoBehaviour:
   line_hp: {fileID: 2186713639949684791}
   line: {fileID: 7446667951221225783}
   SmokePos: {fileID: 2903752207180902332}
+  bonusPoints: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &1958873579139203113
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +322,8 @@ Transform:
   m_LocalPosition: {x: -0.04502765, y: 0.13498208, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 643759207972148917}
   m_Father: {fileID: 7023544523148396941}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -489,7 +490,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7023544523148396941}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3519400302136143806
 GameObject:
@@ -690,7 +691,7 @@ RectTransform:
   m_Children:
   - {fileID: 5059876458278922950}
   m_Father: {fileID: 7023544523148396941}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

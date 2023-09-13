@@ -104,8 +104,18 @@ public class BossController : Singleton<BossController>
             {
                 heroes = PlayerController.Instance.getRealData();
             }
-            int dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
-            int typeValue = MathController.Instance.getTypeValue(heroes, monsterData);
+            int dame;
+            int type;
+            if (heroes.Id / 10 == 6)
+            {
+                dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent, bonusLowHpPercent());
+                type = MathController.Instance.getTypeValue(heroes, monsterData);
+            }
+            else
+            {
+                dame = MathController.Instance.playerHitEnemy(heroes, monsterData, damePercent);
+                type = MathController.Instance.getTypeValue(heroes, monsterData);
+            }
             int actualDame = Mathf.Abs(dame);
             currentHp -= actualDame;
             //Debug.Log(currentHp);
@@ -123,10 +133,34 @@ public class BossController : Singleton<BossController>
             disableObject();
             string floatingText = "FloatingText";
             GameObject floatText = EasyObjectPool.instance.GetObjectFromPool(floatingText, transform.position, transform.rotation);
-            floatText.GetComponent<FloatingText>().disableObject(dame, typeValue);
+            floatText.GetComponent<FloatingText>().disableObject(dame, type);
         }
     }
-
+    private int bonusLowHpPercent()
+    {
+        int percentHp = currentHp * 100 / monsterData.Hp;
+        if (percentHp >= 60 && percentHp <= 80)
+        {
+            return 10;
+        }
+        else if (percentHp >= 50 && percentHp <= 60)
+        {
+            return 20;
+        }
+        else if (percentHp >= 35 && percentHp <= 50)
+        {
+            return 30;
+        }
+        else if (percentHp >= 20 && percentHp <= 35)
+        {
+            return 40;
+        }
+        else if (percentHp < 20)
+        {
+            return 20;
+        }
+        return 0;
+    }
     public bool getIsDead()
     {
         return isDead;

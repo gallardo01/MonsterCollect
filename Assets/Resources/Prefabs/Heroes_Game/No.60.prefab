@@ -479,7 +479,8 @@ Transform:
   m_LocalPosition: {x: 0.31000018, y: 0.014980662, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5178687592525657975}
   m_Father: {fileID: 9125529040854155575}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -582,7 +583,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9125529040854155575}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6305007950491914885
 GameObject:
@@ -696,7 +697,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9125529040854155575}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6893310766358006732
 GameObject:
@@ -731,7 +732,7 @@ RectTransform:
   m_Children:
   - {fileID: 4548402011266337062}
   m_Father: {fileID: 9125529040854155575}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -983,13 +984,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7749013986618569051}
-  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.12, y: -0.67, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.120000005, y: -0.6700001, z: 0}
   m_LocalScale: {x: -0.32977998, y: 0.34217998, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 9125529040854155575}
-  m_RootOrder: 7
+  m_Father: {fileID: 5990506613632884857}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5241659366276487433
 SpriteRenderer:
@@ -1103,7 +1104,6 @@ Transform:
   - {fileID: 4898453942478976554}
   - {fileID: 5819430559703062773}
   - {fileID: 5077662098757005727}
-  - {fileID: 5178687592525657975}
   - {fileID: 270868674432546190}
   - {fileID: 108773173373361252}
   - {fileID: 3580803432014842385}
@@ -1225,6 +1225,7 @@ MonoBehaviour:
   line_hp: {fileID: 5041460879099840263}
   line: {fileID: 7305925931478846584}
   SmokePos: {fileID: 6407316429412174941}
+  bonusPoints: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &8534383301878021527
 GameObject:
   m_ObjectHideFlags: 0

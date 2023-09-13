@@ -33,7 +33,7 @@ RectTransform:
   m_Children:
   - {fileID: 1238052784627763323}
   m_Father: {fileID: 6670814481215495399}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -342,7 +342,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6670814481215495399}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3587153910042330571
 GameObject:
@@ -354,7 +354,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3781798874602996690}
   - component: {fileID: 6060769601159622338}
-  - component: {fileID: 3402570596034636875}
   m_Layer: 0
   m_Name: play_character_target
   m_TagString: Untagged
@@ -374,8 +373,8 @@ Transform:
   m_LocalScale: {x: 0.32977998, y: 0.34217998, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6670814481215495399}
-  m_RootOrder: 2
+  m_Father: {fileID: 6151682852318621258}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6060769601159622338
 SpriteRenderer:
@@ -429,26 +428,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &3402570596034636875
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3587153910042330571}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 301383e428b4f774e8303a295911c901, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4802421112494868862
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,7 +445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &21621973270048902
 Transform:
   m_ObjectHideFlags: 0
@@ -474,8 +453,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4802421112494868862}
-  m_LocalRotation: {x: 0, y: 0, z: -0.00004363845, w: 1}
-  m_LocalPosition: {x: 0.0250388, y: 0.26495615, z: -0.001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -561,7 +540,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6670814481215495399}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5459161947559251594
 GameObject:
@@ -598,7 +577,6 @@ Transform:
   m_Children:
   - {fileID: 6151682852318621258}
   - {fileID: 21621973270048902}
-  - {fileID: 3781798874602996690}
   - {fileID: 4243870511958513053}
   - {fileID: 838168368588742500}
   - {fileID: 6232245477561094121}
@@ -646,7 +624,7 @@ MonoBehaviour:
   slotNames:
   - Layer_0
   - Layer_1
-  dirty: 1
+  dirty: 0
 --- !u!50 &123266427150057063
 Rigidbody2D:
   serializedVersion: 4
@@ -715,6 +693,7 @@ MonoBehaviour:
   line_hp: {fileID: 7245950462666327062}
   line: {fileID: 658084584501958896}
   SmokePos: {fileID: 5049262457003937677}
+  bonusPoints: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &7198201019171239542
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,11 +720,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7198201019171239542}
-  m_LocalRotation: {x: 0, y: 0, z: -0.000042676358, w: 1}
-  m_LocalPosition: {x: -0.00003194423, y: -0.19001444, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3781798874602996690}
   m_Father: {fileID: 6670814481215495399}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -891,7 +891,14 @@ public class BossController : Singleton<BossController>
                 yield return new WaitForSeconds(1f);
             }
 
+            //ban lam cham
+            yield return new WaitForSeconds(2f);
+            runAnimation(3);
+            GameObject windFog = EasyObjectPool.instance.GetObjectFromPool("Boss_6_Target", transform.position, transform.rotation);
+            Vector3 directionFog = Vector3.Normalize(player.position - transform.position);
+            windFog.GetComponent<BulletOfBossController>().initBullet(player, directionFog, 6f, 3, monsterData);
 
+            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
 
         }
 

@@ -64,10 +64,6 @@ public class BulletOfBossController : MonoBehaviour
             }
             else if (type == 11 && isReflect) // bounce bulle
             {
-
-                Debug.Log("width " + (width).ToString());
-                Debug.Log("height " + (height).ToString());
-
                 if (transform.position.x >(width + 0) && bounce > 0)
                 {
                     isReflect = false;

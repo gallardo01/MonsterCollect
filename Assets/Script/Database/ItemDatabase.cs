@@ -26,6 +26,18 @@ public class ItemDatabase : Singleton<ItemDatabase>
     void Start()
     {
         LoadData();
+        /*
+        // cheat đồ 
+        for (int i = 1; i <= 37; i++)
+        {
+            addNewItem(i, 1, Random.Range(1, 6));
+        }
+        for (int i = 101; i <= 112; i++)
+        {
+            addNewItem(i, 300);
+        }
+        Save();
+        */
     }
     public void LoadData()
     {

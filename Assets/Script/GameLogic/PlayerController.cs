@@ -967,9 +967,7 @@ gameObject.transform.rotation);
         if (realData.Id / 10 == 10)
         {
             float percent = (float) currentHp / realData.Hp;
-            Debug.Log(percent);
             bonusSpeed = 1f + 0.5f * (1f - percent);
-            Debug.Log(bonusSpeed);
         }
     }
     public void setPlayerNormal()

@@ -193,7 +193,16 @@ public class BulletOfBossController : MonoBehaviour
             height = 6;
 
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            Vector2 vector = new Vector2(-1f, UnityEngine.Random.Range(-2f, 2f));
+            Vector2 vector;
+            if (target.position.x < transform.position.x)
+            {
+                vector = new Vector2(-1f, UnityEngine.Random.Range(-2f, 2f));
+            }
+            else
+            {
+                vector = new Vector2(1f, UnityEngine.Random.Range(-2f, 2f));
+
+            }
             vector = vector.normalized;
             GetComponent<Rigidbody2D>().AddForce(vector * 700);
         }

@@ -50,28 +50,31 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
         if (isSyncCloud == false)
         {
-            string myFileName = "MyItem.txt";
-            LoadResourceTextfileCurrentData(myFileName);
-
-            if (PlayerPrefs.HasKey("Init") == false)
-            {
-                PlayerPrefs.SetInt("Init", 1);
-                for (int i = 1; i <= 37; i++)
-                {
-                    addNewItem(i, 1, Random.Range(1, 6));
-                }
-                for (int i = 101; i <= 112; i++)
-                {
-                    addNewItem(i, 300);
-                }
-            }
-
+            LoadResourceTextfileCurrentData();
             SyncService.Instance.PushInventory(inventoryData);
         } else
         {
             Debug.Log("Using inventory from cloud...");
             inventoryData = items;
         }
+    }
+
+    public void deleteData()
+    {
+        inventoryData.Clear();
+        for (int i = 1; i < 10; i++)
+        {
+            addNewItem(i, 0);
+        }
+        for (int i = 34; i < 38; i++)
+        {
+            addNewItem(i, 0);
+        }
+        for (int i = 101; i < 113; i++)
+        {
+            addNewItem(i, 0);
+        }
+        Save();
     }
 
     private void LoadResourceTextfileItemData(string path)
@@ -81,12 +84,25 @@ public class ItemDatabase : Singleton<ItemDatabase>
         itemData = JsonMapper.ToObject(targetFile.text);
         ConstructItemDatabase();
     }
-    private void LoadResourceTextfileCurrentData(string path)
+    private void LoadResourceTextfileCurrentData()
     {
         string tempPath = Application.persistentDataPath + "/c/b/c" + "/MyItem.txt";
         //Load saved Json
         if (!File.Exists(tempPath))
         {
+            for (int i = 1; i < 10; i++)
+            {
+                addNewItem(i, 0);
+            }
+            for (int i = 34; i < 38; i++)
+            {
+                addNewItem(i, 0);
+            }
+            for (int i = 101; i < 113; i++)
+            {
+                addNewItem(i, 0);
+            }
+            Save();
             return;
         }
         byte[] jsonByte = null;

@@ -63,10 +63,16 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         else
         {
-            LoadResourceTextfileCurrentData(myFileName);
+            LoadResourceTextfileCurrentData();
         }
     }
-
+    public void deleteData()
+    {
+        string fileName = "Heroes.txt";
+        myHeroes.Clear();
+        LoadResourceTextfileMyHeroes(fileName);
+        Save();
+    }
 
     private void LoadResourceTextfileMyHeroes(string path)
     {
@@ -75,7 +81,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         myHeroesJson = JsonMapper.ToObject(targetFile.text);
         ConstructMyHeroes();
     }
-    private void LoadResourceTextfileCurrentData(string path)
+    private void LoadResourceTextfileCurrentData()
     {
         string tempPath = Application.persistentDataPath + "/c/b/c" + "/MyHeroes.txt";
         //Load saved Json

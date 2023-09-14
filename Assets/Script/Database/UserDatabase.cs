@@ -137,6 +137,12 @@ public class UserDatabase : Singleton<UserDatabase>
         }
         SyncService.Instance.PushUser(database);
     }
+    public void deleteData()
+    {
+        string fileName = "User.txt";
+        LoadResourceTextfileItemData(fileName);
+        Save();
+    }
     public UserData getUserData()
     {
         return database;

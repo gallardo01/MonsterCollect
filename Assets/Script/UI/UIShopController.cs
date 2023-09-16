@@ -40,6 +40,15 @@ public class UIShopController : MonoBehaviour
     private string[] type = { "", "Fire", "Thunder", "Water", "Grass" };
     private bool isLoadAds = true;
     public GameObject loadAdsDiamond;
+
+    private string[] targetOffers = {
+        "stone_pack",
+        "1000_diamond_pack",
+        "10000_gold_pack",
+        "newbie_pack",
+        "random_equipment_pack"
+    };
+
     void Start()
     {
         initAds();
@@ -152,14 +161,28 @@ public class UIShopController : MonoBehaviour
     void InitTargetedOffer()
     {
         GameObject TO = new GameObject();
-        int to = UnityEngine.Random.Range(1, 6);
+        int to = 4; //UnityEngine.Random.Range(1, 6);
         SetUpTO(TO, to);
     }
 
     void SetUpTO(GameObject TO, int index)
     {
         TO = Instantiate(Resources.Load($"Prefabs/UI/TargetOffer/TO_{index}") as GameObject, TargetedOfferPanel.transform.GetChild(0).transform);
-        TO.GetComponent<Button>().onClick.AddListener(() => OnTargetOfferPurchased(index, StaticInfo.TOBaseValue[index - 1]));
+        TO.GetComponent<Button>().onClick.AddListener(async () => {
+            SoundManagerDemo.Instance.playOneShot(10);
+            if (index > targetOffers.Length) return;
+            var productId = targetOffers[index - 1];
+            var ok = await PurchaseService.Instance.Purchase(productId);
+
+            if (ok)
+            {
+                OnTargetOfferPurchased(productId);
+            }
+            else
+            {
+                // TODO: Show error banner?
+            }
+        });
     }
 
     void InitGems()
@@ -250,15 +273,16 @@ public class UIShopController : MonoBehaviour
         Coins_Btn[5].GetComponent<Button>().onClick.AddListener(() => OnCoinPurchased(20000, 4000));
 
     }
-    void OnTargetOfferPurchased(int type, double price)
+
+    void OnTargetOfferPurchased(string productId)
     {
-        SoundManagerDemo.Instance.playOneShot(10);
         List<ItemInventory> items = new List<ItemInventory>();
         int gold = 0;
         int diamond = 0;
-        switch (type)
+
+        switch (productId)
         {
-            case 1:
+            case "stone_pack":
                 items.Add(ItemDatabase.Instance.getItemObject(1, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(2, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(3, 10, 1));
@@ -268,22 +292,22 @@ public class UIShopController : MonoBehaviour
                 items.Add(ItemDatabase.Instance.getItemObject(7, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(8, 10, 1));
                 break;
-            case 2:
-                UserDatabase.Instance.gainMoney(0, 1000);
+            case "1000_diamond_pack":
+                //UserDatabase.Instance.gainMoney(0, 1000);
                 diamond = 1000;
                 break;
-            case 3:
-                UserDatabase.Instance.gainMoney(10000, 0);
+            case "10000_gold_pack":
+                //UserDatabase.Instance.gainMoney(10000, 0);
                 gold = 10000;
                 break;
-            case 4:
+            case "newbie_pack":
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 diamond = 500;
                 gold = 5000;
                 break;
-            case 5:
+            case "random_equipment_pack":
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 14), 1, returnRarityTO()));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(14, 18), 1, returnRarityTO()));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(18, 22), 1, returnRarityTO()));
@@ -293,9 +317,21 @@ public class UIShopController : MonoBehaviour
                 break;
         }
 
+        for (int i = 0; i < items.Count; i++)
+        {
+            ItemDatabase.Instance.addNewItemByObject(items[i]);
+        }
+
+
+        if (gold > 0 || diamond > 0)
+        {
+            UserDatabase.Instance.gainMoney(gold, diamond);
+        }
+
         // celebration
         openCelebration(items, gold, diamond);
     }
+
     private int returnRarityTO()
     {
         int rate = Random.Range(0, 100);
@@ -312,13 +348,9 @@ public class UIShopController : MonoBehaviour
             return 5;
         }
     }
+
     private void openCelebration(List<ItemInventory> items, int gold, int diamond)
     {
-        for (int i = 0; i < items.Count; i++)
-        {
-            ItemDatabase.Instance.addNewItemByObject(items[i]);
-        }
-        UserDatabase.Instance.gainMoneyInGame(gold, diamond);
         InventoryController.Instance.initEquipment();
         InventoryController.Instance.initMaterial();
         InventoryController.Instance.initShard();

@@ -1,12 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 using UnityEngine;
 using VoxelBusters.CoreLibrary;
 using VoxelBusters.EssentialKit;
 
 
-public class PurchaseService : MonoBehaviour
+public class PurchaseService : Singleton<PurchaseService>
 {
+    enum PurchaseState
+    {
+        requesting,
+        successful,
+        failed
+    }
+
+    private Dictionary<string, IBillingProduct> productDict = new();
+    private ConcurrentDictionary<string, PurchaseState> purchaseStates = new();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,11 +54,39 @@ public class PurchaseService : MonoBehaviour
         BillingServices.OnRestorePurchasesComplete -= OnRestorePurchasesComplete;
     }
 
-    public void Purchase(int productIndex)
+    public async Task<bool> Purchase(string productId)
     {
         if (BillingServices.CanMakePayments())
         {
-            BillingServices.BuyProduct(BillingServices.Products[productIndex]);
+            var product = productDict[productId];
+            if (product == null)
+            {
+                Debug.Log("Unable to find product: " + productId);
+                return false;
+            }
+
+            var canPurchase = purchaseStates.TryAdd(productId, PurchaseState.requesting);
+
+            if (canPurchase)
+            {
+                Debug.Log("Purchasing product: " + productId);
+                BillingServices.BuyProduct(product);
+
+                while (purchaseStates[productId] == PurchaseState.requesting)
+                {
+                    await Task.Delay(15);
+                }
+
+                return purchaseStates[productId] == PurchaseState.successful;
+
+            } else
+            {
+                Debug.Log(string.Format("Another purchase of id '{0}' is awaiting completion.", productId));
+                return false;
+            }
+        } else
+        {
+            return false;
         }
     }
 
@@ -55,10 +95,6 @@ public class PurchaseService : MonoBehaviour
         BillingServices.RestorePurchases();
     }
 
-    private void RewardPurchase(string productId)
-    {
-        // Call UIShopController.OnXXXPurchased here
-    }
 
     private void OnInitializeStoreComplete(BillingServicesInitializeStoreResult result, Error error)
     {
@@ -75,6 +111,7 @@ public class PurchaseService : MonoBehaviour
                 // Disable purchase button here
                 // productButton[iter].interactable = !BillingServices.IsProductPurchased(productId[iter]);
                 var product = products[iter];
+                productDict[product.Id] = product;
                 Debug.Log(string.Format("[{0}]: {1}", iter, product));
             }
         }
@@ -101,14 +138,17 @@ public class PurchaseService : MonoBehaviour
         for (int iter = 0; iter < transactions.Length; iter++)
         {
             var transaction = transactions[iter];
+            var productId = transaction.Payment.ProductId;
             switch (transaction.TransactionState)
             {
                 case BillingTransactionState.Purchased:
-                    Debug.Log(string.Format("Buy product with id:{0} finished successfully.", transaction.Payment.ProductId));
-                    RewardPurchase(transaction.Payment.ProductId);
+                    
+                    Debug.Log(string.Format("Buy product with id:{0} finished successfully.", productId));
+                    purchaseStates[productId] = PurchaseState.successful;
                     break;
 
                 case BillingTransactionState.Failed:
+                    purchaseStates[productId] = PurchaseState.failed;
                     Debug.Log(string.Format("Buy product with id:{0} failed with error. Error: {1}", transaction.Payment.ProductId, transaction.Error));
                     break;
             }
@@ -122,16 +162,18 @@ public class PurchaseService : MonoBehaviour
             var transactions = result.Transactions;
             Debug.Log("Request to restore purchases finished successfully.");
             Debug.Log("Total restored products: " + transactions.Length);
+
             for (int iter = 0; iter < transactions.Length; iter++)
             {
                 var transaction = transactions[iter];
+                var productId = transaction.Payment.ProductId;
 
                 if (transaction.ReceiptVerificationState == BillingReceiptVerificationState.Success)
                 {
-                    RewardPurchase(transaction.Payment.ProductId);
-                }
+                    // TODO: call restore rewards.
+                } 
 
-                Debug.Log(string.Format("[{0}]: {1}", iter, transaction.Payment.ProductId));
+                Debug.Log(string.Format("[{0}]: {1}", iter, productId));
             }
         }
         else

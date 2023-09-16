@@ -291,6 +291,19 @@ public class ItemDatabase : Singleton<ItemDatabase>
     {
         return inventoryData;
     }
+    public int getBonusItemType(int type)
+    {
+        List<ItemInventory> usedItem = fetchUsedItem();
+        int count = 0;
+        for (int i = 0; i < usedItem.Count; i++)
+        {
+            if ((usedItem[i].Id - 9) % 4 == type)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
     public int getBonusItemSameType(int type)
     {
         int count = 0;

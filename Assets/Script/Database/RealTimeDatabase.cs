@@ -31,6 +31,32 @@ public class RealTimeDatabase : Singleton<RealTimeDatabase>
         itemInformation.ExGold = (int)itemInformation.ExGold;
         itemInformation.ExExp = (int)itemInformation.ExExp;
 
+        int totalBonus = 0;
+        for (int i = 1; i <= 4; i++)
+        {
+            if(ItemDatabase.Instance.getBonusItemType(i) >= 3)
+            {
+                if (heroesInformation.Type == i)
+                {
+                    totalBonus += 5;
+                }
+            }
+            if(ItemDatabase.Instance.getBonusItemType(i) == 6)
+            {
+                totalBonus += 5;
+            }
+        }
+        if(totalBonus > 0)
+        {
+            itemInformation.Atk = itemInformation.Atk * (totalBonus + 100) / 100;
+            itemInformation.Hp = itemInformation.Hp * (totalBonus + 100) / 100;
+            itemInformation.Armour = itemInformation.Armour * (totalBonus + 100) / 100;
+            itemInformation.Move = itemInformation.Move * (totalBonus + 100) / 100;
+            itemInformation.Crit = itemInformation.Crit * (totalBonus + 100) / 100;
+            itemInformation.AttackSpeed = itemInformation.AttackSpeed * (totalBonus + 100) / 100;
+            itemInformation.ExGold = itemInformation.ExGold * (totalBonus + 100) / 100;
+            itemInformation.ExExp = itemInformation.ExExp * (totalBonus + 100) / 100;
+        }
         userRealData = itemInformation;
         return itemInformation;
     }

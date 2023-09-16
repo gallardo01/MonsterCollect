@@ -13,11 +13,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     private List<MyHeroes> myHeroes = new List<MyHeroes>();
     private JsonData myHeroesJson;
 
-    void Awake()
-    {
-        DontDestroyOnLoad(transform.gameObject);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -269,7 +264,20 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
         return listHero;
     }
-
+    public int returnCurrentHeroes()
+    {
+        if (fetchMyHeroes(10).Level == 1)
+        {
+            return 10;
+        } else if (fetchMyHeroes(20).Level == 1)
+        {
+            return 20;
+        } else if (fetchMyHeroes(30).Level == 1)
+        {
+            return 30;
+        }
+        return 0;
+    }
     //
     public bool buyHeroes(int id)
     {

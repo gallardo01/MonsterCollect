@@ -21,11 +21,22 @@ public class LoadingScene : MonoBehaviour
         //UserDatabase.Instance.LoadData();
         yield return new WaitForSeconds(2f);
 
-        AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("UI");
-        while (!loadLevelOp.isDone)
+        if (HeroesDatabase.Instance.returnCurrentHeroes() > 0)
         {
-            // update progress bar amount to loadLevelOp.progress
-            yield return null;
+            AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("UI");
+            while (!loadLevelOp.isDone)
+            {
+                // update progress bar amount to loadLevelOp.progress
+                yield return null;
+            }
+        } else
+        {
+            AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("Tutorial");
+            while (!loadLevelOp.isDone)
+            {
+                // update progress bar amount to loadLevelOp.progress
+                yield return null;
+            }
         }
     }
 }

@@ -492,6 +492,29 @@ public class ItemDatabase : Singleton<ItemDatabase>
         }
         Save();
     }
+    public void addNewItemByListObject(List<ItemInventory> item)
+    {
+        for (int i = 0; i < item.Count; i++)
+        {
+            if (item[i].Type == 0 || item[i].Type == 10)
+            {
+                int index = fetchInventoryByIndex(item[i].Id);
+                if (index == -1)
+                {
+                    inventoryData.Add(item[i]);
+                }
+                else
+                {
+                    inventoryData[index].Slot += item[i].Slot;
+                }
+            }
+            else
+            {
+                inventoryData.Add(item[i]);
+            }
+        }
+        Save();
+    }
     public ItemInventory getItemObject(int id, int slot, int rarity)
     {
         ItemData rawItem = fetchItemById(id);
@@ -752,7 +775,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         List<ItemInventory> itemInv = new List<ItemInventory>();
         for (int i = 0; i < inventoryData.Count; i++)
         {
-            if (inventoryData[i].Type == 0)
+            if (inventoryData[i].Type == 0 && inventoryData[i].Slot > 0)
             {
                 itemInv.Add(inventoryData[i]);
             }
@@ -764,7 +787,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         List<ItemInventory> itemInv = new List<ItemInventory>();
         for (int i = 0; i < inventoryData.Count; i++)
         {
-            if (inventoryData[i].Type == 10)
+            if (inventoryData[i].Type == 10 && inventoryData[i].Slot > 0)
             {
                 itemInv.Add(inventoryData[i]);
             }

@@ -31,6 +31,7 @@ public class InventoryController : Singleton<InventoryController>
     [SerializeField] Button craftButton;
     [SerializeField] GameObject craftItemObj;
     [SerializeField] GameObject hideScreenWhenCraft;
+    [SerializeField] RectTransform scrollRect;
     private bool filterBool = true;
     private bool isCraftItem = false;
     private Sprite[] itemsSprite;
@@ -79,7 +80,7 @@ public class InventoryController : Singleton<InventoryController>
             initEquipment();
         }
         isCraftItem = !isCraftItem;
-        initLayout();
+        StartCoroutine(initLayout());
     }
     public bool getCraftItem()
     {
@@ -114,14 +115,18 @@ public class InventoryController : Singleton<InventoryController>
         ItemPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2(250f, 250f);
         MaterialPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2(250f, 250f);
         ShardPanel.GetComponent<GridLayoutGroup>().cellSize = new Vector2(250f, 250f);
-        initLayout();
+        StartCoroutine(initLayout());
     }
-    public void initLayout()
+    public IEnumerator initLayout()
     {
-        ItemPanel.GetComponent<GridLayoutGroup>().CalculateLayoutInputHorizontal();
-        ItemPanel.GetComponent<GridLayoutGroup>().CalculateLayoutInputVertical();
-        ItemPanel.GetComponent<GridLayoutGroup>().SetLayoutHorizontal();
-        ItemPanel.GetComponent<GridLayoutGroup>().SetLayoutVertical();
+        yield return new WaitForSeconds(0.01f);
+        ItemPanel.SetActive(false);
+        ItemPanel.SetActive(true);
+        MaterialPanel.SetActive(false);
+        MaterialPanel.SetActive(true);
+        ShardPanel.SetActive(false);
+        ShardPanel.SetActive(true);
+
     }
     public void initUsedItem()
     {
@@ -188,6 +193,7 @@ public class InventoryController : Singleton<InventoryController>
             else
             {
                 GameObject _slotitem = Instantiate(SlotItem, MaterialPanel.transform);
+                _slotitem.SetActive(true);
                 _slotitem.transform.localPosition = new Vector3(0, 0, 0);
                 _slotitem.GetComponent<ItemInflate>().InitData(itemArr[i]);
             }
@@ -217,6 +223,7 @@ public class InventoryController : Singleton<InventoryController>
             else
             {
                 GameObject _slotitem = Instantiate(SlotItem, ShardPanel.transform);
+                _slotitem.SetActive(true);
                 _slotitem.transform.localPosition = new Vector3(0, 0, 0);
                 _slotitem.GetComponent<ItemInflate>().InitData(itemArr[i]);
             }

@@ -403,6 +403,8 @@ public class UIShopController : MonoBehaviour
             }
             celebrationObj.SetActive(true);
             celebrationObj.GetComponent<CelebrationShopController>().initCelebration(items, 0, 0);
+            ItemDatabase.Instance.addNewItemByListObject(items);
+            InventoryController.Instance.initItemData();
         } else
         {
             SoundManagerDemo.Instance.playOneShot(12);

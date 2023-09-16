@@ -44,7 +44,7 @@ public class PlayerController : Singleton<PlayerController>
     private bool revivePenguin = true;
 
     // 1.Atk 2.Hp 3.Armour 4.Move 5.Crit 6.Speed 7.SuperEffective 8.Gold 9.Exp 10. Healing
-    public int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] bonusPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] bonusPointsExtra = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] buffLevel = { 0, 0, 0, 0, 0, 0, 0 };
     private int cacheSpeed;
@@ -371,10 +371,10 @@ public class PlayerController : Singleton<PlayerController>
         yield return new WaitForSeconds(totalSkill[id].timerGame * (100 - bonusTimer) / 100 + 0.4f);
         if (isPause == false)
         {
-            SoundManagerDemo.Instance.playOneShot(2);
             Transform shootTarget = EasyObjectPool.instance.getNearestHitPosition(gameObject);
             if (shootTarget != null)
             {
+                SoundManagerDemo.Instance.playOneShot(2);
                 GameObject projectileNormal = EasyObjectPool.instance.GetObjectFromPool(bulletText, locate.transform.position, shootTarget.rotation);
                 projectileNormal.GetComponent<BulletController>().initBullet(realData, 5, totalSkill[id].powerGame, shootTarget);
                 Vector2 vector = shootFollower(shootTarget);
@@ -853,9 +853,13 @@ gameObject.transform.rotation);
     private void flip()
     {
         facingRight = 1 - facingRight;
-        Vector3 newScale = body.transform.localScale;
+        Vector3 newScale = transform.localScale;
         newScale.x *= -1;
-        body.transform.localScale = newScale;
+        transform.localScale = newScale;
+
+        Vector3 newScale1 = hpBar.GetComponent<RectTransform>().localScale;
+        newScale1.x *= -1;
+        hpBar.GetComponent<RectTransform>().localScale = newScale1;
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -900,6 +904,7 @@ gameObject.transform.rotation);
     }
     public void setPlayerHurt(MonsterData monsterData, int status)
     {
+        Debug.Log(status);
         // 1 root
         if (status == 1)
         {
@@ -916,7 +921,7 @@ gameObject.transform.rotation);
         }
         else if (status == 3) //slow Speed
         {
-            slowPlayer(50);
+            StartCoroutine(slowPlayer(70));
         }
         else if (status == 4) //slow Speed
         {
@@ -1057,17 +1062,28 @@ gameObject.transform.rotation);
             StartCoroutine(slowSpeed(100));
         }
     }
-    public void slowPlayer(int percent)
-    {
-        cacheSpeed = realData.Move;
-        realData.Move = (100 - percent) * realData.Move / 100;
-    }
     private IEnumerator slowSpeed(int percent)
     {
-        int cacheSpeed = realData.Move;
-        realData.Move = (100 - percent) * realData.Move / 100;
-        yield return new WaitForSeconds(1f);
-        realData.Move = cacheSpeed;
-        isPlayerRooted = false;
+        if (realData.Move > 0)
+        {
+            int cacheSpeed = realData.Move;
+            realData.Move = (100 - percent) * realData.Move / 100;
+            yield return new WaitForSeconds(1f);
+            realData.Move = cacheSpeed;
+            isPlayerRooted = false;
+        }
+    }
+    private IEnumerator slowPlayer(int percent)
+    {
+        if (isPlayerRooted == false)
+        {
+            isPlayerRooted = true;
+            cacheSpeed = realData.Move;
+            realData.Move = (100 - percent) * realData.Move / 100;
+            Debug.Log("Move " + realData.Move);
+            yield return new WaitForSeconds(3f);
+            realData.Move = cacheSpeed;
+            isPlayerRooted = false;
+        }
     }
 }

@@ -95,19 +95,18 @@ public class BulletRootController : MonoBehaviour
         count++;
         yield return new WaitForSeconds(1f);
         EasyObjectPool.instance.getAllObjectInPosition(gameObject, 0.5f, heroes, dame);
-        StartCoroutine(hurtEnemyAround());
         if (count > 4)
         {
             GameObject par = EasyObjectPool.instance.GetObjectFromPool("Particle_Grass_3", transform.position, transform.rotation);
             par.GetComponent<ParticleSystem>().Play();
             StopAllCoroutines();
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-            if (grass_2.gameObject != null)
-            {
-                EasyObjectPool.instance.ReturnObjectToPool(grass_2);
-            }
+            EasyObjectPool.instance.ReturnObjectToPool(grass_2);
             grass_2.SetActive(false);
             gameObject.SetActive(false);
+        } else
+        {
+            StartCoroutine(hurtEnemyAround());
         }
     }
 

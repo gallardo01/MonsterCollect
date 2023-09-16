@@ -53,9 +53,6 @@ public class GameController : Singleton<GameController>
 
     private int[] numberCreep = { 0, 40, 60, 80, 100, 120, 140, 160, 180, 200};
 
-    private int idCurrentBoss = 20;
-
-
     private void Awake()
     {
     }
@@ -87,7 +84,7 @@ public class GameController : Singleton<GameController>
         string route = "Route1";
         waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
-        enemyLv = 1;
+        enemyLv = stage;
         initInfo();
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
@@ -190,9 +187,9 @@ public class GameController : Singleton<GameController>
         GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", bossPosition.transform.position, transform.rotation);
         yield return new WaitForSeconds(2f);
         warningBoss.SetActive(false);
-        string enemyType = "Enemy" + (idCurrentBoss);
+        string enemyType = "Enemy" + (stage*10);
         GameObject boss = EasyObjectPool.instance.GetObjectFromPool(enemyType, warning.transform.position, transform.rotation);
-        boss.GetComponent<BossController>().initInfo(idCurrentBoss);
+        boss.GetComponent<BossController>().initInfo(stage * 10);
         boss.GetComponent<DragonBones.UnityArmatureComponent>().animation.Play("idle");
         warning.SetActive(false);
         fillImage.SetActive(true);

@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using DigitalRuby.SoundManagerNamespace;
+using static UnityEditor.PlayerSettings;
 
 public class InventoryController : Singleton<InventoryController>
 {
@@ -140,6 +141,15 @@ public class InventoryController : Singleton<InventoryController>
             Equipment[items[i].Type - 1].SetActive(true);
             Equipment[items[i].Type - 1].GetComponent<ItemInflate>().InitData(items[i]);
         }
+    }
+    public void playEquipAnimation(int pos)
+    {
+        StartCoroutine(playAnim(pos));
+    }
+    IEnumerator playAnim(int pos)
+    {
+        yield return new WaitForSeconds(0.1f);
+        Equipment[pos].GetComponent<ItemInflate>().playAnim();
     }
     public void initEquipment()
     {

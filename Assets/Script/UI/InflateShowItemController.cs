@@ -41,6 +41,11 @@ public class InflateShowItemController : MonoBehaviour
         upgradeButton.onClick.AddListener(() => upgradeItem());
     }
 
+    private void OnEnable()
+    {
+        canClose = true;
+        particle.SetActive(false);
+    }
     private void equipItem()
     {
         SoundManagerDemo.Instance.playOneShot(9);
@@ -51,6 +56,7 @@ public class InflateShowItemController : MonoBehaviour
         {
             ItemDatabase.Instance.equipItemPosition(itemData);
         }
+        InventoryController.Instance.playEquipAnimation(itemData.Type - 1);
         closePanelButton();
     }
     private void closePanelButton()
@@ -91,7 +97,6 @@ public class InflateShowItemController : MonoBehaviour
         upgradeSlider2.GetComponent<Slider>().value = 0f;
         itemData = ItemDatabase.Instance.fetchInventoryByShopId(itemData.ShopId);
         initItem(itemData);
-        particle.SetActive(true);
         InventoryController.Instance.initItemData();
         yield return new WaitForSeconds(2f);
         particle.SetActive(false);

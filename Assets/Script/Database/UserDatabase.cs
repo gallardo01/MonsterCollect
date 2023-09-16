@@ -100,9 +100,12 @@ public class UserDatabase : Singleton<UserDatabase>
     }
     public void setLevelMap(int level)
     {
-        database.Level = level;
-        PlayerPrefs.SetInt("Map", level);
-        Save();
+        if (level > database.Level)
+        {
+            database.Level = level;
+            PlayerPrefs.SetInt("Map", level);
+            Save();
+        }
     }
     private void LoadResourceTextfileItemData(string path)
     {

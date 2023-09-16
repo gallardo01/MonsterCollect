@@ -244,8 +244,7 @@ namespace MarchingBytes {
 					}
 				} else if(listObj[i].tag == "Boss")
                 {
-					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<BossController>().getIsDead() == false
-						&& delta.magnitude < 6f)
+					if (listObj[i].activeInHierarchy == true && listObj[i].GetComponent<BossController>().getIsDead() == false)
 					{
 						if (distance > delta.magnitude)
 						{

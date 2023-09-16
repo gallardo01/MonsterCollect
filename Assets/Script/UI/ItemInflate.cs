@@ -64,6 +64,10 @@ public class ItemInflate : MonoBehaviour
             }
         }
     }
+    public void playAnim()
+    {
+        gameObject.GetComponent<Animator>().Play("Shake");
+    }
 
     public void setTextSlot(int inven, int require)
     {

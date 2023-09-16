@@ -267,7 +267,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     {
         UserInformation itemInformation = new UserInformation();
         List<ItemInventory> usedItem = fetchUsedItem();
-        int bonusEquipmentStats = 100 + UserDatabase.Instance.getUserData().Equipment + UserDatabase.Instance.getUserData().Equipment;
+        int bonusEquipmentStats = 100 + UserDatabase.Instance.getUserData().Equipment;
         int[] stats = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         for (int i = 0; i < usedItem.Count; i++)
         {
@@ -719,6 +719,9 @@ public class ItemDatabase : Singleton<ItemDatabase>
         if (isSort)
         {
             itemInv = sortByLevel(itemInv);
+        } else
+        {
+            itemInv = sortByType(itemInv);
         }
         return itemInv;
     }
@@ -741,6 +744,24 @@ public class ItemDatabase : Singleton<ItemDatabase>
                 ItemInventory cache = arr[i];
                 arr[i] = arr[index];
                 arr[index] = cache;
+            }
+        }
+        return arr;
+    }
+    private List<ItemInventory> sortByType(List<ItemInventory> arr)
+    {
+        int index = 0;
+        for (int j = 1; j <= 6; j++)
+        {
+            for (int i = index; i < arr.Count; i++)
+            {
+                if (arr[i].Type == j)
+                {
+                    ItemInventory cache = arr[index];
+                    arr[index] = arr[i];
+                    arr[i] = cache;
+                    index++;
+                }
             }
         }
         return arr;

@@ -112,7 +112,7 @@ public class UIMainMenuController : MonoBehaviour
             locker.SetActive(true);
         } else
         {
-            currentStage = index;
+            currentMap = index;
         }
 
         mapName.text = StaticInfo.mapName[index];

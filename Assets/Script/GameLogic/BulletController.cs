@@ -114,6 +114,7 @@ public class BulletController : MonoBehaviour
         if (collision.gameObject.tag == "Wall" && id != 1)
         {
             //GameController.Instance.addParticle(collision.gameObject, 1);
+            Debug.Log("dam vao tuong");
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }

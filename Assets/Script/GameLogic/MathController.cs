@@ -49,13 +49,13 @@ public class MathController : Singleton<MathController>
             {
                 hp *= 2;
             }
-            return 500;
-            //return (int)hp;
+            //return 2000;
+            return (int)hp;
         } else
         {
             hp = -(heroesData.Atk / 3) * (skillDame / 100f) * typeRate * (100 - armourRate)/ 100f;
-            return 500;
-            //return (int)hp;
+            return (int)hp;
+            //return 2000;
         }
     }
     public int playerHitEnemy(MyHeroes heroesData, MonsterData monsterData, int skillDame, int bonusPercent)
@@ -110,7 +110,7 @@ public class MathController : Singleton<MathController>
         float hp;
         int armourRate = percentageArmour(heroesData.Armour);
         float typeRate = type[heroesData.Type, monsterData.Type];
-        hp = monsterData.Atk * typeRate * (100 - armourRate) / 100f;
+        hp = (monsterData.Atk / 2) * typeRate * (100 - armourRate) / 100f;
         return (int)hp;
     }
 
@@ -121,23 +121,10 @@ public class MathController : Singleton<MathController>
 
     private int percentageArmour(int armour)
     {
-        int percent = 0;
-
-        for (int i = 0; i <= 6; i++)
+        int percent = armour / 35;
+        if (percent > 75)
         {
-            if (armour > armourPercent[i] * 10)
-            {
-                percent += 10;
-                armour -= armourPercent[i] * 10;
-            } else
-            {
-                percent += armour / armourPercent[i];
-                break;
-            }
-        }
-        if(percent >= 70)
-        {
-            percent = 70;
+            percent = 75;
         }
         return percent;
     }

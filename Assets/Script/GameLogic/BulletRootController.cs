@@ -102,7 +102,10 @@ public class BulletRootController : MonoBehaviour
             par.GetComponent<ParticleSystem>().Play();
             StopAllCoroutines();
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
-            EasyObjectPool.instance.ReturnObjectToPool(grass_2);
+            if (grass_2.gameObject != null)
+            {
+                EasyObjectPool.instance.ReturnObjectToPool(grass_2);
+            }
             grass_2.SetActive(false);
             gameObject.SetActive(false);
         }

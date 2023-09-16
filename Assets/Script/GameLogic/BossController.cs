@@ -128,6 +128,7 @@ public class BossController : Singleton<BossController>
                 setAction(2);
                 isDead = true;
                 GameController.Instance.endGame();
+                UserDatabase.Instance.setLevelMap(monsterData.Id / 10 + 1);
             }
             GameController.Instance.updateHpBoss(currentHp, monsterData.Hp);
             disableObject();
@@ -1273,20 +1274,20 @@ public class BossController : Singleton<BossController>
 
     private void dropItemController(int monsterLv)
     {
-        GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
+        GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f), transform.rotation);
         goldObj.GetComponent<ItemDropController>().setGold(Random.Range(100, 100 + monsterLv * 10));
 
-        GameObject itemObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+        GameObject itemObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f), transform.rotation);
         itemObj.GetComponent<ItemDropController>().setItem();
 
         if (Random.Range(0, 100) < 50)
         {
-            GameObject itemObj2 = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+            GameObject itemObj2 = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position + new Vector3(Random.Range(-1f,1f), Random.Range(-1f, 1f), 0f), transform.rotation);
             itemObj2.GetComponent<ItemDropController>().setItem();
         }
         if (Random.Range(0, 100) < 30)
         {
-            GameObject itemObj3 = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position * 1.05f, transform.rotation);
+            GameObject itemObj3 = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f), transform.rotation);
             itemObj3.GetComponent<ItemDropController>().setItem();
         }
     }

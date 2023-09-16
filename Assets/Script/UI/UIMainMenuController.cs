@@ -33,18 +33,30 @@ public class UIMainMenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!PlayerPrefs.HasKey("Map"))
+        {
+            PlayerPrefs.SetInt("Map", 1);
+        }
+        currentStage = UserDatabase.Instance.getUserData().Level;
+        currentMap = PlayerPrefs.GetInt("Map");
         selectMap(currentMap);
 
         leftBtn.onClick.AddListener(() => leftButton());
         rightBtn.onClick.AddListener(() => rightButton());
         playGame.onClick.AddListener(() => playGameAction());
-        currentStage = UserDatabase.Instance.getUserData().Level / 10 + 1;
-        currentMap = currentStage;
     }
 
     private void playGameAction()
     {
-        PlayerPrefs.SetInt("Map", currentStage);
+        if (currentMap > UserDatabase.Instance.getUserData().Level)
+        {
+            PlayerPrefs.SetInt("Map", currentStage);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Map", currentMap);
+        }
+
         SceneManager.LoadScene(2);
     }
 

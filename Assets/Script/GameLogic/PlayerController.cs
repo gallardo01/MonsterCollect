@@ -128,6 +128,10 @@ public class PlayerController : Singleton<PlayerController>
         }
         calculateSkillDame();
         attackMonster(totalSkill[0]);
+        attackMonster(totalSkill[1]);
+        attackMonster(totalSkill[2]);
+        attackMonster(totalSkill[3]);
+
         for (int i = 0; i < currentHp / 400; i++)
         {
             GameObject line_obj = Instantiate(line, line_hp.transform.position, line_hp.transform.rotation);

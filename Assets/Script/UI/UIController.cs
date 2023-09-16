@@ -46,8 +46,8 @@ public class UIController : Singleton<UIController>
         upgradeBtn.onClick.AddListener(() => upgradeButton());
         eventBtn.onClick.AddListener(() => eventsButton());
         SoundManagerDemo.Instance.StopAudio(1);
+        SoundManagerDemo.Instance.StopAudio(13);
         SoundManagerDemo.Instance.playMusic(8);
-        SoundManagerDemo.Instance.setVolume(8);
         startGame();
     }
     private void initCurrency()

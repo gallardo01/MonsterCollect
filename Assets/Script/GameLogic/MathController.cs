@@ -49,11 +49,13 @@ public class MathController : Singleton<MathController>
             {
                 hp *= 2;
             }
-            return (int)hp;
+            return 500;
+            //return (int)hp;
         } else
         {
-            hp = -(heroesData.Atk / 3) * (skillDame / 100f) * typeRate * (100 - armourRate)/ 100f; 
-            return (int)hp;
+            hp = -(heroesData.Atk / 3) * (skillDame / 100f) * typeRate * (100 - armourRate)/ 100f;
+            return 500;
+            //return (int)hp;
         }
     }
     public int playerHitEnemy(MyHeroes heroesData, MonsterData monsterData, int skillDame, int bonusPercent)

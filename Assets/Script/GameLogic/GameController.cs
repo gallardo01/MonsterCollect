@@ -41,6 +41,7 @@ public class GameController : Singleton<GameController>
     private bool bossDead = false;
     [SerializeField] GameObject fillImage;
     [SerializeField] GameObject bossIcon;
+    [SerializeField] GameObject levelIcon;
     [SerializeField] TextMeshProUGUI bossHp;
     [SerializeField] GameObject warningBoss;
     [SerializeField] GameObject fadeScreen;
@@ -52,7 +53,7 @@ public class GameController : Singleton<GameController>
 
     private int[] numberCreep = { 0, 40, 60, 80, 100, 120, 140, 160, 180, 200};
 
-    private int idCurrentBoss = 50;
+    private int idCurrentBoss = 20;
 
 
     private void Awake()
@@ -91,8 +92,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        StartCoroutine(addEnemyFirstScene());
-        //StartCoroutine(spawnBoss());
+        //StartCoroutine(addEnemyFirstScene());
+        StartCoroutine(spawnBoss());
     }
 
     public void updateGold(int gold)
@@ -196,6 +197,7 @@ public class GameController : Singleton<GameController>
         warning.SetActive(false);
         fillImage.SetActive(true);
         bossIcon.SetActive(true);
+        levelIcon.SetActive(false);
         bossHp.gameObject.SetActive(true);
         bossHp.text = BossController.Instance.getLevel().Hp.ToString();
         expBar.GetComponent<Slider>().value = 1f;
@@ -216,10 +218,12 @@ public class GameController : Singleton<GameController>
     }
     IEnumerator endGameFlow()
     {
-        PlayerController.Instance.disablePlayer();
         bossDead = true;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(8f);
+        SoundManagerDemo.Instance.StopAudio(1);
+        SoundManagerDemo.Instance.playOneShot(13);
         updateEndGameInformation();
+        PlayerController.Instance.disablePlayer();
         GameFlowController.Instance.gameOver();
     }
     public void setSpawn(bool logic)

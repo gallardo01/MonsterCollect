@@ -98,6 +98,12 @@ public class UserDatabase : Singleton<UserDatabase>
         userData = JsonMapper.ToObject(jsonData);
         ConstructItemDatabase();
     }
+    public void setLevelMap(int level)
+    {
+        database.Level = level;
+        PlayerPrefs.SetInt("Map", level);
+        Save();
+    }
     private void LoadResourceTextfileItemData(string path)
     {
         string filePath = "StreamingAssets/" + path.Replace(".txt", "");

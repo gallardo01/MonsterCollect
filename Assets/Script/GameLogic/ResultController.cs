@@ -33,16 +33,12 @@ public class ResultController : MonoBehaviour
 		player.SetActive(true);
 
 		result.gameObject.SetActive(false);
-
-
 	}
 
 	void MainMenu()
     {
 		mainMenu.gameObject.SetActive(true);
-
 		result.gameObject.SetActive(false);
-
 	}
 
 

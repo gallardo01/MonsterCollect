@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
+using DigitalRuby.SoundManagerNamespace;
 
 public class ItemDropController : MonoBehaviour
 {
@@ -99,11 +100,16 @@ public class ItemDropController : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Player" && isActive && type == 2)
         {
+            if (type != 1)
+            {
+                SoundManagerDemo.Instance.playOneShot(5);
+            }
             target = GameController.Instance.getGoldTextObj();
             isFlyBack = true;
         }
         else if (collision.gameObject.tag == "Player" && (isFlyBack) && type != 2)
         {
+            SoundManagerDemo.Instance.playOneShot(4);
             EasyObjectPool.instance.ReturnObjectToPool(gameObject);
             gameObject.SetActive(false);
         }

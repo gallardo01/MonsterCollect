@@ -31,7 +31,7 @@ public class UserDatabase : Singleton<UserDatabase>
         var user = SyncService.Instance.GetUser();
         if (isSyncCloud == false)
         {
-            LoadResourceTextfileCurrentData();
+            firstTimeSetUp();
             SyncService.Instance.PushUser(database);
         }
         else
@@ -55,6 +55,9 @@ public class UserDatabase : Singleton<UserDatabase>
             string fileName = "User.txt";
             LoadResourceTextfileItemData(fileName);
             Save();
+        } else
+        {
+            LoadResourceTextfileCurrentData();
         }
     }
     private void ConstructItemDatabase()
@@ -81,7 +84,6 @@ public class UserDatabase : Singleton<UserDatabase>
         //Load saved Json
         if (!File.Exists(tempPath))
         {
-            firstTimeSetUp();
             return;
         }
         byte[] jsonByte = null;

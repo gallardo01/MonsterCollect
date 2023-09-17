@@ -53,6 +53,30 @@ public class PurchaseService : Singleton<PurchaseService>
         failed
     }
 
+    private Dictionary<int, ProductId> monsterIdMap = new()
+    {
+        { 5, ProductId.elephany },
+        { 6, ProductId.torchic },
+        { 7, ProductId.tiny },
+        { 8, ProductId.porcupine },
+        { 9, ProductId.flychooper },
+        { 10, ProductId.tailtiger },
+        { 11, ProductId.hempfire },
+        { 12, ProductId.sleepine },
+    };
+
+    private Dictionary<int, ProductId> evolvedMonsterIdMap = new()
+    {
+        { 6, ProductId.phoenix },
+        { 7, ProductId.tinyhero },
+        { 8, ProductId.kingcune },
+        { 9, ProductId.giantchooper },
+        { 10, ProductId.garchamp },
+        { 11, ProductId.kingfire },
+        { 12, ProductId.dragonpine },
+    };
+
+    private bool storeInitialized = false;
     private Dictionary<string, IBillingProduct> productDict = new();
     private ConcurrentDictionary<string, PurchaseState> purchaseStates = new();
 
@@ -107,6 +131,13 @@ public class PurchaseService : Singleton<PurchaseService>
         }
     }
 
+    public ProductId? GetHero(int id, bool evolved)
+    {
+        return evolved
+            ? evolvedMonsterIdMap.GetValueOrNull(id)
+            : monsterIdMap.GetValueOrNull(id);
+    }
+
     public async Task<bool> Purchase(ProductId productId)
     {
         string id = productId.ToString();
@@ -154,8 +185,13 @@ public class PurchaseService : Singleton<PurchaseService>
 
     private void OnInitializeStoreComplete(BillingServicesInitializeStoreResult result, Error error)
     {
+        if (storeInitialized) return;
+ 
+
         if (error == null)
         {
+            storeInitialized = true;
+
             // update UI
             // show console messages
             var products = result.Products;
@@ -186,6 +222,7 @@ public class PurchaseService : Singleton<PurchaseService>
                 Debug.Log(string.Format("[{0}]: {1}", iter, invalidIds[iter]));
             }
         }
+      
     }
 
     private void OnTransactionStateChange(BillingServicesTransactionStateChangeResult result)
@@ -236,5 +273,19 @@ public class PurchaseService : Singleton<PurchaseService>
         {
             Debug.Log("Request to restore purchases failed with error. Error: " + error);
         }
+    }
+}
+
+public static class DictionaryExtensions
+{
+    public static TValue? GetValueOrNull<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
+        where TValue : struct
+    {
+        if (dict.TryGetValue(key, out TValue value))
+        {
+            return value;
+        }
+
+        return null;
     }
 }

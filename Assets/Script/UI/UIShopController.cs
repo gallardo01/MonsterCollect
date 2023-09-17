@@ -50,18 +50,6 @@ public class UIShopController : MonoBehaviour
         ProductId.equipment_pack,
     };
 
-    private Dictionary<int, ProductId> heroes = new()
-    {
-        { 5, ProductId.elephany },
-        { 6, ProductId.torchic },
-        { 7, ProductId.tiny },
-        { 8, ProductId.porcupine },
-        { 9, ProductId.flychooper },
-        { 10, ProductId.tailtiger },
-        { 11, ProductId.hempfire },
-        { 12, ProductId.sleepine },
-    };
-
     void Start()
     {
         initAds();
@@ -117,8 +105,10 @@ public class UIShopController : MonoBehaviour
     }
     private async void initBuySingleHeroes()
     {
-        if (!heroes.ContainsKey(singleId)) return;
-        var ok = await PurchaseService.Instance.Purchase(heroes[singleId]);
+        var productId = PurchaseService.Instance.GetHero(singleId, true);
+
+        if (productId == null) return;
+        var ok = await PurchaseService.Instance.Purchase(productId.Value);
 
         if (!ok)
         {

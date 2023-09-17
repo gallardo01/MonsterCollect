@@ -7,6 +7,7 @@ using DG.Tweening;
 using System;
 using Mono.Cecil;
 using DigitalRuby.SoundManagerNamespace;
+using static PurchaseService;
 
 public class UIHero : Singleton<UIHero>
 {
@@ -151,8 +152,20 @@ public class UIHero : Singleton<UIHero>
 
         if (data.Level == 0)
         {
-            txtPrice.text = "<sprite=5> " + StaticInfo.costHeroes[cacheId / 10].ToString();
+            var singleId = cacheId / 10;
+            var productId = PurchaseService.Instance.GetHero(singleId, false);
+            var defaultPrice = "$" + StaticInfo.costHeroes[singleId].ToString();
+
+            if (productId is ProductId id)
+            {
+                txtPrice.text = PurchaseService.Instance.GetPrice(id, defaultPrice);
+            }
+            else
+            {
+                txtPrice.text = defaultPrice;
+            }
         }
+
         txtHeroSkillDetail.text = data.Skill.ToString();
 
         txtAlibity_1.text = data.Atk.ToString();
@@ -237,18 +250,15 @@ public class UIHero : Singleton<UIHero>
 
     void buyHero()
     {
-        SoundManagerDemo.Instance.playOneShot(9);
-        if (HeroesDatabase.Instance.buyHeroes(cacheId))
-        {
-            SoundManagerDemo.Instance.playOneShot(4);
-            MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
-            initUIHero();
-            handleButton(data);
-        }
-        else
-        {
-            // khong du tien
-        }
+        int singleId = cacheId / 10;
+        //
+
+        SoundManagerDemo.Instance.playOneShot(4);
+        HeroesDatabase.Instance.unlockHero(cacheId);
+        MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
+        initUIHero();
+        handleButton(data);
+     
     }
 
     void openEvolvePanel()

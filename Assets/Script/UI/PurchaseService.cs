@@ -9,7 +9,44 @@ using VoxelBusters.EssentialKit;
 
 public class PurchaseService : Singleton<PurchaseService>
 {
-    enum PurchaseState
+    public enum ProductId
+    {
+        // Targeted Offers
+        evolve_stone_pack,
+        gem_pack,
+        gold_pack,
+        newbie_pack,
+        equipment_pack,
+
+        // Gems
+        gem_pile,
+        gem_heap,
+        gem_bucket,
+        gem_barrel,
+        gem_chest,
+        gem_cart,
+
+        // Heroes
+        unlock_all_heroes,
+        elephany,       // 5
+        torchic,        // 6
+        tiny,           // 7
+        porcupine,      // 8
+        flychooper,     // 9
+        tailtiger,      // 10
+        hempfire,       // 11
+        sleepine,       // 12,
+
+        phoenix,        // 6
+        tinyhero,       // 7
+        kingcune,       // 8
+        giantchooper,   // 9
+        garchamp,       // 10
+        kingfire,       // 11
+        dragonpine,     // 12,
+    }
+
+    private enum PurchaseState
     {
         requesting,
         successful,
@@ -38,6 +75,11 @@ public class PurchaseService : Singleton<PurchaseService>
 
     }
 
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
+
     private void OnEnable()
     {
         // register for events
@@ -54,31 +96,45 @@ public class PurchaseService : Singleton<PurchaseService>
         BillingServices.OnRestorePurchasesComplete -= OnRestorePurchasesComplete;
     }
 
-    public async Task<bool> Purchase(string productId)
+    public string GetPrice(ProductId productId, string defaultValue)
     {
+        if (productDict.TryGetValue(productId.ToString(), out IBillingProduct product))
+        {
+            return product.LocalizedPrice;
+        } else
+        {
+            return defaultValue;
+        }
+    }
+
+    public async Task<bool> Purchase(ProductId productId)
+    {
+        string id = productId.ToString();
+
         if (BillingServices.CanMakePayments())
         {
-            var product = productDict[productId];
+            var product = productDict[id];
             if (product == null)
             {
                 Debug.Log("Unable to find product: " + productId);
                 return false;
             }
 
-            var canPurchase = purchaseStates.TryAdd(productId, PurchaseState.requesting);
+            var canPurchase = purchaseStates.TryAdd(id, PurchaseState.requesting);
 
             if (canPurchase)
             {
                 Debug.Log("Purchasing product: " + productId);
                 BillingServices.BuyProduct(product);
 
-                while (purchaseStates[productId] == PurchaseState.requesting)
+                while (purchaseStates[id] == PurchaseState.requesting)
                 {
                     await Task.Delay(15);
                 }
 
-                return purchaseStates[productId] == PurchaseState.successful;
-
+                purchaseStates.TryRemove(id, out PurchaseState finalState);
+                return finalState == PurchaseState.successful;
+                
             } else
             {
                 Debug.Log(string.Format("Another purchase of id '{0}' is awaiting completion.", productId));

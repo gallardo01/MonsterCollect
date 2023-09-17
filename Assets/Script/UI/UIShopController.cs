@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Random = UnityEngine.Random;
 using DigitalRuby.SoundManagerNamespace;
+using static PurchaseService;
 
 public class UIShopController : MonoBehaviour
 {
@@ -41,12 +42,24 @@ public class UIShopController : MonoBehaviour
     private bool isLoadAds = true;
     public GameObject loadAdsDiamond;
 
-    private string[] targetOffers = {
-        "stone_pack",
-        "1000_diamond_pack",
-        "10000_gold_pack",
-        "newbie_pack",
-        "random_equipment_pack"
+    private ProductId[] targetOffers = {
+        ProductId.evolve_stone_pack,
+        ProductId.gem_pack,
+        ProductId.gold_pack,
+        ProductId.newbie_pack,
+        ProductId.equipment_pack,
+    };
+
+    private Dictionary<int, ProductId> heroes = new()
+    {
+        { 5, ProductId.elephany },
+        { 6, ProductId.torchic },
+        { 7, ProductId.tiny },
+        { 8, ProductId.porcupine },
+        { 9, ProductId.flychooper },
+        { 10, ProductId.tailtiger },
+        { 11, ProductId.hempfire },
+        { 12, ProductId.sleepine },
     };
 
     void Start()
@@ -78,8 +91,15 @@ public class UIShopController : MonoBehaviour
             Gems_Price[0].SetActive(true);
         }
     }
-    private void initBuyAlLHeroes()
+    private async void initBuyAlLHeroes()
     {
+        var ok = await PurchaseService.Instance.Purchase(ProductId.unlock_all_heroes);
+
+        if (!ok) {
+            // TODO: show error?
+            return;
+        }
+
         // verify pricing
         List<ItemInventory> availableMonster = new List<ItemInventory>();
         for (int i = 4; i <= 12; i++)
@@ -95,8 +115,17 @@ public class UIShopController : MonoBehaviour
         HeroesDatabase.Instance.unlockAllHeroes();
         initSellingMonster();
     }
-    private void initBuySingleHeroes()
+    private async void initBuySingleHeroes()
     {
+        if (!heroes.ContainsKey(singleId)) return;
+        var ok = await PurchaseService.Instance.Purchase(heroes[singleId]);
+
+        if (!ok)
+        {
+            // TODO: show error?
+            return;
+        }
+
         // verify pricing
         List<ItemInventory> availableMonster = new List<ItemInventory>
         {
@@ -121,13 +150,16 @@ public class UIShopController : MonoBehaviour
         if(availableMonster.Count > 0)
         {
             int randomValue = Random.Range(0, availableMonster.Count);
-            int idSale_1 = availableMonster[randomValue];
+            int idSale_1 = 12; //availableMonster[randomValue];
             singleId = idSale_1;
             MyHeroes heroes = HeroesDatabase.Instance.fetchLastestEvolve(idSale_1);
             singleName.text = heroes.Name + " - " + type[heroes.Type] + $"<sprite={10+heroes.Type}>";
-            singleSaleOff.text = "<size=65><color=yellow>" + (100 - 100 * StaticInfo.newPrice[idSale_1] / StaticInfo.costPrice[idSale_1]) + "% OFF </color></size> \n Unlock your favourite!";
-            singlePrice.text = StaticInfo.newPrice[idSale_1] + "$";
-            singleOriginalPrice.text = StaticInfo.costPrice[idSale_1] + "$";
+
+            int discount = (int)(100 * (1 - StaticInfo.newPrice[idSale_1] / StaticInfo.costPrice[idSale_1]));
+
+            singleSaleOff.text = string.Format("<size=65><color=yellow>{0}% OFF </color></size> \n Unlock your favourite!", discount);
+            singlePrice.text = string.Format("${0:0.00}", StaticInfo.newPrice[idSale_1]);
+            singleOriginalPrice.text = string.Format("${0:0.00}", StaticInfo.costPrice[idSale_1]);
             Sprite[] sprite = Resources.LoadAll<Sprite>("UI/Icons/Monster");
             int index = HeroesDatabase.Instance.fetchHeroesIndex(heroes.Id);
             heroesImage.sprite = sprite[index];
@@ -161,7 +193,7 @@ public class UIShopController : MonoBehaviour
     void InitTargetedOffer()
     {
         GameObject TO = new GameObject();
-        int to = 4; //UnityEngine.Random.Range(1, 6);
+        int to = 5; //UnityEngine.Random.Range(1, 6);
         SetUpTO(TO, to);
     }
 
@@ -195,43 +227,55 @@ public class UIShopController : MonoBehaviour
         Gems_Label[0].GetComponent<TextMeshProUGUI>().text = "100";
         Gems_Description_Text[0].GetComponent<TextMeshProUGUI>().text = "";
         Gems_SubLabel[0].GetComponent<TextMeshProUGUI>().text = "Pile of Gems";
-        Gems_Price[0].GetComponent<TextMeshProUGUI>().text = "0.99$";
-        Gems_Btn[0].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(100, 0.99));
+        Gems_Price[0].GetComponent<TextMeshProUGUI>().text = PurchaseService.Instance.GetPrice(ProductId.gem_pile, "$0.99");
+        Gems_Btn[0].GetComponent<Button>().onClick.AddListener(() =>
+            OnDiamondPurchased(ProductId.gem_pile, 100)
+        );
 
         //Item 2
         Gems_Label[1].GetComponent<TextMeshProUGUI>().text = "220";
         Gems_Description_Text[1].GetComponent<TextMeshProUGUI>().text = "Discount 10%";
         Gems_SubLabel[1].GetComponent<TextMeshProUGUI>().text = "Heap of Gems";
-        Gems_Price[1].GetComponent<TextMeshProUGUI>().text = "1.99$";
-        Gems_Btn[1].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(220, 1.99));
+        Gems_Price[1].GetComponent<TextMeshProUGUI>().text = PurchaseService.Instance.GetPrice(ProductId.gem_heap, "$1.99");
+        Gems_Btn[1].GetComponent<Button>().onClick.AddListener(() =>
+            OnDiamondPurchased(ProductId.gem_heap, 220)
+        );
 
         //Item 3
         Gems_Label[2].GetComponent<TextMeshProUGUI>().text = "500";
         Gems_Description_Text[2].GetComponent<TextMeshProUGUI>().text = "Discount 20%";
         Gems_SubLabel[2].GetComponent<TextMeshProUGUI>().text = "Bucket of Gems";
-        Gems_Price[2].GetComponent<TextMeshProUGUI>().text = "3.99$";
-        Gems_Btn[2].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(500, 3.99));
+        Gems_Price[2].GetComponent<TextMeshProUGUI>().text = PurchaseService.Instance.GetPrice(ProductId.gem_bucket, "$3.99");
+        Gems_Btn[2].GetComponent<Button>().onClick.AddListener(() =>
+            OnDiamondPurchased(ProductId.gem_bucket, 500)
+        );
 
         //Item 4
         Gems_Label[3].GetComponent<TextMeshProUGUI>().text = "1000";
         Gems_Description_Text[3].GetComponent<TextMeshProUGUI>().text = "Discount 30%";
         Gems_SubLabel[3].GetComponent<TextMeshProUGUI>().text = "Barrel of Gems";
-        Gems_Price[3].GetComponent<TextMeshProUGUI>().text = "6.99$";
-        Gems_Btn[3].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(1000, 6.99));
+        Gems_Price[3].GetComponent<TextMeshProUGUI>().text = PurchaseService.Instance.GetPrice(ProductId.gem_barrel, "$6.99");
+        Gems_Btn[3].GetComponent<Button>().onClick.AddListener(() =>
+            OnDiamondPurchased(ProductId.gem_barrel, 1000)
+        );
 
         //Item 5
         Gems_Label[4].GetComponent<TextMeshProUGUI>().text = "2000";
         Gems_Description_Text[4].GetComponent<TextMeshProUGUI>().text = "Discount 40%";
         Gems_SubLabel[4].GetComponent<TextMeshProUGUI>().text = "Chest of Gems";
-        Gems_Price[4].GetComponent<TextMeshProUGUI>().text = "11.99$";
-        Gems_Btn[4].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(2000, 11.99));
+        Gems_Price[4].GetComponent<TextMeshProUGUI>().text = PurchaseService.Instance.GetPrice(ProductId.gem_chest, "$11.99");
+        Gems_Btn[4].GetComponent<Button>().onClick.AddListener(() =>
+            OnDiamondPurchased(ProductId.gem_chest, 2000)
+        );
 
         //Item 6
         Gems_Label[5].GetComponent<TextMeshProUGUI>().text = "5000";
         Gems_Description_Text[5].GetComponent<TextMeshProUGUI>().text = "Discount 50%";
         Gems_SubLabel[5].GetComponent<TextMeshProUGUI>().text = "Cart of Gems";
-        Gems_Price[5].GetComponent<TextMeshProUGUI>().text = "24.99$";
-        Gems_Btn[5].GetComponent<Button>().onClick.AddListener(() => OnDiamondPurchased(5000, 24.99));
+        Gems_Price[5].GetComponent<TextMeshProUGUI>().text = PurchaseService.Instance.GetPrice(ProductId.gem_cart, "$24.99");
+        Gems_Btn[5].GetComponent<Button>().onClick.AddListener(() =>
+            OnDiamondPurchased(ProductId.gem_cart, 5000)
+        );
 
     }
     void InitCoins()
@@ -274,7 +318,7 @@ public class UIShopController : MonoBehaviour
 
     }
 
-    void OnTargetOfferPurchased(string productId)
+    void OnTargetOfferPurchased(ProductId productId)
     {
         List<ItemInventory> items = new List<ItemInventory>();
         int gold = 0;
@@ -282,7 +326,7 @@ public class UIShopController : MonoBehaviour
 
         switch (productId)
         {
-            case "stone_pack":
+            case ProductId.evolve_stone_pack:
                 items.Add(ItemDatabase.Instance.getItemObject(1, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(2, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(3, 10, 1));
@@ -292,22 +336,22 @@ public class UIShopController : MonoBehaviour
                 items.Add(ItemDatabase.Instance.getItemObject(7, 10, 1));
                 items.Add(ItemDatabase.Instance.getItemObject(8, 10, 1));
                 break;
-            case "1000_diamond_pack":
+            case ProductId.gem_pack:
                 //UserDatabase.Instance.gainMoney(0, 1000);
                 diamond = 1000;
                 break;
-            case "10000_gold_pack":
+            case ProductId.gold_pack:
                 //UserDatabase.Instance.gainMoney(10000, 0);
                 gold = 10000;
                 break;
-            case "newbie_pack":
+            case ProductId.newbie_pack:
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                 diamond = 500;
                 gold = 5000;
                 break;
-            case "random_equipment_pack":
+            case ProductId.equipment_pack:
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 14), 1, returnRarityTO()));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(14, 18), 1, returnRarityTO()));
                 items.Add(ItemDatabase.Instance.getItemObject(Random.Range(18, 22), 1, returnRarityTO()));
@@ -442,12 +486,21 @@ public class UIShopController : MonoBehaviour
             SoundManagerDemo.Instance.playOneShot(12);
         }
     }
-    void OnDiamondPurchased(int value, double price)
+    async void OnDiamondPurchased(ProductId id, int value)
     {
         if (value == 100 && isLoadAds == true)
         {
             // verify watch ads
+        } else
+        {
+            var ok = await PurchaseService.Instance.Purchase(id);
+            if (!ok)
+            {
+                // TODO: show error?
+                return;
+            }
         }
+
         // verify purchases
         SoundManagerDemo.Instance.playOneShot(4);
         celebrationObj.SetActive(true);
@@ -455,12 +508,12 @@ public class UIShopController : MonoBehaviour
         celebrationObj.GetComponent<CelebrationShopController>().initCelebration(null, 0, value);
 
     }
-    void OnCoinPurchased(int value, int price)
+    void OnCoinPurchased(int value, int diamond)
     {
-        if (UserDatabase.Instance.getUserData().Diamond >= price)
+        if (UserDatabase.Instance.getUserData().Diamond >= diamond)
         {
             SoundManagerDemo.Instance.playOneShot(4);
-            UserDatabase.Instance.reduceMoney(0, price);
+            UserDatabase.Instance.reduceMoney(0, diamond);
             UserDatabase.Instance.gainMoneyInGame(value, 0);
             celebrationObj.SetActive(true);
             celebrationObj.GetComponent<CelebrationShopController>().initCelebration(null, value, 0);

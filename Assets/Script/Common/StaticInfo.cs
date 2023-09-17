@@ -41,8 +41,8 @@ public class StaticInfo : MonoBehaviour
     public static int[] evolLocation = {0, -800, -1600,-2400,-3200 };
     public static int[] userUpdateBase = { 20, 20, 20, 20, 20, 20, 1, 1, 1};
 
-    public static int[] newPrice = { 0, 0, 0, 0, 0, 0, 3, 6, 7, 15, 20, 35, 80 };
-    public static int[] costPrice = { 0, 1000, 1000, 1000, 5000, 1, 4, 8, 10, 20, 30, 50, 100 };
+    public static double[] newPrice = { 0, 0, 0, 0, 0, 0, 2.99, 5.99, 6.99, 14.99, 19.99, 29.99, 49.99 };
+    public static double[] costPrice = { 0, 1000, 1000, 1000, 5000, 0.99, 3.99, 7.99, 9.99, 19.99, 29.99, 49.99, 99.99 };
 
     public static double[] TOBaseValue = { 4, 5, 4, 2, 5};
     public static double[] TOValue = { 3.99, 4.99, 4.99, 4.99};

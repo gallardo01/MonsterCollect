@@ -49,6 +49,8 @@ public class UIController : Singleton<UIController>
         SoundManagerDemo.Instance.StopAudio(13);
         SoundManagerDemo.Instance.playMusic(8);
         startGame();
+
+        AdsController.Instance.ShowRewardedAd();
     }
     private void initCurrency()
     {

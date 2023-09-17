@@ -128,9 +128,6 @@ public class PlayerController : Singleton<PlayerController>
         }
         calculateSkillDame();
         attackMonster(totalSkill[0]);
-        attackMonster(totalSkill[1]);
-        attackMonster(totalSkill[2]);
-        attackMonster(totalSkill[3]);
 
         for (int i = 0; i < currentHp / 400; i++)
         {
@@ -904,7 +901,6 @@ gameObject.transform.rotation);
     }
     public void setPlayerHurt(MonsterData monsterData, int status)
     {
-        Debug.Log(status);
         // 1 root
         if (status == 1)
         {

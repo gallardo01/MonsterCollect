@@ -6,6 +6,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine.SceneManagement;
 using DigitalRuby.SoundManagerNamespace;
+using UnityEditor;
 
 public class UIMainMenuController : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class UIMainMenuController : MonoBehaviour
     public Button leftBtn;
     public Button rightBtn;
     public Button playGame;
+
+    public Button settings;
+    public GameObject tooltip;
+    public Button muteButton;
 
     private int currentMap = 1;
     private int currentStage = 1;
@@ -41,11 +46,60 @@ public class UIMainMenuController : MonoBehaviour
         currentMap = PlayerPrefs.GetInt("Map");
         selectMap(currentMap);
 
+        if (!PlayerPrefs.HasKey("Audio"))
+        {
+            PlayerPrefs.SetInt("Audio", 1);
+        }
+
+        setupAudio(PlayerPrefs.GetInt("Audio"));
+
+
         leftBtn.onClick.AddListener(() => leftButton());
         rightBtn.onClick.AddListener(() => rightButton());
         playGame.onClick.AddListener(() => playGameAction());
+
+        settings.onClick.AddListener(() => openSettingsTooltip());
+        muteButton.onClick.AddListener(() => muteAudio());
     }
 
+    private void openSettingsTooltip()
+    {
+        SoundManagerDemo.Instance.playOneShot(9);
+        if (tooltip.activeInHierarchy == true)
+        {
+            tooltip.SetActive(false);
+        }
+        else
+        {
+            tooltip.SetActive(true);
+        }
+    }
+
+    private void muteAudio()
+    {
+        SoundManagerDemo.Instance.playOneShot(9);
+        if (PlayerPrefs.GetInt("Audio") == 1)
+        {
+            PlayerPrefs.SetInt("Audio", 0);
+            setupAudio(0);
+        } else
+        {
+            PlayerPrefs.SetInt("Audio", 1);
+            setupAudio(1);
+        }
+    }
+    private void setupAudio(int state)
+    {
+        if (state == 1)
+        {
+            SoundManagerDemo.Instance.setVolumeAll(1);
+            muteButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Background/setting_icon_sound_on");
+        } else
+        {
+            SoundManagerDemo.Instance.setVolumeAll(0);
+            muteButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Background/setting_icon_sound_off");
+        }
+    }
     private void playGameAction()
     {
         if (currentMap > UserDatabase.Instance.getUserData().Level)

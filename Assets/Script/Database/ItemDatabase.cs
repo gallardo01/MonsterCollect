@@ -597,11 +597,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public ItemInventory dropItem()
     {
         int chance = Random.Range(0, 100);
-        if(chance < 40)
+        if(chance < 60)
         {
-            int id = Random.Range(4, 10);
+            int id = Random.Range(5, 10);
             return getItemObject(id, 1, 1);
-        } else if(chance < 60)
+        } else if(chance < 70)
         {
             int id = Random.Range(1, 4);
             return getItemObject(id, 1, 1);

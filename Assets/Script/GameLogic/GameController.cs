@@ -72,7 +72,6 @@ public class GameController : Singleton<GameController>
     {
         SoundManagerDemo.Instance.StopAudio(8);
         SoundManagerDemo.Instance.playMusic(1);
-        SoundManagerDemo.Instance.setVolume(1);
 
         int heroesPick = PlayerPrefs.GetInt("HeroesPick");
         //int heroesPick = 10;
@@ -89,8 +88,8 @@ public class GameController : Singleton<GameController>
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
         //spawn crep
-        //StartCoroutine(addEnemyFirstScene());
-        StartCoroutine(spawnBoss());
+        StartCoroutine(addEnemyFirstScene());
+        //StartCoroutine(spawnBoss());
     }
 
     public void updateGold(int gold)

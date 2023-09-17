@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using DigitalRuby.SoundManagerNamespace;
 
 public class CraftItemController : Singleton<CraftItemController>
 {
@@ -103,6 +104,8 @@ public class CraftItemController : Singleton<CraftItemController>
         particleItem[1].SetActive(true);
 
         yield return new WaitForSeconds(2f);
+        SoundManagerDemo.Instance.playOneShot(6);
+
         particleItem[0].SetActive(false);
         particleItem[1].SetActive(false);
         InventoryController.Instance.onClickItem(givenItem);

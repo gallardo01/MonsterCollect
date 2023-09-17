@@ -18,10 +18,21 @@ namespace DigitalRuby.SoundManagerNamespace
 {
     public class SoundManagerDemo : SingletonBehaviour<SoundManagerDemo>
     {
+        private bool isMute = true;
+
         void Awake()
         {
             //SoundManager.StopAll();
             DontDestroyOnLoad(transform.gameObject);
+            if (PlayerPrefs.GetInt("Audio") == 1)
+            {
+                isMute = true;
+            }
+            else
+            {
+                isMute = false;
+            }
+            setVolumeAll(PlayerPrefs.GetInt("Audio"));
         }
 
         public AudioSource[] SoundAudioSources;
@@ -35,9 +46,13 @@ namespace DigitalRuby.SoundManagerNamespace
         {
             SoundAudioSources[index].PlayLoopingMusicManaged(1.0f, 1.0f, false);
         }
-        public void setVolume(int index)
+        public void setVolumeAll(int volume)
         {
-            SoundAudioSources[index].volume = 1f;
+            for (int i = 0; i < SoundAudioSources.Length; i++)
+            {
+                SoundAudioSources[i].volume = volume;
+                SoundAudioSources[i].mute = volume == 0 ? true : false;
+            }
         }
         public void playOneShot(int index)
         {
@@ -46,7 +61,7 @@ namespace DigitalRuby.SoundManagerNamespace
 
         public void playMusic(int index)
         {
-            PlayMusic(index);
+             PlayMusic(index);
         }
 
         private void Start()

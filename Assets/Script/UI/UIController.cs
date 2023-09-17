@@ -50,7 +50,7 @@ public class UIController : Singleton<UIController>
         SoundManagerDemo.Instance.playMusic(8);
         startGame();
 
-        AdsController.Instance.ShowRewardedAd();
+        AdsController.Instance.ShowAd();
     }
     private void initCurrency()
     {

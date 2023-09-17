@@ -6,81 +6,122 @@ using UnityEngine;
 
 public class AdsController : Singleton<AdsController>
 {
+    private int adsId;
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Initialize the Google Mobile Ads SDK.
-        MobileAds.Initialize((InitializationStatus initStatus) =>
-        {
-            // This callback is called once the MobileAds SDK is initialized.
-        });
-        LoadRewardedAd();
-    }
-
+    /// <summary>
+    /// UI element activated when an ad is ready to show.
+    /// </summary>
     // These ad units are configured to always serve test ads.
-    #if UNITY_ANDROID
-      private string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
-    #elif UNITY_IPHONE
-      private string _adUnitId = "ca-app-pub-3940256099942544/1712485313";
-    #else
-        private string _adUnitId = "unused";
-    #endif
-
+#if UNITY_ANDROID
+    private const string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+#elif UNITY_IPHONE
+        private const string _adUnitId = "ca-app-pub-3940256099942544/1712485313";
+#else
+        private const string _adUnitId = "unused";
+#endif
+    private void Start()
+    {
+        LoadAd();
+    }
     private RewardedAd _rewardedAd;
 
     /// <summary>
-    /// Loads the rewarded ad.
+    /// Loads the ad.
     /// </summary>
-    public void LoadRewardedAd()
+    public void LoadAd()
     {
         // Clean up the old ad before loading a new one.
         if (_rewardedAd != null)
         {
+            DestroyAd();
+        }
+
+        Debug.Log("Loading rewarded ad.");
+
+        // Create our request used to load the ad.
+        var adRequest = new AdRequest();
+
+        // Send the request to load the ad.
+        RewardedAd.Load(_adUnitId, adRequest, (RewardedAd ad, LoadAdError error) =>
+        {
+            // If the operation failed with a reason.
+            if (error != null)
+            {
+                Debug.LogError("Rewarded ad failed to load an ad with error : " + error);
+                return;
+            }
+            // If the operation failed for unknown reasons.
+            // This is an unexpected error, please report this bug if it happens.
+            if (ad == null)
+            {
+                Debug.LogError("Unexpected error: Rewarded load event fired with null ad and null error.");
+                return;
+            }
+
+            // The operation completed successfully.
+            Debug.Log("Rewarded ad loaded with response : " + ad.GetResponseInfo());
+            _rewardedAd = ad;
+
+            // Register to ad events to extend functionality.
+            RegisterEventHandlers(ad);
+
+            // Inform the UI that the ad is ready.
+            //AdLoadedStatus?.SetActive(true);
+        });
+    }
+
+    /// <summary>
+    /// Shows the ad.
+    /// </summary>
+    public void ShowAd()
+    {
+        if (_rewardedAd != null && _rewardedAd.CanShowAd())
+        {
+            Debug.Log("Showing rewarded ad.");
+            _rewardedAd.Show((Reward reward) =>
+            {
+                Debug.Log(String.Format("Rewarded ad granted a reward: {0} {1}",
+                                        reward.Amount,
+                                        reward.Type));
+            });
+        }
+        else
+        {
+            Debug.LogError("Rewarded ad is not ready yet.");
+        }
+
+        // Inform the UI that the ad is not ready.
+        //AdLoadedStatus?.SetActive(false);
+    }
+
+    /// <summary>
+    /// Destroys the ad.
+    /// </summary>
+    public void DestroyAd()
+    {
+        if (_rewardedAd != null)
+        {
+            Debug.Log("Destroying rewarded ad.");
             _rewardedAd.Destroy();
             _rewardedAd = null;
         }
 
-        Debug.Log("Loading the rewarded ad.");
-
-        // create our request used to load the ad.
-        var adRequest = new AdRequest();
-
-        // send the request to load the ad.
-        RewardedAd.Load(_adUnitId, adRequest,
-            (RewardedAd ad, LoadAdError error) =>
-            {
-                // if error is not null, the load request failed.
-                if (error != null || ad == null)
-                {
-                    Debug.LogError("Rewarded ad failed to load an ad " +
-                                   "with error : " + error);
-                    return;
-                }
-
-                Debug.Log("Rewarded ad loaded with response : "
-                          + ad.GetResponseInfo());
-
-                _rewardedAd = ad;
-            });
+        // Inform the UI that the ad is not ready.
+        //AdLoadedStatus?.SetActive(false);
     }
 
-
-    public void ShowRewardedAd()
+    /// <summary>
+    /// Logs the ResponseInfo.
+    /// </summary>
+    public void LogResponseInfo()
     {
-        const string rewardMsg =
-            "Rewarded ad rewarded the user. Type: {0}, amount: {1}.";
-
-        if (_rewardedAd != null && _rewardedAd.CanShowAd())
+        if (_rewardedAd != null)
         {
-            _rewardedAd.Show((Reward reward) =>
-            {
-                // TODO: Reward the user.
-                Debug.Log(String.Format(rewardMsg, reward.Type, reward.Amount));
-            });
+            var responseInfo = _rewardedAd.GetResponseInfo();
+            UnityEngine.Debug.Log(responseInfo);
         }
     }
 
@@ -103,7 +144,7 @@ public class AdsController : Singleton<AdsController>
         {
             Debug.Log("Rewarded ad was clicked.");
         };
-        // Raised when an ad opened full screen content.
+        // Raised when the ad opened full screen content.
         ad.OnAdFullScreenContentOpened += () =>
         {
             Debug.Log("Rewarded ad full screen content opened.");
@@ -116,15 +157,8 @@ public class AdsController : Singleton<AdsController>
         // Raised when the ad failed to open full screen content.
         ad.OnAdFullScreenContentFailed += (AdError error) =>
         {
-            Debug.LogError("Rewarded ad failed to open full screen content " +
-                           "with error : " + error);
+            Debug.LogError("Rewarded ad failed to open full screen content with error : "
+                + error);
         };
-    }
-
-
-    private void RegisterReloadHandler(RewardedAd ad)
-    {
-        // Raised when the ad closed full screen content.
-
     }
 }

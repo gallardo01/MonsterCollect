@@ -56,11 +56,14 @@ public class GameFlowController : Singleton<GameFlowController>
     private void reviveButton()
     {
         // watch ads
+        AdsController.Instance.ShowAd();
+
         StopAllCoroutines();
         dead.SetActive(false);
         isAction = false;
         PlayerController.Instance.revivePlayer();
     }
+
     private void cancelReviveAction()
     {
         closeButton();

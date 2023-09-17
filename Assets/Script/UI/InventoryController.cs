@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using DigitalRuby.SoundManagerNamespace;
-using static UnityEditor.PlayerSettings;
 
 public class InventoryController : Singleton<InventoryController>
 {

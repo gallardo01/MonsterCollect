@@ -347,15 +347,15 @@ public class MonsterController : MonoBehaviour
     public void setColor()
     {
         int playerLv = GameController.Instance.getEnemyLv();
-        if (monsterData.Id <= playerLv)
+        if (monsterData.Id % 10 <= playerLv)
         {
             level.color = Color.white;
         }
-        else if (monsterData.Id <= playerLv + 1)
+        else if (monsterData.Id % 10 <= playerLv + 1)
         {
             level.color = Color.green;
         }
-        else if (monsterData.Id <= playerLv + 2)
+        else if (monsterData.Id % 10 <= playerLv + 2)
         {
             level.color = Color.yellow;
         }

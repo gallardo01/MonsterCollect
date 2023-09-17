@@ -19,6 +19,7 @@ public class GameFlowController : Singleton<GameFlowController>
     int variable_stage = 0;
     int variable_gold = 0;
     List<ItemInventory> rewards = new List<ItemInventory>();
+    private bool isRevive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +31,14 @@ public class GameFlowController : Singleton<GameFlowController>
 
     public void userDeath()
     {
-        StartCoroutine(revive());
+        if (isRevive)
+        {
+            isRevive = false;
+            StartCoroutine(revive());
+        } else
+        {
+            closeButton();
+        }
     }
 
     public void initData(int progress, int stage, int gold, List<ItemInventory> listRewards)
@@ -56,12 +64,20 @@ public class GameFlowController : Singleton<GameFlowController>
     private void reviveButton()
     {
         // watch ads
-        AdsController.Instance.ShowAd();
+        AdsController.Instance.ShowAd(1);
+        StopAllCoroutines();
+    }
 
+    public void reviveSuccess()
+    {
         StopAllCoroutines();
         dead.SetActive(false);
         isAction = false;
         PlayerController.Instance.revivePlayer();
+    }
+    public void reviveFailed()
+    {
+        cancelReviveAction();
     }
 
     private void cancelReviveAction()

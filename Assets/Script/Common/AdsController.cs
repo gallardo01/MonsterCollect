@@ -76,23 +76,29 @@ public class AdsController : Singleton<AdsController>
     /// <summary>
     /// Shows the ad.
     /// </summary>
-    public void ShowAd()
+    public void ShowAd(int id)
     {
         if (_rewardedAd != null && _rewardedAd.CanShowAd())
         {
+            adsId = id;
             Debug.Log("Showing rewarded ad.");
             _rewardedAd.Show((Reward reward) =>
             {
                 Debug.Log(String.Format("Rewarded ad granted a reward: {0} {1}",
                                         reward.Amount,
                                         reward.Type));
+                // success
+                if(id == 1)
+                {
+                    GameFlowController.Instance.reviveSuccess();
+                }
             });
         }
         else
         {
             Debug.LogError("Rewarded ad is not ready yet.");
         }
-
+        LoadAd();
         // Inform the UI that the ad is not ready.
         //AdLoadedStatus?.SetActive(false);
     }
@@ -159,6 +165,10 @@ public class AdsController : Singleton<AdsController>
         {
             Debug.LogError("Rewarded ad failed to open full screen content with error : "
                 + error);
+            if (adsId == 1)
+            {
+                GameFlowController.Instance.reviveFailed();
+            }
         };
     }
 }

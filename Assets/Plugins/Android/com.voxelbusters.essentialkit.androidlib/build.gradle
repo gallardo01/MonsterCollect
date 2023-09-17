@@ -35,6 +35,11 @@ android {
     defaultConfig {
         targetSdkVersion 29
         consumerProguardFiles 'proguard.txt'
+        configurations.all {
+            resolutionStrategy {
+                force 'androidx.core:core:1.8.0'
+            }
+        }
     }
  
     lintOptions {

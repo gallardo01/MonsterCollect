@@ -50,9 +50,14 @@ public class GameController : Singleton<GameController>
     [SerializeField] GameObject bossPosition;
     [SerializeField] Button pauseGame;
     [SerializeField] GameObject pauseGameObj;
+    [SerializeField] GameObject tutorial;
+    [SerializeField] GameObject joystick;
+    [SerializeField] GameObject startGame;
+    [SerializeField] SpriteRenderer heroesSprite;
+    [SerializeField] TextMeshProUGUI textStart;
 
     private int[] numberCreep = { 0, 40, 60, 80, 100, 120, 140, 160, 180, 200};
-
+    private string[] typeStart = { "", "Water", "Fire", "Electric", "Water", "Electric", "Grass", "Water", "Electric", "Grass", "Fire" };
     private void Awake()
     {
     }
@@ -60,7 +65,7 @@ public class GameController : Singleton<GameController>
     void Start()
     {
         Application.targetFrameRate = 60;
-        testScreen();
+        StartCoroutine(testScreen());
         pauseGame.onClick.AddListener(() => pauseGameController());
     }
     private void pauseGameController()
@@ -68,22 +73,39 @@ public class GameController : Singleton<GameController>
         pauseGameObj.SetActive(true);
         pauseGameObj.GetComponent<PauseGameController>().initSkillData(currentSkill, currentBuff);
     }
-    private void testScreen()
+    IEnumerator testScreen()
     {
         SoundManagerDemo.Instance.StopAudio(8);
         SoundManagerDemo.Instance.playMusic(1);
-
+        if (!PlayerPrefs.HasKey("Show"))
+        {
+            PlayerPrefs.SetInt("Show", 0);
+        }
+        joystick.SetActive(false);
+        if (PlayerPrefs.GetInt("Show") < 3)
+        {
+            tutorial.SetActive(true);
+            PlayerPrefs.SetInt("Show", PlayerPrefs.GetInt("Show") + 1);
+            yield return new WaitForSeconds(4f);
+            tutorial.SetActive(false);
+        }
+        stage = PlayerPrefs.GetInt("Map");
+        startGame.SetActive(true);
+        heroesSprite.sprite = (Sprite)Resources.LoadAll("Contents/Icon/Island/Trainer")[stage];
+        textStart.text = "I'm master of " + typeStart[stage] + "-Type Element Monster. Let's battle!";
+        yield return new WaitForSeconds(4f);
+        startGame.SetActive(false);
+        joystick.SetActive(true);
         int heroesPick = PlayerPrefs.GetInt("HeroesPick");
         //int heroesPick = 10;
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
         pl.transform.position = new Vector3(0f, 0f, 0f);
         camera.GetComponent<CinemachineVirtualCamera>().Follow = pl.transform;
         // get stage    
-        stage = PlayerPrefs.GetInt("Map");
         string route = "Route1";
         waypoints1 = GameObject.FindGameObjectsWithTag(route);
         System.Array.Sort(waypoints1, CompareObNames);
-        enemyLv = stage;
+        enemyLv = 1;
         initInfo();
         playerLevel = PlayerController.Instance.getLevel();
         levelText.text = playerLevel.ToString();
@@ -112,7 +134,7 @@ public class GameController : Singleton<GameController>
     }
     public int getEnemyLv()
     {
-        return enemyLv;
+        return enemyLv%10;
     }
     private IEnumerator respawnEnemyDuringTime()
     {
@@ -255,6 +277,7 @@ public class GameController : Singleton<GameController>
         {
             enemyId = 9;
         }
+        enemyId = enemyId + (stage-1)* 10;
         string enemyType = "Enemy" + enemyId;
         GameObject enemy = EasyObjectPool.instance.GetObjectFromPool(enemyType, waypoints1[pos].transform.position, waypoints1[pos].transform.rotation);
         enemy.GetComponent<MonsterController>().initDataWaypoints(enemyId, countEnemy);

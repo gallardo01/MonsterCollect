@@ -248,17 +248,25 @@ public class UIHero : Singleton<UIHero>
         }
     }
 
-    void buyHero()
+    async void buyHero()
     {
         int singleId = cacheId / 10;
-        //
+        var productId = PurchaseService.Instance.GetHero(singleId, true);
+
+        if (productId == null) return;
+        var ok = await PurchaseService.Instance.Purchase(productId.Value);
+
+        if (!ok)
+        {
+            // TODO: show error?
+            return;
+        }
 
         SoundManagerDemo.Instance.playOneShot(4);
         HeroesDatabase.Instance.unlockHero(cacheId);
         MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
         initUIHero();
         handleButton(data);
-     
     }
 
     void openEvolvePanel()

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using System;
+using DragonBones;
 
 public class UserDatabase : Singleton<UserDatabase>
 {
@@ -20,46 +21,42 @@ public class UserDatabase : Singleton<UserDatabase>
     // Start is called before the first frame update
     void Start()
     {
+        firstTimeSetUp();
         LoadData();
     }
 
     public void LoadData()
     {
-        bool isSyncCloud = false;
-        isSyncCloud = SyncService.Instance.getCloudStatus();
-
-        var user = SyncService.Instance.GetUser();
-        if (isSyncCloud == false)
+        if (SyncService.Instance.getCloudStatus())
         {
-            firstTimeSetUp();
-            SyncService.Instance.PushUser(database);
-        }
-        else
-        {
-            Debug.Log("Using user data from cloud...");
-            database = user;
+            var user = SyncService.Instance.GetUser();
+            if (user != null)
+            {
+                database = user;
+            }
         }
     }
-
     private void firstTimeSetUp()
     {
         string tempPath = Application.persistentDataPath + "/c/b/c/";
         string filePath = tempPath + "UserData.txt";
+
+        string fileName = "User.txt";
         if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
         }
         if (!File.Exists(filePath))
         {
-            File.Create(filePath).Close();
-            string fileName = "User.txt";
             LoadResourceTextfileItemData(fileName);
             Save();
-        } else
+        }
+        else
         {
             LoadResourceTextfileCurrentData();
         }
     }
+
     private void ConstructItemDatabase()
     {
         database.Name = userData["Name"]?.ToString() ?? "Player";
@@ -114,6 +111,7 @@ public class UserDatabase : Singleton<UserDatabase>
         string filePath = "StreamingAssets/" + path.Replace(".txt", "");
         TextAsset targetFile = Resources.Load<TextAsset>(filePath);
         userData = JsonMapper.ToObject(targetFile.text);
+
         ConstructItemDatabase();
     }
     public void Save()
@@ -146,7 +144,10 @@ public class UserDatabase : Singleton<UserDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
-        SyncService.Instance.PushUser(database);
+        if (SyncService.Instance.getCloudStatus())
+        {
+            SyncService.Instance.PushUser(database);
+        }
     }
     public void deleteData()
     {

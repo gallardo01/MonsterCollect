@@ -8,6 +8,7 @@ using System.IO;
 using System;
 using Random = UnityEngine.Random;
 using DragonBones;
+using System.Linq;
 // using static UnityEditor.Progress;
 
 public class ItemDatabase : Singleton<ItemDatabase>
@@ -25,37 +26,20 @@ public class ItemDatabase : Singleton<ItemDatabase>
     // Start is called before the first frame update
     void Start()
     {
+        string fileName = "Item.txt";
+        LoadResourceTextfileItemData(fileName);
+        LoadResourceTextfileCurrentData();
         LoadData();
-        /*
-        // cheat đồ 
-        for (int i = 1; i <= 37; i++)
-        {
-            addNewItem(i, 1, Random.Range(1, 6));
-        }
-        for (int i = 101; i <= 112; i++)
-        {
-            addNewItem(i, 300);
-        }
-        Save();
-        */
     }
     public void LoadData()
     {
-        bool isSyncCloud;
-        isSyncCloud = SyncService.Instance.getCloudStatus();
-        string fileName = "Item.txt";
-        LoadResourceTextfileItemData(fileName);
-
-        var items = SyncService.Instance.GetInventory();
-
-        if (isSyncCloud == false)
+        if (SyncService.Instance.getCloudStatus())
         {
-            LoadResourceTextfileCurrentData();
-            SyncService.Instance.PushInventory(inventoryData);
-        } else
-        {
-            Debug.Log("Using inventory from cloud...");
-            inventoryData = items;
+            var items = SyncService.Instance.GetInventory();
+            if (items != null)
+            {
+                inventoryData = items;
+            }
         }
     }
 
@@ -168,7 +152,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
         string filePath = tempPath + "MyItem.txt";
 
         //Convert To Json then to bytes
-
         byte[] jsonByte = Encoding.ASCII.GetBytes(jsonData);
 
         //Create Directory if it does not exist
@@ -191,8 +174,10 @@ public class ItemDatabase : Singleton<ItemDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
-
-        SyncService.Instance.PushInventory(inventoryData);
+        if (SyncService.Instance.getCloudStatus())
+        {
+            SyncService.Instance.PushInventory(inventoryData);
+        }
     }
 
     public ItemData fetchItemById(int id)

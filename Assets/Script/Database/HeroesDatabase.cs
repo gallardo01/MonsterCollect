@@ -23,26 +23,26 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
     public void LoadData()
     {
-        var heroes = SyncService.Instance.GetHeroes();
         bool isSyncCloud;
         isSyncCloud = SyncService.Instance.getCloudStatus();
 
         if (isSyncCloud == false)
         {
-            Debug.Log("Loading heroes from file...");
             firstTimeSetUp();
-            SyncService.Instance.PushHeroes(myHeroes);
         }
         else
         {
-            Debug.Log("Using heroes from cloud...");
-            myHeroes = heroes;
+            var heroes = SyncService.Instance.GetHeroes();
+            if (heroes != null)
+            {
+                myHeroes = heroes;
+            }
         }
     }
 
     private void firstTimeSetUp()
     {
-        string tempPath = Application.persistentDataPath + "/c/b/c/";
+        string tempPath = Application.persistentDataPath + "/c/b/a/";
         string filePath = tempPath + "MyHeroes.txt";
 
         string fileName = "Heroes.txt";
@@ -334,7 +334,10 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         }
 
         Debug.Log($"Preparing to push heroes: {jsonData}");
-        SyncService.Instance.PushHeroes(myHeroes);
+        if (SyncService.Instance.getCloudStatus())
+        {
+            SyncService.Instance.PushHeroes(myHeroes);
+        }
     }
 }
 

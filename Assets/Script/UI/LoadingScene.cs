@@ -21,7 +21,7 @@ public class LoadingScene : MonoBehaviour
         //UserDatabase.Instance.LoadData();
         yield return new WaitForSeconds(2f);
 
-        if (HeroesDatabase.Instance.returnCurrentHeroes() > 0)
+        if (HeroesDatabase.Instance.returnCurrentHeroes() < 1000)
         {
             AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("UI");
             while (!loadLevelOp.isDone)

@@ -82,6 +82,7 @@ public class AdsController : Singleton<AdsController>
         {
             adsId = id;
             Debug.Log("Showing rewarded ad.");
+            GameFlowController.Instance.pauseWhenWatchAds();
             _rewardedAd.Show((Reward reward) =>
             {
                 Debug.Log(String.Format("Rewarded ad granted a reward: {0} {1}",

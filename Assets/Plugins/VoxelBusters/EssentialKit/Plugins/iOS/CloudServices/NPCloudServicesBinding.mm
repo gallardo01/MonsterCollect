@@ -60,6 +60,28 @@ static SavedDataChangeNativeCallback   _savedDataChangeCallback     = nil;
                                                   object:[NSUbiquitousKeyValueStore defaultStore]];
 }
 
+#pragma mark - Utility methods
+
+NPBINDING DONTSTRIP char* NPSerializeObjectToCString(id value)
+{
+    if (value)
+    {
+        NSError*    error;
+        NSString*   jsonStr     = NPToJson(value, &error);
+        
+        if (error)
+        {
+            NSLog(@"[NativePlugins] Failed to convert to json string.");
+            return nil;
+        }
+        
+        return NPCreateCStringCopyFromNSString(jsonStr);;
+    }
+    
+    return nil;
+}
+
+
 #pragma mark - User methods
 
 - (void)sendUserAccountInfo
@@ -143,8 +165,16 @@ NPBINDING DONTSTRIP double NPCloudServicesGetDouble(const char* key)
 
 NPBINDING DONTSTRIP char* NPCloudServicesGetString(const char* key)
 {
-    NSString*   savedValue  = [[NSUbiquitousKeyValueStore defaultStore] stringForKey:NPCreateNSStringFromCString(key)];
-    return NPCreateCStringCopyFromNSString(savedValue);
+    /*NSString*   savedValue  = [[NSUbiquitousKeyValueStore defaultStore] stringForKey:NPCreateNSStringFromCString(key)];*/
+    
+    id  val = [[NSUbiquitousKeyValueStore defaultStore] objectForKey:NPCreateNSStringFromCString(key)];
+    
+    if([val isKindOfClass: [NSString class]]) {
+        return NPCreateCStringCopyFromNSString(val);
+    } else {
+        return NPSerializeObjectToCString(val);
+    }
+    
 }
 
 NPBINDING DONTSTRIP const void* NPCloudServicesGetByteArray(const char* key, int &length)
@@ -165,41 +195,13 @@ NPBINDING DONTSTRIP const void* NPCloudServicesGetByteArray(const char* key, int
 NPBINDING DONTSTRIP char* NPCloudServicesGetArray(const char* key)
 {
     NSArray*        savedValue  = [[NSUbiquitousKeyValueStore defaultStore] arrayForKey:NPCreateNSStringFromCString(key)];
-    if (savedValue)
-    {
-        NSError*    error;
-        NSString*   jsonStr     = NPToJson(savedValue, &error);
-        
-        if (error)
-        {
-            NSLog(@"[NativePlugins] Failed to convert to json string.");
-            return nil;
-        }
-        
-        return NPCreateCStringCopyFromNSString(jsonStr);
-    }
-    
-    return nil;
+    return NPSerializeObjectToCString(savedValue);
 }
 
 NPBINDING DONTSTRIP char* NPCloudServicesGetDictionary(const char* key)
 {
     NSDictionary*   savedValue  = [[NSUbiquitousKeyValueStore defaultStore] dictionaryForKey:NPCreateNSStringFromCString(key)];
-    if (savedValue)
-    {
-        NSError*    error;
-        NSString*   jsonStr     = NPToJson(savedValue, &error);
-        
-        if (error)
-        {
-            NSLog(@"[NativePlugins] Failed to convert to json string.");
-            return nil;
-        }
-        
-        return NPCreateCStringCopyFromNSString(jsonStr);
-    }
-    
-    return nil;
+    return NPSerializeObjectToCString(savedValue);
 }
 
 NPBINDING DONTSTRIP void NPCloudServicesSetBool(const char* key, bool value)

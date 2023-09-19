@@ -12,7 +12,7 @@
 @interface NPStoreKitObserver : NSObject<SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
 // properties
-@property(nonatomic) bool               usesReceiptVerification;
+@property(nonatomic) bool usesReceiptVerification;
 
 // class methods
 + (NPStoreKitObserver*)sharedObserver;

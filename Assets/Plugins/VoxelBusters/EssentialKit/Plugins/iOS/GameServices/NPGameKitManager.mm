@@ -135,14 +135,9 @@ static GameServicesLoadServerCredentialsNativeCallback  _gameCenterLoadServerCre
     // add instance to tracker
     [[NPManagedPointerCache sharedInstance] addPointer:tagPtr forKey:_gameCenterViewController];
     
-    // present view  contoller
-    CGRect  viewFrame   = [UnityGetGLView() frame];
-    CGPoint spawnPoint  = CGPointMake(CGRectGetMidX(viewFrame), CGRectGetMidY(viewFrame));
-    [UnityGetGLViewController() presentViewControllerInPopoverStyleIfRequired:_gameCenterViewController
-                                                                 withDelegate:self
-                                                                 fromPosition:spawnPoint
-                                                                     animated:YES
-                                                                   completion:nil];
+    [UnityGetGLViewController() presentViewControllerInFullScreen: _gameCenterViewController
+                                               animated: YES
+                                             completion: nil];
 }
 
 - (void)loadServerCredentials: (void*) tagPtr

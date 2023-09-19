@@ -16,12 +16,9 @@ public class LoadingScene : MonoBehaviour
         Debug.Log("Waiting for cloud data...");
         yield return new WaitUntil(SyncService.Instance.HasRetrievedCloudData);
 
-        //ItemDatabase.Instance.LoadData();
-        //HeroesDatabase.Instance.LoadData();
-        //UserDatabase.Instance.LoadData();
         yield return new WaitForSeconds(2f);
 
-        if (HeroesDatabase.Instance.returnCurrentHeroes() < 1000)
+        if (HeroesDatabase.Instance.returnCurrentHeroes() > 0)
         {
             AsyncOperation loadLevelOp = SceneManager.LoadSceneAsync("UI");
             while (!loadLevelOp.isDone)

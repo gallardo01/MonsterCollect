@@ -248,7 +248,8 @@ static NSURL *_appleRootCertificateURL = nil;
 { // Based on: https://developer.apple.com/library/ios/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateLocally.html#//apple_ref/doc/uid/TP40010573-CH1-SW17
     static int verified = 1;
     int result = 0;
-    OpenSSL_add_all_digests(); // Required for PKCS7_verify to work
+    //OpenSSL_add_all_digests(); // Required for PKCS7_verify to work
+    OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_DIGESTS, nil);
     X509_STORE *store = X509_STORE_new();
     if (store)
     {
@@ -266,7 +267,7 @@ static NSURL *_appleRootCertificateURL = nil;
         }
     }
     X509_STORE_free(store);
-    EVP_cleanup(); // Balances OpenSSL_add_all_digests (), perhttp://www.openssl.org/docs/crypto/OpenSSL_add_all_algorithms.html
+    //EVP_cleanup(); // Balances OpenSSL_add_all_digests (), perhttp://www.openssl.org/docs/crypto/OpenSSL_add_all_algorithms.html
     
     return result == verified;
 }

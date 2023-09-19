@@ -275,8 +275,9 @@ static RestorePurchasesNativeCallback           _restorePurchasesCallback       
     for (SKPaymentTransaction* transaction in transactions)
     {
         [[NPStoreReceiptVerificationManager sharedManager] verifyTransaction:transaction :^(bool success) {
+#if NATIVE_PLUGINS_DEBUG_ENABLED
             NSLog(@"[NativePlugins] Completed receipt verification for product with id %@ status is %d", transaction.payment.productIdentifier, success);
-            
+#endif
             // set state
             NPStoreReceiptVerificationState state = success ? NPStoreReceiptVerificationStateSuccess : NPStoreReceiptVerificationStateFailed;
             [self.cachedTransactionVerificationResults setObject:[NSNumber numberWithLong:state] forKey:[NSValue valueWithNonretainedObject:transaction]];
@@ -318,7 +319,9 @@ static RestorePurchasesNativeCallback           _restorePurchasesCallback       
 
 - (void)productsRequest:(SKProductsRequest*)request didReceiveResponse:(SKProductsResponse*)response
 {
+#if NATIVE_PLUGINS_DEBUG_ENABLED
     NSLog(@"[NativePlugins] Load store products finished successfully.");
+#endif
     
     // update info
     self.activeProducts         = response.products;
@@ -337,7 +340,9 @@ static RestorePurchasesNativeCallback           _restorePurchasesCallback       
 
 - (void)request:(SKRequest*)request didFailWithError:(NSError*)error
 {
+#if NATIVE_PLUGINS_DEBUG_ENABLED
     NSLog(@"[NativePlugins] Load store products failed with error %@.", [error description]);
+#endif
     
     // update info copy
     self.activeProducts     = nil;
@@ -355,15 +360,19 @@ static RestorePurchasesNativeCallback           _restorePurchasesCallback       
     // check whether we are good to receive transaction information
     if ([self isLoadingProductsInfo])
     {
+#if NATIVE_PLUGINS_DEBUG_ENABLED
         NSLog(@"[NativePlugins] Ignoring transaction state change callback.");
+#endif
         return;
     }
     
     // reset properties
     [self.restoredTransactions removeAllObjects];
     
+#if NATIVE_PLUGINS_DEBUG_ENABLED
     // filter transactions based on state
     NSLog(@"[NativePlugins] Processing transaction change callback.");
+#endif
     
     bool                                    hasPurchasingTransactions   = false;
     NSMutableArray<SKPaymentTransaction*>*  incompleteTransactions      = [NSMutableArray arrayWithCapacity:4];
@@ -416,22 +425,28 @@ static RestorePurchasesNativeCallback           _restorePurchasesCallback       
 
 - (void)paymentQueue:(SKPaymentQueue*)queue removedTransactions:(NSArray<SKPaymentTransaction*>*)transactions
 {
+#if NATIVE_PLUGINS_DEBUG_ENABLED
     for (SKPaymentTransaction* transaction in transactions)
     {
         NSLog(@"[NativePlugins] Removing transactions with id %@.", transaction.transactionIdentifier);
     }
+#endif
 }
 
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue*)queue
 {
+#if NATIVE_PLUGINS_DEBUG_ENABLED
     NSLog(@"[NativePlugins] Restore purchases finished");
+#endif
     
     [self handleRestoredTransactions];
 }
 
 - (void)paymentQueue:(SKPaymentQueue*)queue restoreCompletedTransactionsFailedWithError:(NSError*)error
 {
+#if NATIVE_PLUGINS_DEBUG_ENABLED
     NSLog(@"[NativePlugins] Restore purchases failed with error %@.", [error description]);
+#endif
     
     // reset state
     self.isRestoringCompletedTransactions   = false;

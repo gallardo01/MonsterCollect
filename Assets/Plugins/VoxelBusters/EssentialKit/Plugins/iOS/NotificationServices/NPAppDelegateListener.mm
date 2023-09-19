@@ -15,6 +15,7 @@
 static NPAppDelegateListener*   _sharedListener;
 #if NATIVE_PLUGINS_USES_NOTIFICATION
 static UNNotification*          _deliveredNotification;
+static BOOL                 _deliveredNotificationLaunchStatus;
 #endif
 
 @implementation NPAppDelegateListener
@@ -70,7 +71,7 @@ static UNNotification*          _deliveredNotification;
     // send cached info
     if (_deliveredNotification)
     {
-        _notificationRecievedCompletionHandler(_deliveredNotification);
+        _notificationRecievedCompletionHandler(_deliveredNotification, _deliveredNotificationLaunchStatus);
         _deliveredNotification          = nil;
     }
 #endif
@@ -85,7 +86,10 @@ static UNNotification*          _deliveredNotification;
     NSString*   deviceTokenStr      = NPExtractTokenFromNSData(deviceToken);
     
     // send event
-    _registerForRemoteNotificationsCompletionHandler(deviceTokenStr, nil);
+    if(_registerForRemoteNotificationsCompletionHandler != nil)
+    {
+        _registerForRemoteNotificationsCompletionHandler(deviceTokenStr, nil);
+    }
 }
 
 - (void)didFailToRegisterForRemoteNotificationsWithError:(NSNotification*)notification
@@ -93,7 +97,10 @@ static UNNotification*          _deliveredNotification;
     NSError*     error              = (NSError*)notification.userInfo;
     
     // send event
-    _registerForRemoteNotificationsCompletionHandler(nil, error);
+    if(_registerForRemoteNotificationsCompletionHandler != nil)
+    {
+        _registerForRemoteNotificationsCompletionHandler(nil, error);
+    }
 }
 #endif
 
@@ -109,12 +116,19 @@ static UNNotification*          _deliveredNotification;
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler
 {
-    [self handleReceivedNotification:response.notification];
+    if(![response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
+        [self handleReceivedNotification:response.notification withLaunchStatus: TRUE];
+    }
     
     completionHandler();
 }
 
 - (void)handleReceivedNotification:(UNNotification*)notification
+{
+    [self handleReceivedNotification: notification withLaunchStatus:FALSE];
+}
+
+- (void)handleReceivedNotification:(UNNotification*)notification withLaunchStatus: (BOOL)isLaunchNotification
 {
 #if !NATIVE_PLUGINS_USES_PUSH_NOTIFICATION
     UNNotificationTriggerType   triggerType = [[notification request] triggerType];
@@ -128,10 +142,12 @@ static UNNotification*          _deliveredNotification;
     if (_notificationRecievedCompletionHandler == nil)
     {
         _deliveredNotification  = notification;
+        _deliveredNotificationLaunchStatus = isLaunchNotification;
     }
     else
     {
-        _notificationRecievedCompletionHandler(notification);
+        NSLog(@"Launch notification? => %d", isLaunchNotification);
+        _notificationRecievedCompletionHandler(notification, isLaunchNotification);
     }
 }
 #endif

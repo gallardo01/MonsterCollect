@@ -126,6 +126,9 @@ static  WebViewURLSchemeMatchFoundNativeCallback    _urlSchemeMatchFoundCallback
     webView.navigationDelegate  = self;
     webView.opaque              = false;
     [webView setTranslatesAutoresizingMaskIntoConstraints: NO];
+    if (@available(iOS 11.0, *)) {
+        [webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
     
     return webView;
 }
@@ -133,7 +136,7 @@ static  WebViewURLSchemeMatchFoundNativeCallback    _urlSchemeMatchFoundCallback
 - (NPWebViewTabBar*)createToolbar
 {
     // setup toolbar
-    NPWebViewTabBar*    tabBar  = [[NPWebViewTabBar alloc] init];
+    NPWebViewTabBar*    tabBar  = [[NPWebViewTabBar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, kTabBarHeight)];
     [tabBar setDelegate:self];
     [tabBar setTranslatesAutoresizingMaskIntoConstraints: NO];
 
@@ -590,6 +593,7 @@ static  WebViewURLSchemeMatchFoundNativeCallback    _urlSchemeMatchFoundCallback
     NSURL       *requestURL         = [[navigationAction request] URL];
     NSString    *currentURLScheme   = [requestURL scheme];
     
+    
     if ([self.urlSchemes indexOfObject:currentURLScheme] != NSNotFound)
     {
         // notify observers about matching url scheme
@@ -598,6 +602,14 @@ static  WebViewURLSchemeMatchFoundNativeCallback    _urlSchemeMatchFoundCallback
         // check if we need to continue with load request
         if (![self shouldStartLoadRequestWithURLScheme:currentURLScheme])
         {
+            decisionHandler(WKNavigationActionPolicyCancel);
+            return;
+        }
+    } else  if ([currentURLScheme hasPrefix:@"itms-"]) {
+        
+        if ([[UIApplication sharedApplication] canOpenURL:requestURL])
+        {
+            [[UIApplication sharedApplication] openURL:requestURL options:@{} completionHandler:nil];
             decisionHandler(WKNavigationActionPolicyCancel);
             return;
         }
@@ -616,4 +628,13 @@ static  WebViewURLSchemeMatchFoundNativeCallback    _urlSchemeMatchFoundCallback
     return nil;
 }
 
+#pragma mark - WKUIDelegate Methods
+- (nullable WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    if (![navigationAction.targetFrame isMainFrame]) {
+        [webView loadRequest:navigationAction.request];
+    }
+
+    return nil;
+}
 @end

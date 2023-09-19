@@ -12,7 +12,7 @@
 #import "NPNotificationCenterDataTypes.h"
 
 typedef void (^RegisterForRemoteNotificationsCompletionHandler)(NSString* deviceToken, NSError* error);
-typedef void (^NotificationRecievedCompletionHandler)(UNNotification* notification);
+typedef void (^NotificationRecievedCompletionHandler)(UNNotification* notification, BOOL isLaunchNotification);
 
 @interface NPAppDelegateListener : NSObject<AppDelegateListener
                                 #if NATIVE_PLUGINS_USES_NOTIFICATION

@@ -65,6 +65,10 @@ public class GameFlowController : Singleton<GameFlowController>
     {
         // watch ads
         AdsController.Instance.ShowAd(1);
+    }
+
+    public void pauseWhenWatchAds()
+    {
         StopAllCoroutines();
     }
 

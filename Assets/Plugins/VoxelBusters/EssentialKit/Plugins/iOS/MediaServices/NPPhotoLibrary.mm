@@ -98,11 +98,15 @@ static void*                                        _pickImageRequestTag;
     // cache tag
     _pickImageRequestTag    = tagPtr;
     
+    CGRect  viewFrame   = [UnityGetGLView() frame];
+    CGPoint spawnPoint  = CGPointMake(CGRectGetMidX(viewFrame) - 150, CGRectGetMidY(viewFrame));
+    
     // open image picker in gallery view mode
     self.pickerController   = [self createImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary withEditOption:canEdit];
     [UnityGetGLViewController() presentViewControllerInPopoverStyleIfRequired:_pickerController
                                                                  withDelegate:self
-                                                                 fromPosition:GetLastTouchPosition()
+                                                                 fromPosition:spawnPoint
+                                                                 permittedArrowDirections : UIPopoverArrowDirectionAny
                                                                      animated:YES
                                                                    completion:nil];
 }
@@ -220,9 +224,25 @@ static void*                                        _pickImageRequestTag;
 
 #pragma mark - UIPopoverPresentationControllerDelegate implementation
 
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+    
+    if(self.pickerController == nil)
+        return;
+    
+    _pickImageCallback(nil, PickImageFinishReasonCancelled, _pickImageRequestTag);
+    
+    // reset properties
+    [self dismissImagePickerController];
+}
+
 - (void)presentationControllerDidDismiss:(UIPresentationController*)presentationController
 {
     NSLog(@"[NativePlugins] Image picker closed.");
+    _pickImageCallback(nil, PickImageFinishReasonCancelled, _pickImageRequestTag);
+    
+    // reset properties
+    [self dismissImagePickerController];
 }
 
 #pragma mark - Unused code

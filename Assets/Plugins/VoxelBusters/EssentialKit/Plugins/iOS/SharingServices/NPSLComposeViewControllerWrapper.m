@@ -116,7 +116,11 @@ static NSString* const kURLSchemeTwitter    = @"twitter://";
 
 - (void)showAtPosition:(CGPoint)position
 {
-    [UnityGetGLViewController() presentViewControllerInPopoverStyleIfRequired:[self internalComposer]
+    //Embedding internal composer within a navigation controller as its buggy when directly presented. Now callbacks on dismissed are proper.
+    UINavigationController *viewControllerToPresent=[[UINavigationController alloc]initWithRootViewController:[self internalComposer]];
+    [viewControllerToPresent setNavigationBarHidden:TRUE];
+    
+    [UnityGetGLViewController() presentViewControllerInPopoverStyleIfRequired:viewControllerToPresent
                                                                  withDelegate:self
                                                                  fromPosition:position
                                                                      animated:YES

@@ -61,7 +61,7 @@ NPBINDING DONTSTRIP const char* NPScoreGetLastReportedDate(void* scorePtr)
 NPBINDING DONTSTRIP void* NPScoreGetPlayer(void* scorePtr)
 {
     GKScore*    score       = (__bridge GKScore*)scorePtr;
-    return (__bridge void*)score.player;
+    return NPRetainWithOwnershipTransfer(score.player);
 }
 
 NPBINDING DONTSTRIP void NPScoreReportScore(void* scorePtr, void* tagPtr)

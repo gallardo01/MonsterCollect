@@ -17,13 +17,13 @@ public class TutorialController : MonoBehaviour
     private int step = 1;
 
     private static string[] conversation = { "",
-        "Hello friends, My name is Professor Goodwin, Welcome to the Element Monster world",
-        "There are a lot of mysterious pet called Element Monster",
-        "First, tell me, Are you a boy or a girl?",
-        "Welcome, I will give you a Element Monster to travel with you",
+        "Hello there! My name is Professor Goodwin. Welcome to the Element Monsters world!",
+        "Element Monsters are mysterious creatures, and I need your help to find and train them!",
+        "First, are you a boy or a girl?",
+        "Now, you will receive an Element Monster to be your travel companion.",
         "Can you pick one?",
-        "Fire beat Grass, Grass beat Electric, Electric beat Water, Water beat Fire",
-        "Nice choice, hope you have an excited adventure",
+        "Fire beats Grass, Grass beats Electric, Electric beats Water, and Water beats Fire.",
+        "Great choice! Your exciting adventure lies ahead!",
     };
     // Start is called before the first frame update
     void Start()

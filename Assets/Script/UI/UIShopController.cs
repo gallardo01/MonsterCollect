@@ -191,7 +191,6 @@ public class UIShopController : MonoBehaviour
     {
         TO = Instantiate(Resources.Load($"Prefabs/UI/TargetOffer/TO_{index}") as GameObject, TargetedOfferPanel.transform.GetChild(0).transform);
         TO.GetComponent<Button>().onClick.AddListener(async () => {
-            SoundManagerDemo.Instance.playOneShot(10);
             if (index > targetOffers.Length) return;
             var productId = targetOffers[index - 1];
             var ok = await PurchaseService.Instance.Purchase(productId);
@@ -313,7 +312,7 @@ public class UIShopController : MonoBehaviour
         List<ItemInventory> items = new List<ItemInventory>();
         int gold = 0;
         int diamond = 0;
-
+        SoundManagerDemo.Instance.playOneShot(10);
         switch (productId)
         {
             case ProductId.evolve_stone_pack:

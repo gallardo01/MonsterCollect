@@ -16,21 +16,13 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(testManualLoad());
+        firstTimeSetUp();
         LoadData();
-
     }
 
     public void LoadData()
     {
-        bool isSyncCloud;
-        isSyncCloud = SyncService.Instance.getCloudStatus();
-
-        if (isSyncCloud == false)
-        {
-            firstTimeSetUp();
-        }
-        else
+        if (SyncService.Instance.getCloudStatus())
         {
             var heroes = SyncService.Instance.GetHeroes();
             if (heroes != null)
@@ -42,11 +34,10 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
 
     private void firstTimeSetUp()
     {
-        string tempPath = Application.persistentDataPath + "/c/b/a/";
+        string tempPath = Application.persistentDataPath + "/c/b/c/";
         string filePath = tempPath + "MyHeroes.txt";
 
         string fileName = "Heroes.txt";
-        string myFileName = "MyHeroes.txt";
         if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(tempPath));

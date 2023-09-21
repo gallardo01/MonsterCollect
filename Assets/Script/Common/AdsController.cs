@@ -12,22 +12,22 @@ public class AdsController : Singleton<AdsController>
         DontDestroyOnLoad(gameObject);
     }
     /// Test Ads
+#if UNITY_ANDROID
+    private const string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+#elif UNITY_IPHONE
+            private const string _adUnitId = "ca-app-pub-3940256099942544/1712485313";
+#else
+            private const string _adUnitId = "unused";
+#endif
+
+    /// Production Ads
 //#if UNITY_ANDROID
-//    private const string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+//    private const string _adUnitId = "ca-app-pub-7999860288970453/4602702447";
 //#elif UNITY_IPHONE
-//        private const string _adUnitId = "ca-app-pub-3940256099942544/1712485313";
+//        private const string _adUnitId = "ca-app-pub-7999860288970453/1976539105";
 //#else
 //        private const string _adUnitId = "unused";
 //#endif
-
-    /// Production Ads
-#if UNITY_ANDROID
-    private const string _adUnitId = "ca-app-pub-7999860288970453/4602702447";
-#elif UNITY_IPHONE
-        private const string _adUnitId = "ca-app-pub-7999860288970453/1976539105";
-#else
-        private const string _adUnitId = "unused";
-#endif
     private void Start()
     {
         LoadAd();

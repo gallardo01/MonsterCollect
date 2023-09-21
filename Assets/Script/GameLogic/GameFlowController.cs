@@ -51,7 +51,7 @@ public class GameFlowController : Singleton<GameFlowController>
     IEnumerator revive()
     {
         dead.SetActive(true);
-        for(int i = 5; i >= 0; i--)
+        for(int i = 10; i >= 0; i--)
         {
             countdown.text = i.ToString();
             yield return new WaitForSeconds(1f);

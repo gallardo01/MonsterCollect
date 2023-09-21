@@ -14,6 +14,7 @@ public class UIHero : Singleton<UIHero>
     public GameObject[] listHero;
     public Button btnSelect;
     public Button btnBuy;
+    public GameObject btnBuyObj;
     public TextMeshProUGUI txtPrice;
 
     public Button btnEvolve;
@@ -68,15 +69,18 @@ public class UIHero : Singleton<UIHero>
     private int requireStone = 0;
     private bool isEvolve = true;
     // Start is called before the first frame update
+
+    public GameObject loadingIAP;
+    public GameObject iapError;
+
     void Start()
     {
         heroesSprite = Resources.LoadAll<Sprite>("UI/Icons/Monster");
         imageSprites = Resources.LoadAll<Sprite>("Contents/Skill");
         if (!PlayerPrefs.HasKey("HeroesPick"))
         {
-            PlayerPrefs.SetInt("HeroesPick", 10);
-            curHeroID = PlayerPrefs.GetInt("HeroesPick");
             curHeroID = HeroesDatabase.Instance.getCurrentHero(curHeroID).Id;
+            PlayerPrefs.SetInt("HeroesPick", curHeroID);
         }
         else
         {
@@ -94,9 +98,6 @@ public class UIHero : Singleton<UIHero>
         panelBtnEvolve.onClick.AddListener(() => evolutionAndLevelUpHero());
 
         evolAnimator = pnEvolve.GetComponent<Animator>();
-
-        //maskBtnBuyGold.SetActive(true);
-        //maskBtnBuyDiamond.SetActive(true);
     }
     private void OnEnable()
     {
@@ -152,17 +153,37 @@ public class UIHero : Singleton<UIHero>
 
         if (data.Level == 0)
         {
-            var singleId = cacheId / 10;
-            var productId = PurchaseService.Instance.GetHero(singleId, false);
-            var defaultPrice = "$" + StaticInfo.costHeroes[singleId].ToString();
+            if (cacheId >= 50)
+            {
+                var singleId = cacheId / 10;
+                var productId = PurchaseService.Instance.GetHero(singleId, false);
+                var defaultPrice = "$" + StaticInfo.costHeroes[singleId].ToString();
 
-            if (productId is ProductId id)
+                if (productId is ProductId id)
+                {
+                    txtPrice.text = PurchaseService.Instance.GetPrice(id, defaultPrice);
+                }
+                else
+                {
+                    txtPrice.text = defaultPrice;
+                }
+            } else
             {
-                txtPrice.text = PurchaseService.Instance.GetPrice(id, defaultPrice);
-            }
-            else
-            {
-                txtPrice.text = defaultPrice;
+                int diamond = 1000;
+                if (cacheId/10 == 4)
+                {
+                    diamond = 2000;
+                }
+                txtPrice.text = diamond.ToString();
+                //if (UserDatabase.Instance.getUserData().Diamond >= diamond)
+                //{
+                //    SoundManagerDemo.Instance.playOneShot(4);
+                //    UserDatabase.Instance.
+                //}
+                //else
+                //{
+                //    SoundManagerDemo.Instance.playOneShot(12);
+                //}
             }
         }
 
@@ -243,6 +264,11 @@ public class UIHero : Singleton<UIHero>
         else
         {
             btnBuy.gameObject.SetActive(true);
+            btnBuyObj.SetActive(true);
+            if (data.Id >= 50)
+            {
+                btnBuyObj.SetActive(false);
+            }
             btnSelect.gameObject.SetActive(false);
             btnEvolve.gameObject.SetActive(false);
         }
@@ -251,22 +277,44 @@ public class UIHero : Singleton<UIHero>
     async void buyHero()
     {
         int singleId = cacheId / 10;
-        var productId = PurchaseService.Instance.GetHero(singleId, true);
-
-        if (productId == null) return;
-        var ok = await PurchaseService.Instance.Purchase(productId.Value);
-
-        if (!ok)
+        if (singleId > 4)
         {
-            // TODO: show error?
-            return;
-        }
+            var productId = PurchaseService.Instance.GetHero(singleId, false);
 
-        SoundManagerDemo.Instance.playOneShot(4);
-        HeroesDatabase.Instance.unlockHero(cacheId);
-        MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
-        initUIHero();
-        handleButton(data);
+            if (productId == null) return;
+            var ok = await PurchaseService.Instance.Purchase(productId.Value);
+
+            if (!ok)
+            {
+                // TODO: show error?
+                return;
+            }
+
+            SoundManagerDemo.Instance.playOneShot(4);
+            HeroesDatabase.Instance.unlockHero(cacheId);
+            MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
+            initUIHero();
+            handleButton(data);
+        } else
+        {
+            int diamond = 1000;
+            if (singleId == 4)
+            {
+                diamond = 2000;
+            }
+            if (UserDatabase.Instance.getUserData().Diamond >= diamond)
+            {
+                SoundManagerDemo.Instance.playOneShot(4);
+                HeroesDatabase.Instance.unlockHero(cacheId);
+                MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);
+                initUIHero();
+                handleButton(data);
+            }
+            else
+            {
+                SoundManagerDemo.Instance.playOneShot(12);
+            }
+        }
     }
 
     void openEvolvePanel()

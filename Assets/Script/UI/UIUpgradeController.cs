@@ -173,6 +173,7 @@ public class UIUpgradeController : MonoBehaviour
             AbilitiesVFX[result].SetActive(false);
             yield return new WaitForSeconds(0.15f);
         }
+        SoundManagerDemo.Instance.playOneShot(6);
         InitUI();
         IsUpdated = false;
 

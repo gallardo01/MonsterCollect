@@ -52,6 +52,7 @@ public class GameController : Singleton<GameController>
     [SerializeField] GameObject pauseGameObj;
     [SerializeField] GameObject tutorial;
     [SerializeField] GameObject joystick;
+    [SerializeField] GameObject pauseButton;
     [SerializeField] GameObject startGame;
     [SerializeField] SpriteRenderer heroesSprite;
     [SerializeField] TextMeshProUGUI textStart;
@@ -81,6 +82,7 @@ public class GameController : Singleton<GameController>
         {
             PlayerPrefs.SetInt("Show", 0);
         }
+        pauseButton.SetActive(false);
         joystick.SetActive(false);
         if (PlayerPrefs.GetInt("Show") < 3)
         {
@@ -96,6 +98,7 @@ public class GameController : Singleton<GameController>
         yield return new WaitForSeconds(4f);
         startGame.SetActive(false);
         joystick.SetActive(true);
+        pauseButton.SetActive(true);
         int heroesPick = PlayerPrefs.GetInt("HeroesPick");
         //int heroesPick = 10;
         GameObject pl = Instantiate(Resources.Load("Prefabs/Heroes_Game/No." + heroesPick) as GameObject);
@@ -314,17 +317,20 @@ public class GameController : Singleton<GameController>
     }
     private void updateProgressBar(bool levelUp, int currentExp)
     {
-        //expBar.GetComponent<Slider>().value = progres;
-        if (levelUp)
+        if (isBossSpawn == true)
         {
-            exp -= currentExp;
-            playerLevel++;
-            levelText.text = playerLevel.ToString();
-            PlayerController.Instance.gainLv(playerLevel);
-            updateColorText();
+            //expBar.GetComponent<Slider>().value = progres;
+            if (levelUp)
+            {
+                exp -= currentExp;
+                playerLevel++;
+                levelText.text = playerLevel.ToString();
+                PlayerController.Instance.gainLv(playerLevel);
+                updateColorText();
+            }
+            float progres = (float)exp / (float)(400 + playerLevel * 100);
+            StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
         }
-        float progres = (float)exp / (float)(400 + playerLevel * 100);
-        StartCoroutine(animationprogressBar(expBar.GetComponent<Slider>().value, progres, levelUp));
     }
     private void pickSkillLevelUp()
     {

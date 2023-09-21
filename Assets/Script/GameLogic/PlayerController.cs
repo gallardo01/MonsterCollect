@@ -150,7 +150,8 @@ public class PlayerController : Singleton<PlayerController>
         realData.Speed = data.Speed * (100 + bonusPoints[6]) / 100;
         if (realData.Hp - cacheHp > 0)
         {
-            healPlayer(realData.Hp - cacheHp);
+            int percentHeal = (realData.Hp - cacheHp) * 100 / realData.Hp;
+            healPlayer(percentHeal);
         }
         //Debug.Log(JsonConvert.SerializeObject(realData, Formatting.Indented));
     }
@@ -758,9 +759,7 @@ gameObject.transform.rotation);
             }
             else
             {
-                float scaleNumber = 0.7f + (size - 1) * 0.1f;
-                Debug.Log(scaleNumber);
-             
+                float scaleNumber = 0.7f + (size - 1) * 0.1f;             
                 gameObjectNonRepeat.transform.localScale = new Vector3(scaleNumber, scaleNumber, scaleNumber);
                 gameObjectNonRepeat.GetComponent<BulletOnStayController>().initBullet(realData, size, totalSkill[id].powerGame, gameObject);
             }

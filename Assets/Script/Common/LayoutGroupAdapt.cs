@@ -15,8 +15,10 @@ public class LayoutGroupAdapt : MonoBehaviour
 
     private void changeScreenSize()
     {
-        int width = Screen.width;
-        int numberOfLine = (width - 175) / 275;
+        Canvas canvas = FindObjectOfType<Canvas>();
+        int width = (int) canvas.GetComponent<RectTransform>().rect.width;
+
+        int numberOfLine = (width - 125) / 275;
         int left = (width - 275*numberOfLine + 25)/2;
         layoutGroup.GetComponent<GridLayoutGroup>().padding = new RectOffset(left, left, 0, 50);
     }

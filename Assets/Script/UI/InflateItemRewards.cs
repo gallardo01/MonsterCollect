@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using MarchingBytes;
+using DragonBones;
 
 public class InflateItemRewards : MonoBehaviour
 {
@@ -41,6 +43,25 @@ public class InflateItemRewards : MonoBehaviour
     public void inflateGoldItem(int slot)
     {
         iconItem.sprite = Resources.Load<Sprite>("UI/Sprites/Gold");
+        slotItem.text = slot.ToString();
+    }
+
+    public void inflateDiamondItem(int slot)
+    {
+        GameObject particle = EasyObjectPool.instance.GetObjectFromPool("Diamond", transform.position, transform.rotation);
+        particle.transform.SetParent(gameObject.transform);
+
+        iconItem.sprite = Resources.Load<Sprite>("UI/Sprites/Diamond");
+        StartCoroutine(animationDiamond(slot));
+    }
+
+    IEnumerator animationDiamond(int slot)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            slotItem.text = Random.Range(1, 30).ToString();
+            yield return new WaitForSeconds(0.2f);
+        }
         slotItem.text = slot.ToString();
     }
 }

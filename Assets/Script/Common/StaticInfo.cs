@@ -36,7 +36,7 @@ public class StaticInfo : MonoBehaviour
 
     public static string[] typeText = { "", "Fire", "Electric", "Water", "Grass" };
 
-    public static int[] costHeroes = { 0, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000 };
+    public static string[] costHeroes = { "", "1000", "1000", "1000", "2000", "0.99$", "3.99$", "7.99$", "9.99$", "19.99$", "29.99$", "49.99$", "99.99$" };
 
     public static int[] evolLocation = {0, -800, -1600,-2400,-3200 };
     public static int[] userUpdateBase = { 20, 20, 20, 20, 20, 20, 1, 1, 1};

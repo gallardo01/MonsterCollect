@@ -270,17 +270,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         return 0;
     }
     //
-    public bool buyHeroes(int id)
-    {
-        int cost = StaticInfo.costHeroes[id / 10];
-        if(UserDatabase.Instance.reduceMoney(0, cost) == true)
-        {
-            unlockHero(id);
-            Save();
-            return true;
-        }
-        return false;
-    }
     public MyHeroes getCurrentHero(int id)
     {
         for (int i = myHeroes.Count-1; i >= 0; i--)

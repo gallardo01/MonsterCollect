@@ -204,7 +204,7 @@ public class PurchaseService : Singleton<PurchaseService>
                 // productButton[iter].interactable = !BillingServices.IsProductPurchased(productId[iter]);
                 var product = products[iter];
                 productDict[product.Id] = product;
-                Debug.Log(string.Format("[{0}]: {1}", iter, product));
+                //Debug.Log(string.Format("[{0}]: {1}", iter, product));
             }
         }
         else

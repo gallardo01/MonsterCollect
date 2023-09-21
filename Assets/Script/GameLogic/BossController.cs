@@ -121,6 +121,7 @@ public class BossController : Singleton<BossController>
             //Debug.Log(currentHp);
             if (currentHp <= 0)
             {
+                currentHp = 0;
                 //GameController.Instance.initEatMonster(heroes.Level);
                 // drop item
                 dropItemController(monsterData.Id);

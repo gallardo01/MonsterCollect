@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System;
+using MarchingBytes;
 
 public class SumaryController : MonoBehaviour
 {
@@ -45,11 +45,20 @@ public class SumaryController : MonoBehaviour
         bossIcon.GetComponent<Image>().SetNativeSize();
         textProgress.text = "You reach <size=70><color=yellow>" + progress.ToString() + "%<size=50><color=white>Stage " + stage.ToString();
 
-        UserDatabase.Instance.gainMoneyInGame(gold, 0);
-        StartCoroutine(animationItem(gold, rewards));
+        int diamond = 0;
+        if (progress >= 70)
+        {
+            diamond = Random.Range(1, 10);
+            if (progress >= 100)
+            {
+                diamond = diamond + 5 + stage * 2;
+            }
+        }
+        UserDatabase.Instance.gainMoneyInGame(gold, diamond);
+        StartCoroutine(animationItem(gold, rewards, diamond));
     }
 
-    IEnumerator animationItem(int gold, List<ItemInventory> rewards)
+    IEnumerator animationItem(int gold, List<ItemInventory> rewards, int diamond)
     {
         int num = -1;
         if (gold > 0)
@@ -57,6 +66,12 @@ public class SumaryController : MonoBehaviour
             num++;
             item[num].SetActive(true);
             item[num].GetComponent<InflateItemRewards>().inflateGoldItem(gold);
+        }
+        if (diamond > 0)
+        {
+            num++;
+            item[num].SetActive(true);
+            item[num].GetComponent<InflateItemRewards>().inflateDiamondItem(diamond);
         }
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < rewards.Count; i++)

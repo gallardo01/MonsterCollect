@@ -1,3 +1,4 @@
+using DigitalRuby.SoundManagerNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -38,6 +39,8 @@ public class TutorialController : MonoBehaviour
 
     IEnumerator tutorial()
     {
+        yield return new WaitForSeconds(1f);
+        //SoundManagerDemo.Instance.playMusic(8);
         textConversation.text = conversation[step];
         yield return new WaitForSeconds(4f);
         step++;

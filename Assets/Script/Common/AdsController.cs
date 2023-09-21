@@ -11,14 +11,20 @@ public class AdsController : Singleton<AdsController>
     {
         DontDestroyOnLoad(gameObject);
     }
-    /// <summary>
-    /// UI element activated when an ad is ready to show.
-    /// </summary>
-    // These ad units are configured to always serve test ads.
+    /// Test Ads
+//#if UNITY_ANDROID
+//    private const string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+//#elif UNITY_IPHONE
+//        private const string _adUnitId = "ca-app-pub-3940256099942544/1712485313";
+//#else
+//        private const string _adUnitId = "unused";
+//#endif
+
+    /// Production Ads
 #if UNITY_ANDROID
-    private const string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+    private const string _adUnitId = "ca-app-pub-7999860288970453/4602702447";
 #elif UNITY_IPHONE
-        private const string _adUnitId = "ca-app-pub-3940256099942544/1712485313";
+        private const string _adUnitId = "ca-app-pub-7999860288970453/1976539105";
 #else
         private const string _adUnitId = "unused";
 #endif
@@ -76,30 +82,37 @@ public class AdsController : Singleton<AdsController>
     /// <summary>
     /// Shows the ad.
     /// </summary>
-    public void ShowAd(int id)
+    public bool ShowAd(int id)
     {
         if (_rewardedAd != null && _rewardedAd.CanShowAd())
         {
             adsId = id;
             Debug.Log("Showing rewarded ad.");
-            GameFlowController.Instance.pauseWhenWatchAds();
+            if (id == 1)
+            {
+                GameFlowController.Instance.pauseWhenWatchAds();
+            }
             _rewardedAd.Show((Reward reward) =>
             {
-                Debug.Log(String.Format("Rewarded ad granted a reward: {0} {1}",
-                                        reward.Amount,
-                                        reward.Type));
                 // success
                 if(id == 1)
                 {
                     GameFlowController.Instance.reviveSuccess();
+                } else if(id == 2)
+                {
+                    UIShopController.Instance.giveDiamondWatchAds();
+                } else if(id == 3)
+                {
+                    UIShopController.Instance.watchAdsAction();
                 }
             });
+            LoadAd();
+            return true;
         }
         else
         {
-            Debug.LogError("Rewarded ad is not ready yet.");
+            return false;
         }
-        LoadAd();
         // Inform the UI that the ad is not ready.
         //AdLoadedStatus?.SetActive(false);
     }

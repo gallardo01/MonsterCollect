@@ -119,7 +119,7 @@ public class InventoryController : Singleton<InventoryController>
     }
     public IEnumerator initLayout()
     {
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(0.02f);
         ItemPanel.SetActive(false);
         ItemPanel.SetActive(true);
         MaterialPanel.SetActive(false);

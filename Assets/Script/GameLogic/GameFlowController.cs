@@ -74,7 +74,12 @@ public class GameFlowController : Singleton<GameFlowController>
 
     public void reviveSuccess()
     {
-        StopAllCoroutines();
+        StartCoroutine(delayAds());
+    }
+
+    IEnumerator delayAds()
+    {
+        yield return new WaitForSeconds(0.3f);
         dead.SetActive(false);
         isAction = false;
         PlayerController.Instance.revivePlayer();

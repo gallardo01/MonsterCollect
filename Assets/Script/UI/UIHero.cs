@@ -304,6 +304,7 @@ public class UIHero : Singleton<UIHero>
             }
             if (UserDatabase.Instance.getUserData().Diamond >= diamond)
             {
+                UserDatabase.Instance.reduceMoney(0, diamond);
                 SoundManagerDemo.Instance.playOneShot(4);
                 HeroesDatabase.Instance.unlockHero(cacheId);
                 MyHeroes data = HeroesDatabase.Instance.fetchMyHeroes(cacheId);

@@ -216,6 +216,11 @@ public class UIShopController : Singleton<UIShopController>
     }
     public void watchAdsAction()
     {
+        StartCoroutine(delayWatchAdsAction());
+    }
+    IEnumerator delayWatchAdsAction()
+    {
+        yield return new WaitForSeconds(0.3f);
         SoundManagerDemo.Instance.playOneShot(9);
         OnChestPurchased(1, 1, 0, 0);
     }
@@ -229,7 +234,7 @@ public class UIShopController : Singleton<UIShopController>
     }
     private void mulipleDiamondChest()
     {
-        OnChestPurchased(2, 10, 0, 2000);
+        OnChestPurchased(2, 10, 0, 1800);
     }
     public void InitTargetedOffer()
     {
@@ -545,6 +550,11 @@ public class UIShopController : Singleton<UIShopController>
     }
     public void giveDiamondWatchAds()
     {
+        StartCoroutine(delayGiveDiamondWatchAds());
+    }
+    IEnumerator delayGiveDiamondWatchAds()
+    {
+       yield return new WaitForSeconds(0.3f);
         SoundManagerDemo.Instance.playOneShot(4);
         celebrationObj.SetActive(true);
         UserDatabase.Instance.gainMoneyInGame(0, 25);

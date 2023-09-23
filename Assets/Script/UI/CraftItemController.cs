@@ -102,9 +102,8 @@ public class CraftItemController : Singleton<CraftItemController>
         itemShow[3].SetActive(true);
         itemShow[3].GetComponent<ItemInflate>().InitData(givenItem);
         particleItem[1].SetActive(true);
-
-        yield return new WaitForSeconds(2f);
         SoundManagerDemo.Instance.playOneShot(6);
+        yield return new WaitForSeconds(2f);
 
         particleItem[0].SetActive(false);
         particleItem[1].SetActive(false);

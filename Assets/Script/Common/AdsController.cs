@@ -21,13 +21,13 @@ public class AdsController : Singleton<AdsController>
 #endif
 
     /// Production Ads
-//#if UNITY_ANDROID
-//    private const string _adUnitId = "ca-app-pub-7999860288970453/4602702447";
-//#elif UNITY_IPHONE
-//        private const string _adUnitId = "ca-app-pub-7999860288970453/1976539105";
-//#else
-//        private const string _adUnitId = "unused";
-//#endif
+    //#if UNITY_ANDROID
+    //    private const string _adUnitId = "ca-app-pub-7999860288970453/4602702447";
+    //#elif UNITY_IPHONE
+    //        private const string _adUnitId = "ca-app-pub-7999860288970453/1976539105";
+    //#else
+    //        private const string _adUnitId = "unused";
+    //#endif
     private void Start()
     {
         LoadAd();

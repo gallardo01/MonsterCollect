@@ -582,15 +582,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public ItemInventory dropItem()
     {
         int chance = Random.Range(0, 100);
-        if(chance < 60)
+        if(chance < 35)
         {
             int id = Random.Range(5, 10);
             return getItemObject(id, 1, 1);
-        } else if(chance < 70)
+        } else if(chance < 45)
         {
             int id = Random.Range(1, 4);
             return getItemObject(id, 1, 1);
-        }  else if (chance < 80)
+        }  else if (chance < 50)
         {
             int id = Random.Range(101, 113);
             return getItemObject(id, 1, 1);
@@ -603,13 +603,13 @@ public class ItemDatabase : Singleton<ItemDatabase>
     private int returnRandomRarity()
     {
         int chance = Random.Range(0, 100);
-        if(chance <= 60)
+        if(chance <= 70)
         {
             return 1;
-        } else if(chance <= 85)
+        } else if(chance <= 90)
         {
             return 2;
-        } else if(chance <= 95)
+        } else if(chance <= 97)
         {
             return 3;
         } else

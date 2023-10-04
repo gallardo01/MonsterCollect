@@ -1280,7 +1280,7 @@ public class BossController : Singleton<BossController>
     private void dropItemController(int monsterLv)
     {
         GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f), transform.rotation);
-        goldObj.GetComponent<ItemDropController>().setGold(Random.Range(100, 100 + monsterLv * 10));
+        goldObj.GetComponent<ItemDropController>().setGold(Random.Range(200, 150 + monsterLv * 10));
 
         GameObject itemObj = EasyObjectPool.instance.GetObjectFromPool("Item", transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f), transform.rotation);
         itemObj.GetComponent<ItemDropController>().setItem();

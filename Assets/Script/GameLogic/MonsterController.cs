@@ -180,7 +180,7 @@ public class MonsterController : MonoBehaviour
         if (Random.Range(0, 100) < 10)
         {
             GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
-            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(10 + monsterLv * 2, 10 + monsterLv * 5));
+            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(20 + monsterLv * 3, 30 + monsterLv * 5));
         }
         // drop hp
         if (Random.Range(0, 100) < 5)
@@ -253,7 +253,7 @@ public class MonsterController : MonoBehaviour
             {
                 transform.position = Vector2.MoveTowards(transform.position,
                     waypoints,
-                    (monsterData.Speed * slowRate / 800f) * Time.deltaTime);
+                    (monsterData.Speed * slowRate / 750f) * Time.deltaTime);
                 if (transform.position.x == waypoints.x && transform.position.y == waypoints.y)
                 {
                     isMove = false;

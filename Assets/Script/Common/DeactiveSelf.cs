@@ -7,9 +7,11 @@ public class DeactiveSelf : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+    }
+    private void OnEnable()
+    {
         StartCoroutine(deactiveSelf());
     }
-
     IEnumerator deactiveSelf()
     {
         yield return new WaitForSeconds(1.5f);

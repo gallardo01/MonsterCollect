@@ -509,7 +509,7 @@ namespace VoxelBusters.EssentialKit
             }
             catch (Exception exception)
             {
-                DebugLogger.LogException(EssentialKitDomain.Default, exception);
+                Debug.Log(exception);
             }
         }
 

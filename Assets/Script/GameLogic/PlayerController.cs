@@ -189,7 +189,7 @@ public class PlayerController : Singleton<PlayerController>
         if (canMove)
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
-            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (float)(realData.Move * bonusSpeed / 700f) * Time.deltaTime;
+            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (float)(realData.Move * bonusSpeed / 590f) * Time.deltaTime;
         }
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {

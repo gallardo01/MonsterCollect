@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using MarchingBytes;
+using DigitalRuby.SoundManagerNamespace;
 
 public class SumaryController : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class SumaryController : MonoBehaviour
         heroesSprite = Resources.LoadAll<Sprite>("Contents/Icon/Island");
         hide.SetActive(false);
         //Time.timeScale = 0;
+        SoundManagerDemo.Instance.StopAudio(1);
+        SoundManagerDemo.Instance.playOneShot(13);
         stars[0].SetActive(true);
         if (progress >= 50)
         {

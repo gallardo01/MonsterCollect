@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using DigitalRuby.SoundManagerNamespace;
 using UnityEditor;
+using VoxelBusters.EssentialKit;
 
 public class UIMainMenuController : MonoBehaviour
 {
@@ -23,6 +24,13 @@ public class UIMainMenuController : MonoBehaviour
     public Button settings;
     public GameObject tooltip;
     public Button muteButton;
+    public TextMeshProUGUI muteText;
+    public Button pushButton;
+    public TextMeshProUGUI pushText;
+    public Button restorePurchases;
+    public Button policy;
+    public GameObject restoreSuccess;
+    public Button closeSettings;
 
     private int currentMap = 1;
     private int currentStage = 1;
@@ -50,9 +58,13 @@ public class UIMainMenuController : MonoBehaviour
         {
             PlayerPrefs.SetInt("Audio", 1);
         }
+        if (!PlayerPrefs.HasKey("Push"))
+        {
+            PlayerPrefs.SetInt("Push", 1);
+        }
 
         setupAudio(PlayerPrefs.GetInt("Audio"));
-
+        setupPush(PlayerPrefs.GetInt("Push"));
 
         leftBtn.onClick.AddListener(() => leftButton());
         rightBtn.onClick.AddListener(() => rightButton());
@@ -60,8 +72,25 @@ public class UIMainMenuController : MonoBehaviour
 
         settings.onClick.AddListener(() => openSettingsTooltip());
         muteButton.onClick.AddListener(() => muteAudio());
-    }
+        pushButton.onClick.AddListener(() => pushNotification());
+        closeSettings.onClick.AddListener(() => closeSettingsAction());
+        restorePurchases.onClick.AddListener(() => restorePurchaseAction());
+        policy.onClick.AddListener(() => privacyPolicy());
 
+    }
+    private void privacyPolicy()
+    {
+        Application.OpenURL("https://elementmonsters.pages.dev/privacy");
+        SoundManagerDemo.Instance.playOneShot(9);
+        tooltip.SetActive(false);
+    }
+    private void restorePurchaseAction()
+    {
+        SoundManagerDemo.Instance.playOneShot(9);
+        BillingServices.RestorePurchases();
+        tooltip.SetActive(false);
+        restoreSuccess.SetActive(true);
+    }
     private void openSettingsTooltip()
     {
         SoundManagerDemo.Instance.playOneShot(9);
@@ -74,7 +103,24 @@ public class UIMainMenuController : MonoBehaviour
             tooltip.SetActive(true);
         }
     }
-
+    private void closeSettingsAction()
+    {
+        tooltip.SetActive(false);
+    }
+    private void pushNotification()
+    {
+        SoundManagerDemo.Instance.playOneShot(9);
+        if (PlayerPrefs.GetInt("Push") == 1)
+        {
+            PlayerPrefs.SetInt("Push", 0);
+            setupPush(0);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Push", 1);
+            setupPush(1);
+        }
+    }
     private void muteAudio()
     {
         SoundManagerDemo.Instance.playOneShot(9);
@@ -93,11 +139,26 @@ public class UIMainMenuController : MonoBehaviour
         if (state == 1)
         {
             SoundManagerDemo.Instance.setVolumeAll(1);
-            muteButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Background/setting_icon_sound_on");
+            muteButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Pack/UICommon_Button_Yellow3");
+            muteText.text = "ON";
         } else
         {
             SoundManagerDemo.Instance.setVolumeAll(0);
-            muteButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Background/setting_icon_sound_off");
+            muteButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Pack/UICommon_Button_Gray2");
+            muteText.text = "OFF";
+        }
+    }
+    private void setupPush(int state)
+    {
+        if (state == 1)
+        {
+           pushButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Pack/UICommon_Button_Yellow3");
+            pushText.text = "ON";
+        }
+        else
+        {
+            pushButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("UI/Pack/UICommon_Button_Gray2");
+            pushText.text = "OFF";
         }
     }
     private void playGameAction()

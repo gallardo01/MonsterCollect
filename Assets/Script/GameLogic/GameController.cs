@@ -241,8 +241,6 @@ public class GameController : Singleton<GameController>
     {
         bossDead = true;
         yield return new WaitForSeconds(8f);
-        SoundManagerDemo.Instance.StopAudio(1);
-        SoundManagerDemo.Instance.playOneShot(13);
         updateEndGameInformation();
         PlayerController.Instance.disablePlayer();
         GameFlowController.Instance.gameOver();
@@ -260,12 +258,12 @@ public class GameController : Singleton<GameController>
     }
     private IEnumerator addEnemyNow()
     {
+        countEnemy++;
         int pos = Random.Range(0, waypoints1.Length);
         GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", waypoints1[pos].transform.position, waypoints1[pos].transform.rotation);
         yield return new WaitForSeconds(1.5f);
         EasyObjectPool.instance.ReturnObjectToPool(warning);
         warning.SetActive(false);
-        countEnemy++;
         int chance = Random.Range(0, 14);
         int enemyId;
         if (chance < 13)

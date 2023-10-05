@@ -21,19 +21,21 @@ public class UserDatabase : Singleton<UserDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        firstTimeSetUp();
-        LoadData();
     }
-
     public void LoadData()
     {
         if (SyncService.Instance.getCloudStatus())
         {
+            Debug.Log("Sync data from cloud thanhh");
             var user = SyncService.Instance.GetUser();
             if (user != null)
             {
                 database = user;
             }
+        } else
+        {
+            Debug.Log("Khong co cloud");
+            firstTimeSetUp();
         }
     }
     private void firstTimeSetUp()
@@ -144,10 +146,7 @@ public class UserDatabase : Singleton<UserDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
-        if (SyncService.Instance.getCloudStatus())
-        {
-            SyncService.Instance.PushUser(database);
-        }
+        SyncService.Instance.PushUser(database);
     }
     public void deleteData()
     {

@@ -92,10 +92,10 @@ public class SyncService : Singleton<SyncService>
         };
 
         cloudData = data;
-        //Debug.Log("Cloud synchronization completed:");
-        //Debug.Log($" - inventory: {inventoryJson}");
-        //Debug.Log($" - user: {userJson}");
-        //Debug.Log($" - heroes: {heroesJson}");
+        Debug.Log("Cloud synchronization completed:");
+        Debug.Log($" - inventory: {inventoryJson}");
+        Debug.Log($" - user: {userJson}");
+        Debug.Log($" - heroes: {heroesJson}");
     }
 
     private void OnSavedDataChange(CloudServicesSavedDataChangeResult result)

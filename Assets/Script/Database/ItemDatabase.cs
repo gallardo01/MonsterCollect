@@ -26,10 +26,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        string fileName = "Item.txt";
-        LoadResourceTextfileItemData(fileName);
-        LoadResourceTextfileCurrentData();
-        LoadData();
     }
     public void LoadData()
     {
@@ -39,7 +35,13 @@ public class ItemDatabase : Singleton<ItemDatabase>
             if (items != null)
             {
                 inventoryData = items;
+                unCraftAllItem();
             }
+        } else
+        {
+            string fileName = "Item.txt";
+            LoadResourceTextfileItemData(fileName);
+            LoadResourceTextfileCurrentData();
         }
     }
 
@@ -174,10 +176,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
-        if (SyncService.Instance.getCloudStatus())
-        {
-            SyncService.Instance.PushInventory(inventoryData);
-        }
+        SyncService.Instance.PushInventory(inventoryData);
     }
 
     public ItemData fetchItemById(int id)

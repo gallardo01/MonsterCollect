@@ -16,8 +16,6 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
     // Start is called before the first frame update
     void Start()
     {
-        firstTimeSetUp();
-        LoadData();
     }
 
     public void LoadData()
@@ -29,6 +27,9 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             {
                 myHeroes = heroes;
             }
+        } else
+        {
+            firstTimeSetUp();
         }
     }
 
@@ -313,11 +314,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             Debug.LogWarning("Error: " + e.Message);
         }
 
-        Debug.Log($"Preparing to push heroes: {jsonData}");
-        if (SyncService.Instance.getCloudStatus())
-        {
-            SyncService.Instance.PushHeroes(myHeroes);
-        }
+        SyncService.Instance.PushHeroes(myHeroes);
     }
 }
 

@@ -495,19 +495,19 @@ public class UIShopController : Singleton<UIShopController>
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(101, 113), Random.Range(1, 4), 3));
                     }
-                    else if (rate < 65)
+                    else if (rate < 70)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 1));
                     }
-                    else if (rate < 75)
+                    else if (rate < 83)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 2));
                     }
-                    else if (rate < 88)
+                    else if (rate < 92)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                     }
-                    else if (rate < 98)
+                    else if (rate < 99)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 4));
                     }

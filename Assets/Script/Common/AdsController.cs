@@ -135,6 +135,17 @@ public class AdsController : Singleton<AdsController>
             Debug.Log("Destroying rewarded ad.");
             _rewardedAd.Destroy();
             _rewardedAd = null;
+
+            if (adsId == 1)
+            {
+                GameFlowController.Instance.reviveSuccess();
+            } else if (adsId == 2)
+            {
+                UIShopController.Instance.giveDiamondWatchAds();
+            } else if (adsId == 3)
+            {
+                UIShopController.Instance.watchAdsAction();
+            }
         }
 
         // Inform the UI that the ad is not ready.

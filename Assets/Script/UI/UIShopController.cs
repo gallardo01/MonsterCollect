@@ -226,15 +226,15 @@ public class UIShopController : Singleton<UIShopController>
     }
     private void goldenChest()
     {
-        OnChestPurchased(1, 1, 1000, 0);
+        OnChestPurchased(1, 1, 500, 0);
     }
     private void diamondChest()
     {
-        OnChestPurchased(2, 1, 0, 200);
+        OnChestPurchased(2, 1, 0, 100);
     }
     private void mulipleDiamondChest()
     {
-        OnChestPurchased(2, 10, 0, 1800);
+        OnChestPurchased(2, 10, 0, 900);
     }
     public void InitTargetedOffer()
     {
@@ -462,7 +462,7 @@ public class UIShopController : Singleton<UIShopController>
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(1, 5), 1, 1));
                     }
-                    else if (rate < 60)
+                    else if (rate < 65)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(5, 10), Random.Range(1, 3), 1));
                     }
@@ -487,37 +487,33 @@ public class UIShopController : Singleton<UIShopController>
                         rate = 78;
                     }
 
-                    if (rate < 10)
+                    if (rate < 35)
                     {
-                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(1, 5), Random.Range(1, 3), 1));
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(1, 5), Random.Range(1, 4), 1));
                     }
-                    else if (rate < 45)
+                    else if (rate < 55)
                     {
-                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(5, 10), Random.Range(1, 4), 1));
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(101, 113), Random.Range(1, 4), 3));
                     }
                     else if (rate < 65)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 1));
                     }
-                    else if (rate < 80)
+                    else if (rate < 75)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 2));
                     }
-                    else if (rate < 87)
+                    else if (rate < 88)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 3));
                     }
-                    else if (rate < 89)
+                    else if (rate < 98)
                     {
                         items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 4));
                     }
-                    else if (rate < 90)
-                    {
-                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 5));
-                    }
                     else
                     {
-                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(101, 113), Random.Range(1, 3), 3));
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(10, 34), 1, 5));
                     }
                 }
             }

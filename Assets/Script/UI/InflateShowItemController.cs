@@ -145,10 +145,10 @@ public class InflateShowItemController : MonoBehaviour
         allStatsText.text = textAllStats;
         upgradeButton.interactable = true;
         iconShard.sprite = InventoryController.Instance.getSpriteIndex(5 + (item.Id - 10) % 4);
-        int goldRequire = (item.Level) * 500 + 500 * (item.Rarity - 1);
+        int goldRequire = 200 + (item.Level-1) * 100 + 100 * (item.Rarity - 1);
         goldText.text = goldRequire.ToString();
         if(goldRequire <= UserDatabase.Instance.getUserData().Gold) { goldText.color = Color.white; } else { goldText.color = Color.red; upgradeButton.interactable = false;}
-        int shardRequire = (item.Level) * 4/8 + (item.Rarity);
+        int shardRequire = 1 + (item.Level/3) + (item.Rarity*2/5);
         string colorText;
         if (shardRequire <= ItemDatabase.Instance.fetchInventoryById(5+ (item.Id - 10) % 4).Slot) { colorText = "white"; } else { colorText = "red"; upgradeButton.interactable = false;}
         shardText.text = $"<color={colorText}> {ItemDatabase.Instance.fetchInventoryById(5 + (item.Id - 10) % 4).Slot} </color>/{shardRequire}";

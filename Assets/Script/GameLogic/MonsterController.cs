@@ -180,7 +180,7 @@ public class MonsterController : MonoBehaviour
         if (Random.Range(0, 100) < 10)
         {
             GameObject goldObj = EasyObjectPool.instance.GetObjectFromPool("Gold", transform.position * 1.05f, transform.rotation);
-            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(20 + monsterLv * 3, 30 + monsterLv * 5));
+            goldObj.GetComponent<ItemDropController>().setGold(Random.Range(15 + monsterLv * 3, 20 + monsterLv * 5));
         }
         // drop hp
         if (Random.Range(0, 100) < 5)

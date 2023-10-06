@@ -442,7 +442,7 @@ public class UIShopController : Singleton<UIShopController>
         InventoryController.Instance.initEquipment();
         InventoryController.Instance.initMaterial();
         InventoryController.Instance.initShard();
-        InventoryController.Instance.initLayout();
+        StartCoroutine(InventoryController.Instance.initLayout());
         celebrationObj.SetActive(true);
         celebrationObj.GetComponent<CelebrationShopController>().initCelebration(items, gold, diamond);
     }

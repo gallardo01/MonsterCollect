@@ -123,7 +123,7 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Count == 0) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
+        //Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
 
         //cloudData.inventory = data;
         CloudServices.SetString(cloudInventoryKey, jsonData);
@@ -135,7 +135,7 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Name == null) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving user {jsonData}");
+        //Debug.Log($"Saving user {jsonData}");
         //cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);
         CloudServices.Synchronize();
@@ -144,10 +144,8 @@ public class SyncService : Singleton<SyncService>
     public void PushHeroes(List<MyHeroes> data)
     {
         if (data == null || data.Count == 0) return;
-
         string jsonData = JsonConvert.SerializeObject(data);
-        Debug.Log($"Saving heroes {data.Count}, {jsonData}");
-
+        //Debug.Log($"Saving heroes {data.Count}, {jsonData}");
         //cloudData.heroes = data;
         CloudServices.SetString(cloudHeroesKey, jsonData);
         CloudServices.Synchronize();

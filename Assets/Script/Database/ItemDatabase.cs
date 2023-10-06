@@ -7,9 +7,6 @@ using System.Text;
 using System.IO;
 using System;
 using Random = UnityEngine.Random;
-using DragonBones;
-using System.Linq;
-// using static UnityEditor.Progress;
 
 public class ItemDatabase : Singleton<ItemDatabase>
 {
@@ -26,6 +23,8 @@ public class ItemDatabase : Singleton<ItemDatabase>
     // Start is called before the first frame update
     void Start()
     {
+        string fileName = "Item.txt";
+        LoadResourceTextfileItemData(fileName);
     }
     public void LoadData()
     {
@@ -35,12 +34,31 @@ public class ItemDatabase : Singleton<ItemDatabase>
             if (items != null)
             {
                 inventoryData = items;
+                string tempPath = Application.persistentDataPath + "/c/b/c" + "/MyItem.txt";
+                //Create if not exist
+                if (!File.Exists(tempPath))
+                {
+                    for (int i = 1; i < 10; i++)
+                    {
+                        addNewItemNoSave(i, 0);
+                    }
+                    for (int i = 34; i < 38; i++)
+                    {
+                        addNewItemNoSave(i, 0);
+                    }
+                    for (int i = 101; i < 113; i++)
+                    {
+                        addNewItemNoSave(i, 0);
+                    }
+                    SaveFile();
+                }
                 unCraftAllItem();
+            } else
+            {
+                LoadResourceTextfileCurrentData();
             }
         } else
         {
-            string fileName = "Item.txt";
-            LoadResourceTextfileItemData(fileName);
             LoadResourceTextfileCurrentData();
         }
     }
@@ -50,15 +68,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
         inventoryData.Clear();
         for (int i = 1; i < 10; i++)
         {
-            addNewItem(i, 0);
+            addNewItemNoSave(i, 0);
         }
         for (int i = 34; i < 38; i++)
         {
-            addNewItem(i, 0);
+            addNewItemNoSave(i, 0);
         }
         for (int i = 101; i < 113; i++)
         {
-            addNewItem(i, 0);
+            addNewItemNoSave(i, 0);
         }
         Save();
     }
@@ -78,15 +96,15 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             for (int i = 1; i < 10; i++)
             {
-                addNewItem(i, 0);
+                addNewItemNoSave(i, 0);
             }
             for (int i = 34; i < 38; i++)
             {
-                addNewItem(i, 0);
+                addNewItemNoSave(i, 0);
             }
             for (int i = 101; i < 113; i++)
             {
-                addNewItem(i, 0);
+                addNewItemNoSave(i, 0);
             }
             Save();
             return;
@@ -176,8 +194,44 @@ public class ItemDatabase : Singleton<ItemDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
-        SyncService.Instance.PushInventory(inventoryData);
+
+        if (SyncService.Instance.getSynchronizeStatus())
+        {
+            SyncService.Instance.PushInventory(inventoryData);
+        }
     }
+    public void SaveFile()
+    {
+        string jsonData = JsonConvert.SerializeObject(inventoryData.ToArray(), Formatting.Indented);
+
+        string tempPath = Application.persistentDataPath + "/c/b/c/";
+        string filePath = tempPath + "MyItem.txt";
+
+        //Convert To Json then to bytes
+        byte[] jsonByte = Encoding.ASCII.GetBytes(jsonData);
+
+        //Create Directory if it does not exist
+        if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
+        }
+        //Debug.Log(path);
+        if (!File.Exists(filePath))
+        {
+            File.Create(filePath).Close();
+        }
+
+        try
+        {
+            File.WriteAllBytes(filePath, jsonByte);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
+            Debug.LogWarning("Error: " + e.Message);
+        }
+    }
+
 
     public ItemData fetchItemById(int id)
     {
@@ -373,6 +427,77 @@ public class ItemDatabase : Singleton<ItemDatabase>
         Save();
     }
 
+    public void addNewItemNoSave(int id, int slot)
+    {
+        ItemData rawItem = fetchItemById(id);
+        // Add consume item
+        if (rawItem.Type == 0 || rawItem.Type == 10)
+        {
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rawItem.Rarity;
+            item.Type = rawItem.Type;
+            item.ShopId = 0;
+            item.IsUse = 0;
+            item.Level = 0;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            item.Stats_4 = 0;
+            item.Stats_5 = 0;
+            int index = fetchInventoryByIndex(id);
+            if (index == -1)
+            {
+                item.Slot = slot;
+                inventoryData.Add(item);
+            }
+            else
+            {
+                inventoryData[index].Slot += slot;
+            }
+        }
+        else
+        {
+            ItemInventory item = new ItemInventory();
+            item.Id = rawItem.Id;
+            item.Name = rawItem.Name;
+            item.Contents = rawItem.Contents;
+            item.Rarity = rawItem.Rarity;
+            item.Type = rawItem.Type;
+            item.Slot = 1;
+            item.ShopId = Random.Range(0, 999999);
+            item.IsUse = 0;
+            item.Level = 1;
+            item.Stats_1 = 0;
+            item.Stats_2 = 0;
+            item.Stats_3 = 0;
+            item.Stats_4 = 0;
+            item.Stats_5 = 0;
+            if ((item.Id - 10) % 4 == 0) { item.Stats_1 = 1000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 1) { item.Stats_1 = 4000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 2) { item.Stats_1 = 3000 + randomStatsRarity(item.Rarity); }
+            else if ((item.Id - 10) % 4 == 3) { item.Stats_1 = 2000 + randomStatsRarity(item.Rarity); }
+            if (item.Rarity >= 1)
+            {
+                item.Stats_2 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            if (item.Rarity >= 2)
+            {
+                item.Stats_3 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            if (item.Rarity >= 3)
+            {
+                item.Stats_4 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            if (item.Rarity >= 4)
+            {
+                item.Stats_5 = Random.Range(1, 9) * 1000 + randomStatsRarity(item.Rarity);
+            }
+            inventoryData.Add(item);
+        }
+    }
     private int randomStatsRarity(int rarity)
     {
         if (rarity == 1)

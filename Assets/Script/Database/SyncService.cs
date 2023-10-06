@@ -19,6 +19,8 @@ public class SyncService : Singleton<SyncService>
 
     private CloudData cloudData = null;
     private bool isActiveCloudData = false;
+    private bool isSynchronizeCompleted = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -59,7 +61,13 @@ public class SyncService : Singleton<SyncService>
 
     private void OnSynchronizeComplete(CloudServicesSynchronizeResult result)
     {
+        Debug.Log("Sync complete: " + result);
+        isSynchronizeCompleted = true;
         RetrieveCloudData();
+    }
+    public bool getSynchronizeStatus()
+    {
+        return isSynchronizeCompleted;
     }
     public bool getCloudStatus()
     {
@@ -101,7 +109,7 @@ public class SyncService : Singleton<SyncService>
     private void OnSavedDataChange(CloudServicesSavedDataChangeResult result)
     {
         // Data changed externally from another device
-
+        Debug.Log("OnSavedDataChange :" + result);
     }
 
     public List<ItemInventory> GetInventory() => cloudData?.inventory;
@@ -115,11 +123,11 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Count == 0) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        //Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
+        Debug.Log($"Saving inventory {data.Count}, {jsonData}...");
 
         //cloudData.inventory = data;
         CloudServices.SetString(cloudInventoryKey, jsonData);
-        //CloudServices.Synchronize();
+        CloudServices.Synchronize();
     }
 
     public void PushUser(UserData data)
@@ -127,9 +135,10 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Name == null) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
+        Debug.Log($"Saving user {jsonData}");
         //cloudData.user = data;
         CloudServices.SetString(cloudUserKey, jsonData);
-        //CloudServices.Synchronize();
+        CloudServices.Synchronize();
     }
 
     public void PushHeroes(List<MyHeroes> data)
@@ -137,11 +146,11 @@ public class SyncService : Singleton<SyncService>
         if (data == null || data.Count == 0) return;
 
         string jsonData = JsonConvert.SerializeObject(data);
-        //Debug.Log($"Saving heroes {data.Count}, {jsonData}");
+        Debug.Log($"Saving heroes {data.Count}, {jsonData}");
 
         //cloudData.heroes = data;
         CloudServices.SetString(cloudHeroesKey, jsonData);
-        //CloudServices.Synchronize();
+        CloudServices.Synchronize();
     }
 
     private void OnDestroy()

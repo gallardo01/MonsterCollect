@@ -26,6 +26,10 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             if (heroes != null)
             {
                 myHeroes = heroes;
+                SaveFile();
+            } else
+            {
+                firstTimeSetUp();
             }
         } else
         {
@@ -313,8 +317,43 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
+        if (SyncService.Instance.getSynchronizeStatus())
+        {
+            SyncService.Instance.PushHeroes(myHeroes);
+        }
+    }
 
-        SyncService.Instance.PushHeroes(myHeroes);
+    public void SaveFile()
+    {
+        string jsonData = JsonConvert.SerializeObject(myHeroes, Formatting.Indented);
+
+        string tempPath = Application.persistentDataPath + "/c/b/c/";
+        string filePath = tempPath + "MyHeroes.txt";
+
+        //Convert To Json then to bytes
+
+        byte[] jsonByte = Encoding.ASCII.GetBytes(jsonData);
+
+        //Create Directory if it does not exist
+        if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
+        }
+        //Debug.Log(path);
+        if (!File.Exists(filePath))
+        {
+            File.Create(filePath).Close();
+        }
+
+        try
+        {
+            File.WriteAllBytes(filePath, jsonByte);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
+            Debug.LogWarning("Error: " + e.Message);
+        }
     }
 }
 

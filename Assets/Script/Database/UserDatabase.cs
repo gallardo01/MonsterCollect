@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using System;
-using DragonBones;
 
 public class UserDatabase : Singleton<UserDatabase>
 {
@@ -26,15 +25,23 @@ public class UserDatabase : Singleton<UserDatabase>
     {
         if (SyncService.Instance.getCloudStatus())
         {
-            Debug.Log("Sync data from cloud thanhh");
             var user = SyncService.Instance.GetUser();
             if (user != null)
             {
                 database = user;
+                string tempPath = Application.persistentDataPath + "/c/b/c/";
+                string filePath = tempPath + "UserData.txt";
+                //Create Directory if it does not exist
+                if (!File.Exists(filePath))
+                {
+                    SaveFile();
+                }
+            } else
+            {
+                firstTimeSetUp();
             }
         } else
         {
-            Debug.Log("Khong co cloud");
             firstTimeSetUp();
         }
     }
@@ -146,7 +153,42 @@ public class UserDatabase : Singleton<UserDatabase>
             Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
         }
-        SyncService.Instance.PushUser(database);
+
+        if (SyncService.Instance.getSynchronizeStatus())
+        {
+            SyncService.Instance.PushUser(database);
+        }
+    }
+    public void SaveFile()
+    {
+        string jsonData = JsonConvert.SerializeObject(database, Formatting.Indented);
+
+        string tempPath = Application.persistentDataPath + "/c/b/c/";
+        string filePath = tempPath + "UserData.txt";
+
+        //Convert To Json then to bytes
+
+        byte[] jsonByte = Encoding.ASCII.GetBytes(jsonData);
+
+        //Create Directory if it does not exist
+        if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
+        }
+        if (!File.Exists(filePath))
+        {
+            File.Create(filePath).Close();
+        }
+
+        try
+        {
+            File.WriteAllBytes(filePath, jsonByte);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Failed To PlayerInfo Data to: " + tempPath.Replace("/", "\\"));
+            Debug.LogWarning("Error: " + e.Message);
+        }
     }
     public void deleteData()
     {

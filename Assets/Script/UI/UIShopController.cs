@@ -487,9 +487,9 @@ public class UIShopController : Singleton<UIShopController>
                         rate = 78;
                     }
 
-                    if (rate < 35)
+                    if (rate < 40)
                     {
-                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(1, 5), Random.Range(1, 4), 1));
+                        items.Add(ItemDatabase.Instance.getItemObject(Random.Range(1, 5), Random.Range(1, 5), 1));
                     }
                     else if (rate < 55)
                     {

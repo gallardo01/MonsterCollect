@@ -146,6 +146,8 @@ public class AdsController : Singleton<AdsController>
             {
                 UIShopController.Instance.watchAdsAction();
             }
+
+            LoadAd();
         }
 
         // Inform the UI that the ad is not ready.

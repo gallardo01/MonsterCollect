@@ -239,7 +239,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         {
             if (database[i].Id == id)
             {
-                return database[i];
+                return (ItemData) database[i].Clone();
             }
         }
         return null;
@@ -983,6 +983,11 @@ public class ItemData
     public string Contents { get; set; }
     public int Rarity { get; set; }
     public int Type { get; set; }
+    public object Clone()
+    {
+        return this.MemberwiseClone();
+    }
+
 }
 public class UserInformation
 {

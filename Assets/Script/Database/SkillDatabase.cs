@@ -66,7 +66,7 @@ public class SkillDatabase : Singleton<SkillDatabase>
         {
             if (SkillData[i].Id == id)
             {
-                return SkillData[i];
+                return (SkillData) SkillData[i].Clone();
             }
         }
         return null;
@@ -77,7 +77,7 @@ public class SkillDatabase : Singleton<SkillDatabase>
         {
             if (SkillInGame[i].data.Id == id)
             {
-                return SkillInGame[i];
+                return (SkillInGame)SkillInGame[i].Clone();
             }
         }
         return null;
@@ -90,6 +90,10 @@ public class SkillInGame
     public float timerGame { get; set; }
     public int powerGame { get; set; }
     public SkillData data { get; set; }
+    public object Clone()
+    {
+        return this.MemberwiseClone();
+    }
 }
 
 public class SkillData
@@ -102,4 +106,8 @@ public class SkillData
     public int Timer { get; set; }
     public int Upgrade { get; set; }
     public int Level { get; set; }
+    public object Clone()
+    {
+        return this.MemberwiseClone();
+    }
 }

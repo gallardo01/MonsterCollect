@@ -119,7 +119,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         {
             if(myHeroes[i].Id == id)
             {
-                return myHeroes[i];
+                return (MyHeroes)myHeroes[i].Clone();
             }
         }
         return null;
@@ -141,7 +141,7 @@ public class HeroesDatabase : Singleton<HeroesDatabase>
         {
             if (myHeroes[i].Id/10 == id)
             {
-                return myHeroes[i];
+                return (MyHeroes)myHeroes[i].Clone();
             }
         }
         return null;

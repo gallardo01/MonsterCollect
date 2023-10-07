@@ -189,7 +189,7 @@ public class PlayerController : Singleton<PlayerController>
         if (canMove)
         {
             transform.position += new Vector3(UltimateJoystick.GetHorizontalAxis("Movement"),
-            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (float)(realData.Move * bonusSpeed / 590f) * Time.deltaTime;
+            UltimateJoystick.GetVerticalAxis("Movement"), 0).normalized * (float)(calculateSpeed() * bonusSpeed / 600f) * Time.deltaTime;
         }
         if (UltimateJoystick.GetHorizontalAxis("Movement") > 0 && facingRight == 0)
         {
@@ -214,6 +214,19 @@ public class PlayerController : Singleton<PlayerController>
                 walk = true;
                 runAnimation(1);
             }
+        }
+    }
+    private int calculateSpeed()
+    {
+        if (realData.Move < 1000)
+        {
+            return realData.Move;
+        } else if (realData.Move < 1300)
+        {
+            return (1000 + (realData.Move % 1000) * 2 / 3);
+        } else
+        {
+            return (1200 + (realData.Move % 1300) / 2);
         }
     }
     public void disablePlayer()

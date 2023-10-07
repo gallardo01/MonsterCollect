@@ -106,6 +106,10 @@ public class GameFlowController : Singleton<GameFlowController>
     }
     public void endGame(int progress, int stage, int gold, List<ItemInventory> listItem)
     {
+        if (progress < 0)
+        {
+            progress = 0;
+        }
         sumaryObj.SetActive(true);
         sumaryObj.GetComponent<SumaryController>().initEndingData(progress, stage, gold, listItem);
     }

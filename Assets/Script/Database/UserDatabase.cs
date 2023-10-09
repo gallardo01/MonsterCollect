@@ -44,8 +44,6 @@ public class UserDatabase : Singleton<UserDatabase>
         {
             firstTimeSetUp();
         }
-        database.Level = 10;
-        Save();
     }
     private void firstTimeSetUp()
     {

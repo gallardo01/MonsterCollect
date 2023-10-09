@@ -131,7 +131,7 @@ public class GameController : Singleton<GameController>
         monsterSprite.sprite = itemsSprite[stage * 10 - 11 + lv];
         if (lv == 3)
         {
-            inforText.text = "Release bullet hit player when mosnter dead";
+            inforText.text = "Release bullet hit player when monster dead";
         } else if (lv == 7)
         {
             inforText.text = "Release a bee will chase player, deal dame";
@@ -142,7 +142,7 @@ public class GameController : Singleton<GameController>
         {
             inforText.text = "Sometime run really fast";
         }
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(10f);
         information.SetActive(false);
     }
 

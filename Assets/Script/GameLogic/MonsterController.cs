@@ -414,7 +414,7 @@ public class MonsterController : MonoBehaviour
 
         gameObject.GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(2f);
-        if (monsterData.Id == 3)
+        if (monsterData.Id % 20 == 3)
         {
             GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_1", transform.position, transform.rotation);
             Vector2 force = playerPos.position - transform.position;
@@ -424,7 +424,7 @@ public class MonsterController : MonoBehaviour
             float angle = calAngle(playerPos, force);
             bullet.transform.Rotate(0, 0, angle + 90);
         }
-        else if (monsterData.Id == 13)
+        else if (monsterData.Id % 10 == 3)
         {
             GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_2", transform.position, transform.rotation);
             Vector2 force = playerPos.position - transform.position;
@@ -434,7 +434,7 @@ public class MonsterController : MonoBehaviour
             float angle = calAngle(playerPos, force);
             bullet.transform.Rotate(0, 0, angle + 90);
         }
-        else if (monsterData.Id == 7)
+        else if (monsterData.Id % 10 == 7)
         {
             GameObject bullet = EasyObjectPool.instance.GetObjectFromPool("MonsterBullet_3", transform.position, transform.rotation);
             Vector2 force = playerPos.position - transform.position;

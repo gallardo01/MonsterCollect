@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DigitalRuby.SoundManagerNamespace;
 
 public class GameFlowController : Singleton<GameFlowController>
 {
     [SerializeField] GameObject dead;
     [SerializeField] TextMeshProUGUI countdown;
     [SerializeField] Button watchAds;
+    [SerializeField] Button reviveDiamond;
+
     [SerializeField] Button closeBtn;
     [SerializeField] GameObject sumaryObj;
     [SerializeField] Button acceptRevive;
@@ -27,6 +30,7 @@ public class GameFlowController : Singleton<GameFlowController>
         closeBtn.onClick.AddListener(() => closeButton());
         acceptRevive.onClick.AddListener(() => reviveButton());
         cancelRevive.onClick.AddListener(() => cancelReviveAction());
+        reviveDiamond.onClick.AddListener(() => reviveDiamondAction());
     }
 
     public void userDeath()
@@ -51,7 +55,23 @@ public class GameFlowController : Singleton<GameFlowController>
     IEnumerator revive()
     {
         dead.SetActive(true);
-        for(int i = 10; i >= 0; i--)
+        if (AdsController.Instance.canShowAds())
+        {
+            watchAds.gameObject.SetActive(true);
+            reviveDiamond.gameObject.SetActive(false);
+        } else
+        {
+            watchAds.gameObject.SetActive(false);
+            reviveDiamond.gameObject.SetActive(true);
+            if (UserDatabase.Instance.getUserData().Diamond >= 30)
+            {
+                reviveDiamond.interactable = true;
+            } else
+            {
+                reviveDiamond.interactable = false;
+            }
+        }
+        for (int i = 10; i >= 0; i--)
         {
             countdown.text = i.ToString();
             yield return new WaitForSeconds(1f);
@@ -77,12 +97,22 @@ public class GameFlowController : Singleton<GameFlowController>
         StartCoroutine(delayAds());
     }
 
+    public void reviveDiamondAction()
+    {
+        UserDatabase.Instance.reduceMoney(0, 30);
+        dead.SetActive(false);
+        isAction = false;
+        PlayerController.Instance.revivePlayer();
+        SoundManagerDemo.Instance.playOneShot(10);
+    }
+
     IEnumerator delayAds()
     {
         yield return new WaitForSeconds(0.3f);
         dead.SetActive(false);
         isAction = false;
         PlayerController.Instance.revivePlayer();
+        SoundManagerDemo.Instance.playOneShot(10);
     }
     public void reviveFailed()
     {

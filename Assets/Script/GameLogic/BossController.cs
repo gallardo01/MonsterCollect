@@ -379,7 +379,7 @@ public class BossController : Singleton<BossController>
                 yield return new WaitForSeconds(1f);
             }
 
-            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.8f) Time.timeScale += 0.15f;
 
         }
         else if (monsterData.Id == 20)
@@ -532,7 +532,7 @@ public class BossController : Singleton<BossController>
             moveSpeed = 0;
             yield return new WaitForSeconds(3f);
 
-            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.8f) Time.timeScale += 0.15f;
         }
 
         else if (monsterData.Id == 30)
@@ -664,7 +664,7 @@ public class BossController : Singleton<BossController>
                 fellow3.GetComponent<MonsterController>().triggerWaypoints();
 
 
-            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.8f) Time.timeScale += 0.15f;
 
         }
         else if (monsterData.Id == 40)
@@ -763,7 +763,7 @@ public class BossController : Singleton<BossController>
 
             yield return new WaitForSeconds(2f);
 
-            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.8f) Time.timeScale += 0.15f;
         }
         else if (monsterData.Id == 50)
         {
@@ -865,7 +865,7 @@ public class BossController : Singleton<BossController>
                 yield return new WaitForSeconds(1f);
             }
 
-            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.8f) Time.timeScale += 0.15f;
         }
 
         else if (monsterData.Id == 60)
@@ -938,7 +938,7 @@ public class BossController : Singleton<BossController>
             Vector3 directionFog = Vector3.Normalize(player.position - transform.position);
             windFog.GetComponent<BulletOfBossController>().initBullet(player, directionFog, 6f, 3, monsterData);
 
-            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.8f) Time.timeScale += 0.15f;
 
         }
 
@@ -1040,7 +1040,7 @@ public class BossController : Singleton<BossController>
             moveSpeed = 2;
             yield return new WaitForSeconds(2f);
 
-            if (Time.timeScale < 1.5f) Time.timeScale += 0.1f;
+            if (Time.timeScale < 1.8f) Time.timeScale += 0.15f;
 
         }
 

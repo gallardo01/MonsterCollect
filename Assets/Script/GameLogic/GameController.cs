@@ -10,6 +10,11 @@ using DigitalRuby.SoundManagerNamespace;
 
 public class GameController : Singleton<GameController>
 {
+    [SerializeField] GameObject information;
+    [SerializeField] SpriteRenderer monsterSprite;
+    [SerializeField] TextMeshProUGUI inforText;
+
+    [SerializeField] Slider slideProgress;
     [SerializeField] GameObject expBar;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] GameObject bossController;
@@ -56,15 +61,18 @@ public class GameController : Singleton<GameController>
     [SerializeField] GameObject startGame;
     [SerializeField] SpriteRenderer heroesSprite;
     [SerializeField] TextMeshProUGUI textStart;
+    private Sprite[] itemsSprite;
 
     private int[] numberCreep = { 0, 40, 60, 80, 100, 120, 140, 160, 180, 200};
-    private string[] typeStart = { "", "Water", "Fire", "Electric", "Water", "Electric", "Grass", "Water", "Electric", "Grass", "Fire" };
+    private string[] typeStart = { "", "Water", "Fire", "Electric", "Water", "Fire", "Grass", "Water", "Fire", "Grass", "Electric" };
     private void Awake()
     {
     }
     // Start is called before the first frame update
     void Start()
     {
+        itemsSprite = Resources.LoadAll<Sprite>("Contents/Icon/Monster");
+        Time.timeScale = 1.1f;
         Application.targetFrameRate = 60;
         StartCoroutine(testScreen());
         pauseGame.onClick.AddListener(() => pauseGameController());
@@ -117,6 +125,27 @@ public class GameController : Singleton<GameController>
         //StartCoroutine(spawnBoss());
     }
 
+    IEnumerator showInformationBar(int lv)
+    {
+        information.SetActive(true);
+        monsterSprite.sprite = itemsSprite[stage * 10 - 11 + lv];
+        if (lv == 3)
+        {
+            inforText.text = "Release bullet hit player when mosnter dead";
+        } else if (lv == 7)
+        {
+            inforText.text = "Release a bee will chase player, deal dame";
+        } else if (lv == 5)
+        {
+            inforText.text = "Gain armour in a short amount of time";
+        } else if (lv == 9)
+        {
+            inforText.text = "Sometime run really fast";
+        }
+        yield return new WaitForSeconds(3f);
+        information.SetActive(false);
+    }
+
     public void updateGold(int gold)
     {
         goldAward += gold * (100 + PlayerController.Instance.getBonusPoints(8))/100;
@@ -166,6 +195,13 @@ public class GameController : Singleton<GameController>
             if (enemyLv < 10 && countEnemy >= numberCreep[enemyLv])
             {
                 enemyLv++;
+                if (stage <= 5)
+                {
+                    if (enemyLv == 3 || enemyLv == 5 || enemyLv == 7 || enemyLv == 9)
+                    {
+                        StartCoroutine(showInformationBar(enemyLv));
+                    }
+                }
             }
         }
         if (enemyLv >= 10)
@@ -259,12 +295,13 @@ public class GameController : Singleton<GameController>
     private IEnumerator addEnemyNow()
     {
         countEnemy++;
+        slideProgress.value = countEnemy / 200f;
         int pos = Random.Range(0, waypoints1.Length);
         GameObject warning = EasyObjectPool.instance.GetObjectFromPool("Warning", waypoints1[pos].transform.position, waypoints1[pos].transform.rotation);
         yield return new WaitForSeconds(1.5f);
         EasyObjectPool.instance.ReturnObjectToPool(warning);
         warning.SetActive(false);
-        int chance = Random.Range(0, 14);
+        int chance = Random.Range(0, 13);
         int enemyId;
         if (chance < 13)
         {
@@ -418,7 +455,7 @@ public class GameController : Singleton<GameController>
     }
     public void pickSkill(int id)
     {
-        Time.timeScale = 1;
+        Time.timeScale = 1.1f;
         // heal
         if (id == -1)
         {

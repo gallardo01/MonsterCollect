@@ -86,7 +86,15 @@ public class AdsController : Singleton<AdsController>
             //AdLoadedStatus?.SetActive(true);
         });
     }
-
+    
+    public bool canShowAds()
+    {
+        if (_rewardedAd != null && _rewardedAd.CanShowAd())
+        {
+            return true;
+        }
+        return false;
+    }
     /// <summary>
     /// Shows the ad.
     /// </summary>

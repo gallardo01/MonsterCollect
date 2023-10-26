@@ -13,13 +13,17 @@ public class EventPicker : MonoBehaviour
     public Button btnCard_2;
     public Button btnCard_3;
 
+    public Button btnReset;
+    public GameObject txtPick;
 
     private Animator btnCard_AC;
     private Animator btnCard_AC_1;
     private Animator btnCard_AC_2;
     private Animator btnCard_AC_3;
 
-    private bool canOpen = true;
+    private Animator mainAC;
+
+    private bool canOpen = false;
 
     // Start is called before the first frame update
     void Start()
@@ -29,10 +33,13 @@ public class EventPicker : MonoBehaviour
         btnCard_AC_2 = btnCard_2.GetComponent<Animator>();
         btnCard_AC_3 = btnCard_3.GetComponent<Animator>();
 
-
+        mainAC = this.gameObject.GetComponent<Animator>();
 
         btnBuy.onClick.AddListener(() =>
             Shuffle()
+        );
+        btnReset.onClick.AddListener(() =>
+            ResetCard()
         );
         btnCard.onClick.AddListener(() =>
             OpenCard(0)
@@ -50,12 +57,14 @@ public class EventPicker : MonoBehaviour
 
     void Shuffle()
     {
-        btnBuy.gameObject.SetActive(false);
+        //btnBuy.gameObject.SetActive(false);
         btnCard_AC.SetTrigger("Shuffle");
         btnCard_AC_1.SetTrigger("Shuffle");
         btnCard_AC_2.SetTrigger("Shuffle");
         btnCard_AC_3.SetTrigger("Shuffle");
-
+        mainAC.SetTrigger("Shuffle");
+        //txtPick.SetActive(true);
+        canOpen = true;
     }
 
     void OpenCard(int card)
@@ -79,8 +88,25 @@ public class EventPicker : MonoBehaviour
 
             }
             canOpen = false;
+
+            //btnReset.gameObject.SetActive(true);
+            //txtPick.SetActive(false);
+            mainAC.SetTrigger("Open");
         }
-        
+
     }
 
+    public void ResetCard()
+    {
+        btnCard_AC.SetTrigger("Reset");
+        btnCard_AC_1.SetTrigger("Reset");
+        btnCard_AC_2.SetTrigger("Reset");
+        btnCard_AC_3.SetTrigger("Reset");
+        mainAC.SetTrigger("Reset");
+        //btnReset.gameObject.SetActive(false);
+        //btnBuy.gameObject.SetActive(true);
+        //txtPick.SetActive(false);
+        canOpen = false;
+
+    }
 }
